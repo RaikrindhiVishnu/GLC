@@ -8,37 +8,37 @@ export default function Testimonials() {
       name: "Michael Chen",
       role: "Investment Analyst",
       text: "GLC has completely changed my view on agricultural investment. The transparency is unlike anything I've seen in the sector.",
-      image: "/assets/user-beforelogin/person1.1.svg",
+      image: "/assets/home/person.svg",
     },
     {
       name: "Sarah Jenkins",
       role: "Land Owner",
       text: "The process of fractional ownership is seamless. I'm already looking into my third pool.",
-      image: "/assets/user-beforelogin/person1.2.svg",
+      image: "/assets/home/person2.svg",
     },
     {
       name: "David Kumar",
       role: "Serial Investor",
       text: "Solid yields and great professional management. The maintenance team really knows what they're doing.",
-      image: "/assets/user-beforelogin/person1.3.svg",
+      image: "/assets/home/person.svg",
     },
     {
       name: "Vikram Mehta",
       role: "Tech Entrepreneur",
       text: "The process of fractional ownership is seamless. I'm already looking into my third pool.",
-      image: "/assets/user-beforelogin/person1.1.svg",
+      image: "/assets/home/person2.svg",
     },
     {
       name: "Ananya Sharma",
       role: "Wealth Manager",
       text: "GLC has completely changed my view on agricultural investment. The transparency is unlike anything I've seen in the sector.",
-      image: "/assets/user-beforelogin/person1.2.svg",
+      image: "/assets/home/person.svg",
     },
     {
       name: "Siddharth Rao",
       role: "Retiree",
       text: "Solid yields and great professional management. The maintenance team really knows what they're doing.",
-      image: "/assets/user-beforelogin/person1.3.svg",
+      image: "/assets/home/person2.svg",
     },
   ];
 
