@@ -27,14 +27,14 @@ export default function FAQ() {
   ];
 
   return (
-    <section className="relative w-full bg-white py-24 lg:py-32 overflow-hidden">
+    <section className="relative w-full bg-transparent py-24 lg:py-32 overflow-hidden">
       <div className="container mx-auto max-w-[1140px] px-6">
         {/* Header */}
-        <div className="mb-20 flex flex-col items-center text-center">
-          <h2 className="text-[42.67px] font-semibold leading-[56px] text-[#414244] font-jakarta mb-4">
+        <div className="mb-12 lg:mb-20 flex flex-col items-center text-center">
+          <h2 className="text-[32px] lg:text-[42.67px] font-semibold leading-tight lg:leading-[56px] text-[#414244] font-jakarta mb-4">
             Clear reliable information
           </h2>
-          <p className="max-w-[725px] text-[13.33px] leading-[17px] text-[#0F2F4C] font-jakarta">
+          <p className="max-w-[725px] text-[14px] lg:text-[13.33px] leading-relaxed lg:leading-[17px] text-[#0F2F4C] font-jakarta opacity-80">
             Find clear answers to common questions and learn how our agriculture solutions support your farming journey.
           </p>
         </div>

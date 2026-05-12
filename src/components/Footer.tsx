@@ -19,7 +19,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="relative w-full bg-[#164573] pt-[64px] pb-[64px] overflow-hidden" 
+    <footer id="footer-section" className="relative w-full bg-[#164573] pt-[64px] pb-[64px] overflow-hidden" 
       style={{ 
         background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)",
         minHeight: '899px'

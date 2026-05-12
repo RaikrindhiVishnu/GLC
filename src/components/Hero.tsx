@@ -2,52 +2,55 @@ import Image from "next/image";
 
 export default function Hero() {
   return (
-    <section className="relative flex h-screen min-h-[960px] w-full flex-col items-center justify-center overflow-hidden">
-      {/* Background Image with Overlay */}
-      <div className="absolute inset-0 z-0">
-        <Image
-          src="/assets/hero/userhome.svg"
-          alt="Premium Farmland"
-          fill
-          className="object-cover"
-          priority
-        />
-        <div className="absolute inset-0 bg-black/30" />
+    <section id="hero-section" className="relative flex h-[80vh] md:h-screen min-h-[500px] md:min-h-[640px] w-full flex-col items-center justify-center overflow-hidden">
+      {/* Background Video with Overlay */}
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-cover"
+        >
+          <source src="/assets/hero/userhome.mp4" type="video/mp4" />
+        </video>
+
+        {/* General dim layer */}
+        <div className="absolute inset-0 bg-black/40" />
+        {/* Top fade layer */}
+        <div className="absolute inset-x-0 top-0 h-40 bg-linear-to-b from-black/70 to-transparent" />
       </div>
 
       {/* Content */}
       <div className="z-10 flex w-full max-w-[1440px] flex-col items-center px-4 text-center">
-        <h1 className="text-shadow-premium flex flex-col items-center justify-center font-extrabold tracking-[-5px] text-white">
-          <span className="block text-[64px] leading-[70px] md:text-[100px] md:leading-[106px]">
+        <h1 className="text-shadow-premium flex flex-col items-center justify-let font-extrabold tracking-[-4px] text-white">
+          <span className="block text-[48px] leading-[1] md:text-[76px]">
             Discover
           </span>
-          <span className="block text-[64px] leading-[70px] md:text-[100px] md:leading-[106px]">
+          <span className="block text-[48px] leading-[1] md:text-[76px]">
             Premium Farmlands
           </span>
         </h1>
 
         {/* Search Bar */}
-        <div className="glass-search mt-[48px] flex h-[80px] w-full max-w-[672px] items-center gap-3 rounded-[100px] px-[15px] py-[10px]">
-          <div className="flex flex-1 items-center px-[18px]">
+        <div className="glass-search mt-[36px] flex h-[64px] w-full max-w-[560px] items-center gap-3 rounded-[100px] px-[12px] py-[8px]">
+          <div className="flex flex-1 items-center px-[16px]">
             <input
               type="text"
               placeholder="Search Investments..."
-              className="w-full bg-transparent text-[18px] font-medium leading-[23px] text-white placeholder:text-white focus:outline-none"
+              className="w-full bg-transparent text-[16px] font-medium leading-[21px] text-white placeholder:text-white focus:outline-none"
             />
           </div>
-          <button className="flex h-[50px] min-w-[50px] items-center justify-center rounded-full bg-white transition-transform hover:scale-105 active:scale-95">
-            <Image 
-              src="/assets/hero/search.svg" 
-              alt="Filter" 
-              width={18} 
-              height={18}
+          <button className="flex h-[42px] min-w-[42px] items-center justify-center rounded-full bg-white cursor-pointer">
+            <Image
+              src="/assets/hero/search.svg"
+              alt="Filter"
+              width={16}
+              height={16}
             />
           </button>
         </div>
       </div>
-    </section>
+    </section >
   );
 }
-
-
-

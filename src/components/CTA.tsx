@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function CTA() {
   return (
-    <section className="relative w-full h-[608px] overflow-hidden bg-white">
+    <section id="cta-section" className="relative w-full h-[608px] overflow-hidden bg-white">
       
       {/* Background Layer 1: Clouds (Sky) */}
       <div className="absolute inset-0 z-0 h-full">
@@ -35,9 +35,9 @@ export default function CTA() {
       />
 
       {/* Content */}
-      <div className="relative z-40 flex h-full flex-col items-center pt-[160px] px-6"> {/* Moved text up with padding-top */}
-        <h2 className="max-w-[738px] text-[48px] font-bold leading-[55px] tracking-[-1.2px] text-[#0F2F4C] text-center font-jakarta">
-          Simple steps. Smart technology.<br/>Real yields.
+      <div className="relative z-40 flex h-full flex-col items-center pt-[120px] lg:pt-[160px] px-6"> {/* Moved text up with padding-top */}
+        <h2 className="max-w-[738px] text-[32px] lg:text-[48px] font-bold leading-tight lg:leading-[55px] tracking-[-1.2px] text-[#0F2F4C] text-center font-jakarta">
+          Simple steps. Smart technology.<br className="hidden lg:block"/> Real yields.
         </h2>
       </div>
     </section>

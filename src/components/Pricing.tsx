@@ -34,7 +34,7 @@ export default function Pricing() {
   ];
 
   return (
-    <section className="relative w-full bg-white py-24 lg:py-32 overflow-hidden">
+    <section className="relative w-full bg-transparent py-24 lg:py-32 overflow-hidden">
       <div className="container mx-auto max-w-[1280px] px-8">
         {/* Header */}
         <div className="mb-20 text-center flex flex-col items-center gap-4">
@@ -47,14 +47,14 @@ export default function Pricing() {
         </div>
 
         {/* Pricing Cards */}
-        <div className="flex flex-col lg:flex-row items-center justify-center gap-0 lg:gap-[-20px]">
+        <div className="flex flex-col lg:flex-row items-center lg:items-stretch justify-center gap-8 lg:gap-0">
           {tiers.map((tier, i) => (
             <div
               key={i}
-              className={`relative flex flex-col overflow-hidden transition-all duration-300 ${
+              className={`relative flex flex-col w-full overflow-hidden transition-all duration-300 ${
                 tier.highlight
-                  ? "w-full max-w-[483.7px] min-h-[642px] z-20 shadow-[0px_4px_20px_rgba(50,50,50,0.2)] rounded-[42px] border-[1px] border-[#0F2F4C]"
-                  : "w-full max-w-[335px] min-h-[428px] z-10 shadow-[0px_4px_18px_rgba(50,50,50,0.2)] rounded-[42px] "
+                  ? "lg:max-w-[483.7px] min-h-[500px] lg:min-h-[642px] z-20 shadow-[0px_4px_20px_rgba(50,50,50,0.2)] rounded-[42px] border-[1px] border-[#0F2F4C]"
+                  : "lg:max-w-[335px] min-h-[400px] lg:min-h-[428px] z-10 shadow-[0px_4px_18px_rgba(50,50,50,0.2)] rounded-[42px] "
               } bg-white`}
             >
               {/* Popular Badge */}
@@ -65,21 +65,21 @@ export default function Pricing() {
               )}
 
               {/* Card Header */}
-              <div className={`flex flex-col items-center justify-center border-b border-black/10 px-10 ${tier.highlight ? "py-10" : "py-8"}`}>
+              <div className={`flex flex-col items-center justify-center border-b border-black/10 px-6 lg:px-10 ${tier.highlight ? "py-8 lg:py-10" : "py-6 lg:py-8"}`}>
                 <span className="text-[10px] font-bold uppercase tracking-[1px] text-[#0F2F4C] opacity-40 font-jakarta">
                   {tier.tier}
                 </span>
-                <h3 className={`mt-2 font-bold text-[#0F2F4C] font-jakarta ${tier.highlight ? "text-[28px]" : "text-[26px]"}`}>
+                <h3 className={`mt-2 font-bold text-[#0F2F4C] font-jakarta ${tier.highlight ? "text-[28px]" : "text-[24px] lg:text-[26px]"}`}>
                   {tier.name}
                 </h3>
-                <div className={`mt-4 font-extrabold text-[#0F2F4C] font-jakarta ${tier.highlight ? "text-[70px]" : "text-[42px]"}`}>
+                <div className={`mt-4 font-extrabold text-[#0F2F4C] font-jakarta ${tier.highlight ? "text-[50px] lg:text-[70px]" : "text-[36px] lg:text-[42px]"}`}>
                   {tier.price}
                 </div>
               </div>
 
               {/* Features List */}
-              <div className={`flex-1 bg-[#F5F5F5] px-10 ${tier.highlight ? "py-12" : "py-8"}`}>
-                <ul className={`${tier.highlight ? "space-y-8" : "space-y-6"}`}>
+              <div className={`flex-1 bg-[#F5F5F5] px-8 lg:px-10 ${tier.highlight ? "py-10 lg:py-12" : "py-6 lg:py-8"}`}>
+                <ul className={`${tier.highlight ? "space-y-6 lg:space-y-8" : "space-y-4 lg:space-y-6"}`}>
                   {tier.features.map((feature, j) => (
                     <li key={j} className="flex items-center gap-4">
                       <div className="flex shrink-0 items-center justify-center">
@@ -87,7 +87,7 @@ export default function Pricing() {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                         </svg>
                       </div>
-                      <span className="text-[16px] font-semibold text-[#636363] font-jakarta">
+                      <span className="text-[14px] lg:text-[16px] font-semibold text-[#636363] font-jakarta">
                         {feature}
                       </span>
                     </li>
@@ -96,7 +96,7 @@ export default function Pricing() {
               </div>
 
               {/* Action Button */}
-              <div className="p-10 bg-[#F5F5F5]">
+              <div className="p-8 lg:p-10 bg-[#F5F5F5]">
                 {tier.highlight ? (
                   <button 
                     className="w-full rounded-[26px] py-4 text-[18px] font-semibold text-white transition-all hover:scale-105"

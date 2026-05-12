@@ -1,6 +1,6 @@
 export default function Newsletter() {
   return (
-    <section className="relative w-full bg-white py-24 lg:py-32 overflow-hidden">
+    <section className="relative w-full bg-transparent py-24 lg:py-32 overflow-hidden">
       <div className="container mx-auto max-w-[1216px] px-6">
         <div 
           className="flex flex-col items-center justify-center rounded-[48px] bg-[#091426] p-16 lg:p-24 border border-[rgba(105,182,254,0.2)] text-center gap-4"
@@ -12,9 +12,9 @@ export default function Newsletter() {
           </h2>
           
           {/* Subtitle */}
-          <p className="mt-4 text-[18px] text-white/80 font-jakarta whitespace-nowrap">
-          Join 5,000+ investors receiving curated farmland opportunities weekly.
-        </p>
+          <p className="mt-4 text-[16px] lg:text-[18px] text-white/80 font-jakarta px-4">
+            Join 5,000+ investors receiving curated farmland opportunities weekly.
+          </p>
 
           {/* Form */}
           <form className="mt-6 flex flex-col md:flex-row items-center gap-4 w-full max-w-[512px]">
