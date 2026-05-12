@@ -148,7 +148,7 @@ export default function DocumentUnlocks() {
           }}
         >
           <img
-            src="/assets/home/doucmentsunlock.svg"
+            src="/assets/home/DocumentUnlocks/doucmentsunlock.svg"
             alt="Primary Listing"
             style={{ 
               width: "100%", 

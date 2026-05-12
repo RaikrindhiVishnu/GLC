@@ -117,7 +117,7 @@ export default function UnlockedDocs() {
               }}
             >
               <Image
-                src="/assets/home/pdf.svg"
+                src="/assets/home/UnlockedDocs/pdf.svg"
                 alt="PDF"
                 width={30}
                 height={30}

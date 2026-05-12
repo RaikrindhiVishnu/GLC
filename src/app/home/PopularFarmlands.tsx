@@ -8,7 +8,7 @@ const farmlands = [
     title: "GLC SOS 01",
     location: "Vizag, A.P.",
     description: "Prime editorial land parcel featuring rich soil biodiversity and vintage irrigation architecture.",
-    img: "/assets/homesection2/glc1.svg",
+    img: "/assets/home/PopularFarmlands/glc1.svg",
     tag: "Most Viewed",
   },
   {
@@ -16,7 +16,7 @@ const farmlands = [
     title: "GLC SOS-02",
     location: "Tanuku, A.P.",
     description: "Prime editorial land parcel featuring rich soil biodiversity and vintage irrigation architecture.",
-    img: "/assets/homesection2/glc2.svg",
+    img: "/assets/home/PopularFarmlands/glc2.svg",
     tag: "Trending Listing",
   },
   {
@@ -24,7 +24,7 @@ const farmlands = [
     title: "GLC SOS 03",
     location: "Bhimavaram, A.P.",
     description: "Prime editorial land parcel featuring rich soil biodiversity and vintage irrigation architecture.",
-    img: "/assets/home/glcsos3.svg",
+    img: "/assets/home/PopularFarmlands/glcsos3.svg",
     tag: "Trending Listing",
   },
 ];

@@ -3,10 +3,10 @@
 import Image from "next/image";
 
 const locations = [
-  { id: "loc-tanuku", name: "Tanuku", img: "/assets/homesection2/tanuku.svg" },
-  { id: "loc-bhimavaram", name: "Bhimavaram", img: "/assets/homesection2/bhimavaram.svg" },
-  { id: "loc-rajahmundry", name: "Rajahmundary", img: "/assets/homesection2/rajamudry.svg" },
-  { id: "loc-vizag", name: "Vizag", img: "/assets/homesection2/vizag.svg" },
+  { id: "loc-tanuku", name: "Tanuku", img: "/assets/home/TrendingLocations/tanuku.svg" },
+  { id: "loc-bhimavaram", name: "Bhimavaram", img: "/assets/home/TrendingLocations/bhimavaram.svg" },
+  { id: "loc-rajahmundry", name: "Rajahmundary", img: "/assets/home/TrendingLocations/rajamudry.svg" },
+  { id: "loc-vizag", name: "Vizag", img: "/assets/home/TrendingLocations/vizag.svg" },
 ];
 
 export default function TrendingLocations() {

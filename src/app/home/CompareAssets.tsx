@@ -9,7 +9,7 @@ const comparisonData = [
       {
         title: "GLC SOS 01",
         location: "Vizag, Andhra Pradesh",
-        img: "/assets/home/compare1.svg",
+        img: "/assets/home/CompareAssets/compare1.svg",
         soil: "Red Sandy Loam",
         ph: "pH Level: 6.8 (Optimal)",
         yield: "5.2",
@@ -17,7 +17,7 @@ const comparisonData = [
       {
         title: "GLC SOS 02",
         location: "Guntur, Andhra Pradesh",
-        img: "/assets/home/compare2.svg",
+        img: "/assets/home/CompareAssets/compare2.svg",
         soil: "Black Cotton Soil",
         ph: "pH Level: 7.4 (Alkaline)",
         yield: "7.8",
@@ -30,7 +30,7 @@ const comparisonData = [
       {
         title: "WHEAT RIDGE X",
         location: "Srikakulam, A.P",
-        img: "/assets/home/compare3.svg",
+        img: "/assets/home/CompareAssets/compare3.svg",
         soil: "Alluvial Soil",
         ph: "pH Level: 7.0 (Neutral)",
         yield: "6.5",
@@ -38,7 +38,7 @@ const comparisonData = [
       {
         title: "PALM GROVE",
         location: "Nellore, A.P",
-        img: "/assets/home/compare4.svg",
+        img: "/assets/home/CompareAssets/compare4.svg",
         soil: "Laterite Soil",
         ph: "pH Level: 6.2 (Acidic)",
         yield: "4.9",

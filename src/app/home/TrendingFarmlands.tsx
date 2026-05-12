@@ -11,7 +11,7 @@ const trendingItems = [
     tag: "HIGH YIELD 2025",
     tagColor: "rgba(0, 31, 63, 0.1)",
     tagTextColor: "#001F3F",
-    img: "/assets/homesection2/glcsos01.svg",
+    img: "/assets/home/TrendingFarmlands/glcsos01.svg",
   },
   {
     id: "trending-2",
@@ -21,7 +21,7 @@ const trendingItems = [
     tag: "MOST BOOKMARKED",
     tagColor: "rgba(207, 102, 103, 0.1)",
     tagTextColor: "#CF6667",
-    img: "/assets/homesection2/glcsos02.svg",
+    img: "/assets/home/TrendingFarmlands/glcsos02.svg",
   },
   {
     id: "trending-3",
@@ -31,7 +31,7 @@ const trendingItems = [
     tag: "HIGH YIELD 2024",
     tagColor: "rgba(0, 31, 63, 0.1)",
     tagTextColor: "#001F3F",
-    img: "/assets/homesection2/glcsos03.svg",
+    img: "/assets/home/TrendingFarmlands/glcsos03.svg",
   },
 ];
 

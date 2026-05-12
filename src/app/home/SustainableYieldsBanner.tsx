@@ -17,7 +17,7 @@ export default function SustainableYieldsBanner() {
       }}
     >
       <img
-        src="/assets/home/yieldsbanner.svg"
+        src="/assets/home/SustainableYieldsBanner/yieldsbanner.svg"
         alt="Sustainable Practices"
         style={{ 
           position: "absolute",

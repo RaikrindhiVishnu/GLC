@@ -3,10 +3,10 @@
 import Image from "next/image";
 
 const listings = [
-  { id: "listing-1", title: "GLC SOS 01", price: "₹85 Lakhs", img: "/assets/homesection2/glcsos1.svg" },
-  { id: "listing-2", title: "GLC SOS 02", price: "₹1.2 Cr", img: "/assets/homesection2/glcsos2.svg" },
-  { id: "listing-3", title: "GLC SOS 03", price: "₹95 Lakhs", img: "/assets/homesection2/glcsos3.svg" },
-  { id: "listing-4", title: "GLC SOS 04", price: "₹2.4 Cr", img: "/assets/homesection2/glcsos4.svg" },
+  { id: "listing-1", title: "GLC SOS 01", price: "₹85 Lakhs", img: "/assets/home/YourListings/glcsos1.svg" },
+  { id: "listing-2", title: "GLC SOS 02", price: "₹1.2 Cr", img: "/assets/home/YourListings/glcsos2.svg" },
+  { id: "listing-3", title: "GLC SOS 03", price: "₹95 Lakhs", img: "/assets/home/YourListings/glcsos3.svg" },
+  { id: "listing-4", title: "GLC SOS 04", price: "₹2.4 Cr", img: "/assets/home/YourListings/glcsos4.svg" },
 ];
 
 export default function YourListings() {

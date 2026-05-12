@@ -27,7 +27,7 @@ export default function HeroScreen() {
         }}
       />
       <Image
-        src="/assets/home/hero.svg"
+        src="/assets/home/HeroScreen/hero.svg"
         alt="Farmland background"
         fill
         priority
@@ -132,7 +132,7 @@ export default function HeroScreen() {
               flexShrink: 0,
             }}
           >
-            <Image src="/assets/home/search.svg" alt="Search" width={22} height={22} />
+            <Image src="/assets/home/HeroScreen/search.svg" alt="Search" width={22} height={22} />
           </button>
 
           {/* Crown/Wishlist Icon Tab */}
@@ -152,7 +152,7 @@ export default function HeroScreen() {
               flexShrink: 0,
             }}
           >
-            <Image src="/assets/home/Vector.svg" alt="Wishlist" width={22} height={20} />
+            <Image src="/assets/home/HeroScreen/Vector.svg" alt="Wishlist" width={22} height={20} />
           </button>
 
           {/* User Icon Tab — 48x48 pill, user 1.png at 21.62x21.62 */}
@@ -174,7 +174,7 @@ export default function HeroScreen() {
             }}
           >
             <Image
-              src="/assets/home/user 1.png"
+              src="/assets/home/HeroScreen/user 1.png"
               alt="User"
               width={21.62}
               height={21.62}
@@ -207,7 +207,7 @@ export default function HeroScreen() {
               boxSizing: "border-box",
             }}
           >
-            <Image src="/assets/home/unlock 1.svg" alt="Lock" width={26.32} height={26.32} style={{ flexShrink: 0 }} />
+            <Image src="/assets/home/HeroScreen/unlock 1.svg" alt="Lock" width={26.32} height={26.32} style={{ flexShrink: 0 }} />
           </button>
 
           {/* Bell Button — same glassmorphism pill + red dot */}
@@ -234,7 +234,7 @@ export default function HeroScreen() {
               boxSizing: "border-box",
             }}
           >
-            <Image src="/assets/home/notification.svg" alt="Notifications" width={26.32} height={26.32} style={{ flexShrink: 0 }} />
+            <Image src="/assets/home/HeroScreen/notification.svg" alt="Notifications" width={26.32} height={26.32} style={{ flexShrink: 0 }} />
             {/* Red dot */}
             <span
               style={{
@@ -266,7 +266,7 @@ export default function HeroScreen() {
             }}
           >
             <img
-              src="/assets/home/person.svg"
+              src="/assets/home/HeroScreen/person.svg"
               alt="User"
               style={{
                 width: "100%",
@@ -375,7 +375,7 @@ export default function HeroScreen() {
             flexShrink: 0,
           }}
         >
-          <Image src="/assets/home/inside search.svg" alt="Search" width={18} height={18} />
+          <Image src="/assets/home/HeroScreen/inside search.svg" alt="Search" width={18} height={18} />
         </button>
       </div>
 
@@ -404,7 +404,7 @@ export default function HeroScreen() {
           cursor: "pointer",
         }}
       >
-        <Image src="/assets/home/si_ai-fill.svg" alt="AI Assistant" width={26.32} height={26.32} />
+        <Image src="/assets/home/HeroScreen/si_ai-fill.svg" alt="AI Assistant" width={26.32} height={26.32} />
       </div>
 
     </section>
