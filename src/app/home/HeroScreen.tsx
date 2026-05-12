@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function HeroScreen() {
   const [searchVal, setSearchVal] = useState("");
+  const router = useRouter();
 
   return (
     <section
@@ -118,6 +120,7 @@ export default function HeroScreen() {
           {/* Search Icon Tab */}
           <button
             id="nav-search"
+            onClick={() => router.push("/search")}
             style={{
               display: "flex",
               flexDirection: "column",
@@ -138,6 +141,7 @@ export default function HeroScreen() {
           {/* Crown/Wishlist Icon Tab */}
           <button
             id="nav-wishlist"
+            onClick={() => router.push("/pricing")}
             style={{
               display: "flex",
               flexDirection: "column",
@@ -158,6 +162,7 @@ export default function HeroScreen() {
           {/* User Icon Tab — 48x48 pill, user 1.png at 21.62x21.62 */}
           <button
             id="nav-user"
+            onClick={() => router.push("/profile")}
             style={{
               display: "flex",
               flexDirection: "column",
@@ -253,6 +258,7 @@ export default function HeroScreen() {
 
           <div
             id="nav-avatar"
+            onClick={() => router.push("/profile")}
             style={{
               width: "52px",
               height: "52px",
@@ -360,6 +366,7 @@ export default function HeroScreen() {
         {/* Search Button */}
         <button
           id="btn-search"
+          onClick={() => router.push("/search")}
           style={{
             display: "flex",
             flexDirection: "row",

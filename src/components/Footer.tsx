@@ -1,6 +1,10 @@
+"use client";
+
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function Footer() {
+  const router = useRouter();
   const dots = [
     { left: 241, top: 194, img: "/assets/stats/person1.1.svg" }, // 91
     { left: 581, top: 181, img: "/assets/stats/person1.2.svg" }, // 93
@@ -54,7 +58,14 @@ export default function Footer() {
                   </div>
                   <ul className="flex flex-col gap-4">
                     {["Search Farmland", "Pool Buying", "Subscriptions"].map((link) => (
-                      <li key={link} className="text-white text-[16px] font-semibold font-jakarta whitespace-nowrap leading-[100%] cursor-pointer hover:opacity-70 transition-opacity">
+                      <li 
+                        key={link} 
+                        onClick={() => {
+                          if (link === "Search Farmland") router.push("/search");
+                          else if (link === "Subscriptions") router.push("/pricing");
+                        }}
+                        className="text-white text-[16px] font-semibold font-jakarta whitespace-nowrap leading-[100%] cursor-pointer hover:opacity-70 transition-opacity"
+                      >
                         {link}
                       </li>
                     ))}
