@@ -15,18 +15,16 @@ export default function FacilitiesCultivation({
     <div
       style={{
         width: "764.41px",
-        height: "254px",
         display: "flex",
         justifyContent: "space-between",
         gap: "20px",
         flexShrink: 0,
       }}
     >
-      {/* Left Card: Connectivity Hub */}
+      {/* Left Card: Connectivity Hub with embedded Road/Power Map snippet */}
       <div
         style={{
           flex: 1,
-          height: "100%",
           background: "#FFFFFF",
           boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)",
           borderRadius: "48px",
@@ -34,6 +32,7 @@ export default function FacilitiesCultivation({
           boxSizing: "border-box",
           display: "flex",
           flexDirection: "column",
+          gap: "20px",
           justifyContent: "space-between",
         }}
       >
@@ -68,99 +67,118 @@ export default function FacilitiesCultivation({
           </span>
         </div>
 
-        {/* List Rows Container */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-          {/* Row 1 */}
+        {/* Embedded Dynamic Map Snippet Render Frame */}
+        <div
+          style={{
+            width: "100%",
+            height: "140px",
+            borderRadius: "24px",
+            overflow: "hidden",
+            position: "relative",
+            background: "#F1F5F9",
+            border: "1px solid #E2E8F0",
+          }}
+        >
+          <img
+            src="/assets/search/farmlanddetails/Map Snippet.svg"
+            alt="Road/Power Map Connectivity Snippet"
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              display: "block",
+            }}
+            onError={(e) => {
+              // Redundant resilient layer mapping default landscape backdrop if file streaming initializes
+              e.currentTarget.src = "/assets/compareassets/farm1.jpg";
+            }}
+          />
+
+          {/* Overlaid Road/Power Map Token Indicator inside snippet */}
           <div
             style={{
+              position: "absolute",
+              bottom: "12px",
+              left: "12px",
+              background: "rgba(15, 47, 76, 0.85)",
+              backdropFilter: "blur(4px)",
+              borderRadius: "12px",
+              padding: "4px 10px",
               display: "flex",
-              justifyContent: "space-between",
               alignItems: "center",
-              paddingBottom: "12px",
-              borderBottom: "1px solid #E1E3E4",
+              gap: "6px",
             }}
           >
-            <span
-              style={{
-                fontFamily: "'Plus Jakarta Sans', sans-serif",
-                fontWeight: 500,
-                fontSize: "15px",
-                color: "#45474C",
-              }}
-            >
-              Railway station
-            </span>
+            <div style={{ width: "6px", height: "6px", background: "#4ADE80", borderRadius: "9999px" }} />
             <span
               style={{
                 fontFamily: "'Plus Jakarta Sans', sans-serif",
                 fontWeight: 700,
+                fontSize: "10px",
+                color: "#FFFFFF",
+                letterSpacing: "0.5px",
+                textTransform: "uppercase",
+              }}
+            >
+              Road/Power Map
+            </span>
+          </div>
+        </div>
+
+        {/* Dynamic Telemetry Matrix Stack */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "4px" }}>
+          {/* Left Block: Access Route */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+            <span
+              style={{
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                fontWeight: 700,
+                fontSize: "10px",
+                letterSpacing: "1px",
+                color: "#75777D",
+                textTransform: "uppercase",
+              }}
+            >
+              Access Route
+            </span>
+            <span
+              style={{
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                fontWeight: 800,
                 fontSize: "15px",
                 color: "#0F2F4C",
               }}
             >
-              18km
+              HWY DIRECT
             </span>
           </div>
 
-          {/* Row 2 */}
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              paddingBottom: "12px",
-              borderBottom: "1px solid #E1E3E4",
-            }}
-          >
-            <span
-              style={{
-                fontFamily: "'Plus Jakarta Sans', sans-serif",
-                fontWeight: 500,
-                fontSize: "15px",
-                color: "#45474C",
-              }}
-            >
-              Commercial airport
-            </span>
-            <span
-              style={{
-                fontFamily: "'Plus Jakarta Sans', sans-serif",
-                fontWeight: 700,
-                fontSize: "15px",
-                color: "#0F2F4C",
-              }}
-            >
-              45km
-            </span>
-          </div>
+          {/* Split Vertical Line Divider */}
+          <div style={{ width: "1px", height: "24px", background: "#E2E8F0" }} />
 
-          {/* Row 3 */}
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <span
-              style={{
-                fontFamily: "'Plus Jakarta Sans', sans-serif",
-                fontWeight: 500,
-                fontSize: "15px",
-                color: "#45474C",
-              }}
-            >
-              Highway junction
-            </span>
+          {/* Right Block: Surface Condition */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "2px", alignItems: "flex-end" }}>
             <span
               style={{
                 fontFamily: "'Plus Jakarta Sans', sans-serif",
                 fontWeight: 700,
-                fontSize: "15px",
-                color: "#0F2F4C",
+                fontSize: "10px",
+                letterSpacing: "1px",
+                color: "#75777D",
+                textTransform: "uppercase",
               }}
             >
-              2.5km
+              Surface Condition
+            </span>
+            <span
+              style={{
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                fontWeight: 800,
+                fontSize: "15px",
+                color: "#2780C4",
+              }}
+            >
+              PAVED
             </span>
           </div>
         </div>
@@ -170,7 +188,6 @@ export default function FacilitiesCultivation({
       <div
         style={{
           flex: 1,
-          height: "100%",
           background: "#FFFFFF",
           boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)",
           borderRadius: "48px",
@@ -178,6 +195,7 @@ export default function FacilitiesCultivation({
           boxSizing: "border-box",
           display: "flex",
           flexDirection: "column",
+          gap: "20px",
           justifyContent: "space-between",
         }}
       >
@@ -213,7 +231,7 @@ export default function FacilitiesCultivation({
         </div>
 
         {/* List Rows Container */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "16px", margin: "auto 0" }}>
           {/* Row 1: Active Crop */}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <div style={{ display: "flex", flexDirection: "column" }}>
