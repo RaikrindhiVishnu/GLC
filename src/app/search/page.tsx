@@ -10,7 +10,6 @@ import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 
 export default function SearchScreen() {
-
   return (
     <main style={{ minHeight: "100vh", background: "#FFFFFF", display: "flex", flexDirection: "column" }}>
       <SearchHeroSection />

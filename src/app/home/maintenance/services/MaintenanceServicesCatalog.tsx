@@ -371,7 +371,7 @@ export default function MaintenanceServicesCatalog() {
                   boxSizing: "border-box",
                   display: "flex",
                   flexDirection: "row",
-                  justifySession: "center",
+                  justifyContent: "center",
                   alignItems: "center",
                   padding: "12px 0px",
                   width: "100%",
@@ -381,7 +381,6 @@ export default function MaintenanceServicesCatalog() {
                   borderRadius: "6px",
                   cursor: "pointer",
                   transition: "all 0.2s ease",
-                  justifyContent: "center",
                 }}
               >
                 <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", color: selectedServices.includes("Eco-Luxury Build") ? "#2780C4" : "#0F2F4C" }}>
