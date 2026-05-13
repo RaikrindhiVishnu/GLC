@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const filterButtons = [
   {
@@ -48,6 +49,8 @@ const filterButtons = [
 ];
 
 export default function FiltersScreen() {
+  const router = useRouter();
+
   return (
     <section
       id="filters-section"
@@ -78,6 +81,21 @@ export default function FiltersScreen() {
         {filterButtons.map((btn) => (
           <button
             key={btn.id}
+            onClick={() => {
+              if (btn.id === "pool-buying") {
+                router.push("/pool-buying");
+              } else if (btn.id === "search-farmland") {
+                router.push("/search");
+              } else if (btn.id === "my-assets") {
+                router.push("/home/myassets");
+              } else if (btn.id === "verification-farmland") {
+                router.push("/home/verification");
+              } else if (btn.id === "maintenance-farmland") {
+                router.push("/home/maintenance");
+              } else if (btn.id === "sell-land") {
+                router.push("/home/sellyourland");
+              }
+            }}
             style={{
               boxSizing: "border-box",
               display: "flex",

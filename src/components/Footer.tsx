@@ -63,6 +63,7 @@ export default function Footer() {
                         onClick={() => {
                           if (link === "Search Farmland") router.push("/search");
                           else if (link === "Subscriptions") router.push("/pricing");
+                          else if (link === "Pool Buying") router.push("/pool-buying");
                         }}
                         className="text-white text-[16px] font-semibold font-jakarta whitespace-nowrap leading-[100%] cursor-pointer hover:opacity-70 transition-opacity"
                       >
@@ -77,7 +78,15 @@ export default function Footer() {
              <div className="flex flex-col gap-[40px] w-[195px] h-[80px] mb-auto pt-[71px]">
                 <ul className="flex flex-col gap-4">
                   {["Verification of Farmland", "Maintanence of Farmland", "Sell Your Land"].map((link) => (
-                    <li key={link} className="text-white text-[16px] font-semibold font-jakarta whitespace-nowrap leading-[100%] cursor-pointer hover:opacity-70 transition-opacity">
+                    <li 
+                      key={link} 
+                      onClick={() => {
+                        if (link === "Verification of Farmland") router.push("/home/verification");
+                        if (link === "Maintanence of Farmland") router.push("/home/maintenance");
+                        if (link === "Sell Your Land") router.push("/home/sellyourland");
+                      }}
+                      className="text-white text-[16px] font-semibold font-jakarta whitespace-nowrap leading-[100%] cursor-pointer hover:opacity-70 transition-opacity"
+                    >
                       {link}
                     </li>
                   ))}

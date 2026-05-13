@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 // Absolute data parity derived directly from official AI Suggested Matches CSS block metrics
 const suggestedMatches = [
@@ -32,6 +33,7 @@ const suggestedMatches = [
 ];
 
 export default function SuggestedMatchesRow() {
+  const router = useRouter();
   const [bookmarks, setBookmarks] = useState<Record<string, boolean>>({
     "sugg-1": true, // pre-fill bookmark to demonstrate interactive toggle states
   });
@@ -88,6 +90,7 @@ export default function SuggestedMatchesRow() {
           return (
             <div
               key={item.id}
+              onClick={() => router.push(`/search/farmlanddetails?id=${item.id.replace("sugg", "match")}`)}
               style={{
                 background: "#FFFFFF",
                 borderRadius: "30px",

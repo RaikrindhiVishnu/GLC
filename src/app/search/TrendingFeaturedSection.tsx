@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 // Array of premium source assets mapping high-fidelity properties
 const carouselItems = [
@@ -75,6 +76,7 @@ const slotConfigs = [
 ];
 
 export default function TrendingFeaturedSection() {
+  const router = useRouter();
   const [activeIndex, setActiveIndex] = useState(3); // Maps item 3 to central slot 3 by default
   const [wrapId, setWrapId] = useState<number | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -129,7 +131,12 @@ export default function TrendingFeaturedSection() {
   };
 
   const handleCardClick = (id: number) => {
-    if (isAnimating || id === activeIndex) return;
+    if (isAnimating) return;
+    if (id === activeIndex) {
+      const mapId = `match-${(id % 6) + 1}`;
+      router.push(`/search/farmlanddetails?id=${mapId}`);
+      return;
+    }
     setActiveIndex(id);
   };
 

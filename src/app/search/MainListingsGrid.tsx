@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 // Absolute data parity mapping precisely to the 6 newly uploaded search assets
 const gridMatches = [
@@ -73,6 +74,7 @@ const gridMatches = [
 ];
 
 export default function MainListingsGrid() {
+  const router = useRouter();
   const [bookmarks, setBookmarks] = useState<Record<string, boolean>>({
     "match-1": true, // pre-fill bookmark to demonstrate interactive toggle states
   });
@@ -131,6 +133,7 @@ export default function MainListingsGrid() {
             return (
               <div
                 key={item.id}
+                onClick={() => router.push(`/search/farmlanddetails?id=${item.id}`)}
                 style={{
                   background: "#FFFFFF",
                   borderRadius: "30px",
@@ -252,6 +255,10 @@ export default function MainListingsGrid() {
                       {item.price}
                     </span>
                     <span
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        router.push(`/search/farmlanddetails?id=${item.id}`);
+                      }}
                       style={{
                         fontFamily: "'Plus Jakarta Sans', sans-serif",
                         fontWeight: 700,
@@ -259,6 +266,7 @@ export default function MainListingsGrid() {
                         lineHeight: "20px",
                         color: "#00629E",
                         cursor: "pointer",
+                        textDecoration: "underline",
                       }}
                     >
                       View Details
@@ -272,6 +280,7 @@ export default function MainListingsGrid() {
             return (
               <div
                 key={item.id}
+                onClick={() => router.push(`/search/farmlanddetails?id=${item.id}`)}
                 style={{
                   background: "#FFFFFF",
                   borderRadius: "30px",
@@ -357,6 +366,10 @@ export default function MainListingsGrid() {
                       {item.price}
                     </span>
                     <span
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        router.push(`/search/farmlanddetails?id=${item.id}`);
+                      }}
                       style={{
                         fontFamily: "'Plus Jakarta Sans', sans-serif",
                         fontWeight: 700,
@@ -364,6 +377,7 @@ export default function MainListingsGrid() {
                         lineHeight: "20px",
                         color: "#00629E",
                         cursor: "pointer",
+                        textDecoration: "underline",
                       }}
                     >
                       View Details

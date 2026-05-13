@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const comparisonData = [
   {
@@ -48,6 +49,8 @@ const comparisonData = [
 ];
 
 export default function CompareAssets() {
+  const router = useRouter();
+
   return (
     <section
       id="compare-assets"
@@ -195,6 +198,7 @@ export default function CompareAssets() {
 
             {/* CTA Button */}
             <button
+              onClick={() => router.push("/home/compareassets")}
               style={{
                 position: "absolute",
                 bottom: "48px",
