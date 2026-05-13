@@ -31,12 +31,28 @@ export default function FAQ() {
       <div className="container mx-auto max-w-[1140px] px-6">
         {/* Header */}
         <div className="mb-12 lg:mb-20 flex flex-col items-center text-center">
-          <h2 className="text-[32px] lg:text-[42.67px] font-semibold leading-tight lg:leading-[56px] text-[#414244] font-jakarta mb-4">
-            Clear reliable information
+          <h2 className="text-[32px] lg:text-[42.67px] font-semibold leading-tight lg:leading-[56px] text-[#414244] font-jakarta mb-4 flex flex-wrap justify-center gap-x-3">
+            {"Clear reliable information".split(" ").map((word, i) => (
+              <motion.span
+                key={i}
+                initial={{ opacity: 0, filter: "blur(10px)" }}
+                whileInView={{ opacity: 1, filter: "blur(0px)" }}
+                transition={{ duration: 0.8, delay: i * 0.1 }}
+                viewport={{ once: true }}
+              >
+                {word}
+              </motion.span>
+            ))}
           </h2>
-          <p className="max-w-[725px] text-[14px] lg:text-[13.33px] leading-relaxed lg:leading-[17px] text-[#0F2F4C] font-jakarta opacity-80">
+          <motion.p 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 0.4 }}
+            viewport={{ once: true }}
+            className="max-w-[725px] text-[14px] lg:text-[13.33px] leading-relaxed lg:leading-[17px] text-[#0F2F4C] font-jakarta opacity-80"
+          >
             Find clear answers to common questions and learn how our agriculture solutions support your farming journey.
-          </p>
+          </motion.p>
         </div>
 
         {/* FAQ List */}
@@ -44,8 +60,12 @@ export default function FAQ() {
           {faqs.map((faq, i) => {
             const isOpen = openIndex === i;
             return (
-              <div
+              <motion.div
                 key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: i * 0.1 }}
+                viewport={{ once: true }}
                 onClick={() => setOpenIndex(isOpen ? -1 : i)}
                 className={`group cursor-pointer rounded-[30px] transition-all duration-500 ease-in-out relative overflow-hidden ${
                   isOpen
@@ -98,7 +118,7 @@ export default function FAQ() {
                     )}
                   </AnimatePresence>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>

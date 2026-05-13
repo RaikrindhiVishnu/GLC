@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 export default function Testimonials() {
   const testimonials = [
@@ -49,13 +50,29 @@ export default function Testimonials() {
   return (
     <section className="relative w-full bg-[#F8F9FA] py-24 lg:py-32 overflow-hidden">
       <div className="container mx-auto px-8 mb-16 relative z-10">
-        <h2 className="text-[36px] font-bold leading-[40px] tracking-[-0.9px] text-[#131600] font-jakarta text-center">
-          Trusted by Investors Worldwide
+        <h2 className="text-[36px] font-bold leading-[40px] tracking-[-0.9px] text-[#131600] font-jakarta text-center flex flex-wrap justify-center gap-x-3">
+          {"Trusted by Investors Worldwide".split(" ").map((word, i) => (
+            <motion.span
+              key={i}
+              initial={{ opacity: 0, filter: "blur(10px)" }}
+              whileInView={{ opacity: 1, filter: "blur(0px)" }}
+              transition={{ duration: 0.8, delay: i * 0.1 }}
+              viewport={{ once: true }}
+            >
+              {word}
+            </motion.span>
+          ))}
         </h2>
       </div>
 
       {/* Testimonials Container */}
-      <div className="relative flex flex-col gap-8 w-full">
+      <motion.div 
+        initial={{ opacity: 0, filter: "blur(15px)" }}
+        whileInView={{ opacity: 1, filter: "blur(0px)" }}
+        transition={{ duration: 1.2, delay: 0.4 }}
+        viewport={{ once: true }}
+        className="relative flex flex-col gap-8 w-full"
+      >
         
         {/* Row 1: Moving Left */}
         <div className="flex overflow-hidden group">
@@ -80,7 +97,7 @@ export default function Testimonials() {
           <div className="absolute left-0 top-0 h-full w-[192px] bg-gradient-to-r from-[#F8F9FA] to-transparent" />
           <div className="absolute right-0 top-0 h-full w-[192px] bg-gradient-to-l from-[#F8F9FA] to-transparent" />
         </div>
-      </div>
+      </motion.div>
 
       <style jsx global>{`
         @keyframes scroll-left {

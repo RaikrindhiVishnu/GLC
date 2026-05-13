@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 
 export default function Footer() {
   const router = useRouter();
@@ -19,71 +20,80 @@ export default function Footer() {
   ];
 
   return (
-    <footer id="footer-section" className="relative w-full bg-[#164573] pt-[64px] pb-[64px] overflow-hidden" 
-      style={{ 
+    <footer id="footer-section" className="relative w-full bg-[#164573] pt-[64px] pb-[64px] overflow-hidden"
+      style={{
         background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)",
         minHeight: '899px'
       }}>
-      
+
       <div className="container mx-auto max-w-[1312px] flex flex-col items-end gap-[30px] relative">
-        
+
         {/* Frame 1000002206 - Branding Area */}
         <div className="relative w-[1312px] h-[672px] flex flex-col items-start gap-[84px]">
-          
+
           {/* Green Land Capital Text Block */}
           <div className="relative w-[1312px] h-[437px] flex items-center justify-center z-0">
-             {/* Floating Dots - Exact Pixel Positions from Figma */}
-             {dots.map((dot, i) => (
-                <div 
-                  key={i} 
-                  className="absolute w-[48px] h-[48px] rounded-full border-2 border-white shadow-2xl overflow-hidden z-20"
-                  style={{ left: `${dot.left}px`, top: `${dot.top}px` }}
-                >
-                  <Image src={dot.img} alt="Dot" fill className="object-cover" />
-                </div>
-              ))}
+            {/* Floating Dots - Exact Pixel Positions from Figma */}
+            {dots.map((dot, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, scale: 0, y: 20 }}
+                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 100,
+                  damping: 15,
+                  delay: i * 0.1
+                }}
+                viewport={{ once: true }}
+                className="absolute w-[48px] h-[48px] rounded-full border-2 border-white shadow-2xl overflow-hidden z-20"
+                style={{ left: `${dot.left}px`, top: `${dot.top}px` }}
+              >
+                <Image src={dot.img} alt="Dot" fill className="object-cover" />
+              </motion.div>
+            ))}
 
-              <h1 className="w-[1312px] h-[437px] text-[220px] font-semibold text-white leading-[80%] tracking-[-0.02em] text-center font-jakarta flex items-center justify-center select-none z-10">
-                Green Land<br/>Capital
-              </h1>
+            <h1 className="w-[1312px] h-[437px] text-[220px] font-semibold text-white leading-[80%] tracking-[-0.02em] text-center font-jakarta flex flex-col items-center justify-center select-none z-10">
+              <span className="flex">
+                {["Green", "Land"].map((word, i) => (
+                  <motion.span
+                    key={i}
+                    initial={{ opacity: 0, filter: "blur(15px)", y: 20 }}
+                    whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+                    transition={{ duration: 1, delay: i * 0.2 }}
+                    viewport={{ once: true }}
+                    className="mr-10 last:mr-0" // Add spacing between words
+                  >
+                    {word}
+                  </motion.span>
+                ))}
+              </span>
+              <motion.span
+                initial={{ opacity: 0, filter: "blur(15px)", y: 20 }}
+                whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+                transition={{ duration: 1, delay: 0.4 }}
+                viewport={{ once: true }}
+              >
+                Capital
+              </motion.span>
+            </h1>
           </div>
 
           {/* Navigation Links Frame 1000002205 */}
           <div className="w-[1312px] h-[151px] flex flex-row justify-between items-center z-10">
-             {/* Left Column */}
-             <div className="flex flex-col gap-[40px] w-[129px] h-[151px]">
-                <div className="flex flex-col gap-4">
-                  <div className="relative w-[127px] h-[55px]">
-                    <Image src="/assets/common/Logo green land 1.svg" alt="Logo" fill className="object-contain" />
-                  </div>
-                  <ul className="flex flex-col gap-4">
-                    {["Search Farmland", "Pool Buying", "Subscriptions"].map((link) => (
-                      <li 
-                        key={link} 
-                        onClick={() => {
-                          if (link === "Search Farmland") router.push("/search");
-                          else if (link === "Subscriptions") router.push("/pricing");
-                          else if (link === "Pool Buying") router.push("/pool-buying");
-                        }}
-                        className="text-white text-[16px] font-semibold font-jakarta whitespace-nowrap leading-[100%] cursor-pointer hover:opacity-70 transition-opacity"
-                      >
-                        {link}
-                      </li>
-                    ))}
-                  </ul>
+            {/* Left Column */}
+            <div className="flex flex-col gap-[40px] w-[129px] h-[151px]">
+              <div className="flex flex-col gap-4">
+                <div className="relative w-[127px] h-[55px]">
+                  <Image src="/assets/common/Logo green land 1.svg" alt="Logo" fill className="object-contain" />
                 </div>
-             </div>
-
-             {/* Middle Column */}
-             <div className="flex flex-col gap-[40px] w-[195px] h-[80px] mb-auto pt-[71px]">
                 <ul className="flex flex-col gap-4">
-                  {["Verification of Farmland", "Maintanence of Farmland", "Sell Your Land"].map((link) => (
-                    <li 
-                      key={link} 
+                  {["Search Farmland", "Pool Buying", "Subscriptions"].map((link) => (
+                    <li
+                      key={link}
                       onClick={() => {
-                        if (link === "Verification of Farmland") router.push("/home/verification");
-                        if (link === "Maintanence of Farmland") router.push("/home/maintenance");
-                        if (link === "Sell Your Land") router.push("/home/sellyourland");
+                        if (link === "Search Farmland") router.push("/search");
+                        else if (link === "Subscriptions") router.push("/pricing");
                       }}
                       className="text-white text-[16px] font-semibold font-jakarta whitespace-nowrap leading-[100%] cursor-pointer hover:opacity-70 transition-opacity"
                     >
@@ -91,26 +101,38 @@ export default function Footer() {
                     </li>
                   ))}
                 </ul>
-             </div>
+              </div>
+            </div>
 
-             {/* Right Column (Newsletter) */}
-             <div className="flex flex-col gap-[32px] w-[284px] h-[118px]">
-                <p className="text-white text-[18px] leading-[140%] font-jakarta tracking-[-0.02em]">
-                  Get farmland insights and opportunities straight to your inbox
-                </p>
-                <div className="relative w-[262px] border-b border-[#DADADA] pb-2 flex items-center justify-between">
-                  <input 
-                    type="text" 
-                    placeholder="Email address" 
-                    className="bg-transparent text-white placeholder:text-white/60 focus:outline-none font-jakarta text-[16px] leading-[100%] w-full"
-                  />
-                  <div className="relative w-6 h-6">
-                    <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
-                  </div>
+            {/* Middle Column */}
+            <div className="flex flex-col gap-[40px] w-[195px] h-[80px] mb-auto pt-[71px]">
+              <ul className="flex flex-col gap-4">
+                {["Verification of Farmland", "Maintanence of Farmland", "Sell Your Land"].map((link) => (
+                  <li key={link} className="text-white text-[16px] font-semibold font-jakarta whitespace-nowrap leading-[100%] cursor-pointer hover:opacity-70 transition-opacity">
+                    {link}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Right Column (Newsletter) */}
+            <div className="flex flex-col gap-[32px] w-[284px] h-[118px]">
+              <p className="text-white text-[18px] leading-[140%] font-jakarta tracking-[-0.02em]">
+                Get farmland insights and opportunities straight to your inbox
+              </p>
+              <div className="relative w-[262px] border-b border-[#DADADA] pb-2 flex items-center justify-between">
+                <input
+                  type="text"
+                  placeholder="Email address"
+                  className="bg-transparent text-white placeholder:text-white/60 focus:outline-none font-jakarta text-[16px] leading-[100%] w-full"
+                />
+                <div className="relative w-6 h-6">
+                  <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
                 </div>
-             </div>
+              </div>
+            </div>
           </div>
         </div>
 
