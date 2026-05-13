@@ -1,17 +1,15 @@
 "use client";
 
-import { ReactLenis } from "lenis/react";
+import React, { useEffect } from "react";
 
 export default function SmoothScroll({ children }: { children: React.ReactNode }) {
-  return (
-    <ReactLenis root options={{ 
-      lerp: 0.1, 
-      duration: 1.5, 
-      smoothWheel: true,
-      // Lenis handles mobile by default (it doesn't smooth scroll on touch devices 
-      // unless specified, keeping native momentum scrolling which is what the user wants)
-    }}>
-      {children}
-    </ReactLenis>
-  );
+  useEffect(() => {
+    // Enable native smooth scrolling behavior gracefully across document roots
+    document.documentElement.style.scrollBehavior = "smooth";
+    return () => {
+      document.documentElement.style.scrollBehavior = "auto";
+    };
+  }, []);
+
+  return <>{children}</>;
 }
