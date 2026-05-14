@@ -20,7 +20,7 @@ export default function Navbar() {
       <div className="flex items-center gap-4">
         <Link
           href="/login"
-          className="glass flex h-[42px] w-[140px] md:h-[51px] md:w-[184px] items-center justify-center rounded-[125px] text-sm md:text-base font-extrabold text-white transition-all hover:bg-white/20 active:scale-95"
+          className="glass flex h-[42px] w-[140px] md:h-[51px] md:w-[184px] items-center justify-center rounded-[125px] text-sm md:text-base font-extrabold text-white transition-colors hover:bg-white/20 outline-none focus:outline-none [-webkit-tap-highlight-color:transparent]"
         >
           Login / Register
         </Link>
