@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -32,7 +32,7 @@ const carouselItems = [
     title: "GLC SOS 01",
     region: "Vizag, A.P.",
     price: "₹5.2 Cr",
-    img: "/assets/home/CompareAssets/compare3.svg", // Core focal item matching layout strings
+    img: "/assets/home/CompareAssets/compare3.svg", 
   },
   {
     id: 4,
@@ -77,9 +77,31 @@ const slotConfigs = [
 
 export default function TrendingFeaturedSection() {
   const router = useRouter();
-  const [activeIndex, setActiveIndex] = useState(3); // Maps item 3 to central slot 3 by default
+  const [activeIndex, setActiveIndex] = useState(3); 
   const [wrapId, setWrapId] = useState<number | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
+
+  const [scale, setScale] = useState(1);
+  const scalerRef = useRef<HTMLDivElement>(null);
+  const shellRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function update() {
+      const vw = window.innerWidth;
+      const targetWidth = 1360; 
+      const currentScale = vw < targetWidth ? vw / targetWidth : 1;
+      setScale(currentScale);
+      if (scalerRef.current) {
+        scalerRef.current.style.transform = `scale(${currentScale})`;
+      }
+      if (shellRef.current) {
+        shellRef.current.style.height = `${456 * currentScale}px`;
+      }
+    }
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
 
   // Circular offset logic calculates precise slot placement mappings natively
   const getSlotIndex = (itemIndex: number, active: number) => {
@@ -98,14 +120,11 @@ export default function TrendingFeaturedSection() {
     if (isAnimating) return;
     setIsAnimating(true);
 
-    // Identify the item currently residing at Slot 0 (extreme left)
-    // Moving previous causes it to wrap around to Slot 6 (extreme right)
     const wrappingItemIndex = carouselItems.findIndex((item) => getSlotIndex(item.id, activeIndex) === 0);
     setWrapId(wrappingItemIndex);
 
     setActiveIndex((prev) => (prev > 0 ? prev - 1 : carouselItems.length - 1));
 
-    // Release wrap lock immediately after transition initialization completes
     setTimeout(() => {
       setWrapId(null);
       setIsAnimating(false);
@@ -116,14 +135,11 @@ export default function TrendingFeaturedSection() {
     if (isAnimating) return;
     setIsAnimating(true);
 
-    // Identify the item currently residing at Slot 6 (extreme right)
-    // Moving next causes it to wrap around to Slot 0 (extreme left)
     const wrappingItemIndex = carouselItems.findIndex((item) => getSlotIndex(item.id, activeIndex) === 6);
     setWrapId(wrappingItemIndex);
 
     setActiveIndex((prev) => (prev < carouselItems.length - 1 ? prev + 1 : 0));
 
-    // Release wrap lock immediately after transition initialization completes
     setTimeout(() => {
       setWrapId(null);
       setIsAnimating(false);
@@ -149,6 +165,8 @@ export default function TrendingFeaturedSection() {
         alignItems: "center",
         margin: "60px 0 100px 0",
         gap: "60px",
+        overflow: "hidden",
+        boxSizing: "border-box",
       }}
     >
       {/* ─── HEADER TYPOGRAPHY ROW ─── */}
@@ -185,132 +203,159 @@ export default function TrendingFeaturedSection() {
       </div>
 
       {/* ─── OVERLAPPING CAROUSEL FAN-OUT STACK ─── */}
-      <div
-        style={{
-          position: "relative",
-          width: "1280px", // Master stage framework width
-          height: "416.35px",
-          margin: "20px auto 40px auto",
+      <div 
+        ref={shellRef} 
+        style={{ 
+          position: "relative", 
+          width: "1280px", 
+          maxWidth: "100%", 
+          height: "456px",
+          flexShrink: 0 
         }}
       >
-        {carouselItems.map((item) => {
-          const slotIdx = getSlotIndex(item.id, activeIndex);
-          const config = slotConfigs[slotIdx];
-          const isActive = slotIdx === 3;
-          const isWrapping = wrapId === item.id;
+        <div
+          ref={scalerRef}
+          style={{
+            position: "absolute",
+            top: 0,
+            left: "50%",
+            marginLeft: "-640px",
+            width: "1280px",
+            height: "456px",
+            transformOrigin: "top center",
+            willChange: "transform",
+          }}
+        >
+          {/* Exactly the original Hardcoded figma layout container elements with no strings modified */}
+          <div
+            style={{
+              position: "absolute",
+              top: "38.58px",
+              left: 0,
+              width: "1280px",
+              height: "416.35px",
+            }}
+          >
+            {carouselItems.map((item) => {
+              const slotIdx = getSlotIndex(item.id, activeIndex);
+              const config = slotConfigs[slotIdx];
+              const isActive = slotIdx === 3;
+              const isWrapping = wrapId === item.id;
 
-          return (
-            <div
-              key={item.id}
-              onClick={() => handleCardClick(item.id)}
-              style={{
-                position: "absolute",
-                width: config.width,
-                height: config.height,
-                left: config.left,
-                top: config.top,
-                zIndex: config.zIndex,
-                borderRadius: "30px",
-                overflow: "hidden",
-                cursor: isActive ? "default" : "pointer",
-                boxShadow: isActive
-                  ? "0px 15px 40px rgba(0, 0, 0, 0.35)"
-                  : "0px 9.98434px 24.9608px rgba(0, 0, 0, 0.25)",
-                // Instantly teleport item layout behind the carousel drum when wrap lock triggers
-                transition: isWrapping ? "none" : "all 0.5s cubic-bezier(0.25, 1, 0.5, 1)",
-                opacity: isWrapping ? 0 : 1,
-              }}
-            >
-              {/* Core Image Wrapper Layer */}
-              <div
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  transition: isWrapping ? "none" : "filter 0.5s ease",
-                  filter: `brightness(${config.brightness})`,
-                }}
-              >
-                <Image
-                  src={item.img}
-                  alt={item.title}
-                  fill
-                  priority={isActive}
-                  sizes={isActive ? "400px" : "300px"}
-                  style={{ objectFit: "cover" }}
-                />
-              </div>
-
-              {/* Precise Glass Rectangle Bottom Overlay matching target specs perfectly */}
-              <div
-                style={{
-                  position: "absolute",
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  height: "146px", // Covers precisely the lower ~29.5% boundary zone
-                  background: "rgba(0, 0, 0, 0.25)", // Sleek translucent dark frosted rectangle finish
-                  backdropFilter: "blur(12px)",
-                  WebkitBackdropFilter: "blur(12px)",
-                  borderRadius: "0 0 30px 30px",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  padding: "0 28px",
-                  // Cross-fade internal string layers beautifully natively upon arriving at stage center
-                  opacity: isActive ? 1 : 0,
-                  pointerEvents: isActive ? "auto" : "none",
-                  transition: isWrapping ? "none" : "opacity 0.4s ease",
-                }}
-              >
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                    {/* Title */}
-                    <span
-                      style={{
-                        fontFamily: "'Plus Jakarta Sans', sans-serif",
-                        fontWeight: 600,
-                        fontSize: "24px",
-                        lineHeight: "30px",
-                        color: "#F5F7FA",
-                      }}
-                    >
-                      {item.title}
-                    </span>
-                    {/* Region Subtitle */}
-                    <span
-                      style={{
-                        fontFamily: "'Plus Jakarta Sans', sans-serif",
-                        fontWeight: 500,
-                        fontSize: "18px",
-                        lineHeight: "23px",
-                        color: "#F5F7FA",
-                      }}
-                    >
-                      {item.region}
-                    </span>
-                  </div>
-
-                  {/* Pricing tier block */}
-                  <span
+              return (
+                <div
+                  key={item.id}
+                  onClick={() => handleCardClick(item.id)}
+                  style={{
+                    position: "absolute",
+                    width: config.width,
+                    height: config.height,
+                    left: config.left,
+                    top: config.top,
+                    zIndex: config.zIndex,
+                    borderRadius: "30px",
+                    overflow: "hidden",
+                    cursor: isActive ? "default" : "pointer",
+                    boxShadow: isActive
+                      ? "0px 15px 40px rgba(0, 0, 0, 0.35)"
+                      : "0px 9.98434px 24.9608px rgba(0, 0, 0, 0.25)",
+                    transition: isWrapping ? "none" : "all 0.5s cubic-bezier(0.25, 1, 0.5, 1)",
+                    opacity: isWrapping ? 0 : 1,
+                    boxSizing: "border-box",
+                  }}
+                >
+                  {/* Core Image Wrapper Layer */}
+                  <div
                     style={{
-                      fontFamily: "'Plus Jakarta Sans', sans-serif",
-                      fontWeight: 600,
-                      fontSize: "24px",
-                      lineHeight: "30px",
-                      color: "#F5F7FA",
+                      position: "absolute",
+                      inset: 0,
+                      transition: isWrapping ? "none" : "filter 0.5s ease",
+                      filter: `brightness(${config.brightness})`,
                     }}
                   >
-                    {item.price}
-                  </span>
+                    <Image
+                      src={item.img}
+                      alt={item.title}
+                      fill
+                      priority={isActive}
+                      sizes={isActive ? "400px" : "300px"}
+                      style={{ objectFit: "cover" }}
+                    />
+                  </div>
+
+                  {/* Precise Glass Rectangle Bottom Overlay matching target specs perfectly */}
+                  <div
+                    style={{
+                      position: "absolute",
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      height: "146px", 
+                      background: "rgba(0, 0, 0, 0.25)", 
+                      backdropFilter: "blur(12px)",
+                      WebkitBackdropFilter: "blur(12px)",
+                      borderRadius: "0 0 30px 30px",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      padding: "0 28px",
+                      opacity: isActive ? 1 : 0,
+                      pointerEvents: isActive ? "auto" : "none",
+                      transition: isWrapping ? "none" : "opacity 0.4s ease",
+                      boxSizing: "border-box",
+                    }}
+                  >
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                        {/* Title */}
+                        <span
+                          style={{
+                            fontFamily: "'Plus Jakarta Sans', sans-serif",
+                            fontWeight: 600,
+                            fontSize: "24px",
+                            lineHeight: "30px",
+                            color: "#F5F7FA",
+                          }}
+                        >
+                          {item.title}
+                        </span>
+                        {/* Region Subtitle */}
+                        <span
+                          style={{
+                            fontFamily: "'Plus Jakarta Sans', sans-serif",
+                            fontWeight: 500,
+                            fontSize: "18px",
+                            lineHeight: "23px",
+                            color: "#F5F7FA",
+                          }}
+                        >
+                          {item.region}
+                        </span>
+                      </div>
+
+                      {/* Pricing tier block */}
+                      <span
+                        style={{
+                          fontFamily: "'Plus Jakarta Sans', sans-serif",
+                          fontWeight: 600,
+                          fontSize: "24px",
+                          lineHeight: "30px",
+                          color: "#F5F7FA",
+                        }}
+                      >
+                        {item.price}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          );
-        })}
+              );
+            })}
+          </div>
+        </div>
       </div>
 
       {/* ─── PAGINATION RING TOGGLE CONTROLLERS ─── */}
-      <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center", gap: "19.39px", marginTop: "30px" }}>
+      <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center", gap: "19.39px" }}>
         {/* Left Arrow Button Ring */}
         <button
           onClick={handlePrev}

@@ -682,6 +682,7 @@ export default function ProfileScreen() {
 
               {/* Manage Subscription Button */}
               <button
+                onClick={() => router.push("/profile/managesubscriptions")}
                 style={{
                   height: "46px",
                   background: "rgba(255, 255, 255, 0.05)",
@@ -1098,7 +1099,7 @@ export default function ProfileScreen() {
               }}
               onMouseEnter={(e) => (e.currentTarget.style.background = "#FAFAFA")}
               onMouseLeave={(e) => (e.currentTarget.style.background = "#FFFFFF")}
-              onClick={() => alert("Loading support center networks...")}
+              onClick={() => router.push("/home/supportcenter")}
             >
               <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "16px" }}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A1A1AA" strokeWidth="2">
@@ -1127,7 +1128,7 @@ export default function ProfileScreen() {
               }}
               onMouseEnter={(e) => (e.currentTarget.style.background = "#FAFAFA")}
               onMouseLeave={(e) => (e.currentTarget.style.background = "#FFFFFF")}
-              onClick={() => router.push("/search")}
+              onClick={() => router.push("/profile/savedfarmlands")}
             >
               <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "16px" }}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A1A1AA" strokeWidth="2">

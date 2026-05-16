@@ -43,7 +43,11 @@ const regionalOpportunities = [
   },
 ];
 
-export default function DiscoveryGridSection() {
+interface DiscoveryGridSectionProps {
+  onOpenCompare?: (id: string) => void;
+}
+
+export default function DiscoveryGridSection({ onOpenCompare }: DiscoveryGridSectionProps = {}) {
   const router = useRouter();
 
   return (
@@ -325,7 +329,7 @@ export default function DiscoveryGridSection() {
             <div style={{ width: "100%", paddingTop: "4px" }}>
               <button
                 onClick={() => {
-                  router.push(`/search/farmlanddetails?id=${item.id}`);
+                  router.push("/home/compareassets");
                 }}
                 style={{
                   width: "100%",

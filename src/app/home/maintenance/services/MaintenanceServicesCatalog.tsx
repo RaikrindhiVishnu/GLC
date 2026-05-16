@@ -1,8 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function MaintenanceServicesCatalog() {
+  const router = useRouter();
   const [selectedServices, setSelectedServices] = useState<string[]>([
     "Borewell Installation",
     "Chainlink Fencing",
@@ -660,7 +662,7 @@ export default function MaintenanceServicesCatalog() {
             <button
               onClick={() => {
                 if (selectedServices.length === 0) return alert("Please specify at least one action service estimate configuration item.");
-                alert(`Estimate initialization routine engaged for:\n- ${selectedServices.join("\n- ")}\nSecure cost routing channel encrypted.`);
+                router.push("/home/maintenance?submitted=true");
               }}
               style={{
                 boxSizing: "border-box",

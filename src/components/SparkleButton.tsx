@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 const glassStyle: React.CSSProperties = {
   background: "rgba(255, 255, 255, 0.25)", // Increased from 0.15 for better mobile visibility
@@ -29,6 +30,7 @@ function getDocTop(el: HTMLElement): number {
 }
 
 export default function SparkleButton() {
+  const router = useRouter();
   const [isGlass, setIsGlass] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -81,10 +83,12 @@ export default function SparkleButton() {
 
   return (
     <button
+      onClick={() => router.push("/home/ai-generated-farmlands")}
       className="fixed bottom-8 right-6 md:right-[60px] z-50 flex h-[52px] w-[52px] items-center justify-center rounded-full transition-all duration-500 cursor-pointer"
       style={isGlass ? glassStyle : solidStyle}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      title="A.I. Suggested Farmlands"
     >
       <svg width="24" height="24" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path 

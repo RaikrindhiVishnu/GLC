@@ -12,6 +12,7 @@ import LandSpecificationsBento from "./LandSpecificationsBento";
 import FacilitiesCultivation from "./FacilitiesCultivation";
 import StickySidebarRight from "./StickySidebarRight";
 import DiscoveryGridSection from "./DiscoveryGridSection";
+import FilterPropertiesModal from "./compare/FilterPropertiesModal";
 
 // Comprehensive metadata mapping to deliver premium custom parameters per selected farmland listing
 const farmlandRegistry: Record<
@@ -38,19 +39,19 @@ const farmlandRegistry: Record<
   "match-1": {
     title: "GLC SOS 01",
     price: "₹4.80 Cr",
-    acreage: "5.0 Acres",
-    locationSubtitle: "Guntur District, Andhra Pradesh",
-    tags: ["RED LATERITE", "ACTIVE YIELD"],
+    acreage: "320 Acres",
+    locationSubtitle: "Tanuku, Andhra Pradesh",
+    tags: ["ACTIVE & MANAGED", "RED LATERITE"],
     description: "High-yield mango grove with established irrigation systems and road access.",
     heroBg: "/assets/search/image2.1.png",
     energyAccess: { left: "3-Phase Industrial Grid", right: "Solar-Ready Infrastructure" },
-    hydraulicDepth: { left: "Borewell 100m Depth", right: "Dedicated Canal Access" },
+    hydraulicDepth: { left: "100m", right: "Dedicated Canal Access" },
     lastMile: { left: "40ft Black Top Approach", right: "Internal Private Paved Roads" },
     nearestCity: { left: "Zaheerabad (15km)", right: "Hyderabad Outer Ring (85km)" },
     transitAccess: { left: "RGIA Airport (90m)", right: "Major Freight Terminal (20km)" },
     medicalAccess: { left: "Apollo Regional Outpost (10km)", right: "District General Hospital (12km)" },
     soilComposition: {
-      title: "Black Cotton Soil",
+      title: "Red Laterite",
       desc: "High water retention, ideal for moisture-intensive crops and long-term sustainability.",
     },
     currentVegetation: "Seasonal Rice / Cotton Cultivation",
@@ -59,19 +60,19 @@ const farmlandRegistry: Record<
   "match-2": {
     title: "GLC SOS 02",
     price: "₹6.20 Cr",
-    acreage: "8.5 Acres",
+    acreage: "320 Acres",
     locationSubtitle: "Chittoor Region, Premium Belt",
     tags: ["EXPANSION READY", "HIGH ELEVATION"],
     description: "Elevated terrain suitable for premium grape varieties and boutique agro-tourism.",
     heroBg: "/assets/search/image2.2.svg",
     energyAccess: { left: "Dedicated Sub-station Line", right: "Micro-Hydro Generation Ready" },
-    hydraulicDepth: { left: "Artesian Well System", right: "Perennial Stream Frontage" },
+    hydraulicDepth: { left: "100m", right: "Perennial Stream Frontage" },
     lastMile: { left: "State Highway Direct Exit", right: "Gravel Reinforced Paths" },
     nearestCity: { left: "Tirupati Hub (25km)", right: "Chennai Corridor (110km)" },
     transitAccess: { left: "Renigunta Junction (18km)", right: "Inland Container Depot (30km)" },
     medicalAccess: { left: "Specialty Care Center (15km)", right: "Emergency Helipad Site (5km)" },
     soilComposition: {
-      title: "Red Laterite Loam",
+      title: "Red Laterite",
       desc: "Excellent internal drainage metrics, optimally supporting deep-root fruit orchards.",
     },
     currentVegetation: "Table Grapes & Citrus Groves",
@@ -167,6 +168,7 @@ function InnerFarmlandDetailsView() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const rawId = searchParams.get("id") || "match-1";
+  const [isCompareModalOpen, setIsCompareModalOpen] = React.useState(false);
 
   // Safely resolve active farmland dataset with default fallbacks
   const activeLand = farmlandRegistry[rawId] || farmlandRegistry["match-1"];
@@ -184,13 +186,14 @@ function InnerFarmlandDetailsView() {
       {/* ─── 2. MASTER BODY LAYOUT (Width 1280px centered mapping figma specs) ─── */}
       <div
         style={{
-          width: "100%",
-          maxWidth: "1280px",
+          width: "1280px",
           margin: "64px auto 0",
-          padding: "0 32px",
+          padding: "0 32px 64px",
           boxSizing: "border-box",
           display: "flex",
-          justifyContent: "center",
+          flexDirection: "column",
+          alignItems: "flex-start",
+          isolation: "isolate",
         }}
       >
         {/* Main Flex Row split */}
@@ -198,9 +201,10 @@ function InnerFarmlandDetailsView() {
           style={{
             width: "1216px",
             display: "flex",
-            justifyContent: "space-between",
-            gap: "40px",
+            flexDirection: "row",
             alignItems: "flex-start",
+            padding: "0px",
+            gap: "40px",
           }}
         >
           {/* Left Column (Width 764.41px Stack) */}
@@ -209,6 +213,8 @@ function InnerFarmlandDetailsView() {
               width: "764.41px",
               display: "flex",
               flexDirection: "column",
+              alignItems: "flex-start",
+              padding: "0px",
               gap: "32px",
               flexShrink: 0,
             }}
@@ -241,53 +247,15 @@ function InnerFarmlandDetailsView() {
       </div>
 
       {/* ─── 3. SIMILAR REGIONAL OPPORTUNITIES GRID SECTION ─── */}
-      <DiscoveryGridSection />
+      <DiscoveryGridSection onOpenCompare={(id) => setIsCompareModalOpen(true)} />
 
-      {/* ─── 4. RETURN NAVIGATION CONTROLS FOOTER BANNER ─── */}
-      <div
-        style={{
-          width: "100%",
-          maxWidth: "1216px",
-          margin: "40px auto 64px",
-          padding: "24px 32px",
-          background: "#F1F5F9",
-          borderRadius: "24px",
-          boxSizing: "border-box",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <span
-          style={{
-            fontFamily: "'Plus Jakarta Sans', sans-serif",
-            fontWeight: 600,
-            fontSize: "15px",
-            color: "#45474C",
-          }}
-        >
-          Want to examine alternatives or view interactive regional catalogs?
-        </span>
-        <button
-          onClick={() => router.push("/search")}
-          style={{
-            padding: "12px 28px",
-            background: "#0F2F4C",
-            borderRadius: "100px",
-            border: "none",
-            fontFamily: "'Plus Jakarta Sans', sans-serif",
-            fontWeight: 700,
-            fontSize: "14px",
-            color: "#FFFFFF",
-            cursor: "pointer",
-            boxShadow: "0px 2px 8px rgba(15, 47, 76, 0.2)",
-          }}
-        >
-          ← BACK TO SEARCH LISTINGS
-        </button>
-      </div>
+      {/* ─── POPUP COMPARE MODAL OVERLAY ─── */}
+      <FilterPropertiesModal
+        isOpen={isCompareModalOpen}
+        onClose={() => setIsCompareModalOpen(false)}
+      />
 
-      {/* ─── 5. GLOBAL CTA & REUSABLE FOOTER LAYER ─── */}
+      {/* ─── 6. GLOBAL CTA & REUSABLE FOOTER LAYER ─── */}
       <CTA />
       <Footer />
     </div>

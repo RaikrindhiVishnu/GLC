@@ -25,7 +25,7 @@ export default function CompareAssetsWorkspacePage() {
         style={{
           position: "relative",
           width: "100%",
-          height: "960px",
+          height: "100vh",
           background: "linear-gradient(0deg, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35))",
           overflow: "hidden",
           flexShrink: 0,
@@ -287,8 +287,8 @@ export default function CompareAssetsWorkspacePage() {
             width: "100%",
             maxWidth: "1200px",
             left: "50%",
-            transform: "translateX(-50%)",
-            top: "348px",
+            top: "50%",
+            transform: "translate(-50%, -50%)",
             zIndex: 10,
           }}
         >
@@ -298,7 +298,7 @@ export default function CompareAssetsWorkspacePage() {
               fontFamily: "'Plus Jakarta Sans', sans-serif",
               fontWeight: 800,
               fontSize: "100px",
-              lineHeight: "72px",
+              lineHeight: "100px",
               textAlign: "center",
               letterSpacing: "-1.8px",
               color: "#FFFFFF",

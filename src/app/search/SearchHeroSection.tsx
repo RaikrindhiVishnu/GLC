@@ -3,26 +3,31 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import FilterOverlay from "./filter/FilterOverlay";
 
 export default function SearchHeroSection() {
   const router = useRouter();
   // Straightforward editable query string devoid of highlights or squashed text spacing gaps
   const [searchVal, setSearchVal] = useState("I am looking for a farm in Andhra Pradesh with a budget of ₹5Cr");
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   return (
     <section
       id="search-hero-screen"
       style={{
-        position: "relative",
+        position: "relative" as const,
         width: "100%",
-        height: "960px", // Master depth bounds spec
+        height: "100vh", // Exactly fits onto one screen depth without native vertical scrollbars
+        maxHeight: "100vh",
         overflow: "hidden",
+        boxSizing: "border-box",
       }}
+      className="flex flex-col items-center justify-start"
     >
       {/* Background Cover Image with Gradient Darkening Overlay */}
       <div
         style={{
-          position: "absolute",
+          position: "absolute" as const,
           inset: 0,
           background: "linear-gradient(0deg, rgba(0,0,0,0.4), rgba(0,0,0,0.4))",
           zIndex: 1,
@@ -37,20 +42,17 @@ export default function SearchHeroSection() {
         style={{ objectFit: "cover", objectPosition: "center" }}
       />
 
-      {/* ─── TOP HEADER LAYER CONTAINING LOGO, CENTRAL MENU CAPSULE, AND RIGHTMOST CONTROLS ─── */}
+      {/* ─── TOP HEADER LAYER (Fully responsive container avoiding horizontal bleeds) ─── */}
       <div
         style={{
-          position: "absolute",
+          position: "absolute" as const,
           top: 0,
           left: 0,
           right: 0,
           zIndex: 20,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "0 60px",
-          height: "110px",
+          boxSizing: "border-box",
         }}
+        className="px-4 md:px-8 xl:px-[60px] py-4 md:py-0 min-h-[96px] md:h-[110px] flex flex-wrap md:flex-nowrap justify-between items-center gap-4 w-full"
       >
         {/* Leftmost Brand Logo */}
         <div style={{ display: "flex", alignItems: "center", cursor: "pointer", flexShrink: 0 }} onClick={() => router.push("/home")}>
@@ -64,7 +66,6 @@ export default function SearchHeroSection() {
         </div>
 
         {/* Central Left Menu Navigation Pill Capsule */}
-        {/* Rendered beautifully as a high-fidelity glossy frosted glass card */}
         <div
           style={{
             display: "flex",
@@ -72,18 +73,16 @@ export default function SearchHeroSection() {
             alignItems: "center",
             padding: "10px",
             gap: "10px",
-            width: "341px",
-            height: "72px",
             background: "rgba(255, 255, 255, 0.12)",
             border: "1px solid rgba(255, 255, 255, 0.3)",
-            boxShadow:
-              "0px 12px 32px rgba(0, 0, 0, 0.12), inset 0px 1px 2px rgba(255, 255, 255, 0.4)",
+            boxShadow: "0px 12px 32px rgba(0, 0, 0, 0.12), inset 0px 1px 2px rgba(255, 255, 255, 0.4)",
             backdropFilter: "blur(50px)",
             WebkitBackdropFilter: "blur(50px)",
             borderRadius: "100px",
-            flexShrink: 0,
             transition: "all 0.3s ease",
+            boxSizing: "border-box",
           }}
+          className="w-auto max-w-full h-auto md:h-[72px] flex-shrink-0 order-3 md:order-none mx-auto md:mx-0"
           onMouseEnter={(e) => {
             e.currentTarget.style.background = "rgba(255, 255, 255, 0.18)";
             e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.5)";
@@ -101,8 +100,6 @@ export default function SearchHeroSection() {
               flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",
-              width: "48px",
-              height: "48px",
               borderRadius: "100px",
               background: "transparent",
               border: "none",
@@ -110,10 +107,11 @@ export default function SearchHeroSection() {
               flexShrink: 0,
               transition: "transform 0.2s ease",
             }}
+            className="w-10 h-10 md:w-12 md:h-12"
             onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
             onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
           >
-            <svg width="21.62" height="21.62" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
               <polyline points="9 22 9 12 15 12 15 22"></polyline>
             </svg>
@@ -126,28 +124,25 @@ export default function SearchHeroSection() {
               flexDirection: "row",
               justifyContent: "center",
               alignItems: "center",
-              padding: "20px 0",
-              width: "147px",
-              height: "52px",
               background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)",
               borderRadius: "9999px",
               border: "none",
               boxShadow: "0px 20px 25px -5px rgba(78,95,126,0.2), 0px 8px 10px -6px rgba(78,95,126,0.2)",
-              position: "relative",
+              position: "relative" as const,
               flexShrink: 0,
               cursor: "default",
+              boxSizing: "border-box",
             }}
+            className="w-[100px] md:w-[147px] h-[40px] md:h-[52px]"
           >
             <span
               style={{
                 fontFamily: "'Plus Jakarta Sans', sans-serif",
                 fontWeight: 800,
-                fontSize: "16px",
-                lineHeight: "28px",
-                textTransform: "uppercase",
                 color: "#FFFFFF",
                 letterSpacing: "0.02em",
               }}
+              className="text-xs md:text-base leading-tight md:leading-[28px] uppercase"
             >
               SEARCH
             </span>
@@ -161,8 +156,6 @@ export default function SearchHeroSection() {
               flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",
-              width: "48px",
-              height: "48px",
               borderRadius: "100px",
               background: "transparent",
               border: "none",
@@ -170,10 +163,11 @@ export default function SearchHeroSection() {
               flexShrink: 0,
               transition: "transform 0.2s ease",
             }}
+            className="w-10 h-10 md:w-12 md:h-12"
             onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
             onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
           >
-            <Image src="/assets/home/HeroScreen/Vector.svg" alt="Wishlist navigation" width={22} height={20} />
+            <Image src="/assets/home/HeroScreen/Vector.svg" alt="Wishlist navigation" width={20} height={18} />
           </button>
 
           {/* User Profile Tab Button */}
@@ -184,8 +178,6 @@ export default function SearchHeroSection() {
               flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",
-              width: "48px",
-              height: "48px",
               borderRadius: "100px",
               background: "transparent",
               border: "none",
@@ -193,10 +185,11 @@ export default function SearchHeroSection() {
               flexShrink: 0,
               transition: "transform 0.2s ease",
             }}
+            className="w-10 h-10 md:w-12 md:h-12"
             onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
             onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
           >
-            <Image src="/assets/home/HeroScreen/user 1.png" alt="User routing tab" width={21.62} height={21.62} />
+            <Image src="/assets/home/HeroScreen/user 1.png" alt="User routing tab" width={20} height={20} />
           </button>
         </div>
 
@@ -208,8 +201,6 @@ export default function SearchHeroSection() {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              width: "52px",
-              height: "52px",
               background: "rgba(255,255,255,0.1)",
               boxShadow: "0px 10px 7.5px rgba(0,0,0,0.05), inset 3.76px 5px 2.5px -3.76px rgba(255,255,255,0.55)",
               backdropFilter: "blur(62px)",
@@ -217,9 +208,11 @@ export default function SearchHeroSection() {
               borderRadius: "50%",
               border: "none",
               cursor: "pointer",
+              boxSizing: "border-box",
             }}
+            className="w-10 h-10 md:w-[52px] md:h-[52px]"
           >
-            <Image src="/assets/home/HeroScreen/unlock 1.svg" alt="Unlock Controls" width={26.32} height={26.32} />
+            <Image src="/assets/home/HeroScreen/unlock 1.svg" alt="Unlock Controls" width={22} height={22} />
           </button>
 
           {/* Notifications ring with live alert dot */}
@@ -228,8 +221,6 @@ export default function SearchHeroSection() {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              width: "52px",
-              height: "52px",
               background: "rgba(255,255,255,0.1)",
               boxShadow: "0px 10px 7.5px rgba(0,0,0,0.05), inset 3.76px 5px 2.5px -3.76px rgba(255,255,255,0.55)",
               backdropFilter: "blur(62px)",
@@ -237,15 +228,17 @@ export default function SearchHeroSection() {
               borderRadius: "50%",
               border: "none",
               cursor: "pointer",
-              position: "relative",
+              position: "relative" as const,
+              boxSizing: "border-box",
             }}
+            className="w-10 h-10 md:w-[52px] md:h-[52px]"
           >
-            <Image src="/assets/home/HeroScreen/notification.svg" alt="Notifications context" width={26.32} height={26.32} />
+            <Image src="/assets/home/HeroScreen/notification.svg" alt="Notifications context" width={22} height={22} />
             <span
               style={{
-                position: "absolute",
-                top: "13.5px",
-                right: "11.6px",
+                position: "absolute" as const,
+                top: "25%",
+                right: "22%",
                 width: "6.3px",
                 height: "6.3px",
                 background: "#E53935",
@@ -259,14 +252,14 @@ export default function SearchHeroSection() {
           <div
             onClick={() => router.push("/profile")}
             style={{
-              width: "52px",
-              height: "52px",
               borderRadius: "50%",
               boxShadow: "0px 1.8px 10.8px rgba(0, 0, 0, 0.03)",
               overflow: "hidden",
               cursor: "pointer",
-              position: "relative",
+              position: "relative" as const,
+              boxSizing: "border-box",
             }}
+            className="w-10 h-10 md:w-[52px] md:h-[52px]"
           >
             <img
               src="/assets/home/HeroScreen/person.svg"
@@ -277,154 +270,106 @@ export default function SearchHeroSection() {
         </div>
       </div>
 
-      {/* ─── FOREGROUND HERO TYPOGRAPHY ─── */}
-      <div
+      {/* ─── MASTER FOREGROUND CONTENT LAYER (Groups Heading and Search Bar into an unbreakable vertical flex layout natively eliminating collision) ─── */}
+      <div 
         style={{
-          position: "absolute",
-          left: "50%",
-          transform: "translateX(-50%)",
-          top: "220px",
-          width: "100%",
-          maxWidth: "1018px",
+          position: "absolute" as const,
+          inset: 0,
           zIndex: 5,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          padding: "0 20px",
+          boxSizing: "border-box",
         }}
+        className="flex flex-col items-center justify-center px-4 pointer-events-none"
       >
-        <h1
-          style={{
-            margin: 0,
-            fontFamily: "'Plus Jakarta Sans', sans-serif",
-            fontWeight: 800,
-            fontSize: "100px",
-            lineHeight: "106px",
-            letterSpacing: "-5px",
-            textAlign: "center",
-            color: "#FFFFFF",
-            filter: "drop-shadow(0px 1px 1px rgba(0,0,0,0.05))",
-          }}
-        >
-          Find your next<br />high-yield asset
-        </h1>
-      </div>
+        <div className="w-full max-w-[1018px] flex flex-col items-center gap-6 md:gap-10 pointer-events-auto mt-12 md:mt-16">
+          
+          {/* Foreground Title Typography */}
+          <h1
+            className="text-center font-extrabold text-[38px] leading-[44px] md:text-[70px] md:leading-[76px] xl:text-[100px] xl:leading-[106px] tracking-tight xl:tracking-[-5px] text-white m-0 drop-shadow-xs"
+            style={{
+              fontFamily: "'Plus Jakarta Sans', sans-serif",
+            }}
+          >
+            Find your next<br />high-yield asset
+          </h1>
 
-      {/* ─── INTERACTIVE SEARCH QUERY BAR (PREMIUM GLASS CARD) ─── */}
-      <div
-        style={{
-          position: "absolute",
-          left: "50%",
-          transform: "translateX(-50%)",
-          top: "513px",
-          width: "862px",
-          height: "88px",
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: "10px 18px 10px 40px",
-          background: "rgba(255, 255, 255, 0.12)",
-          border: "1px solid rgba(255, 255, 255, 0.3)",
-          boxShadow:
-            "0px 12px 32px rgba(0, 0, 0, 0.12), inset 0px 1px 2px rgba(255, 255, 255, 0.4)",
-          backdropFilter: "blur(50px)",
-          WebkitBackdropFilter: "blur(50px)",
-          borderRadius: "100px",
-          zIndex: 5,
-          transition: "all 0.3s ease",
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.background = "rgba(255, 255, 255, 0.16)";
-          e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.45)";
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.background = "rgba(255, 255, 255, 0.12)";
-          e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.3)";
-        }}
-      >
-        {/* Straightforward editable input bar eliminating parsed highlight overlays completely to guarantee natural flawless character kerning spacing */}
-        <input
-          type="text"
-          value={searchVal}
-          onChange={(e) => setSearchVal(e.target.value)}
-          style={{
-            flex: 1,
-            background: "transparent",
-            border: "none",
-            outline: "none",
-            fontFamily: "'Plus Jakarta Sans', sans-serif",
-            fontWeight: 500,
-            fontSize: "24px",
-            lineHeight: "39px",
-            color: "#FFFFFF",
-            paddingRight: "20px",
-          }}
-        />
+          {/* Interactive Search Query Bar preserving exact visual structure */}
+          <div
+            style={{
+              background: "rgba(255, 255, 255, 0.12)",
+              border: "1px solid rgba(255, 255, 255, 0.3)",
+              boxShadow: "0px 12px 32px rgba(0, 0, 0, 0.12), inset 0px 1px 2px rgba(255, 255, 255, 0.4)",
+              backdropFilter: "blur(50px)",
+              WebkitBackdropFilter: "blur(50px)",
+              borderRadius: "100px",
+              transition: "all 0.3s ease",
+              boxSizing: "border-box",
+            }}
+            className="w-full max-w-[862px] min-h-[64px] md:h-[88px] flex items-center justify-between px-3 md:pl-10 md:pr-[18px]"
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "rgba(255, 255, 255, 0.16)";
+              e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.45)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "rgba(255, 255, 255, 0.12)";
+              e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.3)";
+            }}
+          >
+            {/* Natural character kerning text input bar */}
+            <input
+              type="text"
+              value={searchVal}
+              onChange={(e) => setSearchVal(e.target.value)}
+              style={{
+                background: "transparent",
+                border: "none",
+                outline: "none",
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                fontWeight: 500,
+                color: "#FFFFFF",
+              }}
+              className="flex-1 text-sm md:text-[24px] md:leading-[39px] pl-2 pr-4 py-2 w-full"
+            />
 
-        {/* Rightmost section: perfectly wrapped inside a pure white round circular disc button */}
-        <button
-          style={{
-            width: "52px",
-            height: "52px",
-            background: "#FFFFFF",
-            borderRadius: "50%",
-            border: "none",
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flexShrink: 0,
-            boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-            transition: "all 0.2s ease",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = "scale(1.08)";
-            e.currentTarget.style.boxShadow = "0px 6px 16px rgba(0, 0, 0, 0.15)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = "scale(1)";
-            e.currentTarget.style.boxShadow = "0px 4px 12px rgba(0, 0, 0, 0.1)";
-          }}
-        >
-          <Image
-            src="/assets/home/HeroScreen/inside search.svg"
-            alt="Filter Sliders Controls button"
-            width={24}
-            height={24}
-            style={{ objectFit: "contain" }}
-          />
-        </button>
-      </div>
+            {/* Filter Sliders trigger disc */}
+            <button
+              onClick={() => setIsFilterOpen(true)}
+              style={{
+                background: "#FFFFFF",
+                borderRadius: "50%",
+                border: "none",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+                boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+                transition: "all 0.2s ease",
+              }}
+              className="w-10 h-10 md:w-[52px] md:h-[52px]"
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "scale(1.08)";
+                e.currentTarget.style.boxShadow = "0px 6px 16px rgba(0, 0, 0, 0.15)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "scale(1)";
+                e.currentTarget.style.boxShadow = "0px 4px 12px rgba(0, 0, 0, 0.1)";
+              }}
+            >
+              <Image
+                src="/assets/home/HeroScreen/inside search.svg"
+                alt="Filter Sliders Controls button"
+                width={20}
+                height={20}
+                style={{ objectFit: "contain" }}
+              />
+            </button>
+          </div>
 
-      {/* ─── RIGHT BOTTOM FLOATING TRIGGER (Left menu.svg mounted natively exactly as commanded) ─── */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: "40px",
-          right: "60px", // Anchored securely in the right bottom corner of hero page
-          zIndex: 20,
-          cursor: "pointer",
-          transition: "transform 0.2s ease, filter 0.2s ease",
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.transform = "scale(1.1)";
-          e.currentTarget.style.filter = "drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.4))";
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.transform = "scale(1)";
-          e.currentTarget.style.filter = "none";
-        }}
-      >
-        <div style={{ position: "relative", width: "72px", height: "72px" }}>
-          <Image
-            src="/assets/home/Left menu.svg"
-            alt="Left menu asset client context trigger"
-            fill
-            style={{ objectFit: "contain" }}
-          />
         </div>
       </div>
+
+      {/* Mounted high-fidelity Filter Matrix Dialog Overlay */}
+      <FilterOverlay isOpen={isFilterOpen} onClose={() => setIsFilterOpen(false)} />
 
     </section>
   );
