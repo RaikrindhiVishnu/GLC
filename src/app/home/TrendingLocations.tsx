@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 const locations = [
   { id: "loc-tanuku", name: "Tanuku", img: "/assets/home/TrendingLocations/tanuku.svg" },
@@ -11,175 +12,64 @@ const locations = [
 ];
 
 export default function TrendingLocations() {
-  const [scale, setScale] = useState(1);
-  const scalerRef = useRef<HTMLDivElement>(null);
-  const shellRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    function update() {
-      const vw = window.innerWidth;
-      const targetWidth = 1360;
-      const currentScale = vw < targetWidth ? vw / targetWidth : 1;
-      setScale(currentScale);
-      if (scalerRef.current) {
-        scalerRef.current.style.transform = `scale(${currentScale})`;
-      }
-      if (shellRef.current) {
-        shellRef.current.style.height = `${402 * currentScale}px`;
-      }
-    }
-    update();
-    window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
-  }, []);
-
   return (
-    <section
-      id="trending-locations"
-      style={{
-        width: "100%",
-        margin: "0 auto",
-        padding: "70px 0",
-        background: "#FFFFFF",
-        display: "flex",
-        justifyContent: "center",
-        overflow: "hidden",
-        boxSizing: "border-box",
-      }}
-    >
-      <div 
-        ref={shellRef} 
-        style={{ 
-          position: "relative", 
-          width: "1280px", 
-          maxWidth: "100%", 
-          height: "402px",
-          flexShrink: 0 
-        }}
-      >
-        <div
-          ref={scalerRef}
-          style={{
-            position: "absolute",
-            top: 0,
-            left: "50%",
-            marginLeft: "-640px",
-            width: "1280px",
-            height: "402px",
-            transformOrigin: "top center",
-            willChange: "transform",
-            display: "flex",
-            flexDirection: "column",
-            gap: "32px",
-          }}
-        >
-          {/* Exactly the original Hardcoded figma layout container elements with no strings modified */}
-          {/* Header */}
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              width: "1280px",
-            }}
-          >
-            <h2
-              style={{
-                margin: 0,
-                fontFamily: "'Plus Jakarta Sans', sans-serif",
-                fontWeight: 800,
-                fontSize: "24px",
-                lineHeight: "40px",
-                color: "#0F2F4C",
-              }}
-            >
-              Top Selling Locations
-            </h2>
-            <button
-              style={{
-                background: "none",
-                border: "none",
-                fontFamily: "'Plus Jakarta Sans', sans-serif",
-                fontWeight: 800,
-                fontSize: "18px",
-                lineHeight: "40px",
-                color: "#0F2F4C",
-                cursor: "pointer",
-              }}
-            >
-              View All
-            </button>
-          </div>
+    <section id="trending-locations" className="w-full bg-transparent py-12 lg:py-[70px] overflow-hidden">
 
-          {/* Cards Container */}
-          <div
-            style={{
-              display: "flex",
-              gap: "30px",
-              width: "1280px",
-              overflowX: "auto",
-              paddingBottom: "10px",
-              scrollbarWidth: "none",
-              msOverflowStyle: "none",
-            }}
-          >
-            <style dangerouslySetInnerHTML={{ __html: `
-              #trending-locations ::-webkit-scrollbar { display: none; }
-            `}} />
-            {locations.map((loc) => (
-              <div
-                key={loc.id}
-                style={{
-                  position: "relative",
-                  width: "320px",
-                  height: "320px",
-                  minWidth: "320px",
-                  borderRadius: "48px",
-                  overflow: "hidden",
-                  cursor: "pointer",
-                  transition: "transform 0.3s ease",
-                  boxSizing: "border-box",
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.02)")}
-                onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+      {/* Header — constrained to page margin */}
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 lg:mb-8">
+        <div className="flex justify-between items-center w-full">
+          <h2 className="font-jakarta font-extrabold text-[20px] md:text-[24px] leading-[1.2] text-brand-primary m-0 flex gap-x-1.5">
+            {"Top Selling Locations".split(" ").map((word, i) => (
+              <motion.span
+                key={i}
+                initial={{ opacity: 0, filter: "blur(8px)" }}
+                whileInView={{ opacity: 1, filter: "blur(0px)" }}
+                transition={{ duration: 0.6, delay: i * 0.15 }}
+                viewport={{ once: true }}
               >
-                {/* Image + Overlay */}
-                <div
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    background: "linear-gradient(0deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0))",
-                    zIndex: 1,
-                  }}
-                />
-                <Image
-                  src={loc.img}
-                  alt={loc.name}
-                  fill
-                  style={{ objectFit: "cover" }}
-                />
-
-                {/* Location Name */}
-                <div
-                  style={{
-                    position: "absolute",
-                    left: "24px",
-                    top: "268px",
-                    zIndex: 2,
-                    fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    fontWeight: 700,
-                    fontSize: "20px",
-                    lineHeight: "28px",
-                    color: "#FFFFFF",
-                  }}
-                >
-                  {loc.name}
-                </div>
-              </div>
+                {word}
+              </motion.span>
             ))}
-          </div>
+          </h2>
+          <button className="bg-transparent border-none font-jakarta font-extrabold text-[14px] md:text-[18px] leading-10 text-brand-primary cursor-pointer [-webkit-tap-highlight-color:transparent] hover:opacity-70 transition-opacity">
+            View All
+          </button>
         </div>
       </div>
+
+      {/* Cards — full-width scroll container matching PopularFarmlands layout */}
+      <div className="flex lg:grid lg:grid-cols-4 gap-6.5 lg:gap-6 w-full overflow-x-auto lg:overflow-x-visible pb-4 lg:pb-0 hide-scrollbar pl-4 sm:pl-6 lg:pl-8 xl:pl-[calc((100vw-1280px)/2+32px)] pr-4 sm:pr-6 lg:pr-8">
+        <style dangerouslySetInnerHTML={{ __html: `
+          #trending-locations .hide-scrollbar::-webkit-scrollbar { display: none; }
+          #trending-locations .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        `}} />
+
+        {locations.map((loc, i) => (
+          <motion.div
+            key={loc.id}
+            initial={{ opacity: 0, filter: "blur(8px)" }}
+            whileInView={{ opacity: 1, filter: "blur(0px)" }}
+            transition={{ duration: 0.6, delay: i * 0.1 }}
+            viewport={{ once: true }}
+            className="relative w-57.5 h-57.5 sm:w-67.5 sm:h-67.5 lg:w-full lg:h-auto lg:aspect-square min-w-57.5 sm:min-w-67.5 lg:min-w-0 rounded-3xl lg:rounded-4xl overflow-hidden cursor-pointer shrink-0 box-border group"
+          >
+            {/* Image + Overlay */}
+            <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/10 to-transparent z-10" />
+            <Image
+              src={loc.img}
+              alt={loc.name}
+              fill
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+
+            {/* Location Name */}
+            <div className="absolute left-5 bottom-6 z-20 font-jakarta font-bold text-[16px] sm:text-[18px] md:text-[20px] leading-7 text-white">
+              {loc.name}
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
     </section>
   );
 }

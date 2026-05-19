@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 
 export default function VerificationStandardsSection() {
   const [scale, setScale] = useState(1);
@@ -26,7 +27,11 @@ export default function VerificationStandardsSection() {
   }, []);
 
   return (
-    <section
+    <motion.section
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.7 }}
       style={{
         width: "100%",
         margin: "80px 0",
@@ -134,22 +139,32 @@ export default function VerificationStandardsSection() {
 
           {/* Right Feature Itemized Column */}
           <div style={{ display: "flex", flexDirection: "column", gap: "48px", flex: 1, boxSizing: "border-box" }}>
-            <h2
+            <motion.h2
+              initial={{ opacity: 0, filter: "blur(8px)", y: 10 }}
+              whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
               style={{
                 margin: 0,
                 fontFamily: "'Plus Jakarta Sans', sans-serif",
                 fontWeight: 700,
-                fontSize: "30px",
+                fontSize: "36px",
                 color: "#131600",
                 letterSpacing: "-0.9px",
               }}
             >
               The GLC Verification Standard
-            </h2>
+            </motion.h2>
 
             <div style={{ display: "flex", flexDirection: "column", gap: "36px" }}>
               {/* Standard 1 */}
-              <div style={{ display: "flex", flexDirection: "row", gap: "24px", alignItems: "flex-start" }}>
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                style={{ display: "flex", flexDirection: "row", gap: "24px", alignItems: "flex-start" }}
+              >
                 <div
                   style={{
                     width: "56px",
@@ -178,10 +193,16 @@ export default function VerificationStandardsSection() {
                     Deep-dive land verification reports mapping every clear title trace to guarantee true owner integrity and undisputed agricultural zoning permissions.
                   </p>
                 </div>
-              </div>
+              </motion.div>
 
               {/* Standard 2 */}
-              <div style={{ display: "flex", flexDirection: "row", gap: "24px", alignItems: "flex-start" }}>
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                style={{ display: "flex", flexDirection: "row", gap: "24px", alignItems: "flex-start" }}
+              >
                 <div
                   style={{
                     width: "56px",
@@ -207,10 +228,16 @@ export default function VerificationStandardsSection() {
                     Local ground-level intelligence gathering to verify physical site boundaries, true neighborhood sentiment, and local access network constraints.
                   </p>
                 </div>
-              </div>
+              </motion.div>
 
               {/* Standard 3 */}
-              <div style={{ display: "flex", flexDirection: "row", gap: "24px", alignItems: "flex-start" }}>
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                style={{ display: "flex", flexDirection: "row", gap: "24px", alignItems: "flex-start" }}
+              >
                 <div
                   style={{
                     width: "56px",
@@ -237,11 +264,11 @@ export default function VerificationStandardsSection() {
                     Scientific soil analyses, water table projections, active yielding capacity forecasts, and long-term biological viability metrics given directly from native tests.
                   </p>
                 </div>
-              </div>
+              </motion.div>
             </div>
           </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

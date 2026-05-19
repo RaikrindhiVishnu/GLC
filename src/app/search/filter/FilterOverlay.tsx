@@ -80,7 +80,7 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
             style={{
               display: "flex",
               alignItems: "center",
-              justifyCenter: "center",
+              justifyContent: "center",
               width: "30px",
               height: "30px",
               background: "transparent",

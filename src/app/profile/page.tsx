@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -101,245 +103,13 @@ export default function ProfileScreen() {
           </svg>
         </div>
 
-        {/* ─── TOP MASTER BAR WITH CAPSULE NAVIGATION ─── */}
-        <div
-          style={{
-            position: "absolute",
-            top: "59px",
-            left: "0px",
-            right: "0px",
-            height: "72px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: "0 60px",
-            zIndex: 30,
-          }}
-        >
-          {/* Logo Container */}
-          <div
-            style={{ display: "flex", alignItems: "center", cursor: "pointer", flexShrink: 0 }}
-            onClick={() => router.push("/home")}
-          >
-            <Image
-              src="/assets/common/Logo green land 1.svg"
-              alt="Green Land Capital Brand Logo"
-              width={150}
-              height={64}
-              style={{ objectFit: "contain" }}
-            />
-          </div>
-
-          {/* Master 4-Slot Capsule Container */}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              padding: "10px",
-              gap: "10px",
-              width: "341px",
-              height: "72px",
-              background: "rgba(255, 255, 255, 0.1)",
-              boxShadow: "0px 8px 6px rgba(0, 0, 0, 0.05), inset 3px 4px 2px -3px rgba(255, 255, 255, 0.55), inset 0px -1px 1px rgba(255, 255, 255, 0.25), inset 0px 1px 1px rgba(255, 255, 255, 0.25)",
-              backdropFilter: "blur(50px)",
-              WebkitBackdropFilter: "blur(50px)",
-              borderRadius: "100px",
-              flexShrink: 0,
-            }}
-          >
-            {/* Slot 1: HOME Navigation Trigger */}
-            <button
-              onClick={() => router.push("/home")}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                width: "48px",
-                height: "48px",
-                borderRadius: "100px",
-                background: "transparent",
-                border: "none",
-                cursor: "pointer",
-                flexShrink: 0,
-                transition: "transform 0.2s ease",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
-              onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-            >
-              <svg width="21.62" height="21.62" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                <polyline points="9 22 9 12 15 12 15 22"></polyline>
-              </svg>
-            </button>
-
-            {/* Slot 2: SEARCH Trigger */}
-            <button
-              onClick={() => router.push("/search")}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                width: "48px",
-                height: "48px",
-                borderRadius: "100px",
-                background: "transparent",
-                border: "none",
-                cursor: "pointer",
-                flexShrink: 0,
-                transition: "transform 0.2s ease",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
-              onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-            >
-              <Image src="/assets/home/HeroScreen/search.svg" alt="Search routing link" width={22} height={22} />
-            </button>
-
-            {/* Slot 3: WISHLIST / PRICING Trigger */}
-            <button
-              onClick={() => router.push("/pricing")}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                width: "48px",
-                height: "48px",
-                borderRadius: "100px",
-                background: "transparent",
-                border: "none",
-                cursor: "pointer",
-                flexShrink: 0,
-                transition: "transform 0.2s ease",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
-              onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-            >
-              <Image src="/assets/home/HeroScreen/Vector.svg" alt="Wishlist/Pricing link" width={22} height={20} />
-            </button>
-
-            {/* Slot 4: Active Expanded PROFILE Button */}
-            <button
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-                padding: "20px 0",
-                width: "147px",
-                height: "52px",
-                background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)",
-                borderRadius: "9999px",
-                border: "none",
-                boxShadow: "0px 20px 25px -5px rgba(78, 95, 126, 0.2), 0px 8px 10px -6px rgba(78, 95, 126, 0.2)",
-                position: "relative",
-                flexShrink: 0,
-                cursor: "default",
-              }}
-            >
-              <span
-                style={{
-                  fontFamily: "'Plus Jakarta Sans', sans-serif",
-                  fontWeight: 800,
-                  fontSize: "16px",
-                  lineHeight: "28px",
-                  textTransform: "uppercase",
-                  color: "#FFFFFF",
-                  letterSpacing: "0.02em",
-                }}
-              >
-                PROFILE
-              </span>
-            </button>
-          </div>
-
-          {/* Rightmost Auxiliary Bar Buttons */}
-          <div style={{ display: "flex", alignItems: "center", gap: "10px", flexShrink: 0 }}>
-            {/* Unlock icon pill */}
-            <button
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: "52px",
-                height: "52px",
-                background: "rgba(255, 255, 255, 0.1)",
-                boxShadow: "0px 10px 7.5px rgba(0,0,0,0.05), inset 3.76px 5px 2.5px -3.76px rgba(255,255,255,0.55)",
-                backdropFilter: "blur(62px)",
-                WebkitBackdropFilter: "blur(62px)",
-                borderRadius: "50%",
-                border: "none",
-                cursor: "pointer",
-              }}
-            >
-              <Image src="/assets/home/HeroScreen/unlock 1.svg" alt="Unlock actions" width={26.32} height={26.32} />
-            </button>
-
-            {/* Notifications ring with live alert dot */}
-            <button
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: "52px",
-                height: "52px",
-                background: "rgba(255, 255, 255, 0.1)",
-                boxShadow: "0px 10px 7.5px rgba(0,0,0,0.05), inset 3.76px 5px 2.5px -3.76px rgba(255,255,255,0.55)",
-                backdropFilter: "blur(62px)",
-                WebkitBackdropFilter: "blur(62px)",
-                borderRadius: "50%",
-                border: "none",
-                cursor: "pointer",
-                position: "relative",
-              }}
-            >
-              <Image src="/assets/home/HeroScreen/notification.svg" alt="Live Alerts" width={26.32} height={26.32} />
-              <span
-                style={{
-                  position: "absolute",
-                  top: "13.53px",
-                  right: "11.61px",
-                  width: "6.3px",
-                  height: "6.3px",
-                  background: "#E53935",
-                  border: "0.9px solid rgba(255, 255, 255, 0.9)",
-                  borderRadius: "50%",
-                  zIndex: 2,
-                }}
-              />
-            </button>
-
-            {/* User avatar round bubble */}
-            <div
-              style={{
-                width: "52px",
-                height: "52px",
-                borderRadius: "50%",
-                boxShadow: "0px 1.8px 10.8px rgba(0, 0, 0, 0.03)",
-                overflow: "hidden",
-                cursor: "pointer",
-                position: "relative",
-                border: "2px solid rgba(255, 255, 255, 0.8)",
-              }}
-            >
-              <img
-                src="/assets/stats/person1.1.svg"
-                alt="Active session account"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  objectPosition: "center",
-                }}
-              />
-            </div>
-          </div>
-        </div>
+        <Navbar variant="app" active="profile" />
 
         {/* ─── CENTRAL HERO GLASSMORPHIC PROFILE CONTAINER (Frame 12) ─── */}
-        <div
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.2 }}
           style={{
             position: "absolute",
             width: "569px",
@@ -711,16 +481,19 @@ export default function ProfileScreen() {
               </button>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* ─── LEFT SIDEBAR ARRAYS: IDENTITY & COMPLIANCE ─── */}
-        <div
+        <motion.div
+          initial={{ opacity: 0, x: -30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.7, delay: 0.35 }}
           style={{
             position: "absolute",
             width: "391px",
             height: "536px",
             left: "23px",
-            top: "502px", // aligns flush below header cover landscape level
+            top: "502px",
             background: "#FFFFFF",
             borderRadius: "32px",
             boxShadow: "0px 10px 25px -5px rgba(0, 0, 0, 0.03)",
@@ -923,11 +696,14 @@ export default function ProfileScreen() {
               </span>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* ─── RIGHT SIDEBAR ARRAYS: ACTIVE OPERATIONS & PREFERENCES ─── */}
         {/* Block 1: Active Tracking */}
-        <div
+        <motion.div
+          initial={{ opacity: 0, x: 30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.7, delay: 0.35 }}
           style={{
             position: "absolute",
             width: "377px",
@@ -1043,16 +819,19 @@ export default function ProfileScreen() {
               </svg>
             </button>
           </div>
-        </div>
+        </motion.div>
 
         {/* Block 2: Support & Preferences Section */}
-        <div
+        <motion.div
+          initial={{ opacity: 0, x: 30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.7, delay: 0.5 }}
           style={{
             position: "absolute",
             width: "377px",
             height: "157px",
             left: "1034px",
-            top: "929px", // spaced exactly beneath timeline items matching screenshot vertical index
+            top: "929px",
             display: "flex",
             flexDirection: "column",
             gap: "12px",
@@ -1143,7 +922,7 @@ export default function ProfileScreen() {
               </svg>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
 
       {/* ─── TRAILING SIBLING CALL TO ACTION & FOOTER BANNER (100% Edge-to-Edge) ─── */}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 // Complete pristine list of 7 Staggered Liquid Glass Chips mapped exactly to user input tokens
 const initialGlassChips = [
@@ -41,9 +42,13 @@ export default function CategoriesFilterTabs() {
           msOverflowStyle: "none",
         }}
       >
-        {glassChips.map((chip) => (
-          <div
+        {glassChips.map((chip, i) => (
+          <motion.div
             key={chip.id}
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: i * 0.08 }}
             style={{
               boxSizing: "border-box",
               display: "flex",
@@ -114,7 +119,7 @@ export default function CategoriesFilterTabs() {
                 <path d="M1 1L11 11M11 1L1 11" />
               </svg>
             </button>
-          </div>
+          </motion.div>
         ))}
       </section>
 

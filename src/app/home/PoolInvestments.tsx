@@ -1,117 +1,50 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
+import { motion } from "framer-motion";
+import DynamicCounter from "@/components/shared/DynamicCounter";
 
 export default function PoolInvestments() {
-  const [scale, setScale] = useState(1);
-  const scalerRef = useRef<HTMLDivElement>(null);
-  const shellRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    function update() {
-      const vw = window.innerWidth;
-      const targetWidth = 1360;
-      const currentScale = vw < targetWidth ? vw / targetWidth : 1;
-      setScale(currentScale);
-      if (scalerRef.current) {
-        scalerRef.current.style.transform = `scale(${currentScale})`;
-      }
-      if (shellRef.current) {
-        shellRef.current.style.height = `${600 * currentScale}px`;
-      }
-    }
-    update();
-    window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
-  }, []);
+  const dashArray = 628.318;
+  const targetDashOffset = dashArray * 0.25;
 
   return (
-    <section
-      id="pool-investments"
-      style={{
-        width: "100%",
-        margin: "70px 0",
-        background: "#FFFFFF",
-        display: "flex",
-        justifyContent: "center",
-        overflow: "hidden",
-        boxSizing: "border-box",
-      }}
-    >
-      <div 
-        ref={shellRef} 
-        style={{ 
-          position: "relative", 
-          width: "1280px", 
-          maxWidth: "100%", 
-          height: "600px",
-          flexShrink: 0 
-        }}
-      >
-        <div
-          ref={scalerRef}
-          style={{
-            position: "absolute",
-            top: 0,
-            left: "50%",
-            marginLeft: "-640px",
-            width: "1280px",
-            height: "600px",
-            transformOrigin: "top center",
-            willChange: "transform",
-            display: "flex",
-            gap: "32px",
-          }}
-        >
-          {/* Exactly the original Hardcoded figma layout container elements with no strings modified */}
+    <section id="pool-investments" className="w-full bg-transparent py-12 lg:py-[70px] overflow-hidden">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col lg:flex-row gap-6 lg:gap-[32px] w-full">
+          
           {/* Left Panel: Pool Investments */}
-          <div
-            style={{
-              flex: "0 0 733px",
-              height: "600px",
-              background: "#FFFFFF",
-              boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)",
-              borderRadius: "48px",
-              padding: "48px",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-              boxSizing: "border-box",
-              border: "1px solid #EDEEEF",
-            }}
+          <motion.div
+            initial={{ opacity: 0, x: -20, filter: "blur(8px)" }}
+            whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="flex-1 lg:flex-[0_0_733px] min-h-[500px] lg:h-[600px] bg-white shadow-[0px_1px_2px_rgba(0,0,0,0.05)] rounded-[32px] lg:rounded-[48px] p-6 sm:p-8 lg:p-[48px] flex flex-col justify-between border border-[#EDEEEF] box-border"
           >
-            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-              <h2
-                style={{
-                  margin: 0,
-                  fontFamily: "'Plus Jakarta Sans', sans-serif",
-                  fontWeight: 800,
-                  fontSize: "36px",
-                  lineHeight: "40px",
-                  color: "#131600",
-                }}
-              >
-                Pool Investments
+            <div className="flex flex-col gap-2">
+              <h2 className="m-0 font-jakarta font-extrabold text-[28px] md:text-[36px] leading-[40px] text-[#131600] flex flex-wrap gap-x-[6px]">
+                {"Pool Investments".split(" ").map((word, i) => (
+                  <motion.span
+                    key={i}
+                    initial={{ opacity: 0, filter: "blur(8px)" }}
+                    whileInView={{ opacity: 1, filter: "blur(0px)" }}
+                    transition={{ duration: 0.6, delay: i * 0.15 }}
+                    viewport={{ once: true }}
+                  >
+                    {word}
+                  </motion.span>
+                ))}
               </h2>
-              <p
-                style={{
-                  margin: 0,
-                  fontFamily: "'Plus Jakarta Sans', sans-serif",
-                  fontWeight: 400,
-                  fontSize: "16px",
-                  lineHeight: "24px",
-                  color: "#45474C",
-                }}
-              >
+              <p className="m-0 font-jakarta font-normal text-[14px] md:text-[16px] leading-[24px] text-[#45474C]">
                 Collective ownership of high-yield assets.
               </p>
             </div>
 
             {/* Donut Chart & Legend Area */}
-            <div style={{ display: "flex", alignItems: "center", gap: "128px" }}>
+            <div className="flex flex-col sm:flex-row items-center gap-10 sm:gap-16 lg:gap-[128px] mt-10 lg:mt-0">
               {/* Donut Chart */}
-              <div style={{ position: "relative", width: "256px", height: "256px", flexShrink: 0 }}>
-                <svg width="256" height="256" viewBox="0 0 256 256" style={{ transform: "rotate(-90deg)" }}>
+              <div className="relative w-[200px] h-[200px] sm:w-[256px] sm:h-[256px] shrink-0">
+                <svg width="100%" height="100%" viewBox="0 0 256 256" className="-rotate-90">
                   {/* Background Circle */}
                   <circle
                     cx="128"
@@ -122,155 +55,104 @@ export default function PoolInvestments() {
                     strokeWidth="25"
                   />
                   {/* Progress Circle (3/4 = 75%) */}
-                  <circle
+                  <motion.circle
                     cx="128"
                     cy="128"
                     r="100"
                     fill="transparent"
                     stroke="#2780C4"
                     strokeWidth="25"
-                    strokeDasharray="628.318"
-                    strokeDashoffset={628.318 * 0.25}
+                    strokeDasharray={dashArray}
+                    initial={{ strokeDashoffset: dashArray }}
+                    whileInView={{ strokeDashoffset: targetDashOffset }}
+                    transition={{ duration: 1.5, ease: "easeOut" }}
+                    viewport={{ once: true }}
                     strokeLinecap="round"
                   />
                 </svg>
-                <div
-                  style={{
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                  }}
-                >
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "36px", color: "#091426" }}>3/4</span>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "14px", color: "#45474C" }}>Seats Funded</span>
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
+                  <span className="font-jakarta font-bold text-[28px] sm:text-[36px] text-[#091426]">3/4</span>
+                  <span className="font-jakarta font-medium text-[12px] sm:text-[14px] text-[#45474C]">Seats Funded</span>
                 </div>
               </div>
 
               {/* Legend & CTA */}
-              <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                  <div style={{ width: "12px", height: "12px", background: "#2780C4", borderRadius: "50%", flexShrink: 0 }} />
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "16px", color: "#191C1D", whiteSpace: "nowrap" }}>Secured Funding</span>
+              <div className="flex flex-col gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-3 h-3 bg-[#2780C4] rounded-full shrink-0" />
+                  <span className="font-jakarta font-medium text-[14px] sm:text-[16px] text-[#191C1D] whitespace-nowrap">Secured Funding</span>
                 </div>
-                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                  <div style={{ width: "12px", height: "12px", background: "#E7E8E9", borderRadius: "50%", flexShrink: 0 }} />
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "16px", color: "#191C1D", whiteSpace: "nowrap" }}>Available Slot</span>
+                <div className="flex items-center gap-3">
+                  <div className="w-3 h-3 bg-[#E7E8E9] rounded-full shrink-0" />
+                  <span className="font-jakarta font-medium text-[14px] sm:text-[16px] text-[#191C1D] whitespace-nowrap">Available Slot</span>
                 </div>
-                <button
-                  style={{
-                    marginTop: "16px",
-                    padding: "12px 32px",
-                    background: "#091426",
-                    borderRadius: "9999px",
-                    border: "none",
-                    fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    fontWeight: 700,
-                    fontSize: "16px",
-                    color: "#FFFFFF",
-                    cursor: "pointer",
-                    transition: "opacity 0.3s ease",
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
-                  onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
-                >
+                <button className="mt-4 px-8 py-3 bg-[#091426] rounded-full border-none font-jakarta font-bold text-[14px] sm:text-[16px] text-white cursor-pointer transition-opacity duration-300 hover:opacity-90 w-fit">
                   Join Pool
                 </button>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Right Panels Stack */}
-          <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "32px", height: "600px", boxSizing: "border-box" }}>
+          <div className="flex-1 flex flex-col gap-6 lg:gap-[32px] lg:h-[600px] box-border">
+            
             {/* Active Deals Card */}
-            <div
-              style={{
-                flex: 1,
-                background: "linear-gradient(108.47deg, #121415 3.17%, #1C1F21 96.85%)",
-                borderRadius: "48px",
-                padding: "32px",
-                position: "relative",
-                overflow: "hidden",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-                boxSizing: "border-box",
-              }}
+            <motion.div
+              initial={{ opacity: 0, x: 20, filter: "blur(8px)" }}
+              whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              viewport={{ once: true }}
+              className="flex-1 min-h-[220px] bg-gradient-to-br from-[#121415] to-[#1C1F21] rounded-[32px] lg:rounded-[48px] p-6 lg:p-[32px] relative overflow-hidden flex flex-col justify-between box-border"
             >
               {/* Blue Corner Accent */}
-              <div
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  right: 0,
-                  width: "128px",
-                  height: "128px",
-                  background: "#2780C4",
-                  borderRadius: "0px 0px 0px 9999px",
-                }}
-              />
+              <div className="absolute top-0 right-0 w-[96px] h-[96px] lg:w-[128px] lg:h-[128px] bg-[#2780C4] rounded-bl-full" />
               
-              <div style={{ position: "relative", zIndex: 1 }}>
-                <h3 style={{ margin: 0, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "20px", color: "#FFFFFF" }}>Active Deals</h3>
-                <p style={{ margin: "4px 0 0 0", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "14px", color: "#8590A6" }}>Real-time status of your bids.</p>
+              <div className="relative z-10">
+                <h3 className="m-0 font-jakarta font-bold text-[18px] lg:text-[20px] text-white">Active Deals</h3>
+                <p className="m-0 mt-1 font-jakarta font-normal text-[13px] lg:text-[14px] text-[#8590A6]">Real-time status of your bids.</p>
               </div>
 
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", position: "relative", zIndex: 1 }}>
-                <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "48px", color: "#FFFFFF", lineHeight: 1 }}>1</div>
-                <div style={{ textAlign: "right" }}>
-                  <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", color: "#8590A6", letterSpacing: "1.2px", textTransform: "uppercase" }}>Token Blocked</div>
-                  <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "16px", color: "#FFFFFF" }}>ID: GLC-482</div>
+              <div className="flex justify-between items-end relative z-10">
+                <div className="font-jakarta font-extrabold text-[40px] lg:text-[48px] text-white leading-none">
+                  <DynamicCounter value={1} />
+                </div>
+                <div className="text-right">
+                  <div className="font-jakarta font-bold text-[10px] lg:text-[12px] text-[#8590A6] tracking-[1.2px] uppercase">Token Blocked</div>
+                  <div className="font-jakarta font-medium text-[14px] lg:text-[16px] text-white mt-1">ID: GLC-482</div>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
             {/* My Assets Card */}
-            <div
-              style={{
-                flex: 1,
-                background: "#FFFFFF",
-                border: "1px solid rgba(197, 198, 205, 0.1)",
-                boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)",
-                borderRadius: "48px",
-                padding: "32px",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-                boxSizing: "border-box",
-              }}
+            <motion.div
+              initial={{ opacity: 0, x: 20, filter: "blur(8px)" }}
+              whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="flex-1 min-h-[220px] bg-white border border-[#C5C6CD]/10 shadow-[0px_1px_2px_rgba(0,0,0,0.05)] rounded-[32px] lg:rounded-[48px] p-6 lg:p-[32px] flex flex-col justify-between box-border"
             >
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+              <div className="flex justify-between items-start">
                 <div>
-                  <h3 style={{ margin: 0, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "20px", color: "#131600" }}>My Assets</h3>
-                  <p style={{ margin: "4px 0 0 0", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "14px", color: "#45474C" }}>Portfolio Valuation</p>
+                  <h3 className="m-0 font-jakarta font-bold text-[18px] lg:text-[20px] text-[#131600]">My Assets</h3>
+                  <p className="m-0 mt-1 font-jakarta font-normal text-[13px] lg:text-[14px] text-[#45474C]">Portfolio Valuation</p>
                 </div>
                 {/* Shield Icon Placeholder */}
-                <div style={{ width: "24px", height: "24px", background: "#2780C4", borderRadius: "50%", display: "flex", justifyContent: "center", alignItems: "center", color: "#FFFFFF", fontSize: "12px", flexShrink: 0 }}>✓</div>
+                <div className="w-[24px] h-[24px] bg-[#2780C4] rounded-full flex justify-center items-center text-white text-[12px] shrink-0">✓</div>
               </div>
 
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
-                <div style={{ display: "flex", alignItems: "baseline", gap: "8px" }}>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "36px", color: "#091426" }}>₹1.42</span>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "20px", color: "#091426" }}>Cr</span>
+              <div className="flex justify-between items-end">
+                <div className="flex items-baseline gap-2">
+                  <span className="font-jakarta font-extrabold text-[32px] lg:text-[36px] text-[#091426]">
+                    <DynamicCounter value={1.42} prefix="₹" decimals={2} />
+                  </span>
+                  <span className="font-jakarta font-bold text-[16px] lg:text-[20px] text-[#091426]">Cr</span>
                 </div>
-                <div
-                  style={{
-                    padding: "4px 12px",
-                    background: "#131600",
-                    borderRadius: "9999px",
-                    fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    fontWeight: 700,
-                    fontSize: "12px",
-                    color: "#BCD225",
-                  }}
-                >
+                <div className="px-3 py-1 bg-[#131600] rounded-full font-jakarta font-bold text-[10px] lg:text-[12px] text-[#BCD225]">
                   +12.4%
                 </div>
               </div>
-            </div>
+            </motion.div>
+
           </div>
         </div>
       </div>

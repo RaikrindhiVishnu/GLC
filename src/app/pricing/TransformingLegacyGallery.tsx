@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 
 export default function TransformingLegacyGallery() {
   const [scale, setScale] = useState(1);
@@ -26,7 +27,11 @@ export default function TransformingLegacyGallery() {
   }, []);
 
   return (
-    <section
+    <motion.section
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.7 }}
       style={{
         width: "100%",
         margin: "60px 0 120px 0",
@@ -39,16 +44,19 @@ export default function TransformingLegacyGallery() {
       }}
     >
       <h2
-        style={{
-          margin: 0,
-          fontFamily: "'Plus Jakarta Sans', sans-serif",
-          fontWeight: 800,
-          fontSize: "32px",
-          color: "#001F3F",
-          textAlign: "center",
-        }}
+        className="m-0 font-jakarta font-extrabold text-[28px] md:text-[36px] text-[#001F3F] text-center flex flex-wrap justify-center gap-x-2"
       >
-        Transforming Land into Legacy
+        {"Transforming Land into Legacy".split(" ").map((word, i) => (
+          <motion.span
+            key={i}
+            initial={{ opacity: 0, filter: "blur(8px)" }}
+            whileInView={{ opacity: 1, filter: "blur(0px)" }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: i * 0.1 }}
+          >
+            {word}
+          </motion.span>
+        ))}
       </h2>
 
       {/* Gallery Carousel Array */}
@@ -223,6 +231,6 @@ export default function TransformingLegacyGallery() {
           </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

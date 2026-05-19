@@ -1,164 +1,58 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 
 export default function SustainableYieldsBanner() {
   const router = useRouter();
-  const [scale, setScale] = useState(1);
-  const scalerRef = useRef<HTMLDivElement>(null);
-  const shellRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    function update() {
-      const vw = window.innerWidth;
-      const targetWidth = 1360; 
-      const currentScale = vw < targetWidth ? vw / targetWidth : 1;
-      setScale(currentScale);
-      if (scalerRef.current) {
-        scalerRef.current.style.transform = `scale(${currentScale})`;
-      }
-      if (shellRef.current) {
-        shellRef.current.style.height = `${500 * currentScale}px`;
-      }
-    }
-    update();
-    window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
-  }, []);
 
   return (
-    <section
-      id="sustainable-yields"
-      style={{
-        width: "100%",
-        margin: "70px 0",
-        display: "flex",
-        justifyContent: "center",
-        overflow: "hidden",
-        boxSizing: "border-box",
-      }}
-    >
-      <div 
-        ref={shellRef} 
-        style={{ 
-          position: "relative", 
-          width: "1280px", 
-          maxWidth: "100%", 
-          height: "500px",
-          flexShrink: 0 
-        }}
-      >
-        <div
-          ref={scalerRef}
-          style={{
-            position: "absolute",
-            top: 0,
-            left: "50%",
-            marginLeft: "-640px",
-            width: "1280px",
-            height: "500px",
-            transformOrigin: "top center",
-            willChange: "transform",
-          }}
+    <section id="sustainable-yields" className="w-full bg-transparent py-12 lg:py-[70px] overflow-hidden">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="relative w-full h-[350px] md:h-[400px] lg:h-[500px] rounded-[32px] lg:rounded-[48px] overflow-hidden shadow-[0px_25px_50px_-12px_rgba(0,0,0,0.25)] flex flex-col justify-end items-center p-8 lg:p-[64px]"
         >
-          {/* Exactly the original Hardcoded figma layout container elements with no strings modified */}
-          <div
-            style={{
-              width: "1280px",
-              height: "500px",
-              position: "relative",
-              borderRadius: "48px",
-              overflow: "hidden",
-              boxShadow: "0px 25px 50px -12px rgba(0, 0, 0, 0.25)",
-            }}
-          >
-            <img
-              src="/assets/home/SustainableYieldsBanner/yieldsbanner.svg"
-              alt="Sustainable Practices"
-              style={{
-                position: "absolute",
-                inset: 0,
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-              }}
-            />
+          {/* Background Image */}
+          <Image
+            src="/assets/home/SustainableYieldsBanner/yieldsbanner.svg"
+            alt="Sustainable Practices"
+            fill
+            className="object-cover"
+          />
 
-            {/* Gradient Overlay */}
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                background: "linear-gradient(0deg, #131600 0%, rgba(19, 22, 0, 0.4) 50%, rgba(19, 22, 0, 0) 100%)",
-                zIndex: 1,
-              }}
-            />
+          {/* Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#131600] via-[#131600]/40 to-transparent z-10" />
 
-            {/* Content Container */}
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "flex-end",
-                alignItems: "center",
-                padding: "64px",
-                zIndex: 2,
-              }}
+          {/* Content Container */}
+          <div className="relative z-20 flex flex-col items-center w-full">
+            <h2 className="max-w-[585px] m-0 mb-6 font-jakarta font-extrabold text-[28px] md:text-[36px] lg:text-[48px] leading-[1.2] text-center text-white flex flex-wrap justify-center gap-x-[8px]">
+              {"Sustainable Practices for Generational Wealth".split(" ").map((word, i) => (
+                <motion.span
+                  key={i}
+                  initial={{ opacity: 0, filter: "blur(8px)" }}
+                  whileInView={{ opacity: 1, filter: "blur(0px)" }}
+                  transition={{ duration: 0.6, delay: i * 0.15 }}
+                  viewport={{ once: true }}
+                >
+                  {word}
+                </motion.span>
+              ))}
+            </h2>
+
+            <button
+              onClick={() => router.push("/home/organicfarmingsetup")}
+              className="px-8 lg:px-[40px] py-3 lg:py-[12px] h-[48px] lg:h-[54px] bg-transparent border-[3px] border-white/30 rounded-full font-jakarta font-bold text-[14px] lg:text-[16px] text-white cursor-pointer transition-all duration-300 hover:bg-white/10 hover:border-white"
             >
-              <h2
-                style={{
-                  maxWidth: "585px",
-                  margin: "0 0 24px 0",
-                  fontFamily: "'Plus Jakarta Sans', sans-serif",
-                  fontWeight: 800,
-                  fontSize: "48px",
-                  lineHeight: "48px",
-                  textAlign: "center",
-                  color: "#FFFFFF",
-                }}
-              >
-                Sustainable Practices for Generational Wealth
-              </h2>
-
-              <button
-                onClick={() => router.push("/home/organicfarmingsetup")}
-                style={{
-                  boxSizing: "border-box",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  padding: "12px 40px",
-                  width: "265px",
-                  height: "54px",
-                  background: "none",
-                  border: "3px solid rgba(255, 255, 255, 0.3)",
-                  borderRadius: "9999px",
-                  fontFamily: "'Plus Jakarta Sans', sans-serif",
-                  fontWeight: 700,
-                  fontSize: "16px",
-                  lineHeight: "24px",
-                  color: "#FFFFFF",
-                  cursor: "pointer",
-                  transition: "all 0.3s ease",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = "rgba(255, 255, 255, 1)";
-                  e.currentTarget.style.background = "rgba(255, 255, 255, 0.1)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.3)";
-                  e.currentTarget.style.background = "none";
-                }}
-              >
-                Organic Farming Setup
-              </button>
-            </div>
+              Organic Farming Setup
+            </button>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

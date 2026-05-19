@@ -19,56 +19,56 @@ const solidStyle: React.CSSProperties = {
   border: "1px solid rgba(255,255,255,0.1)",
 };
 
-function getDocTop(el: HTMLElement): number {
-  let top = 0;
-  let node: HTMLElement | null = el;
-  while (node) {
-    top += node.offsetTop;
-    node = node.offsetParent as HTMLElement | null;
-  }
-  return top;
-}
-
 export default function SparkleButton() {
   const router = useRouter();
   const [isGlass, setIsGlass] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
-    const update = () => {
-      const statsEl = document.getElementById("stats-section");
-      const intentEl = document.getElementById("intent-section");
-      const ctaEl = document.getElementById("cta-section");
-      const footerEl = document.getElementById("footer-section");
+    const handleScroll = () => {
+      // Dynamically locate the hero/cover element on any page
+      const heroEl = 
+        document.getElementById("hero-section") || 
+        document.getElementById("hero-screen") ||
+        document.getElementById("search-hero-screen") ||
+        document.querySelector('[id*="hero"]') || 
+        document.querySelector('[id*="Hero"]') ||
+        document.querySelector('[class*="hero"]') || 
+        document.querySelector('[class*="Hero"]') ||
+        document.querySelector("section") ||
+        (() => {
+          // Look for top cover/header divs (e.g., in profile page)
+          const divs = Array.from(document.querySelectorAll("div"));
+          return divs.find(d => {
+            const rect = d.getBoundingClientRect();
+            return rect.height > 300 && rect.height < window.innerHeight * 1.5 && (rect.top + window.scrollY) <= 100;
+          });
+        })();
 
-      if (!statsEl) return;
+      const heroBottom = heroEl ? (heroEl.getBoundingClientRect().bottom + window.scrollY) : window.innerHeight;
+      const ctaSection = document.getElementById("cta-section");
+      
+      // Calculate based on the physical position of the button (approx. 80px from viewport bottom)
+      const buttonPhysicalPos = window.scrollY + window.innerHeight - 80;
+      
+      let pastHero = buttonPhysicalPos >= heroBottom;
+      let beforeCta = true;
 
-      const vh = window.innerHeight;
-      const buttonThreshold = vh - 100; // Trigger when section is 100px from bottom
+      if (ctaSection) {
+        const ctaTop = ctaSection.getBoundingClientRect().top + window.scrollY;
+        // Trigger glass state when the button itself crosses into the CTA section
+        if (buttonPhysicalPos > ctaTop) {
+          beforeCta = false;
+        }
+      }
 
-      const statsRect = statsEl.getBoundingClientRect();
-      const intentRect = intentEl?.getBoundingClientRect();
-      const ctaRect = ctaEl?.getBoundingClientRect();
-      const footerRect = footerEl?.getBoundingClientRect();
-
-      // Detection flags
-      const statsReached = statsRect.top <= buttonThreshold;
-      const intentReached = intentRect ? intentRect.top <= buttonThreshold : false;
-      const ctaReached = ctaRect ? ctaRect.top <= buttonThreshold : false;
-      const footerReached = footerRect ? footerRect.top <= buttonThreshold : false;
-
-      // Logic:
-      const isOverHero = !statsReached;
-      const isOverIntent = intentReached && (intentRect ? intentRect.bottom > buttonThreshold : false);
-      const isOverCTA = ctaReached && (ctaRect ? ctaRect.bottom > buttonThreshold : true);
-      const isOverFooter = footerReached;
-
-      setIsGlass(isOverHero || isOverIntent || isOverCTA || isOverFooter);
+      // It is glass when not past hero or when past CTA, and solid in between
+      setIsGlass(!(pastHero && beforeCta));
     };
 
-    update();
-    window.addEventListener("scroll", update, { passive: true });
-    return () => window.removeEventListener("scroll", update);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   // Define colors for the sparkle based on state

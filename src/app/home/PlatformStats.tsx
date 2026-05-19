@@ -1,142 +1,54 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
+import { motion } from "framer-motion";
+import DynamicCounter from "@/components/shared/DynamicCounter";
 
 export default function PlatformStats() {
   const stats = [
-    { value: "₹45Cr+", label: "MANAGED ASSETS" },
-    { value: "100%", label: "VERIFIED CLEAR TITLES" },
-    { value: "1,200+", label: "ACTIVE INVESTORS" },
+    { value: 45, prefix: "₹", suffix: "Cr+", label: "MANAGED ASSETS" },
+    { value: 100, prefix: "", suffix: "%", label: "VERIFIED CLEAR TITLES" },
+    { value: 1200, prefix: "", suffix: "+", label: "ACTIVE INVESTORS" },
   ];
 
-  const [scale, setScale] = useState(1);
-  const scalerRef = useRef<HTMLDivElement>(null);
-  const shellRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    function update() {
-      const vw = window.innerWidth;
-      const targetWidth = 1360;
-      const currentScale = vw < targetWidth ? vw / targetWidth : 1;
-      setScale(currentScale);
-      if (scalerRef.current) {
-        scalerRef.current.style.transform = `scale(${currentScale})`;
-      }
-      if (shellRef.current) {
-        shellRef.current.style.height = `${216 * currentScale}px`;
-      }
-    }
-    update();
-    window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
-  }, []);
-
   return (
-    <section
-      id="platform-stats"
-      style={{
-        width: "100%",
-        margin: "0 auto",
-        padding: "70px 0",
-        background: "#FFFFFF",
-        display: "flex",
-        justifyContent: "center",
-        overflow: "hidden",
-        boxSizing: "border-box",
-      }}
-    >
-      <div 
-        ref={shellRef} 
-        style={{ 
-          position: "relative", 
-          width: "1216px", 
-          maxWidth: "100%", 
-          height: "216px",
-          flexShrink: 0 
-        }}
-      >
-        <div
-          ref={scalerRef}
-          style={{
-            position: "absolute",
-            top: 0,
-            left: "50%",
-            marginLeft: "-608px",
-            width: "1216px",
-            height: "216px",
-            transformOrigin: "top center",
-            willChange: "transform",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: "80px",
-          }}
-        >
-          {/* Exactly the original Hardcoded figma layout container elements with no strings modified */}
+    <section id="platform-stats" className="w-full bg-transparent py-12 lg:py-[70px] overflow-hidden">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col items-center gap-10 lg:gap-[80px]">
+          
           {/* Heading */}
-          <h2
-            style={{
-              maxWidth: "700px",
-              margin: 0,
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
-              fontWeight: 700,
-              fontSize: "36px",
-              lineHeight: "48px",
-              textAlign: "center",
-              color: "#0F2F4C",
-              letterSpacing: "-1.2px",
-            }}
-          >
-            Empowering investors through data-driven agricultural assets.
+          <h2 className="max-w-[700px] m-0 font-jakarta font-bold text-[28px] md:text-[36px] leading-[1.3] text-center text-[#0F2F4C] tracking-[-1px] flex flex-wrap justify-center gap-x-[8px]">
+            {"Empowering investors through data-driven agricultural assets.".split(" ").map((word, i) => (
+              <motion.span
+                key={i}
+                initial={{ opacity: 0, filter: "blur(8px)" }}
+                whileInView={{ opacity: 1, filter: "blur(0px)" }}
+                transition={{ duration: 0.6, delay: i * 0.1 }}
+                viewport={{ once: true }}
+              >
+                {word}
+              </motion.span>
+            ))}
           </h2>
 
           {/* Stats Row */}
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              width: "1216px",
-            }}
-          >
-            {stats.map((stat, index) => (
-              <div
-                key={index}
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  gap: "8px",
-                  flex: 1,
-                }}
+          <div className="flex flex-col md:flex-row justify-between items-center w-full gap-10 md:gap-4">
+            {stats.map((stat, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: i * 0.15 }}
+                viewport={{ once: true }}
+                className="flex flex-col items-center gap-2 flex-1"
               >
-                <div
-                  style={{
-                    fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    fontWeight: 800,
-                    fontSize: "48px",
-                    lineHeight: "60px",
-                    color: "#0F2F4C",
-                    textAlign: "center",
-                  }}
-                >
-                  {stat.value}
+                <div className="font-jakarta font-extrabold text-[40px] lg:text-[48px] leading-[1.2] text-[#0F2F4C] text-center">
+                  <DynamicCounter value={stat.value} prefix={stat.prefix} suffix={stat.suffix} />
                 </div>
-                <div
-                  style={{
-                    fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    fontWeight: 500,
-                    fontSize: "14px",
-                    lineHeight: "20px",
-                    letterSpacing: "1.4px",
-                    color: "#45474C",
-                    textAlign: "center",
-                    textTransform: "uppercase",
-                  }}
-                >
+                <div className="font-jakarta font-medium text-[12px] lg:text-[14px] leading-[20px] tracking-[1.4px] text-[#45474C] text-center uppercase">
                   {stat.label}
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>

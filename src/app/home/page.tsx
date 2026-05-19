@@ -19,7 +19,7 @@ import Footer from "@/components/Footer";
 
 export default function UserHomePage() {
   return (
-    <main style={{ minHeight: "100vh", background: "#FFFFFF" }}>
+    <main style={{ minHeight: "100vh", background: "#F8F9FA" }}>
       <HeroScreen />
       <FiltersScreen />
       <TrendingLocations />

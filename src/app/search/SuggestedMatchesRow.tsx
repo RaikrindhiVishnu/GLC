@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 
 // Absolute data parity derived directly from official AI Suggested Matches CSS block metrics
 const suggestedMatches = [
@@ -66,7 +67,11 @@ export default function SuggestedMatchesRow() {
   };
 
   return (
-    <section
+    <motion.section
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.7 }}
       style={{
         width: "100%",
         margin: "40px 0",
@@ -105,7 +110,11 @@ export default function SuggestedMatchesRow() {
           {/* Exactly the original Hardcoded figma layout container elements with no strings modified */}
           {/* ─── SECTION HEADER ─── */}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0 16px" }}>
-            <h2
+            <motion.h2
+              initial={{ opacity: 0, filter: "blur(8px)" }}
+              whileInView={{ opacity: 1, filter: "blur(0px)" }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
               style={{
                 margin: 0,
                 fontFamily: "'Plus Jakarta Sans', sans-serif",
@@ -116,7 +125,7 @@ export default function SuggestedMatchesRow() {
               }}
             >
               AI Suggested Matches
-            </h2>
+            </motion.h2>
 
             {/* 3 Indicator Dots on the right */}
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -306,6 +315,6 @@ export default function SuggestedMatchesRow() {
           </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

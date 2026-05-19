@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 
 // Array of premium source assets mapping high-fidelity properties
 const carouselItems = [
@@ -170,13 +171,19 @@ export default function TrendingFeaturedSection() {
       }}
     >
       {/* ─── HEADER TYPOGRAPHY ROW ─── */}
-      <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center", gap: "11px" }}>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.7 }}
+        style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center", gap: "11px" }}
+      >
         <span
           style={{
-            fontFamily: "'Barlow', 'Plus Jakarta Sans', sans-serif",
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
             fontWeight: 700,
-            fontSize: "24px",
-            lineHeight: "32px",
+            fontSize: "28px",
+            lineHeight: "36px",
             color: "#001F3F",
           }}
         >
@@ -188,19 +195,18 @@ export default function TrendingFeaturedSection() {
             style={{
               fontFamily: "'Plus Jakarta Sans', sans-serif",
               fontWeight: 800,
-              fontSize: "24px",
-              lineHeight: "32px",
+              fontSize: "28px",
+              lineHeight: "36px",
               color: "#2780C4",
             }}
           >
             All Categories
           </span>
-          {/* Custom vector down-arrow caret */}
           <svg width="14" height="10" viewBox="0 0 14 10" fill="none" stroke="#2780C4" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="2 2 7 7 12 2"></polyline>
           </svg>
         </div>
-      </div>
+      </motion.div>
 
       {/* ─── OVERLAPPING CAROUSEL FAN-OUT STACK ─── */}
       <div 

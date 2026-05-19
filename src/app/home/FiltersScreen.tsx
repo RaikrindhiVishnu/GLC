@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 
 const filterButtons = [
   {
@@ -51,71 +52,18 @@ const filterButtons = [
 
 export default function FiltersScreen() {
   const router = useRouter();
-  const [scale, setScale] = useState(1);
-  const scalerRef = useRef<HTMLDivElement>(null);
-  const shellRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    function update() {
-      const vw = window.innerWidth;
-      const targetWidth = 1360;
-      const currentScale = vw < targetWidth ? vw / targetWidth : 1;
-      setScale(currentScale);
-      if (scalerRef.current) {
-        scalerRef.current.style.transform = `scale(${currentScale})`;
-      }
-      if (shellRef.current) {
-        shellRef.current.style.height = `${180 * currentScale}px`;
-      }
-    }
-    update();
-    window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
-  }, []);
 
   return (
-    <section
-      id="filters-section"
-      style={{
-        padding: "70px 0",
-        width: "100%",
-        background: "#FFFFFF",
-        display: "flex",
-        justifyContent: "center",
-        overflow: "hidden",
-        boxSizing: "border-box",
-      }}
-    >
-      <div 
-        ref={shellRef} 
-        style={{ 
-          position: "relative", 
-          width: "1280px", 
-          maxWidth: "100%", 
-          height: "180px",
-          flexShrink: 0 
-        }}
-      >
-        <div
-          ref={scalerRef}
-          style={{
-            position: "absolute",
-            top: 0,
-            left: "50%",
-            marginLeft: "-640px",
-            width: "1280px",
-            height: "180px",
-            transformOrigin: "top center",
-            willChange: "transform",
-            display: "flex",
-            gap: "16px",
-            justifyContent: "center",
-          }}
-        >
-          {/* Exactly the original Hardcoded figma layout container elements with no strings modified */}
-          {filterButtons.map((btn) => (
-            <button
+    <section id="filters-section" className="w-full bg-transparent py-12 lg:py-[70px] overflow-hidden">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 xl:gap-6">
+          {filterButtons.map((btn, i) => (
+            <motion.button
               key={btn.id}
+              initial={{ opacity: 0, filter: "blur(10px)", y: 20 }}
+              whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+              transition={{ duration: 0.6, delay: i * 0.1 }}
+              viewport={{ once: true }}
               onClick={() => {
                 if (btn.id === "pool-buying") {
                   router.push("/pool-buying");
@@ -131,61 +79,18 @@ export default function FiltersScreen() {
                   router.push("/home/sellyourland");
                 }
               }}
-              style={{
-                boxSizing: "border-box",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                padding: "24px",
-                gap: "25px",
-                width: "200px",
-                height: "180px",
-                background: "#FFFFFF",
-                borderRadius: "32px",
-                border: "1px solid #E5E7EB",
-                cursor: "pointer",
-                transition: "transform 0.2s, box-shadow 0.2s",
-                boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.02)",
-                flexShrink: 0,
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = "translateY(-4px)";
-                e.currentTarget.style.boxShadow = "0px 10px 15px rgba(0, 0, 0, 0.05)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "translateY(0)";
-                e.currentTarget.style.boxShadow = "0px 4px 6px rgba(0, 0, 0, 0.02)";
-              }}
+              className="flex flex-col justify-center items-center p-4 xl:p-6 gap-4 xl:gap-6 w-full aspect-square lg:aspect-auto lg:h-[180px] bg-white rounded-[24px] lg:rounded-[32px] border border-[#E5E7EB] shadow-[0px_4px_6px_rgba(0,0,0,0.02)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0px_10px_15px_rgba(0,0,0,0.05)] cursor-pointer [-webkit-tap-highlight-color:transparent]"
             >
               <div
-                style={{
-                  width: `${btn.width}px`,
-                  height: `${btn.height}px`,
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  position: "relative",
-                }}
+                style={{ width: `${btn.width}px`, height: `${btn.height}px` }}
+                className="relative flex justify-center items-center shrink-0 animate-pulse-slow"
               >
-                <Image src={btn.icon} alt={btn.label} width={btn.width} height={btn.height} priority />
+                <Image src={btn.icon} alt={btn.label} fill className="object-contain" priority />
               </div>
-              <div
-                style={{
-                  width: "100%",
-                  fontFamily: "'Plus Jakarta Sans', sans-serif",
-                  fontWeight: 700,
-                  fontSize: "14px",
-                  lineHeight: "20px",
-                  textAlign: "center",
-                  letterSpacing: "1.4px",
-                  textTransform: "capitalize",
-                  color: "#45474C",
-                }}
-              >
+              <div className="w-full font-jakarta font-bold text-[13px] xl:text-[14px] leading-[18px] lg:leading-[20px] text-center tracking-[0.5px] xl:tracking-[1px] capitalize text-[#45474C]">
                 {btn.label}
               </div>
-            </button>
+            </motion.button>
           ))}
         </div>
       </div>

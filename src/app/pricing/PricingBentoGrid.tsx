@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 
 interface PricingBentoGridProps {
   onSelectPlan?: (planId: string) => void;
@@ -32,8 +33,12 @@ export default function PricingBentoGrid({ onSelectPlan }: PricingBentoGridProps
   }, []);
 
   return (
-    <section
+    <motion.section
       id="pricing-bento-grid"
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.7 }}
       style={{
         width: "100%",
         margin: "100px 0",
@@ -73,7 +78,11 @@ export default function PricingBentoGrid({ onSelectPlan }: PricingBentoGridProps
           {/* Exactly the original Hardcoded figma layout container elements with no strings modified */}
           {/* Header Titles */}
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px", width: "100%" }}>
-            <h2
+            <motion.h2
+              initial={{ opacity: 0, filter: "blur(8px)", y: 10 }}
+              whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
               style={{
                 margin: 0,
                 fontFamily: "'Plus Jakarta Sans', sans-serif",
@@ -85,8 +94,12 @@ export default function PricingBentoGrid({ onSelectPlan }: PricingBentoGridProps
               }}
             >
               Premium-Investor Access
-            </h2>
-            <p
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.25 }}
               style={{
                 margin: 0,
                 fontFamily: "'Plus Jakarta Sans', sans-serif",
@@ -99,7 +112,7 @@ export default function PricingBentoGrid({ onSelectPlan }: PricingBentoGridProps
               }}
             >
               Choose the perfect plan to accelerate your agricultural portfolio with GLC&apos;s proprietary continuous data stream, premium title pre-checks, and dedicated advisory pipelines.
-            </p>
+            </motion.p>
           </div>
 
           {/* Horizontal Stack Matrix */}
@@ -358,6 +371,6 @@ export default function PricingBentoGrid({ onSelectPlan }: PricingBentoGridProps
           </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

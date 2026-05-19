@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { useState, useRef, useMemo } from "react";
+// @ts-ignore
 import { useCountries } from "use-react-countries";
+import { motion } from "framer-motion";
 
 export default function RegisterPage() {
   const { countries } = useCountries();
@@ -16,29 +18,48 @@ export default function RegisterPage() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [files, setFiles] = useState({ aadhaarFront: null, aadhaarBack: null, pan: null });
   
-  const aadhaarFrontRef = useRef(null);
-  const aadhaarBackRef = useRef(null);
-  const panRef = useRef(null);
+  const aadhaarFrontRef = useRef<HTMLInputElement>(null);
+  const aadhaarBackRef = useRef<HTMLInputElement>(null);
+  const panRef = useRef<HTMLInputElement>(null);
 
   const filteredCountries = useMemo(() => {
     return countries
-      .filter(c => 
+      .filter((c: any) => 
         c.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
         c.countryCallingCode.includes(searchQuery)
       )
-      .sort((a, b) => a.name.localeCompare(b.name));
+      .sort((a: any, b: any) => a.name.localeCompare(b.name));
   }, [countries, searchQuery]);
 
-  const handleFileChange = (e, key) => {
+  const handleFileChange = (e: any, key: string) => {
     if (e.target.files?.[0]) {
-      setFiles(prev => ({ ...prev, [key]: e.target.files[0].name }));
+      setFiles((prev: any) => ({ ...prev, [key]: e.target.files[0].name }));
     }
   };
 
   return (
     <div className="w-full max-w-[480px]">
-      <h1 className="text-[32px] lg:text-[38px] font-bold text-[#353535] font-jakarta leading-tight mb-1">Register Now</h1>
-      <p className="text-[14px] lg:text-[15px] text-[#B8B8B8] font-jakarta mb-6">Green Land Capital Asset Verification.</p>
+      <h1 className="text-[32px] lg:text-[38px] font-bold text-[#353535] font-jakarta leading-tight mb-1 flex flex-wrap gap-x-2">
+        {"Register Now".split(" ").map((word, i) => (
+          <motion.span
+            key={i}
+            initial={{ opacity: 0, filter: "blur(8px)", y: 10 }}
+            animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+            transition={{ duration: 0.5, delay: i * 0.1 }}
+          >
+            {word}
+          </motion.span>
+        ))}
+      </h1>
+
+      <motion.p
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.3 }}
+        className="text-[14px] lg:text-[15px] text-[#B8B8B8] font-jakarta mb-6"
+      >
+        Green Land Capital Asset Verification.
+      </motion.p>
 
       {/* Hidden File Inputs */}
       <input type="file" ref={aadhaarFrontRef} onChange={e => handleFileChange(e, 'aadhaarFront')} className="hidden" accept="image/*" />
@@ -46,7 +67,12 @@ export default function RegisterPage() {
       <input type="file" ref={panRef} onChange={e => handleFileChange(e, 'pan')} className="hidden" accept="image/*" />
 
       {/* First + Last Name */}
-      <div className="flex gap-3 mb-3 lg:mb-4">
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.4 }}
+        className="flex gap-3 mb-3 lg:mb-4"
+      >
         <div className="flex-1 bg-white border border-[#F0F0F0] rounded-[30px] h-[52px] lg:h-[56px] flex items-center px-4 gap-2 focus-within:border-[#2780C4] focus-within:ring-1 focus-within:ring-[#2780C4]/20 transition-all cursor-text">
           <svg className="w-4 h-4 text-[#A1999B] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -61,19 +87,29 @@ export default function RegisterPage() {
           <div className="w-px h-4 bg-[#F0F0F0]" />
           <input type="text" placeholder="Last Name" className="flex-1 bg-transparent text-[14px] lg:text-[15px] placeholder:text-[#BDBDBD] focus:outline-none font-jakarta min-w-0 cursor-text" />
         </div>
-      </div>
+      </motion.div>
 
       {/* Email */}
-      <div className="mb-3 lg:mb-4 bg-white border border-[#F0F0F0] rounded-[30px] h-[52px] lg:h-[56px] flex items-center px-4 gap-2 focus-within:border-[#2780C4] focus-within:ring-1 focus-within:ring-[#2780C4]/20 transition-all cursor-text">
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.5 }}
+        className="mb-3 lg:mb-4 bg-white border border-[#F0F0F0] rounded-[30px] h-[52px] lg:h-[56px] flex items-center px-4 gap-2 focus-within:border-[#2780C4] focus-within:ring-1 focus-within:ring-[#2780C4]/20 transition-all cursor-text"
+      >
         <svg className="w-4 h-4 text-[#2780C4] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
         </svg>
         <div className="w-px h-4 bg-[#F0F0F0]" />
         <input type="email" placeholder="Enter Mail ID" className="flex-1 bg-transparent text-[14px] lg:text-[15px] placeholder:text-[#BDBDBD] focus:outline-none font-jakarta cursor-text" />
-      </div>
+      </motion.div>
 
       {/* Custom Polished Phone Input */}
-      <div className="relative mb-3 lg:mb-4 group">
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.6 }}
+        className="relative mb-3 lg:mb-4 group"
+      >
         <div className="bg-white border border-[#F0F0F0] rounded-[30px] h-[52px] lg:h-[56px] flex items-center px-4 gap-3 focus-within:border-[#2780C4] focus-within:ring-1 focus-within:ring-[#2780C4]/20 transition-all cursor-text">
           <button
             type="button"
@@ -121,7 +157,7 @@ export default function RegisterPage() {
               {/* List */}
               <div className="max-h-[240px] overflow-y-auto custom-scrollbar p-2">
                 {filteredCountries.length > 0 ? (
-                  filteredCountries.map((c) => (
+                  filteredCountries.map((c: any) => (
                     <button
                       key={c.name + c.countryCallingCode}
                       type="button"
@@ -140,10 +176,15 @@ export default function RegisterPage() {
             </div>
           </>
         )}
-      </div>
+      </motion.div>
 
       {/* Aadhaar Input + Uploads */}
-      <div className="mb-3 lg:mb-4 bg-white border border-[#F0F0F0] rounded-[30px] h-[52px] lg:h-[56px] flex items-center px-4 gap-3 focus-within:border-[#2780C4] focus-within:ring-1 focus-within:ring-[#2780C4]/20 transition-all cursor-text">
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.7 }}
+        className="mb-3 lg:mb-4 bg-white border border-[#F0F0F0] rounded-[30px] h-[52px] lg:h-[56px] flex items-center px-4 gap-3 focus-within:border-[#2780C4] focus-within:ring-1 focus-within:ring-[#2780C4]/20 transition-all cursor-text"
+      >
         <svg className="w-4 h-4 text-[#A1999B] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
         </svg>
@@ -203,10 +244,15 @@ export default function RegisterPage() {
             )}
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* PAN Input + Upload */}
-      <div className="mb-4 lg:mb-5 bg-white border border-[#F0F0F0] rounded-[30px] h-[52px] lg:h-[56px] flex items-center px-4 gap-3 focus-within:border-[#2780C4] focus-within:ring-1 focus-within:ring-[#2780C4]/20 transition-all cursor-text">
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.8 }}
+        className="mb-4 lg:mb-5 bg-white border border-[#F0F0F0] rounded-[30px] h-[52px] lg:h-[56px] flex items-center px-4 gap-3 focus-within:border-[#2780C4] focus-within:ring-1 focus-within:ring-[#2780C4]/20 transition-all cursor-text"
+      >
         <svg className="w-4 h-4 text-[#A1999B] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
         </svg>
@@ -238,22 +284,30 @@ export default function RegisterPage() {
             </button>
           )}
         </div>
-      </div>
+      </motion.div>
 
       {/* Submit */}
-      <button
+      <motion.button
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.9 }}
         className="w-full h-[52px] lg:h-[58px] rounded-full text-[16px] font-bold text-white font-jakarta [-webkit-tap-highlight-color:transparent] transition-all cursor-pointer"
         style={{ background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)", border: "1px solid #43B6CD" }}
       >
         Create Account
-      </button>
+      </motion.button>
 
-      <p className="text-center mt-5 lg:mt-6 text-[14px] text-[#B8B8B8] font-jakarta">
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6, delay: 1.0 }}
+        className="text-center mt-5 lg:mt-6 text-[14px] text-[#B8B8B8] font-jakarta"
+      >
         Already have an account?{" "}
         <Link href="/login" className="text-[#2780C4] font-semibold hover:underline transition-all cursor-pointer">
           Sign in
         </Link>
-      </p>
+      </motion.p>
     </div>
   );
 }
