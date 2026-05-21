@@ -21,34 +21,16 @@ export default function MyAssetsDetailedPage() {
         overflowX: "hidden",
       }}
     >
-      {/* ─── FULL WIDTH EDGE-TO-EDGE CANVAS WRAPPER ─── */}
-      <div
-        style={{
-          boxSizing: "border-box",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          padding: "0px",
-          gap: "100px",
-          width: "100%",
-          maxWidth: "1920px",
-          position: "relative",
-        }}
-      >
-        {/* Section 1: Cinematic Hero & Wealth Snapshot Container */}
-        <DetailsHero />
+      <DetailsHero />
 
-        {/* Section 2: Main Content Feed (Split Layout: 70% / 30%) */}
+      <div className="w-full max-w-7xl px-4 lg:px-8 py-16 lg:py-24 flex flex-col gap-16 lg:gap-24 box-border">
         <DetailsFeed />
-
-        {/* Section 3: Add-On Services Catalog & Draft Work Orders */}
         <AddOnServices />
+      </div>
 
-        {/* Standard Final Closing Blocks */}
-        <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center" }}>
-          <CTA />
-          <Footer />
-        </div>
+      <div style={{ width: "100%", display: "flex", flexDirection: "column" }}>
+        <CTA />
+        <Footer />
       </div>
     </main>
   );

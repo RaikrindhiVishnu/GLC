@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import OrganicFarmingSetupHero from "./OrganicFarmingSetupHero";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
+import { motion } from "framer-motion";
 
 export default function OrganicFarmingSetupPage() {
   const router = useRouter();
@@ -25,7 +26,7 @@ export default function OrganicFarmingSetupPage() {
         <div className="w-full flex flex-col lg:flex-row items-stretch gap-8 justify-center max-w-[1280px] mx-auto">
           
           {/* ─── SECTION 1: LEFT PANEL - 55% VISUAL ANCHOR (Width: 633.59px, Height: 904px) ─── */}
-          <div className="w-full lg:w-[633.59px] shrink-0 flex flex-col">
+          <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }} viewport={{ once: true }} className="w-full lg:w-[633.59px] shrink-0 flex flex-col">
             <div className="w-full bg-white shadow-[0_25px_50px_-12px_rgba(9,20,38,0.05)] rounded-[48px] relative overflow-hidden flex flex-col justify-between box-border min-h-[600px] lg:h-[904px]">
               
               {/* Backing Lush Farm Scene Vector Composite Proxy */}
@@ -51,11 +52,11 @@ export default function OrganicFarmingSetupPage() {
               </div>
 
             </div>
-          </div>
+          </motion.div>
 
 
           {/* ─── SECTION 2: RIGHT PANEL - 45% SETUP CONSOLE (Width: 518.41px, Height: 904px) ─── */}
-          <div className="w-full lg:w-[518.41px] shrink-0 flex flex-col justify-between">
+          <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.1 }} viewport={{ once: true }} className="w-full lg:w-[518.41px] shrink-0 flex flex-col justify-between">
             <div className="w-full flex flex-col gap-10 box-border">
               
               {/* ─── SUBMODULE A: SELECT MANAGEMENT PLAN ─── */}
@@ -215,7 +216,7 @@ export default function OrganicFarmingSetupPage() {
               </div>
 
             </div>
-          </div>
+          </motion.div>
 
         </div>
       </section>

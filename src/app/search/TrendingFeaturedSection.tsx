@@ -82,16 +82,15 @@ export default function TrendingFeaturedSection() {
   const [wrapId, setWrapId] = useState<number | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
 
-  const [scale, setScale] = useState(1);
   const scalerRef = useRef<HTMLDivElement>(null);
   const shellRef = useRef<HTMLDivElement>(null);
+  const dragStartX = useRef<number>(0);
 
   useEffect(() => {
     function update() {
       const vw = window.innerWidth;
-      const targetWidth = 1360; 
+      const targetWidth = 1360;
       const currentScale = vw < targetWidth ? vw / targetWidth : 1;
-      setScale(currentScale);
       if (scalerRef.current) {
         scalerRef.current.style.transform = `scale(${currentScale})`;
       }
@@ -158,48 +157,156 @@ export default function TrendingFeaturedSection() {
   };
 
   return (
-    <section
-      style={{
-        width: "100%",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        margin: "60px 0 100px 0",
-        gap: "60px",
-        overflow: "hidden",
-        boxSizing: "border-box",
-      }}
-    >
+    <section style={{ width: "100%", overflow: "hidden", boxSizing: "border-box" }}>
+
+      {/* ══════════════════════════════════════════════════════ */}
+      {/* MOBILE LAYOUT (< lg) — full-width peek carousel       */}
+      {/* ══════════════════════════════════════════════════════ */}
+      <div className="block lg:hidden w-full overflow-hidden py-10">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+          className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 px-4 mb-8"
+        >
+          <span className="font-jakarta font-bold text-[20px] leading-tight text-[#001F3F]">Farmland trending in</span>
+          <div className="flex items-center gap-2 cursor-pointer">
+            <span className="font-jakarta font-extrabold text-[20px] leading-tight text-brand-secondary">All Categories</span>
+            <svg width="14" height="10" viewBox="0 0 14 10" fill="none" stroke="#2780C4" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="2 2 7 7 12 2" />
+            </svg>
+          </div>
+        </motion.div>
+
+        {/* Carousel track — 40 px padding on each side centres card 0; each card = 100vw-80px */}
+        <div
+          className="relative w-full overflow-hidden"
+          onTouchStart={(e) => { dragStartX.current = e.touches[0].clientX; }}
+          onTouchEnd={(e) => {
+            const delta = dragStartX.current - e.changedTouches[0].clientX;
+            if (delta > 50) handleNext();
+            else if (delta < -50) handlePrev();
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              gap: "16px",
+              paddingLeft: "40px",
+              paddingRight: "40px",
+              willChange: "transform",
+              transition: "transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)",
+              "--mi": activeIndex,
+              transform: "translateX(calc(var(--mi) * -1 * (100vw - 64px)))",
+            } as React.CSSProperties}
+          >
+            {carouselItems.map((item) => {
+              const isActive = item.id === activeIndex;
+              return (
+                <div
+                  key={`mob-${item.id}`}
+                  onClick={() => handleCardClick(item.id)}
+                  style={{
+                    width: "calc(100vw - 80px)",
+                    height: "400px",
+                    flexShrink: 0,
+                    borderRadius: "24px",
+                    overflow: "hidden",
+                    position: "relative",
+                    cursor: isActive ? "default" : "pointer",
+                    opacity: isActive ? 1 : 0.6,
+                    transition: "opacity 0.4s ease",
+                  }}
+                >
+                  <Image
+                    src={item.img}
+                    alt={item.title}
+                    fill
+                    priority={isActive}
+                    sizes="80vw"
+                    style={{ objectFit: "cover" }}
+                  />
+                  {/* Glass bottom info overlay */}
+                  <div
+                    style={{
+                      position: "absolute",
+                      left: 0, right: 0, bottom: 0,
+                      height: "110px",
+                      background: "rgba(0,0,0,0.25)",
+                      backdropFilter: "blur(12px)",
+                      WebkitBackdropFilter: "blur(12px)",
+                      borderRadius: "0 0 24px 24px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      padding: "0 20px",
+                      boxSizing: "border-box",
+                      opacity: isActive ? 1 : 0,
+                      transition: "opacity 0.4s ease",
+                    }}
+                  >
+                    <div style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
+                      <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 600, fontSize: "18px", lineHeight: "24px", color: "#F5F7FA" }}>{item.title}</span>
+                      <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 500, fontSize: "14px", lineHeight: "18px", color: "#F5F7FA" }}>{item.region}</span>
+                    </div>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 600, fontSize: "18px", lineHeight: "24px", color: "#F5F7FA" }}>{item.price}</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Pagination arrows */}
+        <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center", gap: "19.39px", marginTop: "32px" }}>
+          <button
+            onClick={handlePrev}
+            disabled={isAnimating}
+            style={{ boxSizing: "border-box", width: "41.7px", height: "41.7px", border: "0.969701px solid #0F2F4C", borderRadius: "96.9701px", background: "transparent", display: "flex", alignItems: "center", justifyContent: "center", cursor: isAnimating ? "default" : "pointer", transition: "all 0.2s ease", opacity: isAnimating ? 0.6 : 1 }}
+            onMouseEnter={(e) => { if (!isAnimating) { e.currentTarget.style.background = "#0F2F4C"; const s = e.currentTarget.querySelector("svg") as SVGElement | null; if (s) s.style.stroke = "#FFFFFF"; }}}
+            onMouseLeave={(e) => { if (!isAnimating) { e.currentTarget.style.background = "transparent"; const s = e.currentTarget.querySelector("svg") as SVGElement | null; if (s) s.style.stroke = "#0F2F4C"; }}}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0F2F4C" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transition: "stroke 0.2s ease" }}>
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+          </button>
+          <button
+            onClick={handleNext}
+            disabled={isAnimating}
+            style={{ boxSizing: "border-box", width: "41.7px", height: "41.7px", border: "0.969701px solid #0F2F4C", borderRadius: "96.9701px", background: "transparent", display: "flex", alignItems: "center", justifyContent: "center", cursor: isAnimating ? "default" : "pointer", transition: "all 0.2s ease", opacity: isAnimating ? 0.6 : 1 }}
+            onMouseEnter={(e) => { if (!isAnimating) { e.currentTarget.style.background = "#0F2F4C"; const s = e.currentTarget.querySelector("svg") as SVGElement | null; if (s) s.style.stroke = "#FFFFFF"; }}}
+            onMouseLeave={(e) => { if (!isAnimating) { e.currentTarget.style.background = "transparent"; const s = e.currentTarget.querySelector("svg") as SVGElement | null; if (s) s.style.stroke = "#0F2F4C"; }}}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0F2F4C" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transition: "stroke 0.2s ease" }}>
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      {/* ══════════════════════════════════════════════════════ */}
+      {/* DESKTOP LAYOUT (>= lg) — existing Figma carousel      */}
+      {/* ══════════════════════════════════════════════════════ */}
+      <div
+        className="hidden lg:flex flex-col items-center"
+        style={{ margin: "60px 0 100px 0", gap: "60px", overflow: "hidden" }}
+      >
       {/* ─── HEADER TYPOGRAPHY ROW ─── */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.7 }}
-        style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center", gap: "11px" }}
+        className="flex flex-wrap flex-row items-center justify-center gap-x-2 gap-y-1 px-4"
       >
-        <span
-          style={{
-            fontFamily: "'Plus Jakarta Sans', sans-serif",
-            fontWeight: 700,
-            fontSize: "28px",
-            lineHeight: "36px",
-            color: "#001F3F",
-          }}
-        >
+        <span className="font-jakarta font-bold text-[20px] md:text-[28px] leading-tight text-[#001F3F]">
           Farmland trending in
         </span>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer" }}>
-          <span
-            style={{
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
-              fontWeight: 800,
-              fontSize: "28px",
-              lineHeight: "36px",
-              color: "#2780C4",
-            }}
-          >
+        <div className="flex items-center gap-2 cursor-pointer">
+          <span className="font-jakarta font-extrabold text-[20px] md:text-[28px] leading-tight text-brand-secondary">
             All Categories
           </span>
           <svg width="14" height="10" viewBox="0 0 14 10" fill="none" stroke="#2780C4" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -436,6 +543,8 @@ export default function TrendingFeaturedSection() {
           </svg>
         </button>
       </div>
+
+      </div>{/* end desktop wrapper */}
 
     </section>
   );

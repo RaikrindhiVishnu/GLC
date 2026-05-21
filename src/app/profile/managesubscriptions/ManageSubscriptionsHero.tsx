@@ -10,12 +10,10 @@ export default function ManageSubscriptionsHero() {
       style={{
         position: "relative",
         width: "100%",
-        height: "100vh",
-        maxHeight: "100vh",
         overflow: "hidden",
         boxSizing: "border-box",
       }}
-      className="flex flex-col items-center justify-start"
+      className="h-[80vh] md:h-screen min-h-125 md:min-h-160 flex flex-col items-center justify-start"
     >
       <div style={{ position: "absolute", inset: 0, background: "linear-gradient(0deg, rgba(0,0,0,0.4), rgba(0,0,0,0.4))", zIndex: 1 }} />
       <img

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { motion } from "framer-motion";
 
 interface PricingBentoGridProps {
@@ -8,29 +8,9 @@ interface PricingBentoGridProps {
 }
 
 export default function PricingBentoGrid({ onSelectPlan }: PricingBentoGridProps = {}) {
-  const [selectedTier, setSelectedTier] = useState<string>("growth"); 
+  const [mobileIndex, setMobileIndex] = useState(1); // start at Growth (index 1)
+  const dragStartX = useRef<number>(0);
 
-  const [scale, setScale] = useState(1);
-  const scalerRef = useRef<HTMLDivElement>(null);
-  const shellRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    function update() {
-      const vw = window.innerWidth;
-      const targetWidth = 1360;
-      const currentScale = vw < targetWidth ? vw / targetWidth : 1;
-      setScale(currentScale);
-      if (scalerRef.current) {
-        scalerRef.current.style.transform = `scale(${currentScale})`;
-      }
-      if (shellRef.current) {
-        shellRef.current.style.height = `${789 * currentScale}px`;
-      }
-    }
-    update();
-    window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
-  }, []);
 
   return (
     <motion.section
@@ -39,336 +19,287 @@ export default function PricingBentoGrid({ onSelectPlan }: PricingBentoGridProps
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.7 }}
-      style={{
-        width: "100%",
-        margin: "100px 0",
-        display: "flex",
-        justifyContent: "center",
-        overflow: "hidden",
-        boxSizing: "border-box",
-      }}
+      style={{ width: "100%", overflow: "hidden", boxSizing: "border-box" }}
     >
-      <div 
-        ref={shellRef} 
-        style={{ 
-          position: "relative", 
-          width: "1280px", 
-          maxWidth: "100%", 
-          height: "789px",
-          flexShrink: 0 
-        }}
-      >
+
+      {/* ══════════════════════════════════════════════ */}
+      {/* MOBILE LAYOUT (< lg) — peek carousel         */}
+      {/* ══════════════════════════════════════════════ */}
+      <div className="block lg:hidden w-full py-10">
+        {/* Header */}
+        <div className="flex flex-col items-center gap-3 text-center px-6 mb-8">
+          <motion.h2
+            initial={{ opacity: 0, filter: "blur(8px)" }}
+            whileInView={{ opacity: 1, filter: "blur(0px)" }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="m-0 font-jakarta font-bold text-[24px] text-[#131600]"
+            style={{ letterSpacing: "-0.6px" }}
+          >
+            Premium-Investor Access
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, filter: "blur(8px)" }}
+            whileInView={{ opacity: 1, filter: "blur(0px)" }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="m-0 font-jakarta font-normal text-[14px] leading-relaxed text-[#45474C]"
+          >
+            Select a subscription model that fits your portfolio scale. From single-asset insights to global agricultural surveillance.
+          </motion.p>
+        </div>
+
+        {/* Peek carousel track */}
         <div
-          ref={scalerRef}
-          style={{
-            position: "absolute",
-            top: 0,
-            left: "50%",
-            marginLeft: "-640px",
-            width: "1280px",
-            height: "789px",
-            transformOrigin: "top center",
-            willChange: "transform",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: "80px",
+          className="relative w-full overflow-hidden"
+          onTouchStart={(e) => { dragStartX.current = e.touches[0].clientX; }}
+          onTouchEnd={(e) => {
+            const delta = dragStartX.current - e.changedTouches[0].clientX;
+            if (delta > 50 && mobileIndex < 2) {
+              const next = mobileIndex + 1;
+              setMobileIndex(next);
+                          } else if (delta < -50 && mobileIndex > 0) {
+              const prev = mobileIndex - 1;
+              setMobileIndex(prev);
+                          }
           }}
         >
-          {/* Exactly the original Hardcoded figma layout container elements with no strings modified */}
-          {/* Header Titles */}
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px", width: "100%" }}>
-            <motion.h2
-              initial={{ opacity: 0, filter: "blur(8px)", y: 10 }}
-              whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7 }}
-              style={{
-                margin: 0,
-                fontFamily: "'Plus Jakarta Sans', sans-serif",
-                fontWeight: 700,
-                fontSize: "36px",
-                color: "#131600",
-                letterSpacing: "-0.9px",
-                textAlign: "center",
-              }}
-            >
-              Premium-Investor Access
-            </motion.h2>
-            <motion.p
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.25 }}
-              style={{
-                margin: 0,
-                fontFamily: "'Plus Jakarta Sans', sans-serif",
-                fontWeight: 400,
-                fontSize: "16px",
-                lineHeight: "24px",
-                color: "#45474C",
-                textAlign: "center",
-                maxWidth: "672px",
-              }}
-            >
-              Choose the perfect plan to accelerate your agricultural portfolio with GLC&apos;s proprietary continuous data stream, premium title pre-checks, and dedicated advisory pipelines.
-            </motion.p>
-          </div>
-
-          {/* Horizontal Stack Matrix */}
           <div
             style={{
               display: "flex",
-              flexDirection: "row",
-              gap: "32px",
-              width: "1280px",
-              alignItems: "center",
-              boxSizing: "border-box",
-            }}
+              gap: "16px",
+              paddingLeft: "40px",
+              paddingRight: "40px",
+              willChange: "transform",
+              transition: "transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)",
+              "--mi": mobileIndex,
+              transform: "translateX(calc(var(--mi) * -1 * (100vw - 64px)))",
+            } as React.CSSProperties}
           >
-            {/* 1. STARTER TIER */}
-            <div
-              onClick={() => setSelectedTier("starter")}
-              style={{
-                flex: 1,
-                height: "560px",
-                background: "#FFFFFF",
-                borderRadius: "42px",
-                boxShadow: selectedTier === "starter" ? "0px 12px 32px rgba(39, 128, 196, 0.15)" : "0px 4px 18px rgba(0, 0, 0, 0.06)",
-                border: selectedTier === "starter" ? "2px solid #2780C4" : "1px solid rgba(0, 0, 0, 0.05)",
-                overflow: "hidden",
-                display: "flex",
-                flexDirection: "column",
-                transition: "all 0.3s ease",
-                cursor: "pointer",
-                transform: selectedTier === "starter" ? "translateY(-8px)" : "translateY(0)",
-                boxSizing: "border-box",
-              }}
-            >
-              {/* Top Container */}
-              <div style={{ padding: "36px", display: "flex", flexDirection: "column", alignItems: "center", borderBottom: "1px solid rgba(0, 0, 0, 0.08)", boxSizing: "border-box" }}>
-                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", color: "#0F2F4C", textTransform: "uppercase", letterSpacing: "1px", opacity: 0.5 }}>
-                  silver Tier
-                </span>
-                <h3 style={{ margin: "4px 0 0 0", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "26px", color: "#0F2F4C" }}>
-                  Starter
-                </h3>
-                <div style={{ marginTop: "16px", display: "flex", alignItems: "baseline" }}>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "42px", color: "#0F2F4C" }}>₹9,999</span>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "14px", color: "#636363", marginLeft: "4px" }}>/yr</span>
-                </div>
-              </div>
-
-              {/* Bottom Specs List */}
-              <div style={{ padding: "36px", background: "#F5F5F5", display: "flex", flexDirection: "column", gap: "24px", flex: 1, justifyContent: "space-between", boxSizing: "border-box" }}>
-                <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-                  {[
-                    "Unlock 4 Premium Farmlands",
-                    "70-Year Title Search Records",
-                    "PDF Export Compliance Access",
-                  ].map((feat, idx) => (
-                    <div key={idx} style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                      <div style={{ width: "20px", height: "20px", borderRadius: "50%", background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #001F3F 100%)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                        <svg width="10" height="8" viewBox="0 0 12 10" fill="none" stroke="#FFFFFF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                          <polyline points="1.5 5.5 4.5 8.5 10.5 1.5"></polyline>
-                        </svg>
-                      </div>
-                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "15px", color: "#45474C" }}>{feat}</span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Action Trigger */}
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (onSelectPlan) onSelectPlan("starter");
-                  }}
+            {[
+              {
+                id: "starter", tier: "SILVER TIER", name: "Starter", price: "₹9,999", suffix: "/yr",
+                features: ["Unlock 4 Premium Farmlands", "70-Year Title Search Records", "PDF Export Compliance Access"],
+                popular: false,
+              },
+              {
+                id: "growth", tier: "GOLD TIER", name: "Growth", price: "₹19,999", suffix: "",
+                features: ["Unlocks 10 Farmlands", "Permanent GIS Access", "IO Risk Assessment", "Priority Document Request"],
+                popular: true,
+              },
+              {
+                id: "annual", tier: "PLATINUM TIER", name: "Annual Pass", price: "₹29,999", suffix: "/yr",
+                features: ["Unlimited Unlocks for 1 Year", "Dedicated IO Support", "Early Access to Pre-Docs"],
+                popular: false,
+              },
+            ].map((plan, i) => {
+              const isActive = i === mobileIndex;
+              return (
+                <div
+                  key={plan.id}
+                  onClick={() => setMobileIndex(i)}
                   style={{
-                    width: "100%",
-                    padding: "16px",
-                    borderRadius: "9999px",
-                    background: selectedTier === "starter" ? "#2780C4" : "rgba(174, 214, 239, 0.15)",
-                    border: selectedTier === "starter" ? "none" : "1px solid #2780C4",
-                    fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    fontWeight: 700,
-                    fontSize: "16px",
-                    color: selectedTier === "starter" ? "#FFFFFF" : "#2780C4",
-                    transition: "all 0.2s ease",
+                    width: "calc(100vw - 80px)",
+                    flexShrink: 0,
+                    borderRadius: "28px",
+                    overflow: "hidden",
+                    background: "#FFFFFF",
+                    border: isActive ? "2px solid #164573" : "1px solid rgba(0,0,0,0.08)",
                     cursor: "pointer",
-                    marginTop: "16px",
+                    opacity: isActive ? 1 : 0.65,
+                    transition: "opacity 0.4s ease, border 0.4s ease",
                   }}
                 >
-                  Select Starter Plan
-                </button>
-              </div>
-            </div>
-
-            {/* 2. GROWTH TIER (MOST POPULAR / ELEVATED) */}
-            <div
-              onClick={() => setSelectedTier("growth")}
-              style={{
-                flex: 1,
-                height: "600px",
-                background: "#FFFFFF",
-                borderRadius: "42px",
-                boxShadow: selectedTier === "growth" ? "0px 24px 48px rgba(22, 69, 115, 0.22)" : "0px 12px 32px rgba(0, 0, 0, 0.12)",
-                border: selectedTier === "growth" ? "2px solid #164573" : "1px solid rgba(0, 0, 0, 0.08)",
-                overflow: "hidden",
-                display: "flex",
-                flexDirection: "column",
-                transition: "all 0.3s ease",
-                cursor: "pointer",
-                position: "relative",
-                transform: selectedTier === "growth" ? "scale(1.04) translateY(-8px)" : "scale(1.02)",
-                boxSizing: "border-box",
-              }}
-            >
-              {/* Absolute Focus Ribbon */}
-              <div style={{ position: "absolute", top: "20px", right: "20px", background: "#FF5200", padding: "6px 16px", borderRadius: "9999px", zIndex: 5 }}>
-                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "11px", color: "#FFFFFF", textTransform: "uppercase", letterSpacing: "0.5px" }}>
-                  Most Popular
-                </span>
-              </div>
-
-              {/* Top Container */}
-              <div style={{ padding: "42px 36px", display: "flex", flexDirection: "column", alignItems: "center", borderBottom: "1px solid rgba(0, 0, 0, 0.08)", boxSizing: "border-box" }}>
-                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", color: "#0F2F4C", textTransform: "uppercase", letterSpacing: "1px", opacity: 0.5 }}>
-                  gold Tier
-                </span>
-                <h3 style={{ margin: "4px 0 0 0", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "28px", color: "#0F2F4C" }}>
-                  Growth
-                </h3>
-                <div style={{ marginTop: "16px", display: "flex", alignItems: "baseline" }}>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "70px", color: "#0F2F4C", lineHeight: "70px" }}>₹19,999</span>
-                </div>
-              </div>
-
-              {/* Bottom Specs List */}
-              <div style={{ padding: "42px 36px", background: "#F5F5F5", display: "flex", flexDirection: "column", gap: "28px", flex: 1, justifyContent: "space-between", boxSizing: "border-box" }}>
-                <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
-                  {[
-                    "Unlocks 10 High-Yield Farmlands",
-                    "Permanent GIS Map Overlays Access",
-                    "Intelligence Officer Risk Assessment",
-                    "Priority Document Pre-Request",
-                  ].map((feat, idx) => (
-                    <div key={idx} style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                      <div style={{ width: "20px", height: "20px", borderRadius: "50%", background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                        <svg width="10" height="8" viewBox="0 0 12 10" fill="none" stroke="#FFFFFF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                          <polyline points="1.5 5.5 4.5 8.5 10.5 1.5"></polyline>
-                        </svg>
-                      </div>
-                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "15px", color: "#131600" }}>{feat}</span>
+                  {/* Most Popular banner */}
+                  {plan.popular && (
+                    <div style={{ background: "#0F2F4C", padding: "12px 24px", textAlign: "center" }}>
+                      <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "14px", color: "#FFFFFF", letterSpacing: "0.3px" }}>Most Popular</span>
                     </div>
-                  ))}
-                </div>
+                  )}
 
-                {/* Action Trigger */}
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (onSelectPlan) onSelectPlan("growth");
-                  }}
-                  style={{
-                    width: "100%",
-                    padding: "18px",
-                    borderRadius: "9999px",
-                    background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)",
-                    border: "none",
-                    boxShadow: "0px 10px 20px rgba(22, 69, 115, 0.25)",
-                    fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    fontWeight: 700,
-                    fontSize: "17px",
-                    color: "#FFFFFF",
-                    transition: "all 0.2s ease",
-                    cursor: "pointer",
-                    marginTop: "12px",
-                  }}
-                >
-                  Select Growth Plan
-                </button>
-              </div>
-            </div>
-
-            {/* 3. ANNUAL PASS TIER */}
-            <div
-              onClick={() => setSelectedTier("annual")}
-              style={{
-                flex: 1,
-                height: "560px",
-                background: "#FFFFFF",
-                borderRadius: "42px",
-                boxShadow: selectedTier === "annual" ? "0px 12px 32px rgba(39, 128, 196, 0.15)" : "0px 4px 18px rgba(0, 0, 0, 0.06)",
-                border: selectedTier === "annual" ? "2px solid #2780C4" : "1px solid rgba(0, 0, 0, 0.05)",
-                overflow: "hidden",
-                display: "flex",
-                flexDirection: "column",
-                transition: "all 0.3s ease",
-                cursor: "pointer",
-                transform: selectedTier === "annual" ? "translateY(-8px)" : "translateY(0)",
-                boxSizing: "border-box",
-              }}
-            >
-              {/* Top Container */}
-              <div style={{ padding: "36px", display: "flex", flexDirection: "column", alignItems: "center", borderBottom: "1px solid rgba(0, 0, 0, 0.08)", boxSizing: "border-box" }}>
-                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", color: "#0F2F4C", textTransform: "uppercase", letterSpacing: "1px", opacity: 0.5 }}>
-                  platinum Tier
-                </span>
-                <h3 style={{ margin: "4px 0 0 0", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "26px", color: "#0F2F4C" }}>
-                  Annual Pass
-                </h3>
-                <div style={{ marginTop: "16px", display: "flex", alignItems: "baseline" }}>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "42px", color: "#0F2F4C" }}>₹29,999</span>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "14px", color: "#636363", marginLeft: "4px" }}>/yr</span>
-                </div>
-              </div>
-
-              {/* Bottom Specs List */}
-              <div style={{ padding: "36px", background: "#F5F5F5", display: "flex", flexDirection: "column", gap: "24px", flex: 1, justifyContent: "space-between", boxSizing: "border-box" }}>
-                <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-                  {[
-                    "Unlimited continuous unlocks for 1 year",
-                    "Dedicated Intelligence Officer Support",
-                    "Early Access to Verified Pre-Docs",
-                  ].map((feat, idx) => (
-                    <div key={idx} style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                      <div style={{ width: "20px", height: "20px", borderRadius: "50%", background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #001F3F 100%)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                        <svg width="10" height="8" viewBox="0 0 12 10" fill="none" stroke="#FFFFFF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                          <polyline points="1.5 5.5 4.5 8.5 10.5 1.5"></polyline>
-                        </svg>
-                      </div>
-                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "15px", color: "#45474C" }}>{feat}</span>
+                  {/* Price block */}
+                  <div style={{ padding: "24px 24px 20px", textAlign: "center", borderBottom: "1px solid rgba(0,0,0,0.07)" }}>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "10px", color: "#0F2F4C", textTransform: "uppercase", letterSpacing: "1.2px", opacity: 0.5 }}>{plan.tier}</span>
+                    <h3 style={{ margin: "4px 0 14px", fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "24px", color: "#0F2F4C" }}>{plan.name}</h3>
+                    <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: "3px" }}>
+                      <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 800, fontSize: "42px", lineHeight: 1, color: "#0F2F4C" }}>{plan.price}</span>
+                      {plan.suffix && <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 600, fontSize: "14px", color: "#636363" }}>{plan.suffix}</span>}
                     </div>
-                  ))}
-                </div>
+                  </div>
 
-                {/* Action Trigger */}
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (onSelectPlan) onSelectPlan("annual");
-                  }}
-                  style={{
-                    width: "100%",
-                    padding: "16px",
-                    borderRadius: "9999px",
-                    background: selectedTier === "annual" ? "#2780C4" : "rgba(174, 214, 239, 0.15)",
-                    border: selectedTier === "annual" ? "none" : "1px solid #2780C4",
-                    fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    fontWeight: 700,
-                    fontSize: "16px",
-                    color: selectedTier === "annual" ? "#FFFFFF" : "#2780C4",
-                    transition: "all 0.2s ease",
-                    cursor: "pointer",
-                    marginTop: "16px",
-                  }}
-                >
-                  Select Platinum Plan
-                </button>
-              </div>
-            </div>
+                  {/* Features + CTA */}
+                  <div style={{ padding: "20px 24px 24px", background: "#F7F8F9", display: "flex", flexDirection: "column", gap: "14px" }}>
+                    {plan.features.map((feat, idx) => (
+                      <div key={idx} style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2780C4" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                          <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                        <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 500, fontSize: "14px", color: "#45474C" }}>{feat}</span>
+                      </div>
+                    ))}
+                    <button
+                      onClick={(e) => { e.stopPropagation(); if (onSelectPlan) onSelectPlan(plan.id); }}
+                      style={{
+                        marginTop: "6px", width: "100%", padding: "14px", borderRadius: "9999px",
+                        background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)",
+                        border: "none",
+                        fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "15px",
+                        color: "#FFFFFF", cursor: "pointer",
+                        boxShadow: "0px 8px 20px rgba(22,69,115,0.25)",
+                      }}
+                    >
+                      Select Plan
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
           </div>
+        </div>
+
+        {/* Dot pagination */}
+        <div style={{ display: "flex", justifyContent: "center", gap: "8px", marginTop: "24px" }}>
+          {[0, 1, 2].map((i) => (
+            <button
+              key={i}
+              onClick={() => setMobileIndex(i)}
+              style={{
+                width: i === mobileIndex ? "20px" : "8px",
+                height: "8px",
+                borderRadius: "9999px",
+                background: i === mobileIndex ? "#0F2F4C" : "#D1D5DB",
+                border: "none",
+                cursor: "pointer",
+                transition: "all 0.3s ease",
+                padding: 0,
+              }}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* ══════════════════════════════════════════════ */}
+      {/* DESKTOP LAYOUT (>= lg)                        */}
+      {/* ══════════════════════════════════════════════ */}
+      <div className="hidden lg:flex flex-col items-center" style={{ margin: "80px 0", gap: "80px" }}>
+
+        {/* Header */}
+        <div className="flex flex-col items-center gap-4 text-center">
+          <motion.h2
+            initial={{ opacity: 0, filter: "blur(8px)" }}
+            whileInView={{ opacity: 1, filter: "blur(0px)" }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className="m-0 font-jakarta font-bold text-[36px] text-[#131600]"
+            style={{ letterSpacing: "-0.9px" }}
+          >
+            Premium-Investor Access
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, filter: "blur(8px)" }}
+            whileInView={{ opacity: 1, filter: "blur(0px)" }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="m-0 font-jakarta font-normal text-[16px] leading-relaxed text-[#45474C] max-w-[672px]"
+          >
+            Select a subscription model that fits your portfolio scale. From single-asset insights to global agricultural surveillance.
+          </motion.p>
+        </div>
+
+        {/* Cards */}
+        <div
+          className="flex items-center justify-center gap-0 w-full"
+          style={{ maxWidth: "1153.84px", minHeight: "642px" }}
+        >
+          {[
+            {
+              id: "starter", tier: "SILVER TIER", name: "Starter", price: "₹9,999", suffix: "/yr",
+              features: ["Unlock 4 Farmlands", "70-Year Title Search", "PDF Export Access"],
+              highlight: false, popular: false,
+            },
+            {
+              id: "growth", tier: "GOLD TIER", name: "Growth", price: "₹19,999", suffix: "",
+              features: ["Unlocks 10 Farmlands", "Permanent GIS Access", "IO Risk Assessment", "Priority Document Request"],
+              highlight: true, popular: true,
+            },
+            {
+              id: "annual", tier: "PLATINUM TIER", name: "Annual Pass", price: "₹29,999", suffix: "/yr",
+              features: ["Unlimited unlocks for 1 year", "Dedicated Intelligence Officer", "Early Access to Pre-Docs"],
+              highlight: false, popular: false,
+            },
+          ].map((tier, i) => (
+            <motion.div
+              key={tier.id}
+              initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
+              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: i * 0.15 }}
+              onClick={() => {}}
+              className={`relative flex flex-col w-full overflow-hidden transition-all duration-500 cursor-pointer bg-white ${
+                tier.highlight
+                  ? "max-w-[483.7px] min-h-[642px] z-20 shadow-[0px_30px_60px_rgba(0,0,0,0.12)] rounded-[42px] border-[4px] border-[#164573]"
+                  : i === 0
+                    ? "max-w-[335px] min-h-[428px] z-10 shadow-[0px_15px_40px_rgba(0,0,0,0.08)] rounded-l-[42px] rounded-r-none border border-[#F2F2F2]"
+                    : "max-w-[335px] min-h-[428px] z-10 shadow-[0px_15px_40px_rgba(0,0,0,0.08)] rounded-r-[42px] rounded-l-none border border-[#F2F2F2]"
+              }`}
+            >
+              {/* Most popular banner */}
+              {tier.popular && (
+                <div className="bg-[#164573] py-5 text-center">
+                  <span className="text-[20px] font-semibold text-white font-jakarta">Most popular</span>
+                </div>
+              )}
+
+              {/* Price header */}
+              <div className={`flex flex-col items-center justify-center bg-white px-10 ${tier.highlight ? "py-10" : "py-8"}`}>
+                <span className="text-[10px] font-bold uppercase tracking-[2px] text-[#0F2F4C] opacity-40 font-jakarta">{tier.tier}</span>
+                <h3 className={`mt-2 font-bold text-[#0F2F4C] font-jakarta ${tier.highlight ? "text-[32px]" : "text-[26px]"}`}>{tier.name}</h3>
+                <div className={`mt-4 font-extrabold text-[#0F2F4C] font-jakarta leading-none ${tier.highlight ? "text-[80px]" : "text-[52px]"}`}>
+                  {tier.price}
+                </div>
+              </div>
+
+              {/* Features + CTA */}
+              <div className={`flex-1 bg-[#F8F9FA] px-8 lg:px-10 flex flex-col ${tier.highlight ? "py-12" : "py-10"}`}>
+                <ul className={`flex-1 ${tier.highlight ? "space-y-6" : "space-y-5"}`}>
+                  {tier.features.map((feature, j) => (
+                    <motion.li
+                      key={j}
+                      initial={{ opacity: 0, filter: "blur(8px)" }}
+                      whileInView={{ opacity: 1, filter: "blur(0px)" }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.4, delay: j * 0.08 }}
+                      className="flex items-center gap-4"
+                    >
+                      <svg className="w-5 h-5 text-[#2780C4] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span className="text-[16px] font-medium text-[#45474C] font-jakarta">{feature}</span>
+                    </motion.li>
+                  ))}
+                </ul>
+
+                <div className="mt-8 flex justify-center">
+                  {tier.highlight ? (
+                    <button
+                      onClick={(e) => { e.stopPropagation(); if (onSelectPlan) onSelectPlan(tier.id); }}
+                      className="w-[380px] h-[52px] rounded-[30px] text-[18px] font-semibold text-white shadow-lg flex items-center justify-center cursor-pointer"
+                      style={{ background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)" }}
+                    >
+                      Select Plan
+                    </button>
+                  ) : (
+                    <button
+                      onClick={(e) => { e.stopPropagation(); if (onSelectPlan) onSelectPlan(tier.id); }}
+                      className="w-[240px] h-[52px] rounded-[30px] border border-[#2780C4] bg-[#AED6EF1A] text-[18px] font-semibold text-[#2780C4] hover:bg-[#2780C4] hover:text-white transition-all flex items-center justify-center cursor-pointer"
+                    >
+                      Select Plan
+                    </button>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
     </motion.section>

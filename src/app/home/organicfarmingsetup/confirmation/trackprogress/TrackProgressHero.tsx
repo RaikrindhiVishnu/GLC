@@ -8,7 +8,7 @@ export default function TrackProgressHero() {
   const router = useRouter();
 
   return (
-    <section className="w-full relative h-screen min-h-screen flex flex-col items-center justify-start box-border select-none overflow-hidden bg-[#0F2F4C] shrink-0">
+    <section className="w-full relative h-[80vh] md:h-screen min-h-125 md:min-h-160 flex flex-col items-center justify-start box-border select-none overflow-hidden bg-brand-primary shrink-0">
       
       {/* Immersive Background Cover exactly loading high-fidelity workspace visual overlay */}
       <div className="absolute inset-0 z-0">

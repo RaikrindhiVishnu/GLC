@@ -12,7 +12,6 @@ export default function MyAssetsPage() {
     <main
       style={{
         boxSizing: "border-box",
-        minHeight: "4086px", // Maps precisely to the high fidelity document bounds targeted
         background: "#F8F9FA",
         display: "flex",
         flexDirection: "column",
@@ -22,41 +21,13 @@ export default function MyAssetsPage() {
         width: "100%",
       }}
     >
-      {/* ─── LEVEL 1: FULL OVERLAY HERO SECTION ─── */}
       <MyAssetsHero />
 
-      {/* ─── LEVEL 2: SPLIT FEED & SIDEBAR BENTO DASHBOARD ─── */}
-      <section
-        style={{
-          boxSizing: "border-box",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          width: "100%",
-          paddingTop: "100px", // Aligning top bounds with document grid coordinates
-          paddingBottom: "64px",
-          paddingLeft: "24px",
-          paddingRight: "24px",
-          zIndex: 10,
-        }}
-      >
+      <section className="w-full max-w-7xl px-4 lg:px-8 pt-16 lg:pt-24 pb-12 box-border" style={{ zIndex: 10 }}>
         <MainWealthFeed />
       </section>
 
-      {/* ─── LEVEL 3: GAMIFIED BONUS BANNER LAYER ─── */}
-      <section
-        style={{
-          boxSizing: "border-box",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          width: "100%",
-          paddingBottom: "100px",
-          paddingLeft: "24px",
-          paddingRight: "24px",
-          zIndex: 15,
-        }}
-      >
+      <section className="w-full max-w-7xl px-4 lg:px-8 pb-16 lg:pb-24 box-border" style={{ zIndex: 15 }}>
         <GamificationBanner />
       </section>
 

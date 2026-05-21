@@ -2,53 +2,34 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 export default function DetailsFeed() {
   const [selectedTab, setSelectedTab] = useState<"operations" | "legal" | "tracking">("operations");
   const [hoveredResale, setHoveredResale] = useState(false);
 
   return (
-    <section
-      style={{
-        boxSizing: "border-box",
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "flex-start",
-        padding: "0px",
-        gap: "48px",
-        width: "1184px",
-        height: "884.19px",
-        position: "relative",
-        flexShrink: 0,
-      }}
-    >
+    <section className="flex flex-col lg:flex-row items-start gap-10 w-full">
       {/* ─── LEFT COLUMN (70% WIDTH) ─── */}
-      <div
-        style={{
-          boxSizing: "border-box",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "flex-start",
-          padding: "0px",
-          gap: "48px",
-          width: "795.2px",
-          height: "884.19px",
-          flexShrink: 0,
-        }}
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+        className="flex-1 min-w-0 flex flex-col gap-10"
+        style={{ boxSizing: "border-box" }}
       >
         {/* Segmented Control */}
         <div
           style={{
             boxSizing: "border-box",
-            display: "flex",
+            display: "inline-flex",
             flexDirection: "row",
             alignItems: "flex-start",
             padding: "6px",
-            width: "493.8px",
-            height: "56px",
             background: "#F3F4F5",
             borderRadius: "48px",
-            flexShrink: 0,
+            overflowX: "auto",
           }}
         >
           {/* Button 1: Operations & Yield */}
@@ -174,15 +155,14 @@ export default function DetailsFeed() {
             display: "flex",
             flexDirection: "column",
             alignItems: "flex-start",
-            padding: "40px",
-            gap: "40px",
-            width: "795.2px",
-            height: "440px",
+            padding: "32px",
+            gap: "32px",
+            width: "100%",
             background: "#FFFFFF",
             boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)",
             borderRadius: "32px",
-            flexShrink: 0,
           }}
+          className="lg:p-10"
         >
           {/* Header Track Container */}
           <div
@@ -193,97 +173,72 @@ export default function DetailsFeed() {
               justifyContent: "space-between",
               alignItems: "flex-end",
               padding: "0px",
-              width: "715.2px",
-              height: "64px",
+              width: "100%",
             }}
           >
             {/* Title subframe */}
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "8px", width: "551.16px", height: "64px" }}>
-              <div style={{ width: "551.16px", height: "32px" }}>
-                <span
-                  style={{
-                    width: "225.2px",
-                    height: "32px",
-                    fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    fontWeight: 700,
-                    fontSize: "24px",
-                    lineHeight: "32px",
-                    display: "flex",
-                    alignItems: "center",
-                    color: "#131600",
-                  }}
-                >
-                  Current Crop Cycle
-                </span>
-              </div>
-              <div style={{ width: "551.16px", height: "24px" }}>
-                <span
-                  style={{
-                    width: "551.16px",
-                    height: "24px",
-                    fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    fontWeight: 400,
-                    fontSize: "16px",
-                    lineHeight: "24px",
-                    display: "flex",
-                    alignItems: "center",
-                    color: "#45474C",
-                  }}
-                >
-                  Ongoing harvest preparation for high-yield timber and seasonal produce.
-                </span>
-              </div>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "8px", flex: 1, minWidth: 0 }}>
+              <span
+                style={{
+                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                  fontWeight: 700,
+                  fontSize: "24px",
+                  lineHeight: "32px",
+                  display: "block",
+                  color: "#131600",
+                }}
+              >
+                Current Crop Cycle
+              </span>
+              <span
+                style={{
+                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                  fontWeight: 400,
+                  fontSize: "16px",
+                  lineHeight: "24px",
+                  display: "block",
+                  color: "#45474C",
+                }}
+              >
+                Ongoing harvest preparation for high-yield timber and seasonal produce.
+              </span>
             </div>
 
             {/* Target Progress Container */}
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", width: "99.95px", height: "56px" }}>
-              <div style={{ width: "99.95px", height: "40px", display: "flex", justifyContent: "flex-end" }}>
-                <span
-                  style={{
-                    width: "82.38px",
-                    height: "40px",
-                    fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    fontWeight: 900,
-                    fontSize: "36px",
-                    lineHeight: "40px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "flex-end",
-                    textAlign: "right",
-                    color: "#091426",
-                  }}
-                >
-                  65%
-                </span>
-              </div>
-              <div style={{ width: "99.95px", height: "16px", display: "flex", justifyContent: "flex-end" }}>
-                <span
-                  style={{
-                    width: "99.95px",
-                    height: "16px",
-                    fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    fontWeight: 700,
-                    fontSize: "12px",
-                    lineHeight: "16px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "flex-end",
-                    textAlign: "right",
-                    letterSpacing: "-0.6px",
-                    textTransform: "uppercase",
-                    color: "#45474C",
-                  }}
-                >
-                  CYCLE PROGRESS
-                </span>
-              </div>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", flexShrink: 0, marginLeft: "16px" }}>
+              <span
+                style={{
+                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                  fontWeight: 900,
+                  fontSize: "36px",
+                  lineHeight: "40px",
+                  textAlign: "right",
+                  color: "#091426",
+                }}
+              >
+                65%
+              </span>
+              <span
+                style={{
+                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                  fontWeight: 700,
+                  fontSize: "12px",
+                  lineHeight: "16px",
+                  textAlign: "right",
+                  letterSpacing: "-0.6px",
+                  textTransform: "uppercase",
+                  color: "#45474C",
+                }}
+              >
+                CYCLE PROGRESS
+              </span>
             </div>
           </div>
 
           {/* Progress Bar Track */}
           <div
             style={{
-              width: "715.2px",
+              width: "100%",
               height: "16px",
               background: "#F3F4F5",
               borderRadius: "9999px",
@@ -305,53 +260,34 @@ export default function DetailsFeed() {
           </div>
 
           {/* Bottom Container Split Frame */}
-          <div style={{ width: "715.2px", height: "200px", position: "relative" }}>
+          <div className="w-full flex flex-col sm:flex-row gap-8 sm:gap-10">
             {/* Active Crops Column */}
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                padding: "0px",
-                gap: "24px",
-                position: "absolute",
-                height: "128px",
-                left: "0px",
-                width: "337.6px",
-                top: "0px",
-              }}
-            >
-              <div style={{ width: "337.6px", height: "16px" }}>
-                <span
-                  style={{
-                    width: "337.6px",
-                    height: "16px",
-                    fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    fontWeight: 800,
-                    fontSize: "12px",
-                    lineHeight: "16px",
-                    display: "flex",
-                    alignItems: "center",
-                    letterSpacing: "1.2px",
-                    textTransform: "uppercase",
-                    color: "#45474C",
-                  }}
-                >
-                  ACTIVE CROPS
-                </span>
-              </div>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", padding: "0px", gap: "24px", flex: 1 }}>
+              <span
+                style={{
+                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                  fontWeight: 800,
+                  fontSize: "12px",
+                  lineHeight: "16px",
+                  letterSpacing: "1.2px",
+                  textTransform: "uppercase",
+                  color: "#45474C",
+                }}
+              >
+                ACTIVE CROPS
+              </span>
 
               {/* Pills container */}
-              <div style={{ display: "flex", flexDirection: "row", alignItems: "flex-start", gap: "12px", width: "337.6px", height: "36px" }}>
+              <div style={{ display: "flex", flexDirection: "row", alignItems: "flex-start", gap: "12px", flexWrap: "wrap" }}>
                 {/* Pill 1 */}
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", padding: "8px 16px", width: "147.66px", height: "36px", background: "#EDEEEF", borderRadius: "32px", boxSizing: "border-box" }}>
-                  <span style={{ width: "115.66px", height: "20px", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", lineHeight: "20px", display: "flex", alignItems: "center", color: "#131600" }}>
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", padding: "8px 16px", background: "#EDEEEF", borderRadius: "32px", boxSizing: "border-box" }}>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", lineHeight: "20px", color: "#131600" }}>
                     Red Sandalwood
                   </span>
                 </div>
                 {/* Pill 2 */}
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", padding: "8px 16px", width: "143.67px", height: "36px", background: "#EDEEEF", borderRadius: "32px", boxSizing: "border-box" }}>
-                  <span style={{ width: "111.67px", height: "20px", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", lineHeight: "20px", display: "flex", alignItems: "center", color: "#131600" }}>
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", padding: "8px 16px", background: "#EDEEEF", borderRadius: "32px", boxSizing: "border-box" }}>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", lineHeight: "20px", color: "#131600" }}>
                     Seasonal Mango
                   </span>
                 </div>
@@ -359,68 +295,49 @@ export default function DetailsFeed() {
             </div>
 
             {/* Recent Yield Ledger Column */}
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                padding: "0px",
-                gap: "24px",
-                position: "absolute",
-                height: "200px",
-                left: "377.6px",
-                width: "337.6px",
-                top: "0px",
-              }}
-            >
-              <div style={{ width: "337.6px", height: "16px" }}>
-                <span
-                  style={{
-                    width: "337.6px",
-                    height: "16px",
-                    fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    fontWeight: 800,
-                    fontSize: "12px",
-                    lineHeight: "16px",
-                    display: "flex",
-                    alignItems: "center",
-                    letterSpacing: "1.2px",
-                    textTransform: "uppercase",
-                    color: "#45474C",
-                  }}
-                >
-                  RECENT YIELD LEDGER
-                </span>
-              </div>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", padding: "0px", gap: "24px", flex: 1 }}>
+              <span
+                style={{
+                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                  fontWeight: 800,
+                  fontSize: "12px",
+                  lineHeight: "16px",
+                  letterSpacing: "1.2px",
+                  textTransform: "uppercase",
+                  color: "#45474C",
+                }}
+              >
+                RECENT YIELD LEDGER
+              </span>
 
               {/* Rows layout */}
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "16px", width: "337.6px", height: "160px" }}>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "16px", width: "100%" }}>
                 {/* Row 1 */}
-                <div style={{ boxSizing: "border-box", display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: "16px", width: "337.6px", height: "72px", background: "#F3F4F5", borderRadius: "32px" }}>
-                  <div style={{ display: "flex", flexDirection: "column", width: "128.3px", height: "40px" }}>
-                    <span style={{ width: "128.3px", height: "24px", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", lineHeight: "24px", display: "flex", alignItems: "center", color: "#131600" }}>
+                <div style={{ boxSizing: "border-box", display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: "16px", width: "100%", height: "72px", background: "#F3F4F5", borderRadius: "32px" }}>
+                  <div style={{ display: "flex", flexDirection: "column" }}>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", lineHeight: "24px", color: "#131600" }}>
                       Q3 Organic Split
                     </span>
-                    <span style={{ width: "60.22px", height: "16px", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "12px", lineHeight: "16px", display: "flex", alignItems: "center", color: "#45474C" }}>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "12px", lineHeight: "16px", color: "#45474C" }}>
                       Sept 2023
                     </span>
                   </div>
-                  <span style={{ width: "99.64px", height: "28px", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "18px", lineHeight: "28px", display: "flex", alignItems: "center", justifyContent: "flex-end", color: "#00629E" }}>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "18px", lineHeight: "28px", color: "#00629E" }}>
                     ₹4,50,000
                   </span>
                 </div>
 
                 {/* Row 2 */}
-                <div style={{ boxSizing: "border-box", display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: "16px", width: "337.6px", height: "72px", background: "#F3F4F5", borderRadius: "32px" }}>
-                  <div style={{ display: "flex", flexDirection: "column", width: "178.45px", height: "40px" }}>
-                    <span style={{ width: "178.45px", height: "24px", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", lineHeight: "24px", display: "flex", alignItems: "center", color: "#131600" }}>
+                <div style={{ boxSizing: "border-box", display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: "16px", width: "100%", height: "72px", background: "#F3F4F5", borderRadius: "32px" }}>
+                  <div style={{ display: "flex", flexDirection: "column" }}>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", lineHeight: "24px", color: "#131600" }}>
                       Mango Harvest Surplus
                     </span>
-                    <span style={{ width: "58.27px", height: "16px", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "12px", lineHeight: "16px", display: "flex", alignItems: "center", color: "#45474C" }}>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "12px", lineHeight: "16px", color: "#45474C" }}>
                       June 2023
                     </span>
                   </div>
-                  <span style={{ width: "99.08px", height: "28px", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "18px", lineHeight: "28px", display: "flex", alignItems: "center", justifyContent: "flex-end", color: "#00629E" }}>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "18px", lineHeight: "28px", color: "#00629E" }}>
                     ₹3,80,000
                   </span>
                 </div>
@@ -430,22 +347,13 @@ export default function DetailsFeed() {
         </div>
 
         {/* Bento Section: Visual Updates */}
-        <div
-          style={{
-            width: "795.2px",
-            height: "292.19px",
-            position: "relative",
-            flexShrink: 0,
-          }}
-        >
+        <div className="w-full flex flex-col sm:flex-row gap-4">
           {/* Sapling Growth Card */}
           <div
             style={{
-              position: "absolute",
-              width: "519.47px",
-              height: "292.19px",
-              left: "0px",
-              top: "0px",
+              position: "relative",
+              flex: 1,
+              height: "208px",
               background: "#F3F4F5",
               borderRadius: "32px",
               overflow: "hidden",
@@ -467,16 +375,14 @@ export default function DetailsFeed() {
               flexDirection: "column",
               alignItems: "flex-start",
               padding: "32px",
-              gap: "39.73px",
-              position: "absolute",
-              width: "243.73px",
-              height: "292.19px",
-              left: "551.47px",
-              top: "0px",
+              gap: "24px",
               background: "#091426",
               borderRadius: "32px",
               overflow: "hidden",
+              position: "relative",
+              minHeight: "180px",
             }}
+            className="w-full sm:w-61"
           >
             {/* Soft backdrop glow effect */}
             <div
@@ -493,34 +399,29 @@ export default function DetailsFeed() {
             />
 
             {/* Typography items */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "8px", width: "179.73px", height: "108px", zIndex: 1, position: "relative" }}>
-              <span style={{ width: "179.73px", height: "16px", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", lineHeight: "16px", display: "flex", alignItems: "center", letterSpacing: "1.2px", textTransform: "uppercase", color: "#FFFFFF", opacity: 0.6 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px", zIndex: 1, position: "relative" }}>
+              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", lineHeight: "16px", letterSpacing: "1.2px", textTransform: "uppercase", color: "#FFFFFF", opacity: 0.6 }}>
                 SOIL HEALTH
               </span>
-              <span style={{ width: "179.73px", height: "36px", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "30px", lineHeight: "36px", display: "flex", alignItems: "center", color: "#FFFFFF" }}>
+              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "30px", lineHeight: "36px", color: "#FFFFFF" }}>
                 9.2 PH
               </span>
-              <span style={{ width: "179.73px", height: "40px", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "14px", lineHeight: "20px", display: "flex", alignItems: "center", color: "#FFFFFF", opacity: 0.8, marginTop: "8px" }}>
+              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "14px", lineHeight: "20px", color: "#FFFFFF", opacity: 0.8, marginTop: "8px" }}>
                 Optimal nutrient density achieved across Area A.
               </span>
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* ─── RIGHT COLUMN (30% WIDTH) ─── */}
-      <div
-        style={{
-          boxSizing: "border-box",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "flex-start",
-          padding: "0px",
-          gap: "32px",
-          width: "340.8px",
-          height: "884.19px",
-          flexShrink: 0,
-        }}
+      <motion.div
+        initial={{ opacity: 0, x: 20 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, delay: 0.1 }}
+        className="w-full lg:w-85.2 lg:shrink-0 flex flex-col gap-8"
+        style={{ boxSizing: "border-box" }}
       >
         {/* Wealth Manager Card */}
         <div
@@ -531,8 +432,7 @@ export default function DetailsFeed() {
             alignItems: "flex-start",
             padding: "32px",
             gap: "32px",
-            width: "340.8px",
-            height: "216px",
+            width: "100%",
             background: "#FFFFFF",
             boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)",
             borderRadius: "32px",
@@ -590,8 +490,7 @@ export default function DetailsFeed() {
             alignItems: "flex-start",
             padding: "32px",
             gap: "24px",
-            width: "340.8px",
-            height: "260px",
+            width: "100%",
             background: "#FFFFFF",
             borderRadius: "32px",
           }}
@@ -675,7 +574,7 @@ export default function DetailsFeed() {
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }

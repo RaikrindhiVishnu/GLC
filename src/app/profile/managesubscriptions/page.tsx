@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { motion } from "framer-motion";
 import ManageSubscriptionsHero from "./ManageSubscriptionsHero";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
@@ -21,7 +22,13 @@ export default function ManageSubscriptionsPage() {
         <div className="w-full flex flex-col lg:flex-row items-stretch gap-8 justify-center">
           
           {/* ─── SECTION 1: LEFT PANE - ACTIVE MEMBERSHIP HUB ─── */}
-          <div className="w-full lg:w-[304px] shrink-0 flex flex-col">
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="w-full lg:w-76 shrink-0 flex flex-col"
+          >
             <div className="w-full bg-white shadow-sm border border-slate-100 rounded-[48px] p-8 flex flex-col items-center justify-between box-border min-h-[580px] lg:h-[840px]">
               
               {/* Header Title Row */}
@@ -95,7 +102,7 @@ export default function ManageSubscriptionsPage() {
               </div>
 
             </div>
-          </div>
+          </motion.div>
 
 
           {/* ─── SECTION 2: CENTER PANE - TIER MATRIX ─── */}
@@ -114,9 +121,13 @@ export default function ManageSubscriptionsPage() {
 
               {/* Tier Cards Stacking View */}
               <div className="flex flex-col gap-4.5">
-                
+
                 {/* Tier Card 1: Starter */}
-                <div
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0 }}
+                  viewport={{ once: true }}
                   onClick={() => setSelectedTier("starter")}
                   className={`w-full bg-white/80 backdrop-blur-md border rounded-[32px] p-5 sm:p-6 flex items-center justify-between box-border cursor-pointer transition-all ${
                     selectedTier === "starter"
@@ -149,10 +160,14 @@ export default function ManageSubscriptionsPage() {
                       PER ANNUM
                     </span>
                   </div>
-                </div>
+                </motion.div>
 
                 {/* Tier Card 2: Growth */}
-                <div
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
+                  viewport={{ once: true }}
                   onClick={() => setSelectedTier("growth")}
                   className={`w-full bg-white/80 backdrop-blur-md border rounded-[32px] p-5 sm:p-6 flex items-center justify-between box-border cursor-pointer transition-all ${
                     selectedTier === "growth"
@@ -185,10 +200,14 @@ export default function ManageSubscriptionsPage() {
                       PER ANNUM
                     </span>
                   </div>
-                </div>
+                </motion.div>
 
                 {/* Tier Card 3: Pro Annual (Figma Selected Accent Anchor) */}
-                <div
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  viewport={{ once: true }}
                   onClick={() => setSelectedTier("pro-annual")}
                   className={`w-full bg-white backdrop-blur-md border rounded-[32px] p-5 sm:p-6 flex items-center justify-between box-border cursor-pointer transition-all relative overflow-hidden ${
                     selectedTier === "pro-annual"
@@ -227,7 +246,7 @@ export default function ManageSubscriptionsPage() {
                       PER ANNUM
                     </span>
                   </div>
-                </div>
+                </motion.div>
 
               </div>
 
@@ -250,7 +269,13 @@ export default function ManageSubscriptionsPage() {
 
 
           {/* ─── SECTION 3: RIGHT PANE - PLATINUM ANCHOR ─── */}
-          <div className="w-full lg:w-[405px] shrink-0 flex flex-col">
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            viewport={{ once: true }}
+            className="w-full lg:w-101.25 shrink-0 flex flex-col"
+          >
             <div className="w-full bg-[#091426] shadow-2xl rounded-[48px] p-8 sm:p-10 flex flex-col justify-between box-border relative overflow-hidden min-h-[580px] lg:h-[840px]">
               
               {/* Internal Ambient Abstract Glow Node Overlay */}
@@ -314,7 +339,7 @@ export default function ManageSubscriptionsPage() {
               </div>
 
             </div>
-          </div>
+          </motion.div>
 
         </div>
       </section>

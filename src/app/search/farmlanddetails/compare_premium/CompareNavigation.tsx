@@ -8,7 +8,7 @@ export default function CompareNavigation() {
   const router = useRouter();
 
   return (
-    <nav className="absolute top-[24px] left-0 w-full z-50 flex justify-center pointer-events-none">
+    <nav className="hidden lg:flex absolute top-6 left-0 w-full z-50 justify-center pointer-events-none">
       {/* Left Logo */}
       <div className="absolute left-[60px] pointer-events-auto cursor-pointer" onClick={() => router.push("/home")}>
         <Image

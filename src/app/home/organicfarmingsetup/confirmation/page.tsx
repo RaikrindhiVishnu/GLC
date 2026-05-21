@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import OrganicFarmingSetupHero from "../OrganicFarmingSetupHero";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
+import { motion } from "framer-motion";
 
 export default function OrganicFarmingSetupConfirmationPage() {
   const router = useRouter();
@@ -23,25 +24,40 @@ export default function OrganicFarmingSetupConfirmationPage() {
         <div className="w-full max-w-[896px] flex flex-col items-center gap-4 mb-16 box-border">
           
           {/* Radial Gradient Verified Ring Icon Slot */}
-          <div className="w-[96px] h-[96px] rounded-full bg-[radial-gradient(59.38%_41.98%_at_50%_50%,#2780C4_0%,#164573_100%)] border-[5px] border-[#AED6EF] flex items-center justify-center relative shadow-sm box-border shrink-0">
+          <motion.div
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ type: "spring", duration: 0.6, delay: 0.2 }}
+            className="w-24 h-24 rounded-full bg-[radial-gradient(59.38%_41.98%_at_50%_50%,#2780C4_0%,#164573_100%)] border-[5px] border-[#AED6EF] flex items-center justify-center relative shadow-sm box-border shrink-0"
+          >
             <span className="text-white text-4xl font-extrabold block">✓</span>
-          </div>
+          </motion.div>
 
           {/* Core Announcement Typography */}
-          <h2 className="m-0 font-extrabold text-4xl sm:text-5xl md:text-[60px] text-[#131600] tracking-[-1.5px] leading-tight md:leading-[60px] text-center mt-3">
+          <motion.h2
+            initial={{ opacity: 0, filter: "blur(8px)" }}
+            animate={{ opacity: 1, filter: "blur(0px)" }}
+            transition={{ duration: 0.7, delay: 0.3 }}
+            className="m-0 font-extrabold text-4xl sm:text-5xl md:text-[60px] text-[#131600] tracking-[-1.5px] leading-tight md:leading-15 text-center mt-3"
+          >
             Work Order Generated.
-          </h2>
+          </motion.h2>
 
           {/* Explanatory Subtitle mapped to screenshot parameters precisely */}
-          <p className="m-0 font-normal text-base sm:text-lg md:text-[20px] text-[#45474C] max-w-[672px] leading-relaxed text-center">
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className="m-0 font-normal text-base sm:text-lg md:text-[20px] text-[#45474C] max-w-2xl leading-relaxed text-center"
+          >
             Your land is now enrolled. A Field Officer (FO) has been assigned to begin site validation and soil preparation.
-          </p>
+          </motion.p>
 
         </div>
 
 
         {/* ─── SECTION 2: EXECUTIVE RECEIPT CARD CONSOLE ─── */}
-        <div className="w-full max-w-[1024px] bg-white shadow-[0_40px_80px_-20px_rgba(9,20,38,0.04)] rounded-[48px] flex flex-col box-border overflow-hidden border border-slate-50">
+        <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} viewport={{ once: true }} className="w-full max-w-5xl bg-white shadow-[0_40px_80px_-20px_rgba(9,20,38,0.04)] rounded-[48px] flex flex-col box-border overflow-hidden border border-slate-50">
           
           {/* Top Panel: Apple-style Inset metadata parameters */}
           <div className="w-full p-6 sm:p-12 box-border border-b border-[#F3F4F5]">
@@ -102,7 +118,7 @@ export default function OrganicFarmingSetupConfirmationPage() {
             </div>
           </div>
 
-        </div>
+        </motion.div>
 
 
         {/* ─── SECTION 3: ACTION DECK TRIGGER CONTAINER ─── */}

@@ -2,23 +2,39 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 export default function ResetPasswordPage() {
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
   return (
-    <div className="w-full max-w-[440px]">
-      <h1 className="text-[34px] lg:text-[42px] font-bold text-[#353535] font-jakarta leading-tight mb-2">
+    <div className="w-full max-w-110">
+      <motion.h1
+        initial={{ opacity: 0, filter: "blur(8px)" }}
+        animate={{ opacity: 1, filter: "blur(0px)" }}
+        transition={{ duration: 0.7 }}
+        className="text-[34px] lg:text-[42px] font-bold text-[#353535] font-jakarta leading-tight mb-2"
+      >
         Reset Your Password?
-      </h1>
-      <p className="text-[14px] text-[#B8B8B8] font-jakarta mb-8 leading-[1.6]">
+      </motion.h1>
+      <motion.p
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        className="text-[14px] text-[#B8B8B8] font-jakarta mb-8 leading-[1.6]"
+      >
         Create a new password to access your account.
-      </p>
+      </motion.p>
 
       {/* New password */}
-      <div className="mb-4 lg:mb-5 bg-white border border-[#D3DEEA] rounded-[33px] h-[58px] lg:h-[66px] flex items-center px-6 gap-3 focus-within:border-[#2780C4] focus-within:ring-1 focus-within:ring-[#2780C4]/20 transition-all cursor-text">
-        <svg className="w-5 h-5 text-[#2780C4] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.35 }}
+        className="mb-4 lg:mb-5 bg-white border border-[#D3DEEA] rounded-[33px] h-14.5 lg:h-16.5 flex items-center px-6 gap-3 focus-within:border-brand-secondary focus-within:ring-1 focus-within:ring-brand-secondary/20 transition-all cursor-text"
+      >
+        <svg className="w-5 h-5 text-brand-secondary shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
         </svg>
         <div className="w-px h-5 bg-[#EFEFEF] shrink-0" />
@@ -35,11 +51,16 @@ export default function ResetPasswordPage() {
             }
           </svg>
         </button>
-      </div>
+      </motion.div>
 
       {/* Confirm password */}
-      <div className="mb-6 lg:mb-8 bg-white border border-[#D3DEEA] rounded-[33px] h-[58px] lg:h-[66px] flex items-center px-6 gap-3 focus-within:border-[#2780C4] focus-within:ring-1 focus-within:ring-[#2780C4]/20 transition-all cursor-text">
-        <svg className="w-5 h-5 text-[#2780C4] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.45 }}
+        className="mb-6 lg:mb-8 bg-white border border-[#D3DEEA] rounded-[33px] h-14.5 lg:h-16.5 flex items-center px-6 gap-3 focus-within:border-brand-secondary focus-within:ring-1 focus-within:ring-brand-secondary/20 transition-all cursor-text"
+      >
+        <svg className="w-5 h-5 text-brand-secondary shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
         </svg>
         <div className="w-px h-5 bg-[#EFEFEF] shrink-0" />
@@ -56,17 +77,23 @@ export default function ResetPasswordPage() {
             }
           </svg>
         </button>
-      </div>
+      </motion.div>
 
       {/* Continue */}
-      <Link href="/login" className="block w-full">
-        <button
-          className="w-full h-[52px] lg:h-[58px] rounded-full text-[16px] font-bold text-white font-jakarta [-webkit-tap-highlight-color:transparent] transition-all cursor-pointer"
-          style={{ background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)", border: "1px solid #43B6CD" }}
-        >
-          Continue
-        </button>
-      </Link>
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.6 }}
+      >
+        <Link href="/login" className="block w-full">
+          <button
+            className="w-full h-13 lg:h-14.5 rounded-full text-[16px] font-bold text-white font-jakarta [-webkit-tap-highlight-color:transparent] transition-all cursor-pointer"
+            style={{ background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)", border: "1px solid #43B6CD" }}
+          >
+            Continue
+          </button>
+        </Link>
+      </motion.div>
     </div>
   );
 }

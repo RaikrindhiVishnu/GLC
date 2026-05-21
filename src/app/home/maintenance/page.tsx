@@ -10,9 +10,6 @@ export default function MaintenanceOfFarmlandPage() {
       {/* 1. Cinematic Hero Overlay Module */}
       <MaintenanceHero />
 
-      {/* Spacing alignment block preserving visual hierarchy */}
-      <div style={{ height: "48px", width: "100%" }} />
-
       {/* 2. Onboard Split Control Panel Form Widget */}
       <MaintenanceOnboardSection />
 

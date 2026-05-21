@@ -32,7 +32,6 @@ export default function CategoriesFilterTabs() {
           width: "100%",
           maxWidth: "1280px",
           margin: "0 auto",
-          padding: "10px 60px",
           display: "flex",
           flexDirection: "row",
           alignItems: "center",
@@ -41,6 +40,7 @@ export default function CategoriesFilterTabs() {
           scrollbarWidth: "none",
           msOverflowStyle: "none",
         }}
+        className="px-4 sm:px-6 lg:px-15 py-2.5"
       >
         {glassChips.map((chip, i) => (
           <motion.div

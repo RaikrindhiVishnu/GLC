@@ -1,410 +1,153 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import Navbar from "@/components/Navbar";
 
 export default function MyAssetsHero() {
   const router = useRouter();
+  const scalerRef = useRef<HTMLDivElement>(null);
+  const shellRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function update() {
+      const vw = window.innerWidth;
+      const scale = Math.min(vw / 1440, window.innerHeight / 960);
+      if (scalerRef.current) scalerRef.current.style.transform = `scale(${scale})`;
+      if (shellRef.current) shellRef.current.style.height = `${960 * scale}px`;
+    }
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
 
   return (
-    <section
-      style={{
-        position: "relative",
-        width: "100%",
-        height: "960px",
-        background: "#091426",
-        overflow: "hidden",
-        display: "flex",
-        justifyContent: "center",
-        flexShrink: 0,
-      }}
-    >
-      {/* Background Layer with Dark Overlay */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background: "linear-gradient(0deg, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45))",
-          zIndex: 1,
-        }}
-      />
-      <Image
-        src="/assets/my-assets/hero.svg"
-        alt="My Assets Background Banner"
-        fill
-        priority
-        style={{ objectFit: "cover", objectPosition: "center", zIndex: 0 }}
-      />
-
-      {/* ─── EXACT 1440px FIGMA ALIGNED LAYOUT SPACE ─── */}
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "1440px",
-          height: "960px",
-          zIndex: 20,
-          pointerEvents: "none",
-        }}
-      >
-        {/* Brand Logo */}
-        <div
-          style={{
-            position: "absolute",
-            width: "150px",
-            height: "64px",
-            left: "60px",
-            top: "58px",
-            cursor: "pointer",
-            pointerEvents: "auto",
-            display: "flex",
-            alignItems: "center",
-          }}
-          onClick={() => router.push("/home")}
-        >
-          <Image
-            src="/assets/common/Logo green land 1.svg"
-            alt="Green Land Capital Brand Logo"
-            width={150}
-            height={64}
-            style={{ objectFit: "contain" }}
-          />
+    <>
+      {/* ══ MOBILE LAYOUT (< lg) ══ */}
+      <div className="block lg:hidden relative w-full h-[80vh] min-h-125 overflow-hidden" style={{ background: "#091426" }}>
+        <Image src="/assets/my-assets/hero.svg" alt="My Assets Background" fill priority style={{ objectFit: "cover", objectPosition: "center", zIndex: 0 }} />
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(0deg, rgba(0,0,0,0.55), rgba(0,0,0,0.45))", zIndex: 1 }} />
+        <div style={{ position: "relative", zIndex: 10 }}>
+          <Navbar variant="app" active="search" />
         </div>
-
-        {/* Central Left Menu Navigation Pill Capsule */}
-        {/* Central Left Menu Navigation Pill Capsule (Figma Layout Parity: Inactive state line-art icons) */}
-        <div
-          style={{
-            boxSizing: "border-box",
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            padding: "10px",
-            gap: "10px",
-            position: "absolute",
-            width: "242px",
-            height: "68px",
-            left: "calc(50% - 242px/2 + 0.5px)",
-            top: "59px",
-            background: "rgba(255, 255, 255, 0.1)",
-            boxShadow:
-              "0px 8px 6px rgba(0, 0, 0, 0.05), inset 3px 4px 2px -3px rgba(255, 255, 255, 0.55), inset 0px -1px 1px rgba(255, 255, 255, 0.25), inset 0px 1px 1px rgba(255, 255, 255, 0.25)",
-            backdropFilter: "blur(50px)",
-            WebkitBackdropFilter: "blur(50px)",
-            borderRadius: "100px",
-            pointerEvents: "auto",
-            justifyContent: "space-between",
-          }}
-        >
-          {/* Slot 1: HOME Line-art Icon Button */}
-          <button
-            onClick={() => router.push("/home")}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              width: "48px",
-              height: "48px",
-              borderRadius: "100px",
-              background: "transparent",
-              border: "none",
-              cursor: "pointer",
-              flexShrink: 0,
-              transition: "transform 0.2s ease",
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
-            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+        <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "calc(80vh - 72px)", padding: "32px 20px 48px", textAlign: "center" }}>
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: "9999px", padding: "4px 16px", marginBottom: "24px", backdropFilter: "blur(20px)" }}
           >
-            <svg width="21.62" height="21.62" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-              <polyline points="9 22 9 12 15 12 15 22"></polyline>
-            </svg>
-          </button>
-
-          {/* Slot 2: Search Icon Tab Button */}
-          <button
-            onClick={() => router.push("/search")}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              width: "48px",
-              height: "48px",
-              borderRadius: "100px",
-              background: "transparent",
-              border: "none",
-              cursor: "pointer",
-              flexShrink: 0,
-              transition: "transform 0.2s ease",
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
-            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", letterSpacing: "2px", color: "#FFFFFF", textTransform: "uppercase" }}>TIER: DIGITAL CURATOR</span>
+          </motion.div>
+          <motion.h1
+            initial={{ opacity: 0, filter: "blur(8px)", y: 15 }}
+            animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="text-[52px] sm:text-[72px]"
+            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, letterSpacing: "-1.8px", color: "#FFFFFF", margin: "0 0 16px", lineHeight: 1 }}
           >
-            <Image src="/assets/home/HeroScreen/search.svg" alt="Search routing tab" width={22} height={22} />
-          </button>
-
-          {/* Slot 3: Pricing Icon Tab Button */}
-          <button
-            onClick={() => router.push("/pricing")}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              width: "48px",
-              height: "48px",
-              borderRadius: "100px",
-              background: "transparent",
-              border: "none",
-              cursor: "pointer",
-              flexShrink: 0,
-              transition: "transform 0.2s ease",
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
-            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+            My Assets
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "16px", lineHeight: "26px", color: "rgba(255,255,255,0.8)", maxWidth: "480px", margin: "0 0 32px" }}
           >
-            <Image src="/assets/home/HeroScreen/Vector.svg" alt="Pricing Wishlist tab" width={21.66} height={19.49} />
-          </button>
-
-          {/* Slot 4: User Profile Tab Button */}
-          <button
-            onClick={() => router.push("/profile")}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              width: "48px",
-              height: "48px",
-              borderRadius: "100px",
-              background: "transparent",
-              border: "none",
-              cursor: "pointer",
-              flexShrink: 0,
-              transition: "transform 0.2s ease",
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
-            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+            Manage your premium agricultural assets, track performance, and access your secure legal vault.
+          </motion.p>
+          <motion.button
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.65 }}
+            onClick={() => router.push("/home/myassets/details")}
+            style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: "100px", backdropFilter: "blur(20px)", padding: "12px 32px", cursor: "pointer" }}
           >
-            <Image src="/assets/home/HeroScreen/user 1.png" alt="User routing tab" width={21.62} height={21.62} />
-          </button>
-        </div>
-
-        {/* Right side controls */}
-        {/* Unlock Button Pill */}
-        <button
-          style={{
-            boxSizing: "border-box",
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "center",
-            position: "absolute",
-            width: "52px",
-            height: "51.39px",
-            left: "1194px",
-            top: "70px",
-            background: "rgba(255, 255, 255, 0.1)",
-            boxShadow: "0px 10.0267px 7.52px rgba(0, 0, 0, 0.05), inset 3.76px 5.01333px 2.50667px -3.76px rgba(255, 255, 255, 0.55)",
-            backdropFilter: "blur(62.6667px)",
-            WebkitBackdropFilter: "blur(62.6667px)",
-            borderRadius: "125.333px",
-            border: "none",
-            cursor: "pointer",
-            pointerEvents: "auto",
-          }}
-        >
-          <Image src="/assets/home/HeroScreen/unlock 1.svg" alt="Unlock Console" width={26.32} height={26.32} />
-        </button>
-
-        {/* Notification Bell Pill */}
-        <button
-          style={{
-            boxSizing: "border-box",
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "center",
-            position: "absolute",
-            width: "52px",
-            height: "51.39px",
-            left: "1261px",
-            top: "70px",
-            background: "rgba(255, 255, 255, 0.1)",
-            boxShadow: "0px 10.0267px 7.52px rgba(0, 0, 0, 0.05), inset 3.76px 5.01333px 2.50667px -3.76px rgba(255, 255, 255, 0.55)",
-            backdropFilter: "blur(62.6667px)",
-            WebkitBackdropFilter: "blur(62.6667px)",
-            borderRadius: "125.333px",
-            border: "none",
-            cursor: "pointer",
-            pointerEvents: "auto",
-          }}
-        >
-          <Image src="/assets/home/HeroScreen/notification.svg" alt="Notifications Context" width={26.32} height={26.32} />
-          {/* Active Red Status Beacon */}
-          <span
-            style={{
-              boxSizing: "border-box",
-              position: "absolute",
-              width: "6.3px",
-              height: "6.3px",
-              left: "27.39px",
-              top: "13.53px",
-              background: "#E53935",
-              border: "0.904652px solid rgba(255, 255, 255, 0.9)",
-              borderRadius: "899.968px",
-            }}
-          />
-        </button>
-
-        {/* Avatar Capsule Circle */}
-        <div
-          onClick={() => router.push("/profile")}
-          style={{
-            boxSizing: "border-box",
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            position: "absolute",
-            width: "52px",
-            height: "52px",
-            left: "1328px",
-            top: "69px",
-            borderRadius: "899.968px",
-            boxShadow: "0px 1.80174px 10.8104px rgba(0, 0, 0, 0.03)",
-            overflow: "hidden",
-            cursor: "pointer",
-            pointerEvents: "auto",
-          }}
-        >
-          <img
-            src="/assets/home/HeroScreen/person.svg"
-            alt="User Avatar"
-            style={{ width: "100%", height: "100%", objectFit: "cover", transform: "scale(1.5)" }}
-          />
-        </div>
-
-        {/* ─── HERO TYPOGRAPHY FRAME ─── */}
-        <div
-          onClick={() => router.push("/home/myassets/details")}
-          style={{
-            boxSizing: "border-box",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            padding: "0px 32px",
-            gap: "32px",
-            position: "absolute",
-            width: "896px",
-            left: "calc(50% - 896px/2)",
-            top: "320px",
-            pointerEvents: "auto",
-            cursor: "pointer",
-          }}
-        >
-          {/* Main Title Heading Container */}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              width: "832px",
-            }}
-          >
-            <h1
-              style={{
-                margin: 0,
-                fontFamily: "'Plus Jakarta Sans', sans-serif",
-                fontWeight: 800,
-                fontSize: "100px",
-                lineHeight: "1",
-                display: "flex",
-                alignItems: "center",
-                textAlign: "center",
-                letterSpacing: "-1.8px",
-                color: "#FFFFFF",
-              }}
-            >
-              My Assets
-            </h1>
-          </div>
-
-          {/* Subheading Text Block */}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              width: "832px",
-            }}
-          >
-            <p
-              style={{
-                margin: 0,
-                maxWidth: "954px",
-                fontFamily: "'Plus Jakarta Sans', sans-serif",
-                fontWeight: 500,
-                fontSize: "24px",
-                lineHeight: "32px",
-                display: "flex",
-                alignItems: "center",
-                textAlign: "center",
-                justifyContent: "center",
-                color: "#FFFFFF",
-              }}
-            >
-              Manage your premium agricultural assets, track performance, and access your secure legal vault.
-            </p>
-          </div>
-
-          {/* Single Line Tier Indicator Button */}
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              router.push("/home/myassets/details");
-            }}
-            style={{
-              boxSizing: "border-box",
-              display: "inline-flex",
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: "12px 32px",
-              background: "rgba(255, 255, 255, 0.1)",
-              border: "1px solid rgba(255, 255, 255, 0.2)",
-              borderRadius: "100px",
-              backdropFilter: "blur(20px)",
-              WebkitBackdropFilter: "blur(20px)",
-              cursor: "pointer",
-              whiteSpace: "nowrap",
-              boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.1)",
-              transition: "all 0.2s ease",
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255, 255, 255, 0.18)")}
-            onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(255, 255, 255, 0.1)")}
-          >
-            <span
-              style={{
-                fontFamily: "'Plus Jakarta Sans', sans-serif",
-                fontWeight: 700,
-                fontSize: "14px",
-                lineHeight: "20px",
-                letterSpacing: "2px",
-                color: "#FFFFFF",
-                whiteSpace: "nowrap",
-              }}
-            >
-              TIER: DIGITAL CURATOR
-            </span>
-          </button>
+            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", letterSpacing: "2px", color: "#FFFFFF", textTransform: "uppercase" }}>VIEW MY ASSETS</span>
+          </motion.button>
         </div>
       </div>
-    </section>
+
+      {/* ══ DESKTOP LAYOUT (>= lg) — scaler shell ══ */}
+      <div className="hidden lg:block" ref={shellRef} style={{ position: "relative", width: "100%", overflow: "hidden" }}>
+        <div ref={scalerRef} style={{ position: "absolute", top: 0, left: "50%", marginLeft: "-720px", width: "1440px", height: "960px", transformOrigin: "top center" }}>
+          <section style={{ position: "relative", width: "1440px", height: "960px", background: "#091426", overflow: "hidden", display: "flex", justifyContent: "center" }}>
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(0deg, rgba(0,0,0,0.45), rgba(0,0,0,0.45))", zIndex: 1 }} />
+            <Image src="/assets/my-assets/hero.svg" alt="My Assets Background" fill priority style={{ objectFit: "cover", objectPosition: "center", zIndex: 0 }} />
+
+            <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: "1440px", height: "960px", zIndex: 20, pointerEvents: "none" }}>
+              {/* Brand Logo */}
+              <div style={{ position: "absolute", width: "150px", height: "64px", left: "60px", top: "58px", cursor: "pointer", pointerEvents: "auto", display: "flex", alignItems: "center" }} onClick={() => router.push("/home")}>
+                <Image src="/assets/common/Logo green land 1.svg" alt="Green Land Capital" width={150} height={64} style={{ objectFit: "contain" }} />
+              </div>
+
+              {/* Nav Pill */}
+              <div style={{ boxSizing: "border-box", display: "flex", flexDirection: "row", alignItems: "center", padding: "10px", gap: "10px", position: "absolute", width: "242px", height: "68px", left: "calc(50% - 121px)", top: "59px", background: "rgba(255,255,255,0.1)", boxShadow: "0px 8px 6px rgba(0,0,0,0.05), inset 3px 4px 2px -3px rgba(255,255,255,0.55), inset 0px -1px 1px rgba(255,255,255,0.25)", backdropFilter: "blur(50px)", borderRadius: "100px", pointerEvents: "auto", justifyContent: "space-between" }}>
+                {[
+                  { icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>, route: "/home" },
+                  { icon: <Image src="/assets/home/HeroScreen/search.svg" alt="Search" width={22} height={22} />, route: "/search" },
+                  { icon: <Image src="/assets/home/HeroScreen/Vector.svg" alt="Pricing" width={22} height={20} />, route: "/pricing" },
+                  { icon: <Image src="/assets/home/HeroScreen/user 1.png" alt="Profile" width={22} height={22} />, route: "/profile" },
+                ].map((item, i) => (
+                  <button key={i} onClick={() => router.push(item.route)} style={{ width: "48px", height: "48px", borderRadius: "100px", background: "transparent", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", transition: "transform 0.2s ease" }} onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")} onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}>
+                    {item.icon}
+                  </button>
+                ))}
+              </div>
+
+              {/* Unlock button */}
+              <button style={{ position: "absolute", width: "52px", height: "52px", left: "1194px", top: "70px", background: "rgba(255,255,255,0.1)", backdropFilter: "blur(62.67px)", borderRadius: "125px", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "auto" }}>
+                <Image src="/assets/home/HeroScreen/unlock 1.svg" alt="Unlock" width={26} height={26} />
+              </button>
+              {/* Notifications */}
+              <button style={{ position: "absolute", width: "52px", height: "52px", left: "1261px", top: "70px", background: "rgba(255,255,255,0.1)", backdropFilter: "blur(62.67px)", borderRadius: "125px", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "auto" }}>
+                <Image src="/assets/home/HeroScreen/notification.svg" alt="Notifications" width={26} height={26} />
+                <span style={{ position: "absolute", width: "6px", height: "6px", left: "27px", top: "13px", background: "#E53935", border: "0.9px solid rgba(255,255,255,0.9)", borderRadius: "50%" }} />
+              </button>
+              {/* Avatar */}
+              <div onClick={() => router.push("/profile")} style={{ position: "absolute", width: "52px", height: "52px", left: "1328px", top: "69px", borderRadius: "50%", border: "0.45px solid rgba(255,255,255,0.82)", overflow: "hidden", cursor: "pointer", pointerEvents: "auto" }}>
+                <img src="/assets/home/HeroScreen/person.svg" alt="Profile" style={{ width: "100%", height: "100%", objectFit: "cover", transform: "scale(1.5)" }} />
+              </div>
+
+              {/* Hero Typography */}
+              <div
+                onClick={() => router.push("/home/myassets/details")}
+                style={{ position: "absolute", width: "896px", left: "calc(50% - 448px)", top: "320px", display: "flex", flexDirection: "column", alignItems: "center", gap: "32px", pointerEvents: "auto", cursor: "pointer", padding: "0px 32px" }}
+              >
+                <motion.h1
+                  initial={{ opacity: 0, filter: "blur(8px)", y: 20 }}
+                  animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
+                  style={{ margin: 0, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "100px", lineHeight: "1", textAlign: "center", letterSpacing: "-1.8px", color: "#FFFFFF" }}
+                >
+                  My Assets
+                </motion.h1>
+                <motion.p
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                  style={{ margin: 0, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "24px", lineHeight: "32px", textAlign: "center", color: "#FFFFFF", maxWidth: "832px" }}
+                >
+                  Manage your premium agricultural assets, track performance, and access your secure legal vault.
+                </motion.p>
+                <motion.button
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.55 }}
+                  onClick={(e) => { e.stopPropagation(); router.push("/home/myassets/details"); }}
+                  style={{ boxSizing: "border-box", display: "inline-flex", alignItems: "center", justifyContent: "center", padding: "12px 32px", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: "100px", backdropFilter: "blur(20px)", cursor: "pointer", whiteSpace: "nowrap", transition: "background 0.2s ease" }}
+                  onMouseEnter={(e) => ((e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.18)")}
+                  onMouseLeave={(e) => ((e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.1)")}
+                >
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", lineHeight: "20px", letterSpacing: "2px", color: "#FFFFFF" }}>TIER: DIGITAL CURATOR</span>
+                </motion.button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </>
   );
 }

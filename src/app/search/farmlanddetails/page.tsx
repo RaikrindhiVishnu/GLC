@@ -183,66 +183,31 @@ function InnerFarmlandDetailsView() {
         heroBg={activeLand.heroBg}
       />
 
-      {/* ─── 2. MASTER BODY LAYOUT (Width 1280px centered mapping figma specs) ─── */}
-      <div
-        style={{
-          width: "1280px",
-          margin: "64px auto 0",
-          padding: "0 32px 64px",
-          boxSizing: "border-box",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "flex-start",
-          isolation: "isolate",
-        }}
-      >
-        {/* Main Flex Row split */}
-        <div
-          style={{
-            width: "1216px",
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "flex-start",
-            padding: "0px",
-            gap: "40px",
-          }}
-        >
-          {/* Left Column (Width 764.41px Stack) */}
-          <div
-            style={{
-              width: "764.41px",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-start",
-              padding: "0px",
-              gap: "32px",
-              flexShrink: 0,
-            }}
-          >
-            {/* Upper Media Hub section */}
+      {/* ─── 2. MASTER BODY LAYOUT ─── */}
+      <div className="w-full max-w-[1280px] mx-auto mt-8 lg:mt-16 px-4 lg:px-8 pb-16 box-border">
+        <div className="flex flex-col lg:flex-row items-start gap-8 lg:gap-10">
+          {/* Left Column */}
+          <div className="w-full flex flex-col gap-8">
             <MediaHub primaryImage={activeLand.heroBg} title={activeLand.title} />
-
-            {/* Land Specifications Bento grid */}
             <LandSpecificationsBento
               areaProp={activeLand.acreage}
               boreDepthProp={activeLand.hydraulicDepth.left}
               efficiencyProp="High Yield"
               soilQualityProp={activeLand.soilComposition.title}
             />
-
-            {/* Facilities & Cultivation module */}
             <FacilitiesCultivation
               currentCrop={activeLand.currentVegetation}
               potentialCrop={activeLand.potentialVegetation}
             />
           </div>
-
-          {/* Right Sticky Column (Width 411.59px Aside) */}
-          <StickySidebarRight
-            title={activeLand.title}
-            price={activeLand.price}
-            locationSubtitle={activeLand.locationSubtitle}
-          />
+          {/* Right Sidebar */}
+          <div className="w-full lg:w-[411px] lg:flex-shrink-0">
+            <StickySidebarRight
+              title={activeLand.title}
+              price={activeLand.price}
+              locationSubtitle={activeLand.locationSubtitle}
+            />
+          </div>
         </div>
       </div>
 

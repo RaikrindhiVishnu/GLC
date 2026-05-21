@@ -10,9 +10,6 @@ export default function VerificationOfFarmlandPage() {
       {/* 1. Cinematic Hero Section */}
       <VerificationHero />
 
-      {/* Spacing gap preserving perfect modular balance */}
-      <div style={{ height: "100px", width: "100%" }} />
-
       {/* 2. Main 4-Tier Tracker and Aside context modules array */}
       <VerificationPipelineFeed />
 

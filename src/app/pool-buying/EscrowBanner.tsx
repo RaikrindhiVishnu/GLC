@@ -1,20 +1,20 @@
 "use client";
 
 import React from "react";
+import { motion } from "framer-motion";
 
 export default function EscrowBanner() {
   return (
-    /* ─── SECTION 3: ESCROW BANNER SECTION ─── */
     <section
       style={{
         width: "100%",
         background: "#091426",
-        padding: "80px 32px",
         display: "flex",
         justifyContent: "center",
         position: "relative",
         zIndex: 20,
       }}
+      className="px-4 py-12 lg:px-8 lg:py-20"
     >
       <div
         style={{
@@ -28,8 +28,12 @@ export default function EscrowBanner() {
           justifyContent: "center",
         }}
       >
-        {/* Glowing Outer Shield Capsule */}
-        <div
+        {/* Glowing Shield Icon */}
+        <motion.div
+          initial={{ scale: 0, opacity: 0 }}
+          whileInView={{ scale: 1, opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ type: "spring", stiffness: 200, damping: 20 }}
           style={{
             width: "96px",
             height: "96px",
@@ -42,16 +46,19 @@ export default function EscrowBanner() {
             flexShrink: 0,
           }}
         >
-          {/* Inner neon blue shield icon */}
           <svg width="32" height="40" viewBox="0 0 24 24" fill="none" stroke="#69B6FE" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
             <path d="M9 12l2 2 4-4"></path>
           </svg>
-        </div>
+        </motion.div>
 
         {/* Context Explanations */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "12px", flex: 1, minWidth: "300px" }}>
-          <h2
+        <div style={{ display: "flex", flexDirection: "column", gap: "12px", flex: 1, minWidth: "280px" }}>
+          <motion.h2
+            initial={{ opacity: 0, filter: "blur(8px)" }}
+            whileInView={{ opacity: 1, filter: "blur(0px)" }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
             style={{
               margin: 0,
               fontFamily: "'Plus Jakarta Sans', sans-serif",
@@ -62,8 +69,12 @@ export default function EscrowBanner() {
             }}
           >
             100% Protected
-          </h2>
-          <p
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.15 }}
             style={{
               margin: 0,
               fontFamily: "'Plus Jakarta Sans', sans-serif",
@@ -77,7 +88,7 @@ export default function EscrowBanner() {
             All investment funds are held in SEBI-regulated Escrow accounts. Funds are only released
             to the project once the pool is 100% subscribed. If the target is not met within the
             stipulated time, investors receive a full refund within 48 hours.
-          </p>
+          </motion.p>
         </div>
       </div>
     </section>

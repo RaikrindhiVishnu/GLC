@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { motion } from "framer-motion";
 
 interface FilterOverlayProps {
   isOpen: boolean;
@@ -324,57 +325,28 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
               </span>
 
               <div className="flex flex-wrap gap-2.5 pt-1 w-full">
-                {/* Button 1: Most Searched */}
-                <button
-                  onClick={() => toggleLeft("Most Searched")}
-                  style={{
-                    background: selectedLeft.includes("Most Searched") ? "#2780C4" : "#E7E8E9",
-                    color: selectedLeft.includes("Most Searched") ? "#FFFFFF" : "#45474C",
-                    borderRadius: "9999px", border: "none", fontFamily: "'Plus Jakarta Sans'", fontWeight: 600, cursor: "pointer"
-                  }}
-                  className="px-4 py-2 text-xs md:text-sm flex-grow md:flex-grow-0 text-center"
-                >
-                  Most Searched
-                </button>
-
-                {/* Button 2: GLC's Exclusive */}
-                <button
-                  onClick={() => toggleLeft("GLC's Exclusive")}
-                  style={{
-                    background: selectedLeft.includes("GLC's Exclusive") ? "#2780C4" : "#E7E8E9",
-                    color: selectedLeft.includes("GLC's Exclusive") ? "#FFFFFF" : "#45474C",
-                    borderRadius: "9999px", border: "none", fontFamily: "'Plus Jakarta Sans'", fontWeight: 600, cursor: "pointer"
-                  }}
-                  className="px-4 py-2 text-xs md:text-sm flex-grow md:flex-grow-0 text-center"
-                >
-                  GLC's Exclusive
-                </button>
-
-                {/* Button 3: Premium Listing */}
-                <button
-                  onClick={() => toggleLeft("Premium Listing")}
-                  style={{
-                    background: selectedLeft.includes("Premium Listing") ? "#2780C4" : "#E7E8E9",
-                    color: selectedLeft.includes("Premium Listing") ? "#FFFFFF" : "#45474C",
-                    borderRadius: "9999px", border: "none", fontFamily: "'Plus Jakarta Sans'", fontWeight: 600, cursor: "pointer"
-                  }}
-                  className="px-4 py-2 text-xs md:text-sm flex-grow md:flex-grow-0 text-center"
-                >
-                  Premium Listing
-                </button>
-
-                {/* Button 4: Trending Land */}
-                <button
-                  onClick={() => toggleLeft("Trending Land")}
-                  style={{
-                    background: selectedLeft.includes("Trending Land") ? "#2780C4" : "#E7E8E9",
-                    color: selectedLeft.includes("Trending Land") ? "#FFFFFF" : "#45474C",
-                    borderRadius: "9999px", border: "none", fontFamily: "'Plus Jakarta Sans'", fontWeight: 600, cursor: "pointer"
-                  }}
-                  className="px-4 py-2 text-xs md:text-sm flex-grow md:flex-grow-0 text-center"
-                >
-                  Trending Land
-                </button>
+                {[
+                  "Most Searched",
+                  "GLC's Exclusive",
+                  "Premium Listing",
+                  "Trending Land",
+                ].map((label, i) => (
+                  <motion.button
+                    key={label}
+                    initial={{ opacity: 0, filter: "blur(8px)" }}
+                    animate={{ opacity: 1, filter: "blur(0px)" }}
+                    transition={{ duration: 0.4, delay: i * 0.07 }}
+                    onClick={() => toggleLeft(label)}
+                    style={{
+                      background: selectedLeft.includes(label) ? "#2780C4" : "#E7E8E9",
+                      color: selectedLeft.includes(label) ? "#FFFFFF" : "#45474C",
+                      borderRadius: "9999px", border: "none", fontFamily: "'Plus Jakarta Sans'", fontWeight: 600, cursor: "pointer"
+                    }}
+                    className="px-4 py-2 text-xs md:text-sm grow md:grow-0 text-center"
+                  >
+                    {label}
+                  </motion.button>
+                ))}
               </div>
             </div>
 
@@ -385,63 +357,29 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
               </span>
 
               <div className="flex flex-wrap gap-2.5 pt-1 w-full">
-                {/* Button 1: Borewell */}
-                <button
-                  onClick={() => toggleRight("Borewell")}
-                  style={{
-                    background: selectedRight.includes("Borewell") ? "#2780C4" : "#E7E8E9",
-                    color: selectedRight.includes("Borewell") ? "#FFFFFF" : "#45474C",
-                    borderRadius: "9999px", border: "none", cursor: "pointer"
-                  }}
-                  className="px-4 py-2 text-xs md:text-sm flex items-center justify-center gap-2 flex-grow md:flex-grow-0 font-medium"
-                >
-                  <span style={{ opacity: selectedRight.includes("Borewell") ? 1 : 0.7 }}>💧</span>
-                  <span>Borewell</span>
-                </button>
-
-                {/* Button 2: Silt Loam */}
-                <button
-                  onClick={() => toggleRight("Silt Loam")}
-                  style={{
-                    background: selectedRight.includes("Silt Loam") ? "#2780C4" : "#E7E8E9",
-                    color: selectedRight.includes("Silt Loam") ? "#FFFFFF" : "#45474C",
-                    borderRadius: "9999px", border: "none", cursor: "pointer"
-                  }}
-                  className="px-4 py-2 text-xs md:text-sm flex items-center justify-center gap-2 flex-grow md:flex-grow-0 font-medium"
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" className="flex-shrink-0">
-                    <path d="M2 22h20v-2H2v2zm3-4h14v-2H5v2zm12-5c0-3.87-3.13-7-7-7s-7 3.13-7 7h14z"></path>
-                  </svg>
-                  <span>Silt Loam</span>
-                </button>
-
-                {/* Button 3: Canal Access */}
-                <button
-                  onClick={() => toggleRight("Canal Access")}
-                  style={{
-                    background: selectedRight.includes("Canal Access") ? "#2780C4" : "#E7E8E9",
-                    color: selectedRight.includes("Canal Access") ? "#FFFFFF" : "#45474C",
-                    borderRadius: "9999px", border: "none", cursor: "pointer"
-                  }}
-                  className="px-4 py-2 text-xs md:text-sm flex items-center justify-center gap-2 flex-grow md:flex-grow-0 font-medium"
-                >
-                  <span style={{ opacity: selectedRight.includes("Canal Access") ? 1 : 0.7 }}>🌊</span>
-                  <span>Canal Access</span>
-                </button>
-
-                {/* Button 4: Red Laterite */}
-                <button
-                  onClick={() => toggleRight("Red Laterite")}
-                  style={{
-                    background: selectedRight.includes("Red Laterite") ? "#2780C4" : "#E7E8E9",
-                    color: selectedRight.includes("Red Laterite") ? "#FFFFFF" : "#45474C",
-                    borderRadius: "9999px", border: "none", cursor: "pointer"
-                  }}
-                  className="px-4 py-2 text-xs md:text-sm flex items-center justify-center gap-2 flex-grow md:flex-grow-0 font-medium"
-                >
-                  <span style={{ opacity: selectedRight.includes("Red Laterite") ? 1 : 0.7 }}>⛰️</span>
-                  <span>Red Laterite</span>
-                </button>
+                {[
+                  { label: "Borewell", icon: <span style={{ opacity: selectedRight.includes("Borewell") ? 1 : 0.7 }}>💧</span> },
+                  { label: "Silt Loam", icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" className="shrink-0"><path d="M2 22h20v-2H2v2zm3-4h14v-2H5v2zm12-5c0-3.87-3.13-7-7-7s-7 3.13-7 7h14z" /></svg> },
+                  { label: "Canal Access", icon: <span style={{ opacity: selectedRight.includes("Canal Access") ? 1 : 0.7 }}>🌊</span> },
+                  { label: "Red Laterite", icon: <span style={{ opacity: selectedRight.includes("Red Laterite") ? 1 : 0.7 }}>⛰️</span> },
+                ].map(({ label, icon }, i) => (
+                  <motion.button
+                    key={label}
+                    initial={{ opacity: 0, filter: "blur(8px)" }}
+                    animate={{ opacity: 1, filter: "blur(0px)" }}
+                    transition={{ duration: 0.4, delay: i * 0.07 }}
+                    onClick={() => toggleRight(label)}
+                    style={{
+                      background: selectedRight.includes(label) ? "#2780C4" : "#E7E8E9",
+                      color: selectedRight.includes(label) ? "#FFFFFF" : "#45474C",
+                      borderRadius: "9999px", border: "none", cursor: "pointer"
+                    }}
+                    className="px-4 py-2 text-xs md:text-sm flex items-center justify-center gap-2 grow md:grow-0 font-medium"
+                  >
+                    {icon}
+                    <span>{label}</span>
+                  </motion.button>
+                ))}
               </div>
             </div>
 

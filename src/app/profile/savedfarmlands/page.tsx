@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 import SavedFarmlandsHero from "./SavedFarmlandsHero";
 import TrendingFeaturedSection from "@/app/search/TrendingFeaturedSection";
 
@@ -110,9 +111,13 @@ export default function SavedFarmlandsPage() {
 
         {/* Master Responsive Grid Container displaying 6 specific premium property entries */}
         <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-[32px]">
-          {properties.map((item) => (
-            <div
+          {properties.map((item, idx) => (
+            <motion.div
               key={item.id}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: idx * 0.08 }}
+              viewport={{ once: true }}
               onClick={() => router.push(`/search/farmlanddetails?id=${item.mapId}`)}
               className="group flex flex-col w-full bg-white rounded-[30px] overflow-hidden shadow-[0px_1px_2px_rgba(0,0,0,0.05)] border border-gray-100/40 cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-1 relative"
             >
@@ -188,7 +193,7 @@ export default function SavedFarmlandsPage() {
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </section>

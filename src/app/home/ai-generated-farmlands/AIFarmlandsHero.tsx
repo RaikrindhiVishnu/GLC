@@ -3,12 +3,13 @@
 import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 
 export default function AIFarmlandsHero() {
   const router = useRouter();
 
   return (
-    <section className="w-full relative h-screen min-h-screen flex flex-col items-center justify-start box-border select-none overflow-hidden bg-[#0F2F4C] shrink-0">
+    <section className="w-full relative h-[80vh] md:h-screen min-h-125 md:min-h-160 flex flex-col items-center justify-start box-border select-none overflow-hidden bg-brand-primary shrink-0">
       
       {/* Background Cover loading explicit custom SVG asset exactly */}
       <div className="absolute inset-0 z-0">
@@ -139,14 +140,24 @@ export default function AIFarmlandsHero() {
         <div className="w-full max-w-[1225px] flex flex-col items-center pointer-events-auto">
           
           {/* Primary h1 Line matching font-size: 100px exactly without wrapping on large desktop frames */}
-          <h1 className="m-0 font-extrabold text-4xl sm:text-6xl md:text-8xl lg:text-[100px] text-white tracking-tight md:tracking-[-1.8px] leading-tight drop-shadow-sm max-w-none whitespace-normal xl:whitespace-nowrap px-2">
+          <motion.h1
+            initial={{ opacity: 0, filter: "blur(8px)", y: 15 }}
+            animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="m-0 font-extrabold text-4xl sm:text-6xl md:text-8xl lg:text-[100px] text-white tracking-tight md:tracking-[-1.8px] leading-tight drop-shadow-sm max-w-none whitespace-normal xl:whitespace-nowrap px-2"
+          >
             A.I. Suggested Farmlands
-          </h1>
+          </motion.h1>
 
           {/* Subtitle bounding box aligned exactly to design tokens */}
-          <p className="mt-4 sm:mt-8 font-medium text-sm sm:text-xl md:text-[24px] text-white max-w-[996px] leading-relaxed md:leading-[32px] drop-shadow-xs px-2">
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="mt-4 sm:mt-8 font-medium text-sm sm:text-xl md:text-[24px] text-white max-w-249 leading-relaxed md:leading-8 drop-shadow-xs px-2"
+          >
             Track the real-time progress of your asset through our rigorous 4-tier legal, agronomy, and intelligence audit pipeline
-          </p>
+          </motion.p>
 
         </div>
       </div>

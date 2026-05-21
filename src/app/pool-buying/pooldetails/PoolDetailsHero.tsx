@@ -1,447 +1,140 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import Navbar from "@/components/Navbar";
 
 export default function PoolDetailsHero() {
   const router = useRouter();
+  const scalerRef = useRef<HTMLDivElement>(null);
+  const shellRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function update() {
+      const vw = window.innerWidth;
+      const scale = Math.min(vw / 1440, window.innerHeight / 960);
+      if (scalerRef.current) scalerRef.current.style.transform = `scale(${scale})`;
+      if (shellRef.current) shellRef.current.style.height = `${960 * scale}px`;
+    }
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
 
   return (
-    <section
-      style={{
-        position: "relative",
-        width: "100%",
-        height: "960px",
-        background: "#131600",
-        overflow: "hidden",
-        display: "flex",
-        justifyContent: "center",
-        flexShrink: 0,
-      }}
-    >
-      {/* Background Gradients and Backdrop Image */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background: "linear-gradient(0deg, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.45))",
-          zIndex: 1,
-        }}
-      />
-      <img
-        src="/assets/poolinvestments/pooldetailshero.svg"
-        alt="Pool Investments Hero Background"
-        style={{
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-          position: "absolute",
-          inset: 0,
-          zIndex: 0,
-        }}
-      />
-
-      {/* ─── EXACT 1440px FIGMA COORDINATE SPACE ─── */}
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "1440px",
-          height: "960px",
-          zIndex: 20,
-          pointerEvents: "none",
-        }}
-      >
-        {/* Brand Logo */}
-        <div
-          style={{
-            position: "absolute",
-            width: "150px",
-            height: "64px",
-            left: "60px",
-            top: "58px",
-            cursor: "pointer",
-            pointerEvents: "auto",
-            display: "flex",
-            alignItems: "center",
-          }}
-          onClick={() => router.push("/home")}
-        >
-          <Image
-            src="/assets/common/Logo green land 1.svg"
-            alt="Green Land Capital Brand Logo"
-            width={150}
-            height={64}
-            style={{ objectFit: "contain" }}
-          />
+    <>
+      {/* ══ MOBILE LAYOUT (< lg) ══ */}
+      <div className="block lg:hidden relative w-full h-[80vh] min-h-125 overflow-hidden" style={{ background: "#131600" }}>
+        <img src="/assets/poolinvestments/pooldetailshero.svg" alt="Pool Details Hero" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0 }} />
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(0deg, rgba(0,0,0,0.65), rgba(0,0,0,0.4))", zIndex: 1 }} />
+        <div style={{ position: "relative", zIndex: 10 }}>
+          <Navbar variant="app" active="search" />
         </div>
-
-        {/* Central Left Menu Navigation Pill Capsule */}
-        <div
-          style={{
-            boxSizing: "border-box",
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            padding: "10px",
-            gap: "10px",
-            position: "absolute",
-            width: "242px",
-            height: "68px",
-            left: "calc(50% - 242px/2 + 0.5px)",
-            top: "59px",
-            background: "rgba(255, 255, 255, 0.1)",
-            boxShadow:
-              "0px 8px 6px rgba(0, 0, 0, 0.05), inset 3px 4px 2px -3px rgba(255, 255, 255, 0.55), inset 0px -1px 1px rgba(255, 255, 255, 0.25), inset 0px 1px 1px rgba(255, 255, 255, 0.25)",
-            backdropFilter: "blur(50px)",
-            WebkitBackdropFilter: "blur(50px)",
-            borderRadius: "100px",
-            pointerEvents: "auto",
-            justifyContent: "space-between",
-          }}
-        >
-          {/* Slot 1: HOME Tab Button */}
-          <button
-            onClick={() => router.push("/home")}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              width: "48px",
-              height: "48px",
-              borderRadius: "100px",
-              background: "transparent",
-              border: "none",
-              cursor: "pointer",
-              flexShrink: 0,
-              transition: "transform 0.2s ease",
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
-            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+        <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "calc(80vh - 72px)", padding: "32px 20px 48px", textAlign: "center" }}>
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            style={{ background: "rgba(0,0,0,0.004)", border: "1px solid rgba(255,255,255,0.3)", borderRadius: "9999px", padding: "10px 24px", marginBottom: "24px", backdropFilter: "blur(20px)" }}
           >
-            <svg width="21.62" height="21.62" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-              <polyline points="9 22 9 12 15 12 15 22"></polyline>
-            </svg>
-          </button>
-
-          {/* Slot 2: Search Icon Tab Button */}
-          <button
-            onClick={() => router.push("/search")}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              width: "48px",
-              height: "48px",
-              borderRadius: "100px",
-              background: "transparent",
-              border: "none",
-              cursor: "pointer",
-              flexShrink: 0,
-              transition: "transform 0.2s ease",
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
-            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", color: "#FFFFFF" }}>Live Pools</span>
+          </motion.div>
+          <motion.h1
+            initial={{ opacity: 0, filter: "blur(8px)", y: 15 }}
+            animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="text-[38px] sm:text-[56px]"
+            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, letterSpacing: "-1.5px", color: "#FFFFFF", margin: "0 0 16px", lineHeight: 1.1 }}
           >
-            <Image src="/assets/home/HeroScreen/search.svg" alt="Search routing tab" width={22} height={22} />
-          </button>
-
-          {/* Slot 3: Pricing Icon Tab Button */}
-          <button
-            onClick={() => router.push("/pricing")}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              width: "48px",
-              height: "48px",
-              borderRadius: "100px",
-              background: "transparent",
-              border: "none",
-              cursor: "pointer",
-              flexShrink: 0,
-              transition: "transform 0.2s ease",
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
-            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+            Pool Investment Details
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "16px", lineHeight: "26px", color: "rgba(255,255,255,0.8)", maxWidth: "480px", margin: 0 }}
           >
-            <Image src="/assets/home/HeroScreen/Vector.svg" alt="Pricing Wishlist tab" width={21.66} height={19.49} />
-          </button>
-
-          {/* Slot 4: User Profile Tab Button */}
-          <button
-            onClick={() => router.push("/profile")}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              width: "48px",
-              height: "48px",
-              borderRadius: "100px",
-              background: "transparent",
-              border: "none",
-              cursor: "pointer",
-              flexShrink: 0,
-              transition: "transform 0.2s ease",
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
-            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-          >
-            <Image src="/assets/home/HeroScreen/user 1.png" alt="User routing tab" width={21.62} height={21.62} />
-          </button>
-        </div>
-
-        {/* Unlock Controls Pill */}
-        <button
-          style={{
-            boxSizing: "border-box",
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "center",
-            position: "absolute",
-            width: "52px",
-            height: "51.39px",
-            left: "1194px",
-            top: "70px",
-            background: "rgba(255, 255, 255, 0.1)",
-            boxShadow: "0px 10.0267px 7.52px rgba(0, 0, 0, 0.05), inset 3.76px 5.01333px 2.50667px -3.76px rgba(255, 255, 255, 0.55)",
-            backdropFilter: "blur(62.6667px)",
-            WebkitBackdropFilter: "blur(62.6667px)",
-            borderRadius: "125.333px",
-            border: "none",
-            cursor: "pointer",
-            pointerEvents: "auto",
-          }}
-        >
-          <Image src="/assets/home/HeroScreen/unlock 1.svg" alt="Unlock Controls" width={26.32} height={26.32} />
-        </button>
-
-        {/* Notifications Ring Controls Pill */}
-        <button
-          style={{
-            boxSizing: "border-box",
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "center",
-            position: "absolute",
-            width: "52px",
-            height: "51.39px",
-            left: "1261px",
-            top: "70px",
-            background: "rgba(255, 255, 255, 0.1)",
-            boxShadow: "0px 10.0267px 7.52px rgba(0, 0, 0, 0.05), inset 3.76px 5.01333px 2.50667px -3.76px rgba(255, 255, 255, 0.55)",
-            backdropFilter: "blur(62.6667px)",
-            WebkitBackdropFilter: "blur(62.6667px)",
-            borderRadius: "125.333px",
-            border: "none",
-            cursor: "pointer",
-            pointerEvents: "auto",
-          }}
-        >
-          <Image src="/assets/home/HeroScreen/notification.svg" alt="Notifications Context" width={26.32} height={26.32} />
-          <span
-            style={{
-              boxSizing: "border-box",
-              position: "absolute",
-              width: "6.3px",
-              height: "6.3px",
-              left: "27.39px",
-              top: "13.53px",
-              background: "#E53935",
-              border: "0.904652px solid rgba(255, 255, 255, 0.9)",
-              borderRadius: "899.968px",
-            }}
-          />
-        </button>
-
-        {/* User Profile Avatar Capsule */}
-        <div
-          onClick={() => router.push("/profile")}
-          style={{
-            boxSizing: "border-box",
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            position: "absolute",
-            width: "52px",
-            height: "52px",
-            left: "1328px",
-            top: "69px",
-            borderRadius: "899.968px",
-            border: "0.452327px solid rgba(255, 255, 255, 0.82)",
-            boxShadow: "0px 1.80174px 10.8104px rgba(0, 0, 0, 0.03)",
-            overflow: "hidden",
-            cursor: "pointer",
-            pointerEvents: "auto",
-          }}
-        >
-          <img
-            src="/assets/home/HeroScreen/person.svg"
-            alt="User Context Profile"
-            style={{ width: "100%", height: "100%", objectFit: "cover", transform: "scale(1.5)" }}
-          />
-        </div>
-
-        {/* ─── HERO TYPOGRAPHY BLOCK ─── */}
-        <div
-          style={{
-            boxSizing: "border-box",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            padding: 0,
-            position: "absolute",
-            width: "1110px",
-            height: "372.45px",
-            left: "calc(50% - 1110px/2)",
-            top: "348px",
-            pointerEvents: "auto",
-          }}
-        >
-          {/* Heading 1 Container */}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              width: "1110px",
-              height: "72px",
-              flex: "none",
-              order: 0,
-            }}
-          >
-            <h1
-              style={{
-                margin: 0,
-                width: "1110px",
-                height: "72px",
-                fontFamily: "'Plus Jakarta Sans', sans-serif",
-                fontWeight: 800,
-                fontSize: "100px",
-                lineHeight: "72px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                textAlign: "center",
-                letterSpacing: "-1.8px",
-                color: "#FFFFFF",
-              }}
-            >
-              Pool Investment Details
-            </h1>
-          </div>
-
-          {/* Subheading Text Container */}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              width: "979px",
-              height: "65.75px",
-              marginTop: "37px",
-              flex: "none",
-              order: 1,
-            }}
-          >
-            <p
-              style={{
-                margin: 0,
-                width: "979px",
-                height: "65px",
-                fontFamily: "'Plus Jakarta Sans', sans-serif",
-                fontWeight: 500,
-                fontSize: "24px",
-                lineHeight: "32px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                textAlign: "center",
-                color: "#FFFFFF",
-              }}
-            >
-              Co-own premium, fully verified agricultural assets and generate passive yields starting at ₹25,00,000.
-            </p>
-          </div>
-
-          {/* Segmented Control Toggle Wrapper */}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "flex-start",
-              paddingTop: "24.7px",
-              width: "832px",
-              height: "80.7px",
-              marginTop: "37px",
-              flex: "none",
-              order: 2,
-            }}
-          >
-            {/* Background+Shadow Capsule */}
-            <div
-              style={{
-                boxSizing: "border-box",
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "center",
-                padding: "6px",
-                minWidth: "154px",
-                height: "56px",
-                background: "rgba(0, 0, 0, 0.004)",
-                boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)",
-                border: "1px solid rgba(255, 255, 255, 0.3)",
-                borderRadius: "9999px",
-                backdropFilter: "blur(20px)",
-                WebkitBackdropFilter: "blur(20px)",
-              }}
-            >
-              {/* Button item */}
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  padding: "12px 32px",
-                  minWidth: "142px",
-                  height: "44px",
-                  borderRadius: "9999px",
-                }}
-              >
-                <span
-                  style={{
-                    fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    fontWeight: 700,
-                    fontSize: "16px",
-                    lineHeight: "20px",
-                    color: "#FFFFFF",
-                    display: "flex",
-                    alignItems: "center",
-                    textAlign: "center",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  Live Pools
-                </span>
-              </div>
-            </div>
-          </div>
+            Co-own premium, fully verified agricultural assets and generate passive yields starting at ₹25,00,000.
+          </motion.p>
         </div>
       </div>
-    </section>
+
+      {/* ══ DESKTOP LAYOUT (>= lg) — scaler shell ══ */}
+      <div className="hidden lg:block" ref={shellRef} style={{ position: "relative", width: "100%", overflow: "hidden" }}>
+        <div ref={scalerRef} style={{ position: "absolute", top: 0, left: "50%", marginLeft: "-720px", width: "1440px", height: "960px", transformOrigin: "top center" }}>
+          <section style={{ position: "relative", width: "1440px", height: "960px", background: "#131600", overflow: "hidden", display: "flex", justifyContent: "center" }}>
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(0deg, rgba(0,0,0,0.55), rgba(0,0,0,0.45))", zIndex: 1 }} />
+            <img src="/assets/poolinvestments/pooldetailshero.svg" alt="Pool Details Hero" style={{ width: "100%", height: "100%", objectFit: "cover", position: "absolute", inset: 0, zIndex: 0 }} />
+
+            <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: "1440px", height: "960px", zIndex: 20, pointerEvents: "none" }}>
+              {/* Brand Logo */}
+              <div style={{ position: "absolute", width: "150px", height: "64px", left: "60px", top: "58px", cursor: "pointer", pointerEvents: "auto", display: "flex", alignItems: "center" }} onClick={() => router.push("/home")}>
+                <Image src="/assets/common/Logo green land 1.svg" alt="Green Land Capital" width={150} height={64} style={{ objectFit: "contain" }} />
+              </div>
+
+              {/* Nav Pill */}
+              <div style={{ boxSizing: "border-box", display: "flex", flexDirection: "row", alignItems: "center", padding: "10px", gap: "10px", position: "absolute", width: "242px", height: "68px", left: "calc(50% - 121px)", top: "59px", background: "rgba(255,255,255,0.1)", boxShadow: "0px 8px 6px rgba(0,0,0,0.05), inset 3px 4px 2px -3px rgba(255,255,255,0.55), inset 0px -1px 1px rgba(255,255,255,0.25)", backdropFilter: "blur(50px)", borderRadius: "100px", pointerEvents: "auto", justifyContent: "space-between" }}>
+                {[
+                  { icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>, route: "/home" },
+                  { icon: <Image src="/assets/home/HeroScreen/search.svg" alt="Search" width={22} height={22} />, route: "/search" },
+                  { icon: <Image src="/assets/home/HeroScreen/Vector.svg" alt="Pricing" width={22} height={20} />, route: "/pricing" },
+                  { icon: <Image src="/assets/home/HeroScreen/user 1.png" alt="Profile" width={22} height={22} />, route: "/profile" },
+                ].map((item, i) => (
+                  <button key={i} onClick={() => router.push(item.route)} style={{ width: "48px", height: "48px", borderRadius: "100px", background: "transparent", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", transition: "transform 0.2s ease" }} onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")} onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}>
+                    {item.icon}
+                  </button>
+                ))}
+              </div>
+
+              {/* Unlock button */}
+              <button style={{ position: "absolute", width: "52px", height: "52px", left: "1194px", top: "70px", background: "rgba(255,255,255,0.1)", backdropFilter: "blur(62.67px)", borderRadius: "125px", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "auto" }}>
+                <Image src="/assets/home/HeroScreen/unlock 1.svg" alt="Unlock" width={26} height={26} />
+              </button>
+              {/* Notifications button */}
+              <button style={{ position: "absolute", width: "52px", height: "52px", left: "1261px", top: "70px", background: "rgba(255,255,255,0.1)", backdropFilter: "blur(62.67px)", borderRadius: "125px", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "auto" }}>
+                <Image src="/assets/home/HeroScreen/notification.svg" alt="Notifications" width={26} height={26} />
+                <span style={{ position: "absolute", width: "6px", height: "6px", left: "27px", top: "13px", background: "#E53935", border: "0.9px solid rgba(255,255,255,0.9)", borderRadius: "50%" }} />
+              </button>
+              {/* Avatar */}
+              <div onClick={() => router.push("/profile")} style={{ position: "absolute", width: "52px", height: "52px", left: "1328px", top: "69px", borderRadius: "50%", border: "0.45px solid rgba(255,255,255,0.82)", overflow: "hidden", cursor: "pointer", pointerEvents: "auto" }}>
+                <img src="/assets/home/HeroScreen/person.svg" alt="Profile" style={{ width: "100%", height: "100%", objectFit: "cover", transform: "scale(1.5)" }} />
+              </div>
+
+              {/* Hero Typography */}
+              <div style={{ position: "absolute", width: "1110px", left: "calc(50% - 555px)", top: "348px", display: "flex", flexDirection: "column", alignItems: "center", pointerEvents: "auto" }}>
+                <motion.h1
+                  initial={{ opacity: 0, filter: "blur(8px)", y: 20 }}
+                  animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
+                  style={{ margin: 0, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "100px", lineHeight: "72px", textAlign: "center", letterSpacing: "-1.8px", color: "#FFFFFF" }}
+                >
+                  Pool Investment Details
+                </motion.h1>
+                <motion.p
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                  style={{ margin: "37px 0 0", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "24px", lineHeight: "32px", textAlign: "center", color: "#FFFFFF", maxWidth: "979px" }}
+                >
+                  Co-own premium, fully verified agricultural assets and generate passive yields starting at ₹25,00,000.
+                </motion.p>
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.55 }}
+                  style={{ marginTop: "37px", background: "rgba(0,0,0,0.004)", boxShadow: "0px 1px 2px rgba(0,0,0,0.05)", border: "1px solid rgba(255,255,255,0.3)", borderRadius: "9999px", backdropFilter: "blur(20px)", padding: "6px" }}
+                >
+                  <div style={{ padding: "12px 32px", borderRadius: "9999px" }}>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#FFFFFF" }}>Live Pools</span>
+                  </div>
+                </motion.div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </>
   );
 }

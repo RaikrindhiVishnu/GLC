@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 export default function AddOnServices() {
   // Track selected draft cart items matching requested design functionality
@@ -16,17 +17,19 @@ export default function AddOnServices() {
   };
 
   return (
-    <section
+    <motion.section
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6 }}
       style={{
         boxSizing: "border-box",
         display: "flex",
         flexDirection: "column",
         alignItems: "flex-start",
         padding: "0px",
-        width: "1184px",
-        maxWidth: "100%",
+        width: "100%",
         position: "relative",
-        flexShrink: 0,
       }}
     >
       {/* ─── SECTION HEADER ─── */}
@@ -71,13 +74,10 @@ export default function AddOnServices() {
       <div
         style={{
           boxSizing: "border-box",
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "flex-start",
-          justifyContent: "space-between",
           width: "100%",
           gap: "48px",
         }}
+        className="flex flex-col lg:flex-row items-start justify-between"
       >
         {/* Left Side (Catalog Grid): 70% Content Width Split */}
         <div
@@ -86,9 +86,8 @@ export default function AddOnServices() {
             display: "grid",
             gridTemplateColumns: "repeat(2, 1fr)",
             gap: "36px",
-            width: "795px",
-            flexShrink: 0,
           }}
+          className="w-full lg:flex-1 min-w-0"
         >
           {/* Service Card 1: Farmhouse Construction */}
           <div
@@ -452,13 +451,12 @@ export default function AddOnServices() {
             justifyContent: "space-between",
             alignItems: "flex-start",
             padding: "40px",
-            width: "340px",
-            flexGrow: 1,
             background: "#FFFFFF",
             borderRadius: "48px",
             boxShadow: "0px 10px 30px rgba(9, 20, 38, 0.05)",
             alignSelf: "stretch",
           }}
+          className="w-full lg:w-85 lg:shrink-0"
         >
           {/* Top Cart Content Block */}
           <div style={{ display: "flex", flexDirection: "column", width: "100%", flexGrow: 1 }}>
@@ -678,6 +676,6 @@ export default function AddOnServices() {
           </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

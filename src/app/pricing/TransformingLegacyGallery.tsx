@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 
 export default function TransformingLegacyGallery() {
-  const [scale, setScale] = useState(1);
   const scalerRef = useRef<HTMLDivElement>(null);
   const shellRef = useRef<HTMLDivElement>(null);
 
@@ -13,7 +12,6 @@ export default function TransformingLegacyGallery() {
       const vw = window.innerWidth;
       const targetWidth = 1260;
       const currentScale = vw < targetWidth ? vw / targetWidth : 1;
-      setScale(currentScale);
       if (scalerRef.current) {
         scalerRef.current.style.transform = `scale(${currentScale})`;
       }
@@ -32,17 +30,100 @@ export default function TransformingLegacyGallery() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.7 }}
-      style={{
-        width: "100%",
-        margin: "60px 0 120px 0",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        gap: "48px",
-        overflow: "hidden",
-        boxSizing: "border-box",
-      }}
+      style={{ width: "100%", overflow: "hidden", boxSizing: "border-box" }}
     >
+
+      {/* ══════════════════════════════════════════════ */}
+      {/* MOBILE LAYOUT (< lg)                          */}
+      {/* ══════════════════════════════════════════════ */}
+      <div className="hidden w-full py-10 flex-col gap-8">
+        {/* Title */}
+        <h2 className="m-0 font-jakarta font-extrabold text-[22px] text-[#001F3F] text-center flex flex-wrap justify-center gap-x-2 px-4">
+          {"Transforming Land into Legacy".split(" ").map((word, i) => (
+            <motion.span
+              key={i}
+              initial={{ opacity: 0, filter: "blur(8px)" }}
+              whileInView={{ opacity: 1, filter: "blur(0px)" }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: i * 0.1 }}
+            >
+              {word}
+            </motion.span>
+          ))}
+        </h2>
+
+        {/* Horizontal scroll gallery */}
+        <div
+          className="flex gap-4 w-full overflow-x-auto pb-4 pl-4 sm:pl-6 pr-4 sm:pr-6"
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        >
+          {/* Action tile: Involve */}
+          <motion.div
+            initial={{ opacity: 0, filter: "blur(8px)", x: 20 }}
+            whileInView={{ opacity: 1, filter: "blur(0px)", x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0 }}
+            style={{ width: "140px", height: "160px", flexShrink: 0, borderRadius: "20px", background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #001F3F 100%)", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", gap: "10px" }}
+          >
+            <div style={{ width: "28px", height: "28px", borderRadius: "50%", border: "2px solid #FFFFFF", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </div>
+            <span style={{ fontFamily: "'Outfit',sans-serif", fontWeight: 600, fontSize: "15px", color: "#FFFFFF" }}>Involve</span>
+          </motion.div>
+
+          {/* Photo 2 */}
+          <motion.div
+            initial={{ opacity: 0, filter: "blur(8px)", x: 20 }}
+            whileInView={{ opacity: 1, filter: "blur(0px)", x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.08 }}
+            style={{ width: "200px", height: "160px", flexShrink: 0, borderRadius: "20px", overflow: "hidden" }}
+          >
+            <img src="/assets/search/image2.4.svg" alt="Farmland high angle view" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+          </motion.div>
+
+          {/* Tall tower photo */}
+          <motion.div
+            initial={{ opacity: 0, filter: "blur(8px)", x: 20 }}
+            whileInView={{ opacity: 1, filter: "blur(0px)", x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.16 }}
+            style={{ width: "160px", height: "260px", flexShrink: 0, borderRadius: "32px", overflow: "hidden", border: "3px solid #FFFFFF" }}
+          >
+            <img src="/assets/search/image3.3.svg" alt="Golden premium yielding view" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+          </motion.div>
+
+          {/* Photo 4 */}
+          <motion.div
+            initial={{ opacity: 0, filter: "blur(8px)", x: 20 }}
+            whileInView={{ opacity: 1, filter: "blur(0px)", x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.24 }}
+            style={{ width: "200px", height: "160px", flexShrink: 0, borderRadius: "20px", overflow: "hidden" }}
+          >
+            <img src="/assets/search/image2.6.svg" alt="Agronomy ongoing working harvest" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+          </motion.div>
+
+          {/* Action tile: Impact */}
+          <motion.div
+            initial={{ opacity: 0, filter: "blur(8px)", x: 20 }}
+            whileInView={{ opacity: 1, filter: "blur(0px)", x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.32 }}
+            style={{ width: "140px", height: "160px", flexShrink: 0, borderRadius: "20px", background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #001F3F 100%)", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", gap: "10px" }}
+          >
+            <div style={{ width: "28px", height: "28px", borderRadius: "50%", border: "2px solid #FFFFFF", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </div>
+            <span style={{ fontFamily: "'Outfit',sans-serif", fontWeight: 600, fontSize: "15px", color: "#FFFFFF" }}>Impact</span>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* ══════════════════════════════════════════════ */}
+      {/* DESKTOP LAYOUT (>= lg)                        */}
+      {/* ══════════════════════════════════════════════ */}
+      <div className="hidden lg:flex flex-col items-center" style={{ margin: "80px 0", gap: "48px" }}>
       <h2
         className="m-0 font-jakarta font-extrabold text-[28px] md:text-[36px] text-[#001F3F] text-center flex flex-wrap justify-center gap-x-2"
       >
@@ -231,6 +312,7 @@ export default function TransformingLegacyGallery() {
           </div>
         </div>
       </div>
+      </div>{/* end desktop wrapper */}
     </motion.section>
   );
 }

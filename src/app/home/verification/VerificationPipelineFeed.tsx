@@ -2,90 +2,37 @@
 
 import React from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 export default function VerificationPipelineFeed() {
   return (
-    <section
-      style={{
-        boxSizing: "border-box",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "flex-start",
-        padding: "0px 32px 64px",
-        width: "1280px",
-        maxWidth: "100%",
-        margin: "0 auto",
-        position: "relative",
-        flexShrink: 0,
-      }}
-    >
+    <section className="w-full max-w-7xl mx-auto px-4 lg:px-8 py-16 lg:py-24 box-border flex flex-col">
       {/* ─── FEED HEADER ─── */}
-      <div
-        style={{
-          boxSizing: "border-box",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "flex-start",
-          padding: "0px",
-          width: "100%",
-          marginBottom: "48px",
-        }}
+      <motion.div
+        initial={{ opacity: 0, filter: "blur(8px)" }}
+        whileInView={{ opacity: 1, filter: "blur(0px)" }}
+        transition={{ duration: 0.6 }}
+        viewport={{ once: true }}
+        style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", width: "100%", marginBottom: "48px" }}
       >
-        <h2
-          style={{
-            margin: "0 0 12px 0",
-            fontFamily: "'Plus Jakarta Sans', sans-serif",
-            fontWeight: 800,
-            fontSize: "48px",
-            lineHeight: "1.2",
-            letterSpacing: "-1.5px",
-            color: "#131600",
-          }}
-        >
+        <h2 style={{ margin: "0 0 12px 0", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "clamp(28px, 4vw, 48px)", lineHeight: "1.2", letterSpacing: "-1.5px", color: "#131600" }}>
           Verification Pipeline
         </h2>
-        <span
-          style={{
-            fontFamily: "'Plus Jakarta Sans', sans-serif",
-            fontWeight: 400,
-            fontSize: "20px",
-            lineHeight: "32px",
-            color: "rgba(69, 71, 76, 0.8)",
-            maxWidth: "672px", // Enforcing design line breaks natively
-          }}
-        >
+        <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "20px", lineHeight: "32px", color: "rgba(69,71,76,0.8)", maxWidth: "672px" }}>
           Comprehensive asset auditing for Green Land Capital. Real-time status of land acquisition and agronomy certification.
         </span>
-      </div>
+      </motion.div>
 
       {/* ─── SPLIT-CONSOLE WRAPPER FRAME ─── */}
-      <div
-        style={{
-          boxSizing: "border-box",
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "flex-start",
-          justifyContent: "space-between",
-          width: "100%",
-          gap: "48px",
-        }}
-      >
-        {/* LEFT COLUMN: 4-Tier Pipeline Tracker (Fluid Content Box) */}
-        <div
-          style={{
-            boxSizing: "border-box",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            padding: "40px",
-            background: "#FFFFFF",
-            border: "1px solid rgba(197, 198, 205, 0.15)",
-            boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)",
-            borderRadius: "32px",
-            width: "800px",
-            flexShrink: 0,
-            position: "relative",
-          }}
+      <div className="flex flex-col lg:flex-row items-start gap-8 w-full">
+        {/* LEFT COLUMN: 4-Tier Pipeline Tracker */}
+        <motion.div
+          initial={{ opacity: 0, x: -30 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="w-full lg:flex-1"
+          style={{ boxSizing: "border-box", display: "flex", flexDirection: "column", alignItems: "flex-start", padding: "40px", background: "#FFFFFF", border: "1px solid rgba(197,198,205,0.15)", boxShadow: "0px 1px 2px rgba(0,0,0,0.05)", borderRadius: "32px", position: "relative" }}
         >
           {/* Timeline Stack Container */}
           <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
@@ -283,19 +230,16 @@ export default function VerificationPipelineFeed() {
             </div>
 
           </div>
-        </div>
+        </motion.div>
 
-        {/* RIGHT COLUMN: Aside Micro-Widgets Framework (Fluid Content Stack) */}
-        <div
-          style={{
-            boxSizing: "border-box",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            gap: "32px",
-            width: "384px",
-            flexShrink: 0,
-          }}
+        {/* RIGHT COLUMN: Aside Micro-Widgets */}
+        <motion.div
+          initial={{ opacity: 0, x: 30 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          viewport={{ once: true }}
+          className="w-full lg:w-96"
+          style={{ boxSizing: "border-box", display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "32px" }}
         >
           {/* Widget 1: Asset Context Card */}
           <div
@@ -499,7 +443,7 @@ export default function VerificationPipelineFeed() {
             </span>
           </div>
 
-        </div>
+        </motion.div>
       </div>
     </section>
   );

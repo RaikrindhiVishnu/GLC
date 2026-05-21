@@ -80,16 +80,14 @@ export default function MainListingsGrid() {
     "match-1": true, 
   });
 
-  const [scale, setScale] = useState(1);
   const scalerRef = useRef<HTMLDivElement>(null);
   const shellRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function update() {
       const vw = window.innerWidth;
-      const targetWidth = 1260; 
+      const targetWidth = 1260;
       const currentScale = vw < targetWidth ? vw / targetWidth : 1;
-      setScale(currentScale);
       if (scalerRef.current) {
         scalerRef.current.style.transform = `scale(${currentScale})`;
       }
@@ -113,23 +111,88 @@ export default function MainListingsGrid() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.7 }}
-      style={{
-        width: "100%",
-        margin: "40px 0",
-        display: "flex",
-        justifyContent: "center",
-        overflow: "hidden",
-        boxSizing: "border-box",
-      }}
+      style={{ width: "100%", overflow: "hidden", boxSizing: "border-box" }}
     >
-      <div 
-        ref={shellRef} 
-        style={{ 
-          position: "relative", 
-          width: "1184px", 
-          maxWidth: "100%", 
+      {/* ─── MOBILE LAYOUT (< lg) ─── */}
+      <div className="block lg:hidden w-full py-10">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 mb-6">
+          <div className="flex justify-between items-center">
+            <h2 className="font-jakarta font-bold text-[20px] text-[#131600] m-0">Andhra Pradesh (18 Matches)</h2>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-[#0F2F4C]" />
+              <div className="w-2 h-2 rounded-full bg-[#E1E3E4]" />
+              <div className="w-2 h-2 rounded-full bg-[#E1E3E4]" />
+            </div>
+          </div>
+        </div>
+        <div
+          className="flex gap-4 w-full overflow-x-auto pb-4 pl-4 sm:pl-6 pr-4 sm:pr-6"
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        >
+          {gridMatches.map((item, i) => {
+            const isBookmarked = !!bookmarks[item.id];
+            return (
+              <motion.div
+                key={`mob-${item.id}`}
+                initial={{ opacity: 0, filter: "blur(8px)", x: 20 }}
+                whileInView={{ opacity: 1, filter: "blur(0px)", x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: i * 0.08 }}
+                onClick={() => router.push(`/search/farmlanddetails?id=${item.id}`)}
+                style={{
+                  width: "260px",
+                  flexShrink: 0,
+                  background: "#FFFFFF",
+                  borderRadius: "20px",
+                  overflow: "hidden",
+                  border: "1px solid #F1F5F9",
+                  boxShadow: "0px 1px 2px rgba(0,0,0,0.05)",
+                  cursor: "pointer",
+                }}
+              >
+                <div style={{ position: "relative", width: "100%", height: "160px" }}>
+                  <img src={item.img} alt={item.title} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                  <button
+                    onClick={(e) => toggleBookmark(item.id, e)}
+                    style={{ position: "absolute", top: "12px", right: "12px", width: "34px", height: "34px", background: "#FFFFFF", borderRadius: "9999px", border: "none", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", boxShadow: "0px 4px 10px rgba(0,0,0,0.08)" }}
+                  >
+                    <svg width="16" height="14" viewBox="0 0 24 24" fill={isBookmarked ? "#2780C4" : "none"} stroke="#2780C4" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                    </svg>
+                  </button>
+                </div>
+                <div style={{ padding: "16px", display: "flex", flexDirection: "column", gap: "6px" }}>
+                  <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
+                    {item.tags.map((t, idx) => (
+                      <span key={idx} style={{ padding: "3px 8px", background: "#E7E8E9", borderRadius: "9999px", fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "9px", color: "#45474C", textTransform: "uppercase" }}>{t}</span>
+                    ))}
+                  </div>
+                  <h3 style={{ margin: 0, fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "16px", lineHeight: "22px", color: "#131600" }}>{item.title}</h3>
+                  <p style={{ margin: 0, fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 400, fontSize: "12px", lineHeight: "18px", color: "#45474C" }}>{item.description}</p>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "10px", marginTop: "4px", borderTop: "1px solid #EDEEEF" }}>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "14px", color: "#091426" }}>{item.price}</span>
+                    <span
+                      onClick={(e) => { e.stopPropagation(); router.push(`/search/farmlanddetails?id=${item.id}`); }}
+                      style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "12px", color: "#00629E", cursor: "pointer", textDecoration: "underline" }}
+                    >View Details</span>
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ─── DESKTOP LAYOUT (>= lg) ─── */}
+      <div className="hidden lg:flex w-full justify-center" style={{ margin: "40px 0" }}>
+      <div
+        ref={shellRef}
+        style={{
+          position: "relative",
+          width: "1184px",
+          maxWidth: "100%",
           height: "1368px",
-          flexShrink: 0 
+          flexShrink: 0
         }}
       >
         <div
@@ -484,6 +547,7 @@ export default function MainListingsGrid() {
           </div>
         </div>
       </div>
+      </div>{/* end desktop wrapper */}
     </motion.section>
   );
 }

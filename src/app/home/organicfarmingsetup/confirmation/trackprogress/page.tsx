@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import TrackProgressHero from "./TrackProgressHero";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
+import { motion } from "framer-motion";
 
 export default function TrackProgressPage() {
   const router = useRouter();
@@ -24,7 +25,7 @@ export default function TrackProgressPage() {
         <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
           {/* ─── PANE 1: ONBOARDING PHASES (Left Column spanning 3 grid tracks on large screens) ─── */}
-          <div className="lg:col-span-3 flex flex-col w-full">
+          <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }} viewport={{ once: true }} className="lg:col-span-3 flex flex-col w-full">
             <div className="w-full bg-white shadow-[0_1px_2px_rgba(0,0,0,0.05)] rounded-[48px] p-6 sm:p-8 box-border flex flex-col gap-8">
               
               {/* Heading 2 */}
@@ -112,11 +113,11 @@ export default function TrackProgressPage() {
               </div>
 
             </div>
-          </div>
+          </motion.div>
 
 
           {/* ─── PANE 2: LIVE SITE UPDATES (Center Flexible Canvas spanning 5 grid tracks on large screens) ─── */}
-          <div className="lg:col-span-5 flex flex-col gap-6 w-full">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }} viewport={{ once: true }} className="lg:col-span-5 flex flex-col gap-6 w-full">
             
             {/* Heading 2 */}
             <h2 className="m-0 font-bold text-lg sm:text-xl text-[#131600] tracking-[-0.5px] px-2">
@@ -152,11 +153,11 @@ export default function TrackProgressPage() {
 
             </div>
 
-          </div>
+          </motion.div>
 
 
           {/* ─── PANE 3: FINANCIALS & ADMIN (Right Column spanning 4 grid tracks on large screens) ─── */}
-          <div className="lg:col-span-4 flex flex-col gap-6 w-full">
+          <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.2 }} viewport={{ once: true }} className="lg:col-span-4 flex flex-col gap-6 w-full">
             
             {/* Heading 2 */}
             <h2 className="m-0 font-bold text-lg sm:text-xl text-[#131600] tracking-[-0.5px] px-2">
@@ -235,7 +236,7 @@ export default function TrackProgressPage() {
 
             </div>
 
-          </div>
+          </motion.div>
 
         </div>
 

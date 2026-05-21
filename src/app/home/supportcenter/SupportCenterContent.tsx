@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 
 export default function SupportCenterContent() {
   const router = useRouter();
@@ -11,7 +12,13 @@ export default function SupportCenterContent() {
       <div className="relative w-full max-w-[1152px] mx-auto px-4 sm:px-6 md:px-8 mt-8 md:mt-[100px] flex flex-col lg:flex-row gap-8 justify-between items-stretch">
         
         {/* 1. Left Column - Human Concierge Card */}
-        <div className="w-full lg:w-[757.33px] shrink-0 flex flex-col justify-between box-border bg-white border border-[#C5C6CD]/20 rounded-[32px] md:rounded-[48px] p-6 sm:p-8 md:p-12 shadow-[0_20px_40px_-15px_rgba(9,20,38,0.05)] z-10">
+        <motion.div
+          initial={{ opacity: 0, x: -30 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="w-full lg:w-[757.33px] shrink-0 flex flex-col justify-between box-border bg-white border border-[#C5C6CD]/20 rounded-4xl md:rounded-[48px] p-6 sm:p-8 md:p-12 shadow-[0_20px_40px_-15px_rgba(9,20,38,0.05)] z-10"
+        >
           
           {/* Top Header shell */}
           <div className="flex flex-col items-start gap-2 w-full">
@@ -54,10 +61,16 @@ export default function SupportCenterContent() {
               CHAT WITH SUPPORT
             </span>
           </button>
-        </div>
+        </motion.div>
 
         {/* 2. Right Aside - Bento Style Stack Column */}
-        <div className="w-full lg:w-[362.67px] shrink-0 flex flex-col gap-8 justify-start">
+        <motion.div
+          initial={{ opacity: 0, x: 30 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          viewport={{ once: true }}
+          className="w-full lg:w-[362.67px] shrink-0 flex flex-col gap-8 justify-start"
+        >
           
           {/* Module A: Active Tracker Component */}
           <div className="box-border flex flex-col justify-between p-6 sm:p-8 w-full min-h-[228px] bg-white border border-[#C5C6CD]/20 rounded-[32px] md:rounded-[48px] shadow-[0_20px_40px_-15px_rgba(9,20,38,0.05)] relative">
@@ -189,7 +202,7 @@ export default function SupportCenterContent() {
               </button>
             </div>
           </div>
-        </div>
+        </motion.div>
 
       </div>
     </section>

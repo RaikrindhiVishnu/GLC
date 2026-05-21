@@ -16,13 +16,11 @@ export default function PricingHeroSection() {
       style={{
         position: "relative",
         width: "100%",
-        height: "100vh",
-        maxHeight: "100vh",
         background: "#131600",
         overflow: "hidden",
         boxSizing: "border-box",
       }}
-      className="flex flex-col items-center justify-start"
+      className="flex flex-col items-center justify-start h-[80vh] md:h-screen min-h-125 md:min-h-160"
     >
       <div
         style={{
@@ -48,8 +46,8 @@ export default function PricingHeroSection() {
 
           {/* Tag Pill */}
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, filter: "blur(8px)" }}
+            animate={{ opacity: 1, filter: "blur(0px)" }}
             transition={{ duration: 0.6, delay: 0.1 }}
             style={{
               background: "rgba(231,232,233,0.2)",

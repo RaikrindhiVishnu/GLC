@@ -44,7 +44,8 @@ export default function FarmlandDetailsHero({ title, locationSubtitle, tags, her
 
       {/* Bottom-anchored content */}
       <div
-        style={{ position: "relative", zIndex: 3, width: "100%", padding: "0 60px 48px", boxSizing: "border-box", display: "flex", justifyContent: "space-between", alignItems: "flex-end", pointerEvents: "none" }}
+        className="px-4 pb-8 sm:px-10 sm:pb-10 lg:px-15 lg:pb-12"
+        style={{ position: "relative", zIndex: 3, width: "100%", boxSizing: "border-box", display: "flex", justifyContent: "space-between", alignItems: "flex-end", pointerEvents: "none" }}
       >
         <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", pointerEvents: "auto" }}>
 
@@ -66,7 +67,8 @@ export default function FarmlandDetailsHero({ title, locationSubtitle, tags, her
             initial={{ opacity: 0, filter: "blur(8px)", y: 15 }}
             animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
             transition={{ duration: 0.8, delay: 0.35 }}
-            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "60px", lineHeight: "60px", letterSpacing: "-1.5px", color: "#FFFFFF", margin: "0 0 16px 0" }}
+            className="text-[36px] leading-10 sm:text-[48px] sm:leading-13 lg:text-[60px] lg:leading-15"
+            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, letterSpacing: "-1.5px", color: "#FFFFFF", margin: "0 0 16px 0" }}
           >
             {title}
           </motion.h1>

@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 
 export default function VerificationStandardsSection() {
-  const [scale, setScale] = useState(1);
   const scalerRef = useRef<HTMLDivElement>(null);
   const shellRef = useRef<HTMLDivElement>(null);
 
@@ -13,7 +12,6 @@ export default function VerificationStandardsSection() {
       const vw = window.innerWidth;
       const targetWidth = 1360;
       const currentScale = vw < targetWidth ? vw / targetWidth : 1;
-      setScale(currentScale);
       if (scalerRef.current) {
         scalerRef.current.style.transform = `scale(${currentScale})`;
       }
@@ -32,16 +30,78 @@ export default function VerificationStandardsSection() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.7 }}
-      style={{
-        width: "100%",
-        margin: "80px 0",
-        display: "flex",
-        justifyContent: "center",
-        overflow: "hidden",
-        boxSizing: "border-box",
-      }}
+      style={{ width: "100%", overflow: "hidden", boxSizing: "border-box" }}
     >
-      <div 
+
+      {/* ══════════════════════════════════════════════ */}
+      {/* MOBILE LAYOUT (< lg)                          */}
+      {/* ══════════════════════════════════════════════ */}
+      <div className="block lg:hidden w-full py-10 px-4 sm:px-6 flex flex-col gap-8">
+        {/* Hero image */}
+        <motion.div
+          initial={{ opacity: 0, filter: "blur(8px)" }}
+          whileInView={{ opacity: 1, filter: "blur(0px)" }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          style={{ width: "100%", height: "200px", borderRadius: "24px", overflow: "hidden" }}
+        >
+          <img src="/assets/pricing/pricing3.1.svg" alt="Analytics standard graph preview" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+        </motion.div>
+
+        {/* Title */}
+        <motion.h2
+          initial={{ opacity: 0, filter: "blur(8px)" }}
+          whileInView={{ opacity: 1, filter: "blur(0px)" }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="m-0 font-jakarta font-bold text-[22px] text-[#131600]"
+          style={{ letterSpacing: "-0.5px" }}
+        >
+          The GLC Verification Standard
+        </motion.h2>
+
+        {/* Feature rows */}
+        {[
+          {
+            icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#091426" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>,
+            title: "70 - Year Title Chain",
+            desc: "Deep-dive land verification reports mapping every clear title trace to guarantee true owner integrity and undisputed agricultural zoning permissions.",
+          },
+          {
+            icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#091426" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><circle cx="12" cy="11" r="3"/></svg>,
+            title: "Intelligence Officer Checks",
+            desc: "Local ground-level intelligence gathering to verify physical site boundaries, true neighborhood sentiment, and local access network constraints.",
+          },
+          {
+            icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#091426" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><line x1="16" y1="8" x2="2" y2="22"/><line x1="17.5" y1="15" x2="9" y2="6.5"/></svg>,
+            title: "Agronomy Reports",
+            desc: "Scientific soil analyses, water table projections, active yielding capacity forecasts, and long-term biological viability metrics given directly from native tests.",
+          },
+        ].map((item, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, filter: "blur(8px)" }}
+            whileInView={{ opacity: 1, filter: "blur(0px)" }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: i * 0.1 }}
+            style={{ display: "flex", gap: "16px", alignItems: "flex-start" }}
+          >
+            <div style={{ width: "44px", height: "44px", borderRadius: "50%", background: "#E7E8E9", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              {item.icon}
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+              <h4 style={{ margin: 0, fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "16px", color: "#131600" }}>{item.title}</h4>
+              <p style={{ margin: 0, fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 400, fontSize: "14px", lineHeight: "22px", color: "#45474C" }}>{item.desc}</p>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* ══════════════════════════════════════════════ */}
+      {/* DESKTOP LAYOUT (>= lg)                        */}
+      {/* ══════════════════════════════════════════════ */}
+      <div className="hidden lg:flex justify-center" style={{ margin: "80px 0", boxSizing: "border-box" }}>
+      <div
         ref={shellRef} 
         style={{ 
           position: "relative", 
@@ -269,6 +329,7 @@ export default function VerificationStandardsSection() {
           </div>
         </div>
       </div>
+      </div>{/* end desktop wrapper */}
     </motion.section>
   );
 }

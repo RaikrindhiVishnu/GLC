@@ -3,12 +3,13 @@
 import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 
 export default function SavedFarmlandsHero() {
   const router = useRouter();
 
   return (
-    <section className="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden shrink-0 select-none">
+    <section className="relative w-full h-[80vh] md:h-screen min-h-125 md:min-h-160 flex flex-col items-center justify-center overflow-hidden shrink-0 select-none">
       {/* Background Layer with Darkened Cinematic Overlays matching requested tokens */}
       <div className="absolute inset-0 z-0 bg-[#F8F9FA]">
         <Image
@@ -130,19 +131,23 @@ export default function SavedFarmlandsHero() {
 
       {/* Central Immersive Heading & Narrative Subtitle matching EXACT typography tokens */}
       <div className="relative z-20 flex flex-col items-center px-4 md:px-8 w-full max-w-[1200px] mx-auto gap-4 md:gap-[37px] text-center pointer-events-auto">
-        <h1 
-          className="text-[42px] sm:text-[64px] md:text-[80px] lg:text-[100px] font-extrabold text-white font-jakarta drop-shadow-xl whitespace-nowrap"
-          style={{
-            lineHeight: "100px",
-            letterSpacing: "-1.8px"
-          }}
+        <motion.h1
+          initial={{ opacity: 0, filter: "blur(8px)", y: 15 }}
+          animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="text-[42px] sm:text-[64px] md:text-[80px] lg:text-[100px] font-extrabold text-white font-jakarta drop-shadow-xl leading-tight tracking-tight"
         >
           Saved Farmlands
-        </h1>
-        <p className="text-xs sm:text-base md:text-xl lg:text-[24px] font-medium text-white/95 font-jakarta leading-[32px] w-[1100px] max-w-[95vw] drop-shadow-md">
-          Track the real-time progress of your asset through our rigorous 4-tier legal, agronomy,<br />
+        </motion.h1>
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="text-xs sm:text-base md:text-xl lg:text-[24px] font-medium text-white/95 font-jakarta leading-8 w-275 max-w-[95vw] drop-shadow-md"
+        >
+          Track the real-time progress of your asset through our rigorous 4-tier legal, agronomy,{" "}
           and intelligence audit pipeline
-        </p>
+        </motion.p>
       </div>
     </section>
   );

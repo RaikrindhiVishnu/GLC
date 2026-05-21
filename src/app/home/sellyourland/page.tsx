@@ -10,9 +10,6 @@ export default function SellYourLandWorkspacePage() {
       {/* 1. Dedicated Edge-to-Edge Farmland Verification Hero Layer */}
       <SellYourLandHero />
 
-      {/* Spacing spacer layout element preserving exact design harmony */}
-      <div style={{ height: "48px", width: "100%" }} />
-
       {/* 2. Primary Three-Phase Institutional Listing Input Console Matrix */}
       <SellYourLandConsole />
 

@@ -14,7 +14,6 @@ export default function PoolDetailsPage() {
     <main
       style={{
         boxSizing: "border-box",
-        minHeight: "5325px", // High fidelity full document depth target
         background: "#F8F9FA",
         display: "flex",
         flexDirection: "column",
@@ -28,27 +27,8 @@ export default function PoolDetailsPage() {
       <PoolDetailsHero />
 
       {/* ─── SECTION 2: SPLIT CONSOLE MAIN CONTENT LAYER ─── */}
-      <section
-        style={{
-          boxSizing: "border-box",
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "flex-start",
-          justifyContent: "center",
-          padding: "0px 24px",
-          gap: "32px",
-          width: "100%",
-          maxWidth: "1280px",
-          marginTop: "100px", // Sets master start point exactly matching top: 1060px relative to absolute document layout
-          marginBottom: "100px",
-          zIndex: 30,
-          flexWrap: "wrap",
-        }}
-      >
-        {/* Left Console: Fractional Layout Blueprint (55% Nominal) */}
+      <section className="flex flex-col lg:flex-row items-start justify-center w-full max-w-7xl px-4 lg:px-6 mt-16 lg:mt-24 mb-16 lg:mb-24 gap-6 lg:gap-8 box-border" style={{ zIndex: 30 }}>
         <LeftConsole />
-
-        {/* Right Console: Investment Controls & Escrow Checkout Panel (40% Nominal) */}
         <RightConsole />
       </section>
 

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import AIFarmlandsHero from "./AIFarmlandsHero";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
+import { motion } from "framer-motion";
 
 export default function AIGeneratedFarmlandsPage() {
   const router = useRouter();
@@ -34,7 +35,7 @@ export default function AIGeneratedFarmlandsPage() {
         <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
           
           {/* ─── COLUMN A: HERO SPLIT (60% Main Master Asset View Canvas spanning 7 Grid Columns) ─── */}
-          <div className="lg:col-span-7 flex flex-col">
+          <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }} viewport={{ once: true }} className="lg:col-span-7 flex flex-col">
             <div className="w-full bg-white border border-white/50 shadow-[0_10px_40px_-10px_rgba(9,20,38,0.04)] rounded-[48px] overflow-hidden flex flex-col justify-between box-border relative flex-grow">
               
               {/* Massive Card Overlap Framework */}
@@ -108,14 +109,14 @@ export default function AIGeneratedFarmlandsPage() {
               </div>
 
             </div>
-          </div>
+          </motion.div>
 
 
           {/* ─── COLUMN B: ALTERNATIVE OPPORTUNITIES (35% Column view logic stacked sidecards spanning 5 Grid Columns) ─── */}
           <div className="lg:col-span-5 flex flex-col gap-8">
-            
+
             {/* Alternative Asset Card Option 1: GLC SOS 02 */}
-            <div className="w-full bg-white border border-white/50 shadow-[0_10px_40px_-10px_rgba(9,20,38,0.04)] rounded-[48px] p-6 box-border flex flex-col gap-5">
+            <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }} viewport={{ once: true }} className="w-full bg-white border border-white/50 shadow-[0_10px_40px_-10px_rgba(9,20,38,0.04)] rounded-[48px] p-6 box-border flex flex-col gap-5">
               
               {/* Image window display canvas loading explicit source asset exactly */}
               <div className="w-full h-[192px] rounded-[32px] overflow-hidden relative select-none bg-slate-100">
@@ -152,11 +153,11 @@ export default function AIGeneratedFarmlandsPage() {
                 Funded
               </button>
 
-            </div>
+            </motion.div>
 
 
             {/* Alternative Asset Card Option 2: GLC SOS 10 */}
-            <div className="w-full bg-white border border-white/50 shadow-[0_10px_40px_-10px_rgba(9,20,38,0.04)] rounded-[48px] p-6 box-border flex flex-col gap-5">
+            <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.1 }} viewport={{ once: true }} className="w-full bg-white border border-white/50 shadow-[0_10px_40px_-10px_rgba(9,20,38,0.04)] rounded-[48px] p-6 box-border flex flex-col gap-5">
               
               {/* Image window display canvas loading explicit source asset exactly */}
               <div className="w-full h-[192px] rounded-[32px] overflow-hidden relative select-none bg-slate-100">
@@ -193,7 +194,7 @@ export default function AIGeneratedFarmlandsPage() {
                 Funded
               </button>
 
-            </div>
+            </motion.div>
 
           </div>
 

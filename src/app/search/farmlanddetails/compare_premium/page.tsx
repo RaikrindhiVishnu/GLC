@@ -1,5 +1,7 @@
 "use client";
 
+import { motion } from "framer-motion";
+import Navbar from "@/components/Navbar";
 import CompareNavigation from "./CompareNavigation";
 import CompareHero from "./CompareHero";
 import FilterChips from "./FilterChips";
@@ -34,27 +36,47 @@ export default function CompareFarmlandPremium() {
 
   return (
     <div className="relative w-full min-h-screen bg-[#F8F9FA] flex flex-col items-center overflow-x-hidden">
+      {/* Mobile Navbar */}
+      <div className="block lg:hidden w-full sticky top-0 z-50">
+        <Navbar variant="app" active="comparepremium" forceScrolled={true} />
+      </div>
+
       <CompareNavigation />
-      
+
       {/* Top Hero Section */}
       <CompareHero />
 
       {/* Main Content Area */}
-      <div className="w-full flex flex-col items-center pb-[100px] mt-[80px] z-20 gap-[80px]">
+      <div className="w-full flex flex-col items-center pb-24 mt-10 lg:mt-20 z-20 gap-16 lg:gap-20">
         {/* Filter Chips */}
-        <div className="w-full max-w-[1440px] px-8 md:px-[60px]">
+        <div className="w-full max-w-[1440px] px-4 sm:px-8 md:px-15">
           <FilterChips />
         </div>
 
         {/* Bento Grid layout */}
-        <div className="w-full max-w-[1440px] px-8 md:px-[60px] flex flex-col gap-[40px]">
+        <div className="w-full max-w-[1440px] px-4 sm:px-8 md:px-15 flex flex-col gap-10">
           {/* Featured Wide Card */}
-          <FeaturedCard />
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <FeaturedCard />
+          </motion.div>
 
-          {/* 3 Column Standard Cards */}
-          <div className="flex flex-row flex-wrap justify-between gap-[32px] w-full">
+          {/* Standard Cards Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
             {standardCardsData.map((card, index) => (
-              <StandardCard key={index} {...card} />
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+              >
+                <StandardCard {...card} />
+              </motion.div>
             ))}
           </div>
         </div>

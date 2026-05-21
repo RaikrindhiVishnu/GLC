@@ -10,7 +10,7 @@ export type NavbarActive = "home" | "search" | "pricing" | "profile" | "document
 
 type Props =
   | { variant?: "landing"; className?: string }
-  | { variant: "app"; active: NavbarActive; className?: string };
+  | { variant: "app"; active: NavbarActive; className?: string; forceScrolled?: boolean };
 
 const ACTIVE_PILL_STYLE: React.CSSProperties = {
   display: "flex",
@@ -91,7 +91,7 @@ function ActiveLabel({ label }: { label: string }) {
   );
 }
 
-function AppNavbar({ active, className }: { active: NavbarActive; className?: string }) {
+function AppNavbar({ active, className, forceScrolled }: { active: NavbarActive; className?: string; forceScrolled?: boolean }) {
   const router = useRouter();
 
   const containerStyle = useMemo<React.CSSProperties>(
@@ -106,14 +106,15 @@ function AppNavbar({ active, className }: { active: NavbarActive; className?: st
     [],
   );
 
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [scrolledState, setScrolledState] = useState(false);
+  const isScrolled = forceScrolled ?? scrolledState;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
       // If at the very top of the page, guarantee isScrolled is false to prevent loading flicker/flashes
       if (window.scrollY === 0) {
-        setIsScrolled(false);
+        setScrolledState(false);
         return;
       }
 
@@ -125,7 +126,7 @@ function AppNavbar({ active, className }: { active: NavbarActive; className?: st
       const inFooter = footerEl && footerEl.getBoundingClientRect().top <= 80;
 
       if (inCta || inFooter) {
-        setIsScrolled(false);
+        setScrolledState(false);
         return;
       }
 
@@ -152,10 +153,10 @@ function AppNavbar({ active, className }: { active: NavbarActive; className?: st
         const rect = heroEl.getBoundingClientRect();
         const heroBottom = rect.bottom + window.scrollY;
         const pastHero = window.scrollY >= heroBottom - 20; // past hero section bottom
-        setIsScrolled(pastHero);
+        setScrolledState(pastHero);
       } else {
         // On pages without any top cover/hero element, default to solid scrolled state
-        setIsScrolled(true);
+        setScrolledState(true);
       }
     };
 
@@ -661,6 +662,6 @@ function LandingNavbar({ className }: { className?: string }) {
 }
 
 export default function Navbar(props: Props) {
-  if (props.variant === "app") return <AppNavbar active={props.active} className={props.className} />;
+  if (props.variant === "app") return <AppNavbar active={props.active} className={props.className} forceScrolled={props.forceScrolled} />;
   return <LandingNavbar className={props.className} />;
 }
