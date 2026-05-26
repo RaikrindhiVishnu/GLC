@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
@@ -12,7 +13,7 @@ interface CheckoutScreenProps {
 }
 
 export default function CheckoutScreen({ planId = "growth", onBack }: CheckoutScreenProps) {
-  // Local state for payment method selection mapping figma specs
+  const router = useRouter();
   const [selectedMethod, setSelectedMethod] = useState<"card" | "upi" | "netbanking">("card");
 
   // Determine dynamic pricing labels based on clicked tier, with robust figma fallback
@@ -325,7 +326,7 @@ export default function CheckoutScreen({ planId = "growth", onBack }: CheckoutSc
               {/* Base CTA Executable Action perfectly aligned with figma styling */}
               <div className="flex flex-col items-center gap-3 pt-6 w-full mt-2">
                 <button
-                  onClick={() => alert(`Initiating secure processing pipeline for total transaction balance: ${planPrice}`)}
+                  onClick={() => router.push("/profile")}
                   className="w-full max-w-[420px] py-4 bg-[radial-gradient(circle_at_center,#2780C4_0%,#164573_100%)] hover:opacity-95 transition-all active:scale-95 text-white font-bold text-sm sm:text-base rounded-full shadow-md cursor-pointer border-none block"
                 >
                   PAY {planPrice} & UPGRADE

@@ -327,7 +327,7 @@ export default function SupportChatScreen() {
               {/* Plus add button mapping figma specs */}
               <button
                 type="button"
-                onClick={() => alert("Secure file/registry selector payload trigger activated.")}
+                onClick={() => router.push("/home/unlockeddocuments")}
                 className="w-10 h-10 rounded-full flex items-center justify-center text-[#45474C] hover:bg-slate-200/80 transition-colors shrink-0 cursor-pointer border-none bg-transparent font-light text-xl"
                 title="Attach Files"
               >
@@ -390,7 +390,7 @@ export default function SupportChatScreen() {
               
               {/* Action Card 1 */}
               <div
-                onClick={() => alert("Initiating calendar scheduling protocol for local custom priority private site charter evaluation...")}
+                onClick={() => router.push("/home/supportcenter/supportchat")}
                 className="w-full bg-white/5 border border-white/5 rounded-[32px] p-4 flex items-center gap-4 hover:bg-white/10 transition-all cursor-pointer box-border group"
               >
                 {/* Gradient platform */}
@@ -415,7 +415,7 @@ export default function SupportChatScreen() {
 
               {/* Action Card 2 */}
               <div
-                onClick={() => alert("Checking token registry integrity for immediate absolute baseline allocation lock-in parameters...")}
+                onClick={() => router.push("/home/unlockeddocuments")}
                 className="w-full bg-white/5 border border-white/5 rounded-[32px] p-4 flex items-center gap-4 hover:bg-white/10 transition-all cursor-pointer box-border group"
               >
                 {/* Gradient platform */}
@@ -438,7 +438,7 @@ export default function SupportChatScreen() {
 
               {/* Action Card 3 */}
               <div
-                onClick={() => alert("Retrieving multi-sig authorized ledger proof files directly from secure intelligence title verification chain...")}
+                onClick={() => router.push("/home/unlockeddocuments")}
                 className="w-full bg-white/5 border border-white/5 rounded-[32px] p-4 flex items-center gap-4 hover:bg-white/10 transition-all cursor-pointer box-border group"
               >
                 {/* Gradient platform */}
@@ -464,7 +464,7 @@ export default function SupportChatScreen() {
 
               {/* Action Card 4 */}
               <div
-                onClick={() => alert("Calculating real-time automated intelligence yield and custom distribution projections...")}
+                onClick={() => router.push("/home/ai-generated-farmlands")}
                 className="w-full bg-white/5 border border-white/5 rounded-[32px] p-4 flex items-center gap-4 hover:bg-white/10 transition-all cursor-pointer box-border group"
               >
                 {/* Gradient platform */}

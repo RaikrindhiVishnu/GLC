@@ -117,7 +117,7 @@ export default function UnlockedDocumentsPage() {
                     <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "9px", letterSpacing: "1px", textTransform: "uppercase", color: "#45474C" }}>{row.sub}</span>
                   </div>
                   <button
-                    onClick={() => alert(row.alert)}
+                    onClick={() => router.push("/home/unlockeddocuments")}
                     style={{ flexShrink: 0, padding: "6px 14px", background: "transparent", border: "1px solid rgba(39,128,196,0.2)", borderRadius: "9999px", cursor: "pointer", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "11px", color: "#2780C4" }}
                   >
                     {row.action}
@@ -127,7 +127,7 @@ export default function UnlockedDocumentsPage() {
             </div>
 
             <button
-              onClick={() => alert("Initializing customized guided field assessment route scheduling engine...")}
+              onClick={() => router.push("/home/supportcenter/supportchat")}
               style={{ width: "100%", height: "52px", background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)", borderRadius: "9999px", border: "none", cursor: "pointer", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "15px", color: "#FFFFFF", boxShadow: "0px 12px 24px -8px rgba(9,20,38,0.4)" }}
             >
               BOOK SITE VISIT

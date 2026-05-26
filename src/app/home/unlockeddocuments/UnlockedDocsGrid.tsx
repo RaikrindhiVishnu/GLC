@@ -100,7 +100,7 @@ export default function UnlockedDocsGrid() {
               </svg>
               <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "13px", color: "#FFFFFF", whiteSpace: "nowrap" }}>3 Premium Unlocks Remaining</span>
               <div style={{ width: "1px", height: "14px", background: "rgba(255,255,255,0.2)" }} />
-              <span onClick={() => alert("Launching premium allocation gate module...")} style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "13px", color: "#CFE5FF", cursor: "pointer" }}>
+              <span onClick={() => router.push("/pricing")} style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "13px", color: "#CFE5FF", cursor: "pointer" }}>
                 Get More Credits
               </span>
             </div>
@@ -145,7 +145,7 @@ export default function UnlockedDocsGrid() {
                 );
               })}
               <button
-                onClick={() => alert("Launching granular telemetry filter matrices dialog...")}
+                onClick={() => router.push("/home/unlockeddocuments")}
                 style={{ flexShrink: 0, width: "40px", height: "40px", background: "#F3F4F5", borderRadius: "9999px", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#191C1D" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -222,7 +222,7 @@ export default function UnlockedDocsGrid() {
                     View Documents
                   </button>
                   <button
-                    onClick={() => alert(`Rendering exact satellite survey boundaries for ${card.id}...`)}
+                    onClick={() => router.push("/search/farmlanddetails?id=match-1")}
                     style={{ width: "100%", height: "48px", border: "2px solid rgba(197,198,205,0.3)", borderRadius: "9999px", background: "transparent", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", cursor: "pointer" }}
                   >
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0F2F4C" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -299,7 +299,7 @@ export default function UnlockedDocsGrid() {
                       <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "14px", lineHeight: "20px", color: "#FFFFFF", whiteSpace: "nowrap" }}>3 Premium Unlocks Remaining</span>
                     </div>
                     <div style={{ width: "1px", height: "16px", background: "rgba(255,255,255,0.2)", zIndex: 2 }} />
-                    <div onClick={() => alert("Launching premium allocation gate module...")} style={{ cursor: "pointer", zIndex: 3 }}>
+                    <div onClick={() => router.push("/pricing")} style={{ cursor: "pointer", zIndex: 3 }}>
                       <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", lineHeight: "20px", color: "#CFE5FF" }}>Get More Credits</span>
                     </div>
                   </div>
@@ -326,7 +326,7 @@ export default function UnlockedDocsGrid() {
                         </button>
                       );
                     })}
-                    <button onClick={() => alert("Launching granular telemetry filter matrices dialog...")} style={{ boxSizing: "border-box", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", padding: "12px", width: "42px", height: "42px", background: "#F3F4F5", borderRadius: "9999px", border: "none", cursor: "pointer" }}>
+                    <button onClick={() => router.push("/home/unlockeddocuments")} style={{ boxSizing: "border-box", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", padding: "12px", width: "42px", height: "42px", background: "#F3F4F5", borderRadius: "9999px", border: "none", cursor: "pointer" }}>
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#191C1D" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                         <line x1="4" y1="21" x2="4" y2="14" /><line x1="4" y1="10" x2="4" y2="3" />
                         <line x1="12" y1="21" x2="12" y2="12" /><line x1="12" y1="8" x2="12" y2="3" />
@@ -396,7 +396,7 @@ export default function UnlockedDocsGrid() {
                         <button onClick={() => setSelectedDossier(card)} style={{ boxSizing: "border-box", display: "flex", justifyContent: "center", alignItems: "center", width: "320px", height: "57px", background: "radial-gradient(50% 155.86% at 50% 50%, #2780C4 0%, #164573 100%)", borderRadius: "32px", border: "none", cursor: "pointer", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", color: "#FFFFFF", boxShadow: "0px 4px 6px -1px rgba(9,20,38,0.2), 0px 2px 4px -2px rgba(9,20,38,0.2)" }}>
                           View Documents
                         </button>
-                        <button onClick={() => alert(`Rendering exact satellite survey boundaries for ${card.id}...`)} style={{ boxSizing: "border-box", display: "flex", justifyContent: "center", alignItems: "center", gap: "8px", width: "320px", height: "56px", border: "2px solid rgba(197,198,205,0.3)", borderRadius: "32px", background: "transparent", cursor: "pointer" }}>
+                        <button onClick={() => router.push("/search/farmlanddetails?id=match-1")} style={{ boxSizing: "border-box", display: "flex", justifyContent: "center", alignItems: "center", gap: "8px", width: "320px", height: "56px", border: "2px solid rgba(197,198,205,0.3)", borderRadius: "32px", background: "transparent", cursor: "pointer" }}>
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0F2F4C" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                             <polygon points="1 6 1 22 12 18 23 22 23 6 12 2 1 6" /><line x1="12" y1="2" x2="12" y2="18" />
                           </svg>
@@ -506,7 +506,7 @@ export default function UnlockedDocsGrid() {
                 ))}
               </div>
               <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "clamp(8px, 1.2vh, 12px)", flexShrink: 0 }}>
-                <button onClick={() => alert(`Allocating secure inspection telemetry calendar slots for ${selectedDossier.id}.`)} style={{ width: "100%", height: "clamp(42px, 5.5vh, 52px)", background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)", borderRadius: "9999px", border: "none", color: "#FFFFFF", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "clamp(14px, 1.8vh, 16px)", cursor: "pointer", boxShadow: "0px 12px 24px -8px rgba(9,20,38,0.4)" }}>BOOK SITE VISIT</button>
+                <button onClick={() => router.push("/home/supportcenter/supportchat")} style={{ width: "100%", height: "clamp(42px, 5.5vh, 52px)", background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)", borderRadius: "9999px", border: "none", color: "#FFFFFF", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "clamp(14px, 1.8vh, 16px)", cursor: "pointer", boxShadow: "0px 12px 24px -8px rgba(9,20,38,0.4)" }}>BOOK SITE VISIT</button>
                 <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                   <span style={{ fontSize: "11px" }}>🛡️</span>
                   <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "clamp(9px, 1.1vh, 11px)", color: "#45474C", letterSpacing: "1px", textTransform: "uppercase" }}>BANK-GRADE ENCRYPTION & VERIFIED VERIFICATION</span>
@@ -521,7 +521,7 @@ export default function UnlockedDocsGrid() {
                   <h4 style={{ margin: 0, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "clamp(16px, 2vh, 18px)", color: "#FFFFFF" }}>Need legal help?</h4>
                   <p style={{ margin: 0, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "clamp(12px, 1.5vh, 14px)", color: "#CFE5FF", lineHeight: "1.4" }}>Our in-house advocates can help with local documentation.</p>
                 </div>
-                <button onClick={() => alert("Launching encrypted websocket connection array with premium regional legal counsel...")} style={{ background: "transparent", border: "none", padding: 0, display: "flex", alignItems: "center", gap: "6px", cursor: "pointer" }}>
+                <button onClick={() => router.push("/home/supportcenter")} style={{ background: "transparent", border: "none", padding: 0, display: "flex", alignItems: "center", gap: "6px", cursor: "pointer" }}>
                   <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "clamp(12px, 1.5vh, 14px)", color: "#A5CCF2", letterSpacing: "1.4px", textTransform: "uppercase" }}>CHAT WITH SUPPORT</span>
                   <span style={{ color: "#A5CCF2", fontWeight: "bold", fontSize: "14px" }}>→</span>
                 </button>

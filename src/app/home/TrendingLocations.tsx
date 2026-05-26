@@ -3,6 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 const locations = [
   { id: "loc-tanuku", name: "Tanuku", img: "/assets/home/TrendingLocations/tanuku.svg" },
@@ -12,6 +13,8 @@ const locations = [
 ];
 
 export default function TrendingLocations() {
+  const router = useRouter();
+  const handleCardClick = () => router.push("/search");
   return (
     <section id="trending-locations" className="w-full bg-transparent py-12 lg:py-[70px] overflow-hidden">
 
@@ -31,7 +34,7 @@ export default function TrendingLocations() {
               </motion.span>
             ))}
           </h2>
-          <button className="bg-transparent border-none font-jakarta font-extrabold text-[14px] md:text-[18px] leading-10 text-brand-primary cursor-pointer [-webkit-tap-highlight-color:transparent] hover:opacity-70 transition-opacity">
+          <button onClick={() => router.push("/search")} className="bg-transparent border-none font-jakarta font-extrabold text-[14px] md:text-[18px] leading-10 text-brand-primary cursor-pointer [-webkit-tap-highlight-color:transparent] hover:opacity-70 transition-opacity">
             View All
           </button>
         </div>
@@ -51,6 +54,7 @@ export default function TrendingLocations() {
             whileInView={{ opacity: 1, filter: "blur(0px)" }}
             transition={{ duration: 0.6, delay: i * 0.1 }}
             viewport={{ once: true }}
+            onClick={handleCardClick}
             className="relative w-57.5 h-57.5 sm:w-67.5 sm:h-67.5 lg:w-full lg:h-auto lg:aspect-square min-w-57.5 sm:min-w-67.5 lg:min-w-0 rounded-3xl lg:rounded-4xl overflow-hidden cursor-pointer shrink-0 box-border group"
           >
             {/* Image + Overlay */}

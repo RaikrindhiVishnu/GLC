@@ -3,8 +3,10 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 export default function DetailsFeed() {
+  const router = useRouter();
   const [selectedTab, setSelectedTab] = useState<"operations" | "legal" | "tracking">("operations");
   const [hoveredResale, setHoveredResale] = useState(false);
 
@@ -455,7 +457,7 @@ export default function DetailsFeed() {
 
           {/* INTIATE RESALE Button */}
           <button
-            onClick={() => alert("Initiating authorized Resale Request workflow for GLC SOS 01...")}
+            onClick={() => router.push("/home/sellyourland")}
             onMouseEnter={() => setHoveredResale(true)}
             onMouseLeave={() => setHoveredResale(false)}
             style={{

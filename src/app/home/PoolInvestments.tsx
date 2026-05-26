@@ -2,9 +2,11 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 import DynamicCounter from "@/components/shared/DynamicCounter";
 
 export default function PoolInvestments() {
+  const router = useRouter();
   const dashArray = 628.318;
   const targetDashOffset = dashArray * 0.25;
 
@@ -86,7 +88,7 @@ export default function PoolInvestments() {
                   <div className="w-3 h-3 bg-[#E7E8E9] rounded-full shrink-0" />
                   <span className="font-jakarta font-medium text-[14px] sm:text-[16px] text-[#191C1D] whitespace-nowrap">Available Slot</span>
                 </div>
-                <button className="mt-4 px-8 py-3 bg-[#091426] rounded-full border-none font-jakarta font-bold text-[14px] sm:text-[16px] text-white cursor-pointer transition-opacity duration-300 hover:opacity-90 w-fit">
+                <button onClick={() => router.push("/pool-buying")} className="mt-4 px-8 py-3 bg-[#091426] rounded-full border-none font-jakarta font-bold text-[14px] sm:text-[16px] text-white cursor-pointer transition-opacity duration-300 hover:opacity-90 w-fit">
                   Join Pool
                 </button>
               </div>

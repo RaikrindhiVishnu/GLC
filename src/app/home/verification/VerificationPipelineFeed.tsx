@@ -3,8 +3,10 @@
 import React from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 export default function VerificationPipelineFeed() {
+  const router = useRouter();
   return (
     <section className="w-full max-w-7xl mx-auto px-4 lg:px-8 py-16 lg:py-24 box-border flex flex-col">
       {/* ─── FEED HEADER ─── */}
@@ -106,7 +108,7 @@ export default function VerificationPipelineFeed() {
 
                 {/* Embedded download link file preview button */}
                 <button
-                  onClick={() => alert("Downloading secure agronomy analysis base documents...")}
+                  onClick={() => router.push("/home/unlockeddocuments")}
                   style={{
                     boxSizing: "border-box",
                     display: "inline-flex",
@@ -415,7 +417,7 @@ export default function VerificationPipelineFeed() {
           >
             {/* Primary trigger button slot */}
             <button
-              onClick={() => alert("Connecting direct encrypted audit operations support desk link...")}
+              onClick={() => router.push("/home/supportcenter")}
               style={{
                 boxSizing: "border-box",
                 display: "flex",

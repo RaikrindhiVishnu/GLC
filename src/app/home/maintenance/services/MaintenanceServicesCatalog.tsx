@@ -104,7 +104,7 @@ export default function MaintenanceServicesCatalog() {
 
         <div
           style={{ display: "flex", flexDirection: "row", alignItems: "center", padding: "16px 24px", gap: "16px", background: "#FFFFFF", boxShadow: "0px 1px 2px rgba(0,0,0,0.05)", borderRadius: "32px", cursor: "pointer", flexShrink: 0 }}
-          onClick={() => alert("Loading complete localized land survey mapping registries...")}
+          onClick={() => router.push("/home/verification")}
         >
           <div style={{ width: "18px", height: "20px", background: "#2780C4", borderRadius: "4px", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <span style={{ fontSize: "10px", color: "#FFFFFF", fontWeight: "bold" }}>⌖</span>
@@ -280,7 +280,7 @@ export default function MaintenanceServicesCatalog() {
               </span>
             </div>
 
-            <div onClick={() => alert("Launching secure encrypted stream dispatch to authorized Regional Development Architect...")} style={{ display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", gap: "8px", width: "100%", cursor: "pointer" }}>
+            <div onClick={() => router.push("/home/supportcenter")} style={{ display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", gap: "8px", width: "100%", cursor: "pointer" }}>
               <div style={{ width: "12px", height: "11px", background: "#2780C4", borderRadius: "2px", display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <span style={{ fontSize: "7px", color: "#FFFFFF", fontWeight: "bold" }}>📞</span>
               </div>

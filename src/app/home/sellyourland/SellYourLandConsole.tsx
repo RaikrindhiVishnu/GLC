@@ -2,8 +2,10 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 export default function SellYourLandConsole() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     fullName: "",
     code: "+91",
@@ -125,7 +127,7 @@ export default function SellYourLandConsole() {
           <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.6) 100%)", zIndex: 1 }} />
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px", zIndex: 5, position: "relative" }}>
             <button
-              onClick={() => alert("Calibrating on-ground satellite geolocation coordinate pin map layout...")}
+              onClick={() => router.push("/home/sellyourland")}
               style={{ display: "flex", flexDirection: "row", alignItems: "center", padding: "16px 32px", gap: "12px", background: "#0F2F4C", borderRadius: "9999px", border: "none", boxShadow: "0px 25px 50px -12px rgba(0,0,0,0.25)", cursor: "pointer", justifyContent: "center" }}
             >
               <svg width="16" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -192,7 +194,7 @@ export default function SellYourLandConsole() {
         >
           <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#FFFFFF", letterSpacing: "-0.4px" }}>SUBMIT LAND DETAILS</span>
         </button>
-        <div onClick={() => alert("Launching live agronomy encrypted channel dispatch support desk...")} style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "8px", cursor: "pointer" }}>
+        <div onClick={() => router.push("/home/supportcenter")} style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "8px", cursor: "pointer" }}>
           <div style={{ width: "13px", height: "13px", background: "#00629E", borderRadius: "2px", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <span style={{ fontSize: "9px", color: "#FFFFFF", fontWeight: "bold" }}>💬</span>
           </div>
@@ -242,7 +244,7 @@ export default function SellYourLandConsole() {
 
           {/* Media upload */}
           <div
-            onClick={() => alert("Initiating file input proxy handlers...")}
+            onClick={() => router.push("/home/sellyourland")}
             style={{ boxSizing: "border-box", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", padding: "48px 64px", width: "100%", border: "2px dashed #C5C6CD", borderRadius: "48px", cursor: "pointer", gap: "12px" }}
           >
             <svg width="33" height="24" viewBox="0 0 24 24" fill="none" stroke="#45474C" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -277,7 +279,7 @@ export default function SellYourLandConsole() {
           </div>
           <div style={{ paddingTop: "32px", width: "100%" }}>
             <button
-              onClick={() => alert("Launching local storage file input array bindings...")}
+              onClick={() => router.push("/home/sellyourland")}
               style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", padding: "16px 0", width: "100%", height: "60px", border: "2px solid #0F2F4C", borderRadius: "48px", background: "transparent", cursor: "pointer" }}
             >
               <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C" }}>UPLOAD DOCUMENTS</span>

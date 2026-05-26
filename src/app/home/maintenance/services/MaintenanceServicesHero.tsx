@@ -404,7 +404,7 @@ export default function MaintenanceServicesHero() {
           pointerEvents: "auto",
           zIndex: 10,
         }}
-        onClick={() => alert("Launching automated Maintenance operations live feed assistant...")}
+        onClick={() => router.push("/home/supportcenter/supportchat")}
       >
         {/* Placeholder node rendering central circle graphic */}
         <div style={{ width: "26px", height: "26px", borderRadius: "13px", background: "#FFFFFF", display: "flex", alignItems: "center", justifyContent: "center" }}>

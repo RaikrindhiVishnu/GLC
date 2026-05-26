@@ -3,9 +3,10 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 export default function AddOnServices() {
-  // Track selected draft cart items matching requested design functionality
+  const router = useRouter();
   const [requestedServices, setRequestedServices] = useState<string[]>(["borewell", "solar"]);
 
   const toggleService = (id: string) => {
@@ -646,7 +647,7 @@ export default function AddOnServices() {
             </p>
 
             <button
-              onClick={() => alert(`Successfully scheduled official work order estimate token for ${requestedServices.length} module(s).`)}
+              onClick={() => router.push("/home/maintenance/services")}
               style={{
                 boxSizing: "border-box",
                 display: "flex",

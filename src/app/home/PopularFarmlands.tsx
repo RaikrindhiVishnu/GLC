@@ -3,6 +3,7 @@
 import React, { useState, useRef } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 const farmlands = [
   {
@@ -43,6 +44,7 @@ const farmlands = [
 ];
 
 export default function PopularFarmlands() {
+  const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
   
   // Drag scroll states
@@ -102,7 +104,7 @@ export default function PopularFarmlands() {
               </motion.span>
             ))}
           </h2>
-          <button className="bg-transparent border-none font-jakarta font-extrabold text-[14px] md:text-[18px] leading-[36px] text-[#0F2F4C] cursor-pointer [-webkit-tap-highlight-color:transparent] hover:opacity-70 transition-opacity">
+          <button onClick={() => router.push("/search")} className="bg-transparent border-none font-jakarta font-extrabold text-[14px] md:text-[18px] leading-[36px] text-[#0F2F4C] cursor-pointer [-webkit-tap-highlight-color:transparent] hover:opacity-70 transition-opacity">
             View All
           </button>
         </div>

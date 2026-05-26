@@ -82,7 +82,7 @@ export default function StickySidebarRight({
         <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "14px", lineHeight: "23px", color: "#8590A6", textAlign: "center", marginBottom: "24px", maxWidth: "333px" }}>
           Access survey numbers, ownership history, and soil reports.
         </span>
-        <button style={{ width: "100%", height: "56px", background: "#2780C4", borderRadius: "48px", border: "none", color: "#FFFFFF", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", cursor: "pointer" }}>
+        <button onClick={() => router.push("/pricing")} style={{ width: "100%", height: "56px", background: "#2780C4", borderRadius: "48px", border: "none", color: "#FFFFFF", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", cursor: "pointer" }}>
           Unlock All Documents
         </button>
       </motion.div>

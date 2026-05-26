@@ -1,8 +1,10 @@
 "use client";
 
 import React from "react";
+import { useRouter } from "next/navigation";
 
 export default function CenterPane() {
+  const router = useRouter();
   // Configured parameterized payload array reproducing absolute layout strings requested
   const documentRows = [
     {
@@ -194,7 +196,7 @@ export default function CenterPane() {
 
             {/* Right Trigger Target Button link */}
             <button
-              onClick={() => alert(row.alertText)}
+              onClick={() => router.push("/home/unlockeddocuments")}
               style={{
                 background: "transparent",
                 border: "1px solid rgba(39, 128, 196, 0.2)",
@@ -235,7 +237,7 @@ export default function CenterPane() {
 
       {/* ─── PRIMARY RADIAL SUBMIT HERO TRIGGER ─── */}
       <button
-        onClick={() => alert("Initializing customized guided field assessment route scheduling engine...")}
+        onClick={() => router.push("/home/supportcenter/supportchat")}
         style={{
           boxSizing: "border-box",
           display: "flex",

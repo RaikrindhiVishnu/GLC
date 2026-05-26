@@ -80,7 +80,7 @@ export default function ProfileScreen() {
 
               {/* Edit Profile + Share row */}
               <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
-                <button style={{ flex: 1, height: "46px", background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)", border: "none", borderRadius: "14px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}>
+                <button onClick={() => router.push("/profile")} style={{ flex: 1, height: "46px", background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)", border: "none", borderRadius: "14px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="#FFFFFF"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
                   <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "14px", color: "#FFFFFF", letterSpacing: "0.5px", textTransform: "uppercase" }}>Edit Profile</span>
                 </button>
@@ -114,7 +114,7 @@ export default function ProfileScreen() {
               <p style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 400, fontSize: "13px", color: "rgba(255,255,255,0.55)", margin: "0 0 20px" }}>Direct access to premium agricultural yields</p>
 
               {/* View Wallet History */}
-              <button style={{ width: "100%", height: "50px", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "14px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <button onClick={() => router.push("/profile/managesubscriptions")} style={{ width: "100%", height: "50px", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "14px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "15px", color: "#FFFFFF" }}>View Wallet History</span>
               </button>
             </div>
@@ -207,7 +207,7 @@ export default function ProfileScreen() {
             ))}
           </div>
           <div style={{ paddingTop: "14px", borderTop: "1px solid #F5F5F5", marginTop: "16px" }}>
-            <button style={{ background: "transparent", border: "none", display: "flex", alignItems: "center", gap: "6px", cursor: "pointer", padding: 0 }}>
+            <button onClick={() => router.push("/home/ai-generated-farmlands")} style={{ background: "transparent", border: "none", display: "flex", alignItems: "center", gap: "6px", cursor: "pointer", padding: 0 }}>
               <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "14px", color: "#00629E" }}>View Live Feeds</span>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#00629E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
             </button>
@@ -315,11 +315,11 @@ export default function ProfileScreen() {
               <div style={{ height: "50px", background: "#2780C4", borderRadius: "20px", display: "flex", alignItems: "center", padding: "0 20px", boxShadow: "0px 4px 12px rgba(0,0,0,0.1)" }}>
                 <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "17.6px", color: "#FFFFFF", letterSpacing: "-0.02em" }}>Silver Tier • 4 Unlocks Available</span>
               </div>
-              <button style={{ height: "50px", background: "#F8F9FA", borderRadius: "20px", border: "none", display: "flex", alignItems: "center", gap: "8px", padding: "0 18px", cursor: "pointer", transition: "opacity 0.2s ease" }} onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.85")} onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}>
+              <button onClick={() => router.push("/profile")} style={{ height: "50px", background: "#F8F9FA", borderRadius: "20px", border: "none", display: "flex", alignItems: "center", gap: "8px", padding: "0 18px", cursor: "pointer", transition: "opacity 0.2s ease" }} onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.85")} onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="#0F2F4C"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" /></svg>
                 <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "17.6px", color: "#0F2F4C", letterSpacing: "-0.04em" }}>Edit Profile</span>
               </button>
-              <button style={{ width: "50px", height: "50px", background: "#F8F9FA", borderRadius: "50%", border: "none", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "opacity 0.2s ease" }} onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.85")} onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}>
+              <button onClick={() => router.push("/profile")} style={{ width: "50px", height: "50px", background: "#F8F9FA", borderRadius: "50%", border: "none", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "opacity 0.2s ease" }} onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.85")} onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F2F4C" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
                   <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
@@ -336,7 +336,7 @@ export default function ProfileScreen() {
             </div>
 
             <div style={{ position: "absolute", top: "574px", left: "48px", display: "flex", flexDirection: "row", gap: "16px", zIndex: 10 }}>
-              <button style={{ height: "46px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: "32px", padding: "0 24px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", transition: "background 0.2s ease" }} onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.15)")} onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.05)")}>
+              <button onClick={() => router.push("/profile/managesubscriptions")} style={{ height: "46px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: "32px", padding: "0 24px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", transition: "background 0.2s ease" }} onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.15)")} onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.05)")}>
                 <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", color: "#FFFFFF" }}>Wallet History</span>
               </button>
               <button onClick={() => router.push("/profile/managesubscriptions")} style={{ height: "46px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: "32px", padding: "0 24px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", transition: "background 0.2s ease" }} onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.15)")} onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.05)")}>
@@ -465,7 +465,7 @@ export default function ProfileScreen() {
             </div>
           </div>
           <div style={{ paddingTop: "16px", borderTop: "1px solid #FAFAFA", display: "flex", alignItems: "center" }}>
-            <button style={{ background: "transparent", border: "none", display: "flex", alignItems: "center", gap: "6px", cursor: "pointer", padding: 0 }} onClick={() => alert("Navigating to live feed networks...")}>
+            <button style={{ background: "transparent", border: "none", display: "flex", alignItems: "center", gap: "6px", cursor: "pointer", padding: 0 }} onClick={() => router.push("/home/ai-generated-farmlands")}>
               <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#00629E" }}>View Live Feeds</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00629E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
             </button>

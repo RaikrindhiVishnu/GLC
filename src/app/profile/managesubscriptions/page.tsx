@@ -2,12 +2,13 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 import ManageSubscriptionsHero from "./ManageSubscriptionsHero";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 
 export default function ManageSubscriptionsPage() {
-  // Dynamic active subscription tier state selection mapping figma bento slots
+  const router = useRouter();
   const [selectedTier, setSelectedTier] = useState<string>("pro-annual");
 
   return (
@@ -325,7 +326,7 @@ export default function ManageSubscriptionsPage() {
                 {/* Bottom Executable Command Container */}
                 <div className="w-full flex flex-col items-center gap-3 pt-8 mt-auto">
                   <button
-                    onClick={() => alert("Redirecting securely to absolute global multi-channel payment layer for instant transition into elite Platinum framework status.")}
+                    onClick={() => router.push("/pricing")}
                     className="w-full py-4 bg-[radial-gradient(circle_at_center,#2780C4_0%,#164573_100%)] hover:opacity-95 transition-all active:scale-95 text-white font-bold text-sm sm:text-base rounded-full shadow-lg border-none cursor-pointer block tracking-wide"
                   >
                     ★ UPGRADE TO PLATINUM

@@ -166,7 +166,7 @@ export default function SupportCenterContent() {
             {/* Dynamic list button shortcuts matrix */}
             <div className="flex flex-col gap-2 w-full mt-auto">
               <button
-                onClick={() => alert("Direct routing to Secure Site Visit calendar allocation setup portal...")}
+                onClick={() => router.push("/home/supportcenter/supportchat")}
                 className="box-border flex flex-row justify-between items-center px-4 py-3 sm:py-3.5 w-full bg-white border border-[#E7E8E9] rounded-xl sm:rounded-2xl cursor-pointer transition-colors hover:border-[#2780C4] hover:bg-[#FAFAFA]"
               >
                 <span className="font-bold text-xs sm:text-sm text-[#091426]">
@@ -178,7 +178,7 @@ export default function SupportCenterContent() {
               </button>
 
               <button
-                onClick={() => alert("Opening Escrow Security Terms and direct refund evaluation pipeline parameters...")}
+                onClick={() => router.push("/pricing")}
                 className="box-border flex flex-row justify-between items-center px-4 py-3 sm:py-3.5 w-full bg-white border border-[#E7E8E9] rounded-xl sm:rounded-2xl cursor-pointer transition-colors hover:border-[#2780C4] hover:bg-[#FAFAFA]"
               >
                 <span className="font-bold text-xs sm:text-sm text-[#091426]">
@@ -190,7 +190,7 @@ export default function SupportCenterContent() {
               </button>
 
               <button
-                onClick={() => alert("Verifying status hash certificates for unlocked GLC base deeds...")}
+                onClick={() => router.push("/home/verification")}
                 className="box-border flex flex-row justify-between items-center px-4 py-3 sm:py-3.5 w-full bg-white border border-[#E7E8E9] rounded-xl sm:rounded-2xl cursor-pointer transition-colors hover:border-[#2780C4] hover:bg-[#FAFAFA]"
               >
                 <span className="font-bold text-xs sm:text-sm text-[#091426]">

@@ -3,6 +3,7 @@
 import React, { useState, useRef } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 const listings = [
   { id: "listing-1", title: "GLC SOS 01", price: "₹85 Lakhs", img: "/assets/home/YourListings/glcsos1.svg" },
@@ -12,6 +13,7 @@ const listings = [
 ];
 
 export default function YourListings() {
+  const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
   
   // Drag scroll states
@@ -49,7 +51,9 @@ export default function YourListings() {
     if (dragged) {
       e.preventDefault();
       e.stopPropagation();
+      return;
     }
+    router.push("/home/myassets/details");
   };
 
   return (
@@ -71,7 +75,7 @@ export default function YourListings() {
               </motion.span>
             ))}
           </h2>
-          <button className="bg-transparent border-none font-jakarta font-extrabold text-[14px] md:text-[18px] leading-[40px] text-[#0F2F4C] cursor-pointer [-webkit-tap-highlight-color:transparent] hover:opacity-70 transition-opacity">
+          <button onClick={() => router.push("/home/myassets")} className="bg-transparent border-none font-jakarta font-extrabold text-[14px] md:text-[18px] leading-[40px] text-[#0F2F4C] cursor-pointer [-webkit-tap-highlight-color:transparent] hover:opacity-70 transition-opacity">
             View All
           </button>
         </div>
@@ -124,7 +128,7 @@ export default function YourListings() {
             </p>
 
             {/* Button */}
-            <button className="w-full h-[48px] lg:h-[52px] bg-[radial-gradient(50%_50%_at_50%_50%,#2780C4_0%,#164573_100%)] rounded-full border-none font-jakarta font-semibold text-[14px] lg:text-[16px] text-white uppercase cursor-pointer shrink-0 hover:opacity-90 transition-opacity">
+            <button onClick={() => router.push("/home/myassets/details")} className="w-full h-[48px] lg:h-[52px] bg-[radial-gradient(50%_50%_at_50%_50%,#2780C4_0%,#164573_100%)] rounded-full border-none font-jakarta font-semibold text-[14px] lg:text-[16px] text-white uppercase cursor-pointer shrink-0 hover:opacity-90 transition-opacity">
               View Details
             </button>
           </motion.div>
