@@ -6,7 +6,7 @@ import { useMemo, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 export type NavbarVariant = "landing" | "app";
-export type NavbarActive = "home" | "search" | "pricing" | "profile" | "documents";
+export type NavbarActive = "home" | "search" | "pricing" | "profile" | "documents" | "compareassets" | "comparepremium";
 
 type Props =
   | { variant?: "landing"; className?: string }

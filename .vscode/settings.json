@@ -1,3 +1,4 @@
 {
-  "remote.autoOpenExternalEndpoints": "openExternal"
+  "remote.autoOpenExternalEndpoints": "openExternal",
+  "css.lint.unknownAtRules": "ignore"
 }
