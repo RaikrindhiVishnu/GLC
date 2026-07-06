@@ -14,9 +14,15 @@ export default function HeroSection() {
   useEffect(() => {
     function update() {
       const vw = window.innerWidth;
+      const vh = window.innerHeight;
       const scale = vw / 1440;
-      if (scalerRef.current) scalerRef.current.style.transform = `scale(${scale})`;
-      if (shellRef.current) shellRef.current.style.height = `${960 * scale}px`;
+      if (scalerRef.current) {
+        scalerRef.current.style.transform = `scale(${scale})`;
+        scalerRef.current.style.height = `${Math.max(960, vh / scale)}px`;
+        const section = scalerRef.current.children[0] as HTMLElement;
+        if (section) section.style.height = '100%';
+      }
+      if (shellRef.current) shellRef.current.style.height = `${vh}px`;
     }
     update();
     window.addEventListener("resize", update);
