@@ -77,12 +77,12 @@ export default function HeroSection() {
             {/* 1440px Figma coordinate space */}
             <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: "1440px", height: "960px", zIndex: 20, pointerEvents: "none" }}>
               {/* Brand Logo */}
-              <div style={{ position: "absolute", width: "150px", height: "64px", left: "60px", top: "58px", cursor: "pointer", pointerEvents: "auto", display: "flex", alignItems: "center" }} onClick={() => router.push("/home")}>
+              <div style={{ position: "absolute", width: "150px", height: "64px", left: "60px", top: "24px", cursor: "pointer", pointerEvents: "auto", display: "flex", alignItems: "center" }} onClick={() => router.push("/home")}>
                 <Image src="/assets/common/Logo green land 1.svg" alt="Green Land Capital Brand Logo" width={150} height={64} style={{ objectFit: "contain" }} />
               </div>
 
               {/* Nav Pill */}
-              <div style={{ boxSizing: "border-box", display: "flex", flexDirection: "row", alignItems: "center", padding: "10px", gap: "10px", position: "absolute", width: "242px", height: "68px", left: "calc(50% - 121px)", top: "59px", background: "rgba(255,255,255,0.1)", boxShadow: "0px 8px 6px rgba(0,0,0,0.05), inset 3px 4px 2px -3px rgba(255,255,255,0.55), inset 0px -1px 1px rgba(255,255,255,0.25)", backdropFilter: "blur(50px)", borderRadius: "100px", pointerEvents: "auto", justifyContent: "space-between" }}>
+              <div style={{ boxSizing: "border-box", display: "flex", flexDirection: "row", alignItems: "center", padding: "10px", gap: "10px", position: "absolute", width: "242px", height: "68px", left: "calc(50% - 121px)", top: "25px", background: "rgba(255,255,255,0.1)", boxShadow: "0px 8px 6px rgba(0,0,0,0.05), inset 3px 4px 2px -3px rgba(255,255,255,0.55), inset 0px -1px 1px rgba(255,255,255,0.25)", backdropFilter: "blur(50px)", borderRadius: "100px", pointerEvents: "auto", justifyContent: "space-between" }}>
                 {[
                   { icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>, route: "/home" },
                   { icon: <Image src="/assets/home/HeroScreen/search.svg" alt="Search" width={22} height={22} />, route: "/search" },
@@ -96,16 +96,16 @@ export default function HeroSection() {
               </div>
 
               {/* Unlock button */}
-              <button onClick={() => router.push("/home/unlockeddocuments")} style={{ position: "absolute", width: "52px", height: "52px", left: "1194px", top: "70px", background: "rgba(255,255,255,0.1)", backdropFilter: "blur(62.67px)", borderRadius: "125px", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "auto" }}>
+              <button onClick={() => router.push("/home/unlockeddocuments")} style={{ position: "absolute", width: "52px", height: "52px", left: "1194px", top: "36px", background: "rgba(255,255,255,0.1)", backdropFilter: "blur(62.67px)", borderRadius: "125px", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "auto" }}>
                 <Image src="/assets/home/HeroScreen/unlock 1.svg" alt="Unlock" width={26} height={26} />
               </button>
               {/* Notifications button */}
-              <button onClick={() => router.push("/home/supportcenter")} style={{ position: "absolute", width: "52px", height: "52px", left: "1261px", top: "70px", background: "rgba(255,255,255,0.1)", backdropFilter: "blur(62.67px)", borderRadius: "125px", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "auto" }}>
+              <button onClick={() => router.push("/home/supportcenter")} style={{ position: "absolute", width: "52px", height: "52px", left: "1261px", top: "36px", background: "rgba(255,255,255,0.1)", backdropFilter: "blur(62.67px)", borderRadius: "125px", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "auto" }}>
                 <Image src="/assets/home/HeroScreen/notification.svg" alt="Notifications" width={26} height={26} />
                 <span style={{ position: "absolute", width: "6px", height: "6px", left: "27px", top: "13px", background: "#E53935", border: "0.9px solid rgba(255,255,255,0.9)", borderRadius: "50%" }} />
               </button>
               {/* Avatar */}
-              <div onClick={() => router.push("/profile")} style={{ position: "absolute", width: "52px", height: "52px", left: "1328px", top: "69px", borderRadius: "50%", border: "0.45px solid rgba(255,255,255,0.82)", overflow: "hidden", cursor: "pointer", pointerEvents: "auto" }}>
+              <div onClick={() => router.push("/profile")} style={{ position: "absolute", width: "52px", height: "52px", left: "1328px", top: "35px", borderRadius: "50%", border: "0.45px solid rgba(255,255,255,0.82)", overflow: "hidden", cursor: "pointer", pointerEvents: "auto" }}>
                 <img src="/assets/home/HeroScreen/person.svg" alt="Profile" style={{ width: "100%", height: "100%", objectFit: "cover", transform: "scale(1.5)" }} />
               </div>
 
