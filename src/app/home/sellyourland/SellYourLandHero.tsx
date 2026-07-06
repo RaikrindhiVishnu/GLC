@@ -14,7 +14,7 @@ export default function SellYourLandHero() {
   useEffect(() => {
     function update() {
       const vw = window.innerWidth;
-      const scale = Math.min(vw / 1440, window.innerHeight / 960);
+      const scale = vw / 1440;
       if (scalerRef.current) scalerRef.current.style.transform = `scale(${scale})`;
       if (shellRef.current) shellRef.current.style.height = `${960 * scale}px`;
     }
