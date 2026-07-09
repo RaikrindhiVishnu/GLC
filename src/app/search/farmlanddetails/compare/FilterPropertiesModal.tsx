@@ -17,6 +17,7 @@ export default function FilterPropertiesModal({
   // Local state for all advanced interactive filter controls
   const [stateSearch, setStateSearch] = useState("");
   const [citySearch, setCitySearch] = useState("");
+  const [mandalSearch, setMandalSearch] = useState("");
 
   // Simulated slider preset ranges for dynamic interactivity
   const pricePresets = [
@@ -37,7 +38,7 @@ export default function FilterPropertiesModal({
 
   // Multi-select state arrays
   const [selectedCollections, setSelectedCollections] = useState<string[]>([
-    "GLC's Exclusive",
+    "GLC's Certified",
   ]);
   const [selectedAttributes, setSelectedAttributes] = useState<string[]>([
     "Silt Loam",
@@ -51,7 +52,7 @@ export default function FilterPropertiesModal({
 
   const collectionsList = [
     "Most Searched",
-    "GLC's Exclusive",
+    "GLC's Certified",
     "Premium Listing",
     "Trending Land",
   ];
@@ -78,6 +79,7 @@ export default function FilterPropertiesModal({
   const handleClearAll = () => {
     setStateSearch("");
     setCitySearch("");
+    setMandalSearch("");
     setPriceIndex(0);
     setSizeIndex(0);
     setSelectedCollections([]);
@@ -91,6 +93,7 @@ export default function FilterPropertiesModal({
       onApplyFilters({
         stateSearch,
         citySearch,
+        mandalSearch,
         priceRange: pricePresets[priceIndex],
         sizeRange: sizePresets[sizeIndex],
         selectedCollections,
@@ -208,13 +211,6 @@ export default function FilterPropertiesModal({
             @keyframes scaleUp {
               from { transform: scale(0.95); opacity: 0; }
               to { transform: scale(1); opacity: 1; }
-            }
-            .compare-modal-content::-webkit-scrollbar {
-              display: none !important;
-            }
-            .compare-modal-content {
-              -ms-overflow-style: none !important;
-              scrollbar-width: none !important;
             }
             .preset-slider:hover .slider-thumb {
               transform: scale(1.15);
@@ -354,7 +350,7 @@ export default function FilterPropertiesModal({
               }}
             >
               {/* State Search Input */}
-              <div style={{ flex: "1 1 320px", position: "relative", boxSizing: "border-box" }}>
+              <div style={{ flex: "1 1 calc(33.333% - 11px)", position: "relative", boxSizing: "border-box" }}>
                 <svg
                   width="16"
                   height="20"
@@ -390,7 +386,7 @@ export default function FilterPropertiesModal({
               </div>
 
               {/* City / District Search Input */}
-              <div style={{ flex: "1 1 320px", position: "relative", boxSizing: "border-box" }}>
+              <div style={{ flex: "1 1 calc(33.333% - 11px)", position: "relative", boxSizing: "border-box" }}>
                 <svg
                   width="18"
                   height="18"
@@ -400,15 +396,48 @@ export default function FilterPropertiesModal({
                   strokeWidth="2.2"
                   style={{ position: "absolute", left: "18px", top: "50%", transform: "translateY(-50%)", zIndex: 1 }}
                 >
-                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                  <line x1="3" y1="9" x2="21" y2="9" />
-                  <line x1="9" y1="21" x2="9" y2="9" />
+                  <path d="M3 6l6-3 6 3 6-3v12l-6 3-6-3-6 3V6z" />
                 </svg>
                 <input
                   type="text"
                   value={citySearch}
                   onChange={(e) => setCitySearch(e.target.value)}
                   placeholder="City / District Search"
+                  style={{
+                    width: "100%",
+                    height: "56px",
+                    backgroundColor: "#FFFFFF",
+                    border: "1px solid rgba(197, 198, 205, 0.3)",
+                    borderRadius: "9999px",
+                    padding: "0 24px 0 48px",
+                    fontFamily: "'Plus Jakarta Sans', sans-serif",
+                    fontSize: "15px",
+                    color: "#0F2F4C",
+                    outline: "none",
+                    boxSizing: "border-box",
+                    boxShadow: "0px 2px 6px rgba(0,0,0,0.01)",
+                  }}
+                />
+              </div>
+
+              {/* Mandal Search Input */}
+              <div style={{ flex: "1 1 calc(33.333% - 11px)", position: "relative", boxSizing: "border-box" }}>
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#75777D"
+                  strokeWidth="2.2"
+                  style={{ position: "absolute", left: "18px", top: "50%", transform: "translateY(-50%)", zIndex: 1 }}
+                >
+                  <path d="M3 6l6-3 6 3 6-3v12l-6 3-6-3-6 3V6z" />
+                </svg>
+                <input
+                  type="text"
+                  value={mandalSearch}
+                  onChange={(e) => setMandalSearch(e.target.value)}
+                  placeholder="Mandal Search"
                   style={{
                     width: "100%",
                     height: "56px",
@@ -624,7 +653,7 @@ export default function FilterPropertiesModal({
                   textTransform: "uppercase",
                 }}
               >
-                CURATED COLLECTIONS
+                ACTION-ORIENTED
               </span>
 
               {/* Multi-select Interactive Pills */}
@@ -653,6 +682,28 @@ export default function FilterPropertiesModal({
                     </button>
                   );
                 })}
+              </div>
+              <div style={{ marginTop: "8px" }}>
+                <button
+                  style={{
+                    background: "none",
+                    border: "none",
+                    padding: 0,
+                    color: "#2780C4",
+                    fontFamily: "'Plus Jakarta Sans', sans-serif",
+                    fontWeight: 500,
+                    fontSize: "14px",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "4px",
+                    cursor: "pointer",
+                  }}
+                >
+                  View All
+                  <svg width="6" height="10" viewBox="0 0 6 10" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M1 9L5 5L1 1" />
+                  </svg>
+                </button>
               </div>
             </div>
 
@@ -746,11 +797,8 @@ export default function FilterPropertiesModal({
                 }}
               >
                 <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "15.5px", color: "#0F2F4C" }}>
-                    Organic-Ready Certificate
-                  </span>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "12.5px", color: "#75777D" }}>
-                    Vetted for chemical-free soil history
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C" }}>
+                    GLC Exclusive Farmlands
                   </span>
                 </div>
 

@@ -1,47 +1,18 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-
-const trendingItems = [
-  {
-    id: "trending-1",
-    title: "GLC SOS 01",
-    location: "VIZAG, A.P",
-    description: "High-yield sustainable corn production facility with automated irrigation...",
-    tag: "HIGH YIELD 2025",
-    tagColor: "rgba(0, 31, 63, 0.1)",
-    tagTextColor: "#001F3F",
-    img: "/assets/home/TrendingFarmlands/glcsos01.svg",
-  },
-  {
-    id: "trending-2",
-    title: "GLC SOS 02",
-    location: "TAMILNADU",
-    description: "Historic vineyard estate featuring boutique grape varieties and a climat...",
-    tag: "MOST BOOKMARKED",
-    tagColor: "rgba(207, 102, 103, 0.1)",
-    tagTextColor: "#CF6667",
-    img: "/assets/home/TrendingFarmlands/glcsos02.svg",
-  },
-  {
-    id: "trending-3",
-    title: "WHEAT RIDGE X",
-    location: "SRIKAKULAM, A.P",
-    description: "Expansive grain territory optimized for precision agriculture with drone...",
-    tag: "HIGH YIELD 2024",
-    tagColor: "rgba(0, 31, 63, 0.1)",
-    tagTextColor: "#001F3F",
-    img: "/assets/home/TrendingFarmlands/glcsos03.svg",
-  },
-];
+import { useGetFarmlandByTagAndStateQuery } from "../../services/home";
 
 export default function TrendingFarmlands() {
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
-  
+
+  const { data: res, isLoading } = useGetFarmlandByTagAndStateQuery({ tag_ids: [1, 2, 3], state_id: 1 });
+  const farmlands = res?.data || [];
+
   // Drag scroll states
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
@@ -62,7 +33,7 @@ export default function TrendingFarmlands() {
     e.preventDefault();
     const x = e.pageX - containerRef.current.offsetLeft;
     const walk = (x - startX) * 2.0; // Responsive drag velocity multiplier
-    
+
     if (Math.abs(walk) > 5) {
       setDragged(true);
     }
@@ -82,7 +53,7 @@ export default function TrendingFarmlands() {
 
   return (
     <section id="trending-farmlands" className="w-full bg-transparent py-12 lg:py-[70px] overflow-hidden">
-      
+
       {/* Section Header Wrapper (Constrained to Page Margin) */}
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 lg:mb-8">
         <div className="flex justify-between items-center w-full">
@@ -106,92 +77,102 @@ export default function TrendingFarmlands() {
       </div>
 
       {/* Cards Scrollable Container (Free Drag-to-Scroll + Asymmetric Offset Layout) */}
-      <div 
+      <div
         ref={containerRef}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUpOrLeave}
         onMouseLeave={handleMouseUpOrLeave}
-        className={`flex gap-4 md:gap-6 lg:gap-[30px] w-full overflow-x-auto pb-4 hide-scrollbar pl-4 sm:pl-6 lg:pl-8 xl:pl-[calc((100vw-1280px)/2+32px)] pr-4 sm:pr-6 lg:pr-8 select-none ${
-          isDragging ? "cursor-grabbing" : "cursor-grab"
-        }`}
+        className={`flex gap-4 md:gap-6 lg:gap-[30px] w-full overflow-x-auto pb-4 hide-scrollbar pl-4 sm:pl-6 lg:pl-8 xl:pl-[calc((100vw-1280px)/2+32px)] pr-4 sm:pr-6 lg:pr-8 select-none ${isDragging ? "cursor-grabbing" : "cursor-grab"
+          }`}
       >
-        <style dangerouslySetInnerHTML={{ __html: `
+        <style dangerouslySetInnerHTML={{
+          __html: `
           #trending-farmlands .hide-scrollbar::-webkit-scrollbar { display: none; }
           #trending-farmlands .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         `}} />
-        
-        {trendingItems.map((item, i) => (
-          <motion.div
-            key={item.id}
-            initial={{ opacity: 0, filter: "blur(8px)", x: 20 }}
-            whileInView={{ opacity: 1, filter: "blur(0px)", x: 0 }}
-            transition={{ duration: 0.6, delay: i * 0.1 }}
-            viewport={{ once: true }}
-            onClick={handleCardClick}
-            className="flex flex-col sm:flex-row w-[280px] sm:w-[450px] lg:w-[511px] shrink-0 bg-white shadow-[0px_11px_38px_rgba(0,31,63,0.04)] rounded-[24px] lg:rounded-[45px] overflow-hidden cursor-pointer box-border group pointer-events-auto"
-          >
-            {/* Left Side: Image */}
-            <div className="relative w-full h-[180px] sm:w-[180px] lg:w-[204px] sm:h-[260px] shrink-0 pointer-events-none">
-              <Image
-                src={item.img}
-                alt={item.title}
-                fill
-                className="object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-            </div>
 
-            {/* Right Side: Content */}
-            <div className="flex flex-1 flex-col justify-between p-6 sm:p-6 lg:p-[30px] gap-4 box-border">
-              <div className="flex flex-col gap-[8px]">
-                
-                {/* Tag */}
-                <div
-                  style={{ background: item.tagColor }}
-                  className="inline-flex items-center px-[11px] py-[4px] rounded-full w-fit pointer-events-none"
-                >
-                  {item.tagTextColor === "#CF6667" ? (
-                    /* Red Label: Bookmark Icon */
-                    <svg width="9" height="10" viewBox="0 0 10 12" fill="none" xmlns="http://www.w3.org/2000/svg" className="mr-1.5 shrink-0">
-                      <path d="M1 1H9V11L5 8.5L1 11V1Z" fill="#CF6667" stroke="#CF6667" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  ) : item.tagTextColor === "#001F3F" ? (
-                    /* Grey Label: Star Icon */
-                    <svg width="10" height="10" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" className="mr-1.5 shrink-0">
-                      <path d="M6 1L7.5 4.5H11L8.2 6.5L9.5 10L6 7.8L2.5 10L3.8 6.5L1 4.5H4.5L6 1Z" fill="#001F3F" />
-                    </svg>
-                  ) : null}
-                  <span
-                    style={{ color: item.tagTextColor }}
-                    className="font-jakarta font-bold text-[9px] leading-[14px] tracking-[0.9px] uppercase"
+        {isLoading ? (
+          <div className="flex justify-center items-center w-full h-[260px]">
+            <span className="font-jakarta text-[#0F2F4C]">Loading trending properties...</span>
+          </div>
+        ) : farmlands.length === 0 ? (
+          <div className="flex justify-center items-center w-full h-[260px]">
+            <span className="font-jakarta text-[#0F2F4C]">No trending properties found.</span>
+          </div>
+        ) : (
+          farmlands.map((item, i) => (
+            <motion.div
+              key={item.farmland_id}
+              initial={{ opacity: 0, filter: "blur(8px)", x: 20 }}
+              whileInView={{ opacity: 1, filter: "blur(0px)", x: 0 }}
+              transition={{ duration: 0.6, delay: i * 0.1 }}
+              viewport={{ once: true }}
+              onClick={handleCardClick}
+              className="flex flex-col sm:flex-row w-[280px] sm:w-[450px] lg:w-[511px] shrink-0 bg-white shadow-[0px_11px_38px_rgba(0,31,63,0.04)] rounded-[24px] lg:rounded-[45px] overflow-hidden cursor-pointer box-border group pointer-events-auto"
+            >
+              {/* Left Side: Image */}
+              <div className="relative w-full h-[180px] sm:w-[180px] lg:w-[204px] sm:h-[260px] shrink-0 pointer-events-none">
+                <Image
+                  src={item.farmland_img || `/assets/home/TrendingFarmlands/glcsos0${(i % 3) + 1}.svg`}
+                  alt={item.farmland_code}
+                  fill
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              </div>
+
+              {/* Right Side: Content */}
+              <div className="flex flex-1 flex-col justify-between p-6 sm:p-6 lg:p-[30px] gap-4 box-border">
+                <div className="flex flex-col gap-[8px]">
+
+                  {/* Tag */}
+                  <div
+                    style={{ background: i % 2 === 0 ? "rgba(0, 31, 63, 0.1)" : "rgba(207, 102, 103, 0.1)" }}
+                    className="inline-flex items-center px-[11px] py-[4px] rounded-full w-fit pointer-events-none"
                   >
-                    {item.tag}
-                  </span>
+                    {i % 2 !== 0 ? (
+                      /* Red Label: Bookmark Icon */
+                      <svg width="9" height="10" viewBox="0 0 10 12" fill="none" xmlns="http://www.w3.org/2000/svg" className="mr-1.5 shrink-0">
+                        <path d="M1 1H9V11L5 8.5L1 11V1Z" fill="#CF6667" stroke="#CF6667" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    ) : (
+                      /* Grey Label: Star Icon */
+                      <svg width="10" height="10" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" className="mr-1.5 shrink-0">
+                        <path d="M6 1L7.5 4.5H11L8.2 6.5L9.5 10L6 7.8L2.5 10L3.8 6.5L1 4.5H4.5L6 1Z" fill="#001F3F" />
+                      </svg>
+                    )}
+                    <span
+                      style={{ color: i % 2 === 0 ? "#001F3F" : "#CF6667" }}
+                      className="font-jakarta font-bold text-[9px] leading-[14px] tracking-[0.9px] uppercase"
+                    >
+                      {i % 2 === 0 ? "HIGH YIELD 2025" : "MOST BOOKMARKED"}
+                    </span>
+                  </div>
+
+                  {/* Title */}
+                  <h3 className="m-0 font-jakarta font-extrabold text-[20px] lg:text-[24px] text-[#001F3F] mt-1 pointer-events-none">
+                    {item.farmland_code}
+                  </h3>
+
+                  {/* Description */}
+                  <p className="m-0 font-jakarta font-normal text-[12px] lg:text-[13.25px] leading-[1.6] text-[#43474E] line-clamp-2 pointer-events-none">
+                    Verified real-time GLC farmland offering optimal returns and curated organic facilities.
+                  </p>
                 </div>
 
-                {/* Title */}
-                <h3 className="m-0 font-jakarta font-extrabold text-[20px] lg:text-[24px] text-[#001F3F] mt-1 pointer-events-none">
-                  {item.title}
-                </h3>
-
-                {/* Description */}
-                <p className="m-0 font-jakarta font-normal text-[12px] lg:text-[13.25px] leading-[1.6] text-[#43474E] line-clamp-2 pointer-events-none">
-                  {item.description}
-                </p>
+                {/* Footer */}
+                <div className="flex items-center pt-4 lg:pt-[22px] border-t border-[#EDEEEF] gap-2 mt-auto pointer-events-none">
+                  <svg width="10" height="12" viewBox="0 0 12 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
+                    <path d="M6 0C2.68629 0 0 2.68629 0 6C0 10.5 6 16 6 16C6 16 12 10.5 12 6C12 2.68629 9.31371 0 6 0ZM6 8.5C4.61929 8.5 3.5 7.38071 3.5 6C3.5 4.61929 4.61929 3.5 6 8.5C7.38071 8.5 8.5 4.61929 8.5 6C8.5 7.38071 7.38071 8.5 6 8.5Z" fill="#64748B" />
+                  </svg>
+                  <span className="font-jakarta font-bold text-[10px] lg:text-[11px] leading-[15px] tracking-[0.3px] uppercase text-[#64748B]">
+                    {item.farmland_district_id ? `District ${item.farmland_district_id}` : "Unknown Location"}
+                  </span>
+                </div>
               </div>
-
-              {/* Footer */}
-              <div className="flex items-center pt-4 lg:pt-[22px] border-t border-[#EDEEEF] gap-2 mt-auto pointer-events-none">
-                <svg width="10" height="12" viewBox="0 0 12 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
-                  <path d="M6 0C2.68629 0 0 2.68629 0 6C0 10.5 6 16 6 16C6 16 12 10.5 12 6C12 2.68629 9.31371 0 6 0ZM6 8.5C4.61929 8.5 3.5 7.38071 3.5 6C3.5 4.61929 4.61929 3.5 6 8.5C7.38071 8.5 8.5 4.61929 8.5 6C8.5 7.38071 7.38071 8.5 6 8.5Z" fill="#64748B"/>
-                </svg>
-                <span className="font-jakarta font-bold text-[10px] lg:text-[11px] leading-[15px] tracking-[0.3px] uppercase text-[#64748B]">
-                  {item.location}
-                </span>
-              </div>
-            </div>
-          </motion.div>
-        ))}
+            </motion.div>
+          ))
+        )}
       </div>
 
     </section>

@@ -1,54 +1,29 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-
-const propertyCards = [
-  {
-    id: 1,
-    image: "/assets/home/YourListings/glcsos1.svg",
-    alt: "GLC SOS 01 Asset Preview",
-    title: "GLC SOS 01",
-    badge: "ACTIVE: 50/50 ORGANIC YIELD",
-    badgeBg: "#93C5FD",
-    badgeColor: "#0F2F4C",
-    meta: "5.0 Acres • Registered Dec 2025",
-    value: "Estimated Value: ₹1.20 Cr",
-    cta: "primary",
-  },
-  {
-    id: 2,
-    image: "/assets/my-assets/image2.1.svg",
-    alt: "GLC SOS 02 Asset Preview",
-    title: "GLC SOS 02",
-    badge: "UNMANAGED",
-    badgeBg: "#E7E8E9",
-    badgeColor: "#45474C",
-    meta: "2.5 Acres • Registered Jan 2026",
-    value: "Value: ₹45.00 L",
-    cta: "link",
-  },
-  {
-    id: 3,
-    image: "/assets/my-assets/image2.2.svg",
-    alt: "GLC SOS 03 Preview",
-    title: "GLC SOS 03",
-    badge: "UNMANAGED",
-    badgeBg: "#E7E8E9",
-    badgeColor: "#45474C",
-    meta: "2.5 Acres • Registered Jan 2026",
-    value: "Value: ₹45.00 L",
-    cta: "link",
-  },
-];
+import { useGetUserBoughtFarmlandsQuery } from "../../../services/user";
 
 export default function MainWealthFeed() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<"sole" | "fractional">("sole");
   const [hoveredBtn1, setHoveredBtn1] = useState(false);
   const [hoveredCertBtn, setHoveredCertBtn] = useState(false);
+  
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  const userId = 2; // Hardcoded to 2 as per backend request
+  
+  const { data: res, isLoading: isQueryLoading } = useGetUserBoughtFarmlandsQuery(
+    { user_id: userId },
+    { skip: !mounted || !userId }
+  );
+  
+  const isLoading = !mounted || isQueryLoading;
+  const boughtFarmlands = res?.data || [];
 
   return (
     <div style={{ boxSizing: "border-box", display: "flex", flexDirection: "column", gap: "48px", width: "100%" }}>
@@ -104,69 +79,85 @@ export default function MainWealthFeed() {
           </div>
 
           {/* Property Cards */}
-          {propertyCards.map((card, i) => (
-            <motion.div
-              key={card.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="flex flex-col sm:flex-row items-start sm:items-center"
-              style={{ boxSizing: "border-box", padding: "24px", gap: "24px", width: "100%", background: "#FFFFFF", borderRadius: "32px", boxShadow: "0px 8px 40px rgba(9, 20, 38, 0.04)" }}
-            >
-              {/* Image */}
-              <div className="relative rounded-3xl overflow-hidden w-full h-48 sm:w-48 sm:h-48 sm:shrink-0" style={{ background: "#F3F4F5", boxShadow: "inset 0px 0px 0px 1px rgba(0,0,0,0.05)" }}>
-                <Image src={card.image} alt={card.alt} fill style={{ objectFit: "cover", opacity: card.id === 1 ? 1 : 0.8 }} />
-              </div>
-
-              {/* Info */}
-              <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", flexGrow: 1, width: "100%", minHeight: "140px" }}>
-                <div style={{ display: "flex", flexDirection: "column", gap: "8px", width: "100%" }}>
-                  <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", flexWrap: "wrap", gap: "8px" }}>
-                    <h3
-                      onClick={() => card.id === 1 && router.push("/home/myassets/details")}
-                      style={{ margin: 0, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "24px", lineHeight: "32px", color: "#0F2F4C", cursor: card.id === 1 ? "pointer" : "default" }}
-                    >
-                      {card.title}
-                    </h3>
-                    <div style={{ background: card.badgeBg, borderRadius: "9999px", padding: "4px 12px", display: "flex", alignItems: "center" }}>
-                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", lineHeight: "15px", letterSpacing: "1px", textTransform: "uppercase", color: card.badgeColor }}>{card.badge}</span>
-                    </div>
-                  </div>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "16px", lineHeight: "24px", color: "#45474C" }}>{card.meta}</span>
-                  <span style={{ marginTop: "4px", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "20px", lineHeight: "28px", color: "#0F2F4C" }}>{card.value}</span>
+          {isLoading ? (
+            <div className="flex justify-center items-center w-full h-[200px] bg-white rounded-[32px] shadow-[0px_8px_40px_rgba(9,20,38,0.04)]">
+              <span className="font-jakarta text-[#0F2F4C]">Loading your assets...</span>
+            </div>
+          ) : boughtFarmlands.length === 0 ? (
+            <div className="flex justify-center items-center w-full h-[200px] bg-white rounded-[32px] shadow-[0px_8px_40px_rgba(9,20,38,0.04)]">
+              <span className="font-jakarta text-[#0F2F4C]">No active holdings found.</span>
+            </div>
+          ) : (
+            boughtFarmlands.map((card, i) => (
+              <motion.div
+                key={card.farmland_id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className="flex flex-col sm:flex-row items-start sm:items-center"
+                style={{ boxSizing: "border-box", padding: "24px", gap: "24px", width: "100%", background: "#FFFFFF", borderRadius: "32px", boxShadow: "0px 8px 40px rgba(9, 20, 38, 0.04)" }}
+              >
+                {/* Image */}
+                <div className="relative rounded-3xl overflow-hidden w-full h-48 sm:w-48 sm:h-48 sm:shrink-0" style={{ background: "#F3F4F5", boxShadow: "inset 0px 0px 0px 1px rgba(0,0,0,0.05)" }}>
+                  <Image src={card.farmland_img || `/assets/home/YourListings/glcsos1.svg`} alt={card.farmland_code} fill style={{ objectFit: "cover", opacity: i === 0 ? 1 : 0.8 }} />
                 </div>
 
-                {card.cta === "primary" ? (
-                  <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", marginTop: "16px" }}>
-                    <div style={{ display: "flex", flexDirection: "row", gap: "8px" }}>
-                      <div style={{ width: "40px", height: "40px", background: "#F3F4F5", borderRadius: "9999px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                        <div style={{ width: "14px", height: "16px", border: "1.5px solid #0F2F4C", borderRadius: "2px" }} />
-                      </div>
-                      <div style={{ width: "40px", height: "40px", background: "#F3F4F5", borderRadius: "9999px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                        <div style={{ width: "16px", height: "16px", border: "1.5px solid #0F2F4C", borderRadius: "8px" }} />
+                {/* Info */}
+                <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", flexGrow: 1, width: "100%", minHeight: "140px" }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "8px", width: "100%" }}>
+                    <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", flexWrap: "wrap", gap: "8px" }}>
+                      <h3
+                        onClick={() => i === 0 && router.push("/home/myassets/details")}
+                        style={{ margin: 0, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "24px", lineHeight: "32px", color: "#0F2F4C", cursor: i === 0 ? "pointer" : "default" }}
+                      >
+                        {card.farmland_code}
+                      </h3>
+                      <div style={{ background: card.is_active ? "#93C5FD" : "#E7E8E9", borderRadius: "9999px", padding: "4px 12px", display: "flex", alignItems: "center" }}>
+                        <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", lineHeight: "15px", letterSpacing: "1px", textTransform: "uppercase", color: card.is_active ? "#0F2F4C" : "#45474C" }}>
+                          {card.is_active ? "ACTIVE HOLDING" : "INACTIVE"}
+                        </span>
                       </div>
                     </div>
-                    <button
-                      onClick={() => router.push("/home/myassets/details")}
-                      onMouseEnter={() => setHoveredBtn1(true)}
-                      onMouseLeave={() => setHoveredBtn1(false)}
-                      style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center", padding: "10px 24px", height: "40px", background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)", borderRadius: "20px", border: "none", cursor: "pointer", transition: "opacity 0.2s ease", opacity: hoveredBtn1 ? 0.9 : 1 }}
-                    >
-                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", textTransform: "uppercase", color: "#FFFFFF" }}>Track Yield Payouts</span>
-                    </button>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "16px", lineHeight: "24px", color: "#45474C" }}>
+                      Registered on {new Date(card.created_on).toLocaleDateString()}
+                    </span>
+                    <span style={{ marginTop: "4px", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "20px", lineHeight: "28px", color: "#0F2F4C" }}>
+                      Value: ₹{(card.price / 100000).toFixed(2)} Lakhs
+                    </span>
                   </div>
-                ) : (
-                  <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "8px", cursor: "pointer", marginTop: "16px" }}>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", lineHeight: "20px", color: "#00629E" }}>Request Add-On Services</span>
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                      <path d="M2 6H10M10 6L6 2M10 6L6 10" stroke="#00629E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </div>
-                )}
-              </div>
-            </motion.div>
-          ))}
+
+                  {i === 0 ? (
+                    <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", marginTop: "16px" }}>
+                      <div style={{ display: "flex", flexDirection: "row", gap: "8px" }}>
+                        <div style={{ width: "40px", height: "40px", background: "#F3F4F5", borderRadius: "9999px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                          <div style={{ width: "14px", height: "16px", border: "1.5px solid #0F2F4C", borderRadius: "2px" }} />
+                        </div>
+                        <div style={{ width: "40px", height: "40px", background: "#F3F4F5", borderRadius: "9999px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                          <div style={{ width: "16px", height: "16px", border: "1.5px solid #0F2F4C", borderRadius: "8px" }} />
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => router.push("/home/myassets/details")}
+                        onMouseEnter={() => setHoveredBtn1(true)}
+                        onMouseLeave={() => setHoveredBtn1(false)}
+                        style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center", padding: "10px 24px", height: "40px", background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)", borderRadius: "20px", border: "none", cursor: "pointer", transition: "opacity 0.2s ease", opacity: hoveredBtn1 ? 0.9 : 1 }}
+                      >
+                        <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", textTransform: "uppercase", color: "#FFFFFF" }}>Track Yield Payouts</span>
+                      </button>
+                    </div>
+                  ) : (
+                    <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "8px", cursor: "pointer", marginTop: "16px" }}>
+                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", lineHeight: "20px", color: "#00629E" }}>Request Add-On Services</span>
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                        <path d="M2 6H10M10 6L6 2M10 6L6 10" stroke="#00629E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            ))
+          )}
         </div>
 
         {/* ─── ASIDE SIDEBAR WIDGETS ─── */}

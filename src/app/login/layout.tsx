@@ -45,18 +45,8 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <div className="flex-1 flex flex-col gap-2 min-h-0">
 
         {/* Form card */}
-        <div className="flex-1 bg-[#F5F5F5] border-[3px] border-white rounded-[28px] flex flex-col p-6 lg:px-10 lg:py-6 overflow-hidden">
-          {/* Mobile-only logo */}
-          <Link href="/" className="lg:hidden block mb-6 shrink-0 [-webkit-tap-highlight-color:transparent] hover:opacity-80 transition-opacity">
-            <Image
-              src="/assets/common/Logo green land 1.svg"
-              alt="Green Land Capital"
-              width={120}
-              height={52}
-              className="w-[100px] h-auto"
-            />
-          </Link>
-          <div className="flex-1 flex flex-col justify-center min-h-0">
+        <div className="relative z-10 flex-1 bg-[#F5F5F5] border-[3px] border-white rounded-[28px] flex flex-col p-4 lg:px-8 lg:py-2">
+          <div className="flex-1 flex flex-col justify-center items-center min-h-0">
             {children}
           </div>
         </div>
@@ -100,24 +90,9 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         {/* Overlay - Dark faded from top */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-black/50" />
 
-        {/* Logo at the top */}
-        <div className="absolute top-12 left-12 right-12 z-10">
-          <Link href="/" className="inline-block shrink-0 [-webkit-tap-highlight-color:transparent] hover:opacity-80 transition-opacity">
-            <Image
-              src="/assets/common/Logo green land 1.svg"
-              alt="Green Land Capital"
-              width={160}
-              height={68}
-              className="w-[150px] h-auto" // Restored original color
-            />
-          </Link>
-        </div>
-
-        {/* Heading and Bottom glass card container */}
-        <div className="absolute bottom-6 left-6 right-6 z-10">
-          
-          {/* Titles moved here - on top of the glass box */}
-          <div className="relative overflow-hidden mb-6 px-6">
+        {/* Titles at the top */}
+        <div className="absolute top-10 lg:top-14 left-8 lg:left-12 right-12 z-10">
+          <div className="relative overflow-hidden">
             {slideData.map((slide, i) => (
               <h2 
                 key={i}
@@ -134,6 +109,10 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
               {"Spacer\nPlaceholder"}
             </h2>
           </div>
+        </div>
+
+        {/* Heading and Bottom glass card container */}
+        <div className="absolute bottom-6 left-6 right-6 z-10">
 
           <div className="bg-white/10 backdrop-blur-xl rounded-[26px] p-6 border border-white/15">
             <div className="flex items-center justify-between mb-4">

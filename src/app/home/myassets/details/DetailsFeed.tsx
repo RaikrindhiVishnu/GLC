@@ -4,8 +4,9 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { FarmlandDetailResponse } from "../../../../services/farmland";
 
-export default function DetailsFeed() {
+export default function DetailsFeed({ farmland }: { farmland: FarmlandDetailResponse }) {
   const router = useRouter();
   const [selectedTab, setSelectedTab] = useState<"operations" | "legal" | "tracking">("operations");
   const [hoveredResale, setHoveredResale] = useState(false);
@@ -406,7 +407,7 @@ export default function DetailsFeed() {
                 SOIL HEALTH
               </span>
               <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "30px", lineHeight: "36px", color: "#FFFFFF" }}>
-                9.2 PH
+                {farmland.land_specifications?.soil_type || "9.2 PH"}
               </span>
               <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "14px", lineHeight: "20px", color: "#FFFFFF", opacity: 0.8, marginTop: "8px" }}>
                 Optimal nutrient density achieved across Area A.
@@ -422,7 +423,7 @@ export default function DetailsFeed() {
         whileInView={{ opacity: 1, x: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6, delay: 0.1 }}
-        className="w-full lg:w-85.2 lg:shrink-0 flex flex-col gap-8"
+        className="w-full lg:w-[340px] lg:shrink-0 flex flex-col gap-8"
         style={{ boxSizing: "border-box" }}
       >
         {/* Wealth Manager Card */}

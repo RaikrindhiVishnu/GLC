@@ -1,20 +1,26 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-
-const documents = [
-  { id: "doc-1", title: "GLC SOS 01", status: "VERIFIED", date: "Oct 24, 2025" },
-  { id: "doc-2", title: "GLC SOS 02", status: "VERIFIED", date: "Oct 24, 2025" },
-  { id: "doc-3", title: "GLC SOS 03", status: "VERIFIED", date: "Oct 24, 2025" },
-  { id: "doc-4", title: "GLC SOS 04", status: "VERIFIED", date: "Oct 24, 2025" },
-  { id: "doc-5", title: "GLC SOS 05", status: "VERIFIED", date: "Oct 24, 2025" },
-];
+import { useGetUserUnlockedFarmlandsQuery } from "../../services/unlocked";
 
 export default function UnlockedDocs() {
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  const userId = 5; // Hardcoded to 5 for unlocked documents
   
+  const { data: res, isLoading: isQueryLoading } = useGetUserUnlockedFarmlandsQuery(
+    { userId },
+    { skip: !mounted || !userId }
+  );
+  
+  const isLoading = !mounted || isQueryLoading;
+  const documents = res?.data || [];
+
   // Drag scroll states
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
@@ -35,7 +41,7 @@ export default function UnlockedDocs() {
     e.preventDefault();
     const x = e.pageX - containerRef.current.offsetLeft;
     const walk = (x - startX) * 2.0; // Responsive drag velocity multiplier
-    
+
     if (Math.abs(walk) > 5) {
       setDragged(true);
     }
@@ -91,125 +97,135 @@ export default function UnlockedDocs() {
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUpOrLeave}
           onMouseLeave={handleMouseUpOrLeave}
-          className={`flex gap-[24px] w-full overflow-x-auto pb-2 hide-scrollbar select-none ${
-            isDragging ? "cursor-grabbing" : "cursor-grab"
-          }`}
+          className={`flex gap-[24px] w-full overflow-x-auto pb-2 hide-scrollbar select-none ${isDragging ? "cursor-grabbing" : "cursor-grab"
+            }`}
         >
-          <style dangerouslySetInnerHTML={{ __html: `
+          <style dangerouslySetInnerHTML={{
+            __html: `
             #unlocked-docs .hide-scrollbar::-webkit-scrollbar { display: none; }
             #unlocked-docs .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
           `}} />
-          
-          {documents.map((doc, i) => (
-            <motion.div
-              key={doc.id}
-              initial={{ opacity: 0, filter: "blur(8px)", y: 20 }}
-              whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
-              transition={{ duration: 0.6, delay: i * 0.1 }}
-              viewport={{ once: true }}
-              onClick={handleCardClick}
-              className="box-border flex flex-col justify-center items-center p-6 w-[210px] h-[240px] min-w-[210px] bg-white border border-[#EDEEEF] rounded-[40px] cursor-pointer shrink-0 pointer-events-auto"
-            >
-              {/* PDF Icon Container */}
-              <div
-                style={{
-                  width: "80px",
-                  height: "80px",
-                  background: "rgba(255, 218, 216, 0.4)",
-                  backdropFilter: "blur(2px)",
-                  borderRadius: "9999px",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginBottom: "24px",
-                }}
-                className="pointer-events-none"
-              >
-                <Image
-                  src="/assets/home/UnlockedDocs/pdf.svg"
-                  alt="PDF"
-                  width={26}
-                  height={26}
-                />
-              </div>
 
-              {/* Text Content */}
-              <div 
-                style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "6px" }}
-                className="pointer-events-none"
+          {isLoading ? (
+            <div className="flex justify-center items-center w-full h-[240px]">
+              <span className="font-jakarta text-[#0F2F4C]">Loading documents...</span>
+            </div>
+          ) : documents.length === 0 ? (
+            <div className="flex justify-center items-center w-full h-[240px]">
+              <span className="font-jakarta text-[#0F2F4C]">No unlocked documents found.</span>
+            </div>
+          ) : (
+            documents.map((doc, i) => (
+              <motion.div
+                key={doc.farmland_id}
+                initial={{ opacity: 0, filter: "blur(8px)", y: 20 }}
+                whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+                transition={{ duration: 0.6, delay: i * 0.1 }}
+                viewport={{ once: true }}
+                onClick={handleCardClick}
+                className="box-border flex flex-col justify-center items-center p-6 w-[210px] h-[240px] min-w-[210px] bg-white border border-[#EDEEEF] rounded-[40px] cursor-pointer shrink-0 pointer-events-auto"
               >
-                
-                {/* Heading 3 */}
-                <h3
+                {/* PDF Icon Container */}
+                <div
                   style={{
-                    margin: 0,
-                    fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    fontWeight: 700,
-                    fontSize: "16px",
-                    lineHeight: "20px",
-                    color: "#001F3F",
+                    width: "80px",
+                    height: "80px",
+                    background: "rgba(255, 218, 216, 0.4)",
+                    backdropFilter: "blur(2px)",
+                    borderRadius: "9999px",
                     display: "flex",
+                    justifyContent: "center",
                     alignItems: "center",
-                    width: "100%",
-                    height: "auto",
+                    marginBottom: "24px",
                   }}
+                  className="pointer-events-none"
                 >
-                  {doc.title}
-                </h3>
+                  <Image
+                    src="/assets/home/UnlockedDocs/pdf.svg"
+                    alt="PDF"
+                    width={26}
+                    height={26}
+                  />
+                </div>
 
-                {/* Status Badge Container */}
-                <div 
-                  style={{ 
-                    display: "flex", 
-                    flexDirection: "row", 
-                    alignItems: "center", 
-                    padding: "2px 0px 0px",
-                    gap: "8px", 
-                    width: "100%",
-                    height: "auto"
-                  }}
+                {/* Text Content */}
+                <div
+                  style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "6px" }}
+                  className="pointer-events-none"
                 >
-                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
-                    <path d="M14 4L6 12L2 8L3.4 6.6L6 9.2L12.6 2.6L14 4Z" fill="#006D37"/>
-                  </svg>
-                  <span
+
+                  {/* Heading 3 */}
+                  <h3
                     style={{
+                      margin: 0,
                       fontFamily: "'Plus Jakarta Sans', sans-serif",
                       fontWeight: 700,
-                      fontSize: "11px",
-                      lineHeight: "16px",
-                      letterSpacing: "1.2px",
-                      color: "#006D37",
+                      fontSize: "16px",
+                      lineHeight: "20px",
+                      color: "#001F3F",
                       display: "flex",
                       alignItems: "center",
-                      width: "auto",
+                      width: "100%",
                       height: "auto",
                     }}
                   >
-                    {doc.status}
-                  </span>
-                </div>
+                    {doc.farm_code}
+                  </h3>
 
-                {/* Date Container */}
-                <div
-                  style={{
-                    fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    fontWeight: 500,
-                    fontSize: "11px",
-                    lineHeight: "16px",
-                    letterSpacing: "0.3px",
-                    color: "#43474E",
-                    display: "flex",
-                    alignItems: "center",
-                    width: "100%",
-                    height: "auto",
-                  }}
-                >
-                  {doc.date}
+                  {/* Status Badge Container */}
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      padding: "2px 0px 0px",
+                      gap: "8px",
+                      width: "100%",
+                      height: "auto"
+                    }}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
+                      <path d="M14 4L6 12L2 8L3.4 6.6L6 9.2L12.6 2.6L14 4Z" fill="#006D37" />
+                    </svg>
+                    <span
+                      style={{
+                        fontFamily: "'Plus Jakarta Sans', sans-serif",
+                        fontWeight: 700,
+                        fontSize: "11px",
+                        lineHeight: "16px",
+                        letterSpacing: "1.2px",
+                        color: "#006D37",
+                        display: "flex",
+                        alignItems: "center",
+                        width: "auto",
+                        height: "auto",
+                      }}
+                    >
+                      VERIFIED
+                    </span>
+                  </div>
+
+                  {/* Date Container */}
+                  <div
+                    style={{
+                      fontFamily: "'Plus Jakarta Sans', sans-serif",
+                      fontWeight: 500,
+                      fontSize: "11px",
+                      lineHeight: "16px",
+                      letterSpacing: "0.3px",
+                      color: "#43474E",
+                      display: "flex",
+                      alignItems: "center",
+                      width: "100%",
+                      height: "auto",
+                    }}
+                  >
+                    {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            ))
+          )}
         </div>
       </div>
     </section>

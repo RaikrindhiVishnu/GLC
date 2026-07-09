@@ -6,11 +6,11 @@ import { useMemo, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 export type NavbarVariant = "landing" | "app";
-export type NavbarActive = "home" | "search" | "pricing" | "profile" | "documents" | "compareassets" | "comparepremium";
+export type NavbarActive = "home" | "search" | "pricing" | "profile" | "documents" | "compareassets" | "comparepremium" | "none";
 
 type Props =
   | { variant?: "landing"; className?: string }
-  | { variant: "app"; active: NavbarActive; className?: string; forceScrolled?: boolean };
+  | { variant: "app"; active?: NavbarActive; className?: string; forceScrolled?: boolean };
 
 const ACTIVE_PILL_STYLE: React.CSSProperties = {
   display: "flex",
@@ -91,92 +91,24 @@ function ActiveLabel({ label }: { label: string }) {
   );
 }
 
-function AppNavbar({ active, className, forceScrolled }: { active: NavbarActive; className?: string; forceScrolled?: boolean }) {
+function AppNavbar({ active, className, forceScrolled }: { active?: NavbarActive; className?: string; forceScrolled?: boolean }) {
   const router = useRouter();
 
-  const containerStyle = useMemo<React.CSSProperties>(
-    () => ({
-      position: "fixed",
-      top: 0,
-      left: 0,
-      right: 0,
-      zIndex: 50,
-      boxSizing: "border-box",
-    }),
-    [],
-  );
-
-  const [scrolledState, setScrolledState] = useState(false);
-  const isScrolled = forceScrolled ?? scrolledState;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      // If at the very top of the page, guarantee isScrolled is false to prevent loading flicker/flashes
-      if (window.scrollY === 0) {
-        setScrolledState(false);
-        return;
-      }
-
-      // Check if we are inside the dark CTA or Footer section at the bottom
-      const ctaEl = document.getElementById("cta-section");
-      const footerEl = document.getElementById("footer-section");
-      
-      const inCta = ctaEl && ctaEl.getBoundingClientRect().top <= 80;
-      const inFooter = footerEl && footerEl.getBoundingClientRect().top <= 80;
-
-      if (inCta || inFooter) {
-        setScrolledState(false);
-        return;
-      }
-
-      // Dynamically locate the hero/cover element on any page
-      const heroEl = 
-        document.getElementById("hero-section") || 
-        document.getElementById("hero-screen") ||
-        document.getElementById("search-hero-screen") ||
-        document.querySelector('[id*="hero"]') || 
-        document.querySelector('[id*="Hero"]') ||
-        document.querySelector('[class*="hero"]') || 
-        document.querySelector('[class*="Hero"]') ||
-        document.querySelector("section") ||
-        (() => {
-          // Look for top cover/header divs (e.g., in profile page)
-          const divs = Array.from(document.querySelectorAll("div"));
-          return divs.find(d => {
-            const rect = d.getBoundingClientRect();
-            return rect.height > 300 && rect.height < window.innerHeight * 1.5 && (rect.top + window.scrollY) <= 100;
-          });
-        })();
-
-      if (heroEl) {
-        const rect = heroEl.getBoundingClientRect();
-        const heroBottom = rect.bottom + window.scrollY;
-        const pastHero = window.scrollY >= heroBottom - 20; // past hero section bottom
-        setScrolledState(pastHero);
-      } else {
-        // On pages without any top cover/hero element, default to solid scrolled state
-        setScrolledState(true);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const currentCapsuleBg = isScrolled ? "#FFFFFF" : "rgba(255, 255, 255, 0.1)";
+  const currentCapsuleBg = "rgba(255, 255, 255, 0.1)";
   const currentActivePillBg = "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)";
-  const currentUtilityBg = isScrolled ? "#FFFFFF" : "rgba(255, 255, 255, 0.1)";
+  const currentUtilityBg = "rgba(255, 255, 255, 0.1)";
   const currentActiveUtilityBg = "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)";
+
+  const isScrolled = false; // Permanently false to keep it glassmorphism
 
   const darkBlueFilter = "brightness(0) saturate(100%) invert(23%) sepia(50%) saturate(1478%) hue-rotate(183deg) brightness(96%) contrast(92%)";
 
   return (
     <div
-      style={containerStyle}
       className={[
-        "px-4 md:px-[60px] py-4 md:pt-[24px] md:pb-4 min-h-[72px] flex justify-between items-center w-full relative",
+        "absolute top-0 left-0 right-0 z-50 px-4 md:px-[60px] py-4 md:pt-[24px] md:pb-4 min-h-[72px] flex justify-between items-center w-full",
         className ?? "",
       ].join(" ")}
     >
@@ -221,7 +153,7 @@ function AppNavbar({ active, className, forceScrolled }: { active: NavbarActive;
       >
         {active === "home" ? (
           <button style={{ ...ACTIVE_PILL_STYLE, background: currentActivePillBg, transition: "all 0.3s ease" }} className="w-[96px] md:w-[120px] h-[36px] md:h-[44px]" type="button">
-            <ActiveLabel label="HOME"  />
+            <ActiveLabel label="HOME" />
           </button>
         ) : (
           <button
@@ -242,7 +174,7 @@ function AppNavbar({ active, className, forceScrolled }: { active: NavbarActive;
 
         {active === "search" ? (
           <button style={{ ...ACTIVE_PILL_STYLE, background: currentActivePillBg, transition: "all 0.3s ease" }} className="w-[96px] md:w-[120px] h-[36px] md:h-[44px]" type="button">
-            <ActiveLabel label="SEARCH"  />
+            <ActiveLabel label="SEARCH" />
           </button>
         ) : (
           <button
@@ -260,7 +192,7 @@ function AppNavbar({ active, className, forceScrolled }: { active: NavbarActive;
 
         {active === "pricing" ? (
           <button style={{ ...ACTIVE_PILL_STYLE, background: currentActivePillBg, transition: "all 0.3s ease" }} className="w-[96px] md:w-[120px] h-[36px] md:h-[44px]" type="button">
-            <ActiveLabel label="PRICING"  />
+            <ActiveLabel label="PRICING" />
           </button>
         ) : (
           <button
@@ -278,7 +210,7 @@ function AppNavbar({ active, className, forceScrolled }: { active: NavbarActive;
 
         {active === "profile" ? (
           <button style={{ ...ACTIVE_PILL_STYLE, background: currentActivePillBg, transition: "all 0.3s ease" }} className="w-[96px] md:w-[120px] h-[36px] md:h-[44px]" type="button">
-            <ActiveLabel label="PROFILE"  />
+            <ActiveLabel label="PROFILE" />
           </button>
         ) : (
           <button
@@ -313,11 +245,11 @@ function AppNavbar({ active, className, forceScrolled }: { active: NavbarActive;
           aria-label="Unlocked Documents"
           aria-current={active === "documents" ? "page" : undefined}
         >
-          <Image 
-            src="/assets/home/HeroScreen/unlock 1.svg" 
-            alt="" 
-            width={22} 
-            height={22} 
+          <Image
+            src="/assets/home/HeroScreen/unlock 1.svg"
+            alt=""
+            width={22}
+            height={22}
             style={{
               filter: isScrolled && active !== "documents" ? darkBlueFilter : "none",
               transition: "filter 0.3s ease"
@@ -340,11 +272,11 @@ function AppNavbar({ active, className, forceScrolled }: { active: NavbarActive;
           className="w-10 h-10 md:w-[44px] md:h-[44px]"
           aria-label="Notifications"
         >
-          <Image 
-            src="/assets/home/HeroScreen/notification.svg" 
-            alt="" 
-            width={22} 
-            height={22} 
+          <Image
+            src="/assets/home/HeroScreen/notification.svg"
+            alt=""
+            width={22}
+            height={22}
             style={{
               filter: isScrolled ? darkBlueFilter : "none",
               transition: "filter 0.3s ease"
@@ -467,8 +399,8 @@ function AppNavbar({ active, className, forceScrolled }: { active: NavbarActive;
             right: "16px",
             background: isScrolled ? "#FFFFFF" : "rgba(255, 255, 255, 0.12)",
             border: isScrolled ? "1.5px solid #EDEEEF" : "1px solid rgba(255, 255, 255, 0.22)",
-            boxShadow: isScrolled 
-              ? "0px 16px 40px rgba(0, 31, 63, 0.1), 0px 4px 12px rgba(0, 31, 63, 0.04)" 
+            boxShadow: isScrolled
+              ? "0px 16px 40px rgba(0, 31, 63, 0.1), 0px 4px 12px rgba(0, 31, 63, 0.04)"
               : "0px 16px 40px rgba(0, 0, 0, 0.15), inset 3px 4px 2px -3px rgba(255, 255, 255, 0.45)",
             borderRadius: "28px",
             backdropFilter: "blur(50px)",
@@ -539,8 +471,8 @@ function AppNavbar({ active, className, forceScrolled }: { active: NavbarActive;
             },
           ].map((item, i) => {
             const isActive = active === item.activeKey;
-            const itemColor = isActive 
-              ? "#FFFFFF" 
+            const itemColor = isActive
+              ? "#FFFFFF"
               : (isScrolled ? "#0F2F4C" : "#FFFFFF");
             return (
               <button
@@ -551,79 +483,79 @@ function AppNavbar({ active, className, forceScrolled }: { active: NavbarActive;
                 }}
                 className="mobile-dropdown-item flex items-center gap-4 w-full px-5 py-3.5 rounded-full text-left border-none cursor-pointer"
                 style={{
-                  background: isActive 
-                    ? "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)" 
-                      : "transparent",
-                    transitionDelay: isMobileMenuOpen ? `${i * 30}ms` : "0ms",
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!isActive) {
-                      e.currentTarget.style.background = isScrolled ? "rgba(15, 47, 76, 0.05)" : "rgba(255, 255, 255, 0.08)";
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!isActive) {
-                      e.currentTarget.style.background = "transparent";
-                    }
-                  }}
-                >
-                  {item.icon(itemColor)}
-                  <span
-                    style={{
-                      fontFamily: "'Plus Jakarta Sans', sans-serif",
-                      fontWeight: isActive ? 800 : 600,
-                      fontSize: "16px",
-                      color: itemColor,
-                      letterSpacing: "-0.2px",
-                    }}
-                  >
-                    {item.label}
-                  </span>
-                </button>
-              );
-            })}
-
-            {/* Divider */}
-            <div style={{ height: "1px", background: isScrolled ? "#EDEEEF" : "rgba(255, 255, 255, 0.15)", margin: "6px 0" }} />
-
-            {/* Notifications Row inside Dropdown (Perfect Equal-Width Layout) */}
-            <button
-              onClick={() => {
-                setIsMobileMenuOpen(false);
-                router.push("/profile");
-              }}
-              className="mobile-dropdown-item flex items-center gap-4 w-full px-5 py-3.5 rounded-full border-none cursor-pointer bg-transparent"
-              style={{
-                transitionDelay: isMobileMenuOpen ? `${5 * 30}ms` : "0ms",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = isScrolled ? "rgba(15, 47, 76, 0.05)" : "rgba(255, 255, 255, 0.08)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "transparent";
-              }}
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={isScrolled ? "#0F2F4C" : "#FFFFFF"} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-              </svg>
-              <div className="flex items-center gap-2">
+                  background: isActive
+                    ? "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)"
+                    : "transparent",
+                  transitionDelay: isMobileMenuOpen ? `${i * 30}ms` : "0ms",
+                }}
+                onMouseEnter={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.background = isScrolled ? "rgba(15, 47, 76, 0.05)" : "rgba(255, 255, 255, 0.08)";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.background = "transparent";
+                  }
+                }}
+              >
+                {item.icon(itemColor)}
                 <span
                   style={{
                     fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    fontWeight: 600,
+                    fontWeight: isActive ? 800 : 600,
                     fontSize: "16px",
-                    color: isScrolled ? "#0F2F4C" : "#FFFFFF",
+                    color: itemColor,
                     letterSpacing: "-0.2px",
                   }}
                 >
-                  Notifications
+                  {item.label}
                 </span>
-                <span className="w-2 h-2 rounded-full bg-[#E53935] border border-white shrink-0" />
-              </div>
-            </button>
-          </div>
-        </>
+              </button>
+            );
+          })}
+
+          {/* Divider */}
+          <div style={{ height: "1px", background: isScrolled ? "#EDEEEF" : "rgba(255, 255, 255, 0.15)", margin: "6px 0" }} />
+
+          {/* Notifications Row inside Dropdown (Perfect Equal-Width Layout) */}
+          <button
+            onClick={() => {
+              setIsMobileMenuOpen(false);
+              router.push("/profile");
+            }}
+            className="mobile-dropdown-item flex items-center gap-4 w-full px-5 py-3.5 rounded-full border-none cursor-pointer bg-transparent"
+            style={{
+              transitionDelay: isMobileMenuOpen ? `${5 * 30}ms` : "0ms",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = isScrolled ? "rgba(15, 47, 76, 0.05)" : "rgba(255, 255, 255, 0.08)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "transparent";
+            }}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={isScrolled ? "#0F2F4C" : "#FFFFFF"} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+              <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+            </svg>
+            <div className="flex items-center gap-2">
+              <span
+                style={{
+                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                  fontWeight: 600,
+                  fontSize: "16px",
+                  color: isScrolled ? "#0F2F4C" : "#FFFFFF",
+                  letterSpacing: "-0.2px",
+                }}
+              >
+                Notifications
+              </span>
+              <span className="w-2 h-2 rounded-full bg-[#E53935] border border-white shrink-0" />
+            </div>
+          </button>
+        </div>
+      </>
     </div>
   );
 }
@@ -632,7 +564,7 @@ function LandingNavbar({ className }: { className?: string }) {
   return (
     <nav
       className={[
-        "fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-[60px] py-6",
+        "absolute top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-[60px] bg-transparent py-6",
         className ?? "",
       ].join(" ")}
     >
@@ -652,7 +584,7 @@ function LandingNavbar({ className }: { className?: string }) {
       <div className="flex items-center gap-4">
         <Link
           href="/login"
-          className="glass flex h-[42px] w-[140px] md:h-[51px] md:w-[184px] items-center justify-center rounded-[125px] text-sm md:text-base font-extrabold text-white transition-colors hover:bg-white/20 outline-none focus:outline-none [-webkit-tap-highlight-color:transparent]"
+          className="flex h-[42px] w-[140px] md:h-[51px] md:w-[184px] items-center justify-center rounded-[125px] text-sm md:text-base font-extrabold transition-all outline-none focus:outline-none [-webkit-tap-highlight-color:transparent] glass text-white hover:bg-white/20"
         >
           Login / Register
         </Link>

@@ -1,12 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import { motion } from "framer-motion";
+import { useSearchParams, useRouter } from "next/navigation";
+import { authService } from "../../../services/auth";
 
-export default function VerifyCodePage() {
-  const [otp, setOtp] = useState(["", "", "", "", ""]);
+function VerifyCodeContent() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const email = searchParams.get("email") || "your email";
+  
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]); // 6 digits for auth API
   const [seconds, setSeconds] = useState(55);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const inputs = useRef<(HTMLInputElement | null)[]>([]);
 
   useEffect(() => {
@@ -20,7 +28,7 @@ export default function VerifyCodePage() {
     const next = [...otp];
     next[idx] = val;
     setOtp(next);
-    if (val && idx < 4) inputs.current[idx + 1]?.focus();
+    if (val && idx < 5) inputs.current[idx + 1]?.focus();
   };
 
   const handleKeyDown = (e: React.KeyboardEvent, idx: number) => {
@@ -29,10 +37,39 @@ export default function VerifyCodePage() {
     }
   };
 
+  const handleVerify = async () => {
+    const code = otp.join("");
+    if (code.length < 6) {
+      setError("Please enter the full 6-digit code.");
+      return;
+    }
+    setError("");
+    setLoading(true);
+    try {
+      await authService.verifyOtp({ emailAddress: email, otp: code });
+      router.push(`/login/reset-password?email=${encodeURIComponent(email)}`);
+    } catch (err: any) {
+      setError(err.message || "Invalid OTP.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResend = async () => {
+    setError("");
+    try {
+      await authService.sendOtp({ emailAddress: email });
+      setSeconds(55);
+      alert("Code resent!");
+    } catch (err: any) {
+      setError(err.message || "Failed to resend.");
+    }
+  };
+
   const pad = (n: number) => String(n).padStart(2, "0");
 
   return (
-    <div className="w-full max-w-110">
+    <>
       <motion.h1
         initial={{ opacity: 0, filter: "blur(8px)" }}
         animate={{ opacity: 1, filter: "blur(0px)" }}
@@ -47,8 +84,8 @@ export default function VerifyCodePage() {
         transition={{ duration: 0.5, delay: 0.2 }}
         className="text-[14px] text-[#B8B8B8] font-jakarta mb-8 leading-[1.6]"
       >
-        A 5-digit security code has been dispatched to{" "}
-        <span className="text-[#434343]">arjun.v@gmail.com</span>. Enter it below to unlock your institutional dossier.
+        A 6-digit security code has been dispatched to{" "}
+        <span className="text-[#434343]">{email}</span>. Enter it below to verify.
       </motion.p>
 
       {/* OTP boxes */}
@@ -99,16 +136,27 @@ export default function VerifyCodePage() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.7 }}
-        className="text-center text-[13px] text-[#B8B8B8] font-jakarta mb-8"
+        className="text-center text-[13px] text-[#B8B8B8] font-jakarta mb-4"
       >
         Didn&apos;t receive the code?{" "}
         <button
-          onClick={() => setSeconds(55)}
-          className="text-brand-secondary font-semibold hover:underline [-webkit-tap-highlight-color:transparent] transition-all cursor-pointer"
+          onClick={handleResend}
+          disabled={seconds > 0}
+          className={`font-semibold transition-all cursor-pointer ${seconds > 0 ? 'text-[#B8B8B8]' : 'text-brand-secondary hover:underline'}`}
         >
           Resend Dispatched Code
         </button>
       </motion.p>
+
+      {error && (
+        <motion.p 
+          initial={{ opacity: 0 }} 
+          animate={{ opacity: 1 }} 
+          className="text-red-500 text-[13px] font-jakarta mb-3 text-center"
+        >
+          {error}
+        </motion.p>
+      )}
 
       {/* Verify button */}
       <motion.div
@@ -116,15 +164,25 @@ export default function VerifyCodePage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.8 }}
       >
-        <Link href="/login/reset-password" className="block w-full">
-          <button
-            className="w-full h-13 lg:h-14.5 rounded-full text-[16px] font-bold text-white font-jakarta [-webkit-tap-highlight-color:transparent] transition-all cursor-pointer"
-            style={{ background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)", border: "1px solid #43B6CD" }}
-          >
-            Verify Code &amp; Activate Profile
-          </button>
-        </Link>
+        <button
+          onClick={handleVerify}
+          disabled={loading}
+          className="w-full h-13 lg:h-14.5 rounded-full text-[16px] font-bold text-white font-jakarta [-webkit-tap-highlight-color:transparent] transition-all cursor-pointer disabled:opacity-70"
+          style={{ background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)", border: "1px solid #43B6CD" }}
+        >
+          {loading ? "Verifying..." : "Verify Code & Activate Profile"}
+        </button>
       </motion.div>
+    </>
+  );
+}
+
+export default function VerifyCodePage() {
+  return (
+    <div className="w-full max-w-110">
+      <Suspense fallback={<div>Loading...</div>}>
+        <VerifyCodeContent />
+      </Suspense>
     </div>
   );
 }

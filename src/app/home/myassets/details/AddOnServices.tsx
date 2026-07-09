@@ -4,11 +4,11 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-
+import RequestSubmittedModal from "./RequestSubmittedModal";
 export default function AddOnServices() {
   const router = useRouter();
-  const [requestedServices, setRequestedServices] = useState<string[]>(["borewell", "solar"]);
-
+  const [requestedServices, setRequestedServices] = useState<string[]>(["borewell-drilling", "fencing-security"]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const toggleService = (id: string) => {
     if (requestedServices.includes(id)) {
       setRequestedServices(requestedServices.filter((s) => s !== id));
@@ -158,7 +158,7 @@ export default function AddOnServices() {
 
             {/* Button */}
             <button
-              onClick={() => toggleService("farmhouse")}
+              onClick={() => toggleService("farmhouse-construction")}
               style={{
                 boxSizing: "border-box",
                 display: "flex",
@@ -168,15 +168,15 @@ export default function AddOnServices() {
                 padding: "12px 24px",
                 width: "100%",
                 height: "48px",
-                border: requestedServices.includes("farmhouse") ? "none" : "1px solid #C5C6CD",
+                border: requestedServices.includes("farmhouse-construction") ? "none" : "1px solid #C5C6CD",
                 borderRadius: "9999px",
-                background: requestedServices.includes("farmhouse") ? "#EDEEEF" : "transparent",
+                background: requestedServices.includes("farmhouse-construction") ? "#EDEEEF" : "transparent",
                 cursor: "pointer",
                 transition: "all 0.2s ease",
               }}
             >
               <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", color: "#091426" }}>
-                {requestedServices.includes("farmhouse") ? "✓ Added to Request" : "+ Add to Request"}
+                {requestedServices.includes("farmhouse-construction") ? "✓ Added to Request" : "+ Add to Request"}
               </span>
             </button>
           </div>
@@ -245,7 +245,7 @@ export default function AddOnServices() {
             </div>
 
             <button
-              onClick={() => toggleService("borewell")}
+              onClick={() => toggleService("borewell-drilling")}
               style={{
                 boxSizing: "border-box",
                 display: "flex",
@@ -255,15 +255,15 @@ export default function AddOnServices() {
                 padding: "12px 24px",
                 width: "100%",
                 height: "48px",
-                border: requestedServices.includes("borewell") ? "none" : "1px solid #C5C6CD",
+                border: requestedServices.includes("borewell-drilling") ? "none" : "1px solid #C5C6CD",
                 borderRadius: "9999px",
-                background: requestedServices.includes("borewell") ? "#EDEEEF" : "transparent",
+                background: requestedServices.includes("borewell-drilling") ? "#EDEEEF" : "transparent",
                 cursor: "pointer",
                 transition: "all 0.2s ease",
               }}
             >
               <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", color: "#091426" }}>
-                {requestedServices.includes("borewell") ? "✓ Added to Request" : "+ Add to Request"}
+                {requestedServices.includes("borewell-drilling") ? "✓ Added to Request" : "+ Add to Request"}
               </span>
             </button>
           </div>
@@ -332,7 +332,7 @@ export default function AddOnServices() {
             </div>
 
             <button
-              onClick={() => toggleService("organic")}
+              onClick={() => toggleService("organic-farm-setup")}
               style={{
                 boxSizing: "border-box",
                 display: "flex",
@@ -342,15 +342,15 @@ export default function AddOnServices() {
                 padding: "12px 24px",
                 width: "100%",
                 height: "48px",
-                border: requestedServices.includes("organic") ? "none" : "1px solid #C5C6CD",
+                border: requestedServices.includes("organic-farm-setup") ? "none" : "1px solid #C5C6CD",
                 borderRadius: "9999px",
-                background: requestedServices.includes("organic") ? "#EDEEEF" : "transparent",
+                background: requestedServices.includes("organic-farm-setup") ? "#EDEEEF" : "transparent",
                 cursor: "pointer",
                 transition: "all 0.2s ease",
               }}
             >
               <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", color: "#091426" }}>
-                {requestedServices.includes("organic") ? "✓ Added to Request" : "+ Add to Request"}
+                {requestedServices.includes("organic-farm-setup") ? "✓ Added to Request" : "+ Add to Request"}
               </span>
             </button>
           </div>
@@ -400,7 +400,7 @@ export default function AddOnServices() {
                 width: "100%",
               }}
             >
-              Solar Power Grid
+              Fencing & Security
             </h3>
 
             <div style={{ display: "flex", flexDirection: "column", gap: "10px", width: "100%", marginBottom: "28px", flexGrow: 1 }}>
@@ -419,7 +419,7 @@ export default function AddOnServices() {
             </div>
 
             <button
-              onClick={() => toggleService("solar")}
+              onClick={() => toggleService("fencing-security")}
               style={{
                 boxSizing: "border-box",
                 display: "flex",
@@ -429,15 +429,15 @@ export default function AddOnServices() {
                 padding: "12px 24px",
                 width: "100%",
                 height: "48px",
-                border: requestedServices.includes("solar") ? "none" : "1px solid #C5C6CD",
+                border: requestedServices.includes("fencing-security") ? "none" : "1px solid #C5C6CD",
                 borderRadius: "9999px",
-                background: requestedServices.includes("solar") ? "#EDEEEF" : "transparent",
+                background: requestedServices.includes("fencing-security") ? "#EDEEEF" : "transparent",
                 cursor: "pointer",
                 transition: "all 0.2s ease",
               }}
             >
               <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", color: "#091426" }}>
-                {requestedServices.includes("solar") ? "✓ Added to Request" : "+ Add to Request"}
+                {requestedServices.includes("fencing-security") ? "✓ Added to Request" : "+ Add to Request"}
               </span>
             </button>
           </div>
@@ -483,7 +483,7 @@ export default function AddOnServices() {
               ) : null}
 
               {/* Draft Item: Borewell & Irrigation */}
-              {requestedServices.includes("borewell") && (
+              {requestedServices.includes("borewell-drilling") && (
                 <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", paddingBottom: "12px", borderBottom: "1px solid #F3F4F5" }}>
                   <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "12px" }}>
                     <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", width: "42px", height: "42px", background: "#F3F4F5", borderRadius: "48px", flexShrink: 0 }}>
@@ -501,7 +501,7 @@ export default function AddOnServices() {
                     </div>
                   </div>
                   <button
-                    onClick={() => toggleService("borewell")}
+                    onClick={() => toggleService("borewell-drilling")}
                     style={{ background: "transparent", border: "none", cursor: "pointer", padding: "4px", display: "flex", alignItems: "center" }}
                   >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#75777D" strokeWidth="2.5" strokeLinecap="round">
@@ -513,7 +513,7 @@ export default function AddOnServices() {
               )}
 
               {/* Draft Item: Solar Power Grid */}
-              {requestedServices.includes("solar") && (
+              {requestedServices.includes("fencing-security") && (
                 <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", paddingBottom: "12px", borderBottom: "1px solid #F3F4F5" }}>
                   <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "12px" }}>
                     <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", width: "42px", height: "42px", background: "#F3F4F5", borderRadius: "48px", flexShrink: 0 }}>
@@ -525,7 +525,7 @@ export default function AddOnServices() {
                     </div>
                     <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
                       <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", color: "#131600" }}>
-                        Solar Power Grid
+                        Fencing & Security
                       </span>
                       <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "11px", letterSpacing: "0.5px", color: "#00629E" }}>
                         (DRAFT)
@@ -533,7 +533,7 @@ export default function AddOnServices() {
                     </div>
                   </div>
                   <button
-                    onClick={() => toggleService("solar")}
+                    onClick={() => toggleService("fencing-security")}
                     style={{ background: "transparent", border: "none", cursor: "pointer", padding: "4px", display: "flex", alignItems: "center" }}
                   >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#75777D" strokeWidth="2.5" strokeLinecap="round">
@@ -545,7 +545,7 @@ export default function AddOnServices() {
               )}
 
               {/* Draft Item: Farmhouse Construction */}
-              {requestedServices.includes("farmhouse") && (
+              {requestedServices.includes("farmhouse-construction") && (
                 <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", paddingBottom: "12px", borderBottom: "1px solid #F3F4F5" }}>
                   <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "12px" }}>
                     <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", width: "42px", height: "42px", background: "#F3F4F5", borderRadius: "48px", flexShrink: 0 }}>
@@ -563,7 +563,7 @@ export default function AddOnServices() {
                     </div>
                   </div>
                   <button
-                    onClick={() => toggleService("farmhouse")}
+                    onClick={() => toggleService("farmhouse-construction")}
                     style={{ background: "transparent", border: "none", cursor: "pointer", padding: "4px", display: "flex", alignItems: "center" }}
                   >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#75777D" strokeWidth="2.5" strokeLinecap="round">
@@ -575,7 +575,7 @@ export default function AddOnServices() {
               )}
 
               {/* Draft Item: Organic Farm Setup */}
-              {requestedServices.includes("organic") && (
+              {requestedServices.includes("organic-farm-setup") && (
                 <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", paddingBottom: "12px", borderBottom: "1px solid #F3F4F5" }}>
                   <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "12px" }}>
                     <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", width: "42px", height: "42px", background: "#F3F4F5", borderRadius: "48px", flexShrink: 0 }}>
@@ -593,7 +593,7 @@ export default function AddOnServices() {
                     </div>
                   </div>
                   <button
-                    onClick={() => toggleService("organic")}
+                    onClick={() => toggleService("organic-farm-setup")}
                     style={{ background: "transparent", border: "none", cursor: "pointer", padding: "4px", display: "flex", alignItems: "center" }}
                   >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#75777D" strokeWidth="2.5" strokeLinecap="round">
@@ -647,7 +647,7 @@ export default function AddOnServices() {
             </p>
 
             <button
-              onClick={() => router.push("/home/maintenance/services")}
+              onClick={() => setIsModalOpen(true)}
               style={{
                 boxSizing: "border-box",
                 display: "flex",
@@ -677,6 +677,11 @@ export default function AddOnServices() {
           </div>
         </div>
       </div>
+      <RequestSubmittedModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        selectedServices={requestedServices}
+      />
     </motion.section>
   );
 }

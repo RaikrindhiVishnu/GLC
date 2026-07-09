@@ -106,7 +106,7 @@ export default function Newsletter() {
             {/* Button */}
             <button
               type="submit"
-              className="h-[56px] md:h-[64px] w-full md:w-[159px] rounded-full bg-[#2780C4] text-[15px] md:text-[16px] font-bold text-white transition-all hover:bg-[#1a66a3] active:scale-95 font-jakarta whitespace-nowrap cursor-pointer shadow-lg"
+              className="h-[56px] md:h-[64px] w-full md:w-auto md:px-8 rounded-full bg-[#2780C4] text-[15px] md:text-[16px] font-bold text-white transition-all hover:bg-[#1a66a3] active:scale-95 font-jakarta whitespace-nowrap cursor-pointer shadow-lg"
             >
               Subscribe
             </button>

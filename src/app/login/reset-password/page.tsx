@@ -1,15 +1,52 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { motion } from "framer-motion";
+import { useSearchParams, useRouter } from "next/navigation";
+import { authService } from "../../../services/auth";
 
-export default function ResetPasswordPage() {
+function ResetPasswordContent() {
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const email = searchParams.get("email") || "";
+
+  const handleContinue = async () => {
+    if (!newPassword || !confirmPassword) {
+      setError("Please fill in both fields.");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+    if (!email) {
+      setError("Email not found. Please try the flow again.");
+      return;
+    }
+
+    setError("");
+    setLoading(true);
+    try {
+      await authService.resetPassword({ login_id: email, new_password: newPassword });
+      alert("Password reset successfully! You can now log in.");
+      router.push("/login");
+    } catch (err: any) {
+      setError(err.message || "Failed to reset password.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="w-full max-w-110">
+    <>
       <motion.h1
         initial={{ opacity: 0, filter: "blur(8px)" }}
         animate={{ opacity: 1, filter: "blur(0px)" }}
@@ -40,6 +77,8 @@ export default function ResetPasswordPage() {
         <div className="w-px h-5 bg-[#EFEFEF] shrink-0" />
         <input
           type={showNew ? "text" : "password"}
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
           placeholder="New Password"
           className="flex-1 bg-transparent text-[15px] text-[#434343] placeholder:text-[#BDBDBD] focus:outline-none font-jakarta cursor-text"
         />
@@ -66,6 +105,8 @@ export default function ResetPasswordPage() {
         <div className="w-px h-5 bg-[#EFEFEF] shrink-0" />
         <input
           type={showConfirm ? "text" : "password"}
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
           placeholder="Confirm Password"
           className="flex-1 bg-transparent text-[15px] text-[#434343] placeholder:text-[#BDBDBD] focus:outline-none font-jakarta cursor-text"
         />
@@ -79,21 +120,41 @@ export default function ResetPasswordPage() {
         </button>
       </motion.div>
 
+      {error && (
+        <motion.p 
+          initial={{ opacity: 0 }} 
+          animate={{ opacity: 1 }} 
+          className="text-red-500 text-[13px] font-jakarta mb-3 text-center"
+        >
+          {error}
+        </motion.p>
+      )}
+
       {/* Continue */}
       <motion.div
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.6 }}
       >
-        <Link href="/login" className="block w-full">
-          <button
-            className="w-full h-13 lg:h-14.5 rounded-full text-[16px] font-bold text-white font-jakarta [-webkit-tap-highlight-color:transparent] transition-all cursor-pointer"
-            style={{ background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)", border: "1px solid #43B6CD" }}
-          >
-            Continue
-          </button>
-        </Link>
+        <button
+          onClick={handleContinue}
+          disabled={loading}
+          className="w-full h-13 lg:h-14.5 rounded-full text-[16px] font-bold text-white font-jakarta [-webkit-tap-highlight-color:transparent] transition-all cursor-pointer disabled:opacity-70"
+          style={{ background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)", border: "1px solid #43B6CD" }}
+        >
+          {loading ? "Resetting..." : "Continue"}
+        </button>
       </motion.div>
+    </>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <div className="w-full max-w-110">
+      <Suspense fallback={<div>Loading...</div>}>
+        <ResetPasswordContent />
+      </Suspense>
     </div>
   );
 }

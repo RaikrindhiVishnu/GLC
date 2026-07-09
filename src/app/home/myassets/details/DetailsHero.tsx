@@ -5,8 +5,9 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
+import { FarmlandDetailResponse } from "../../../../services/farmland";
 
-export default function DetailsHero() {
+export default function DetailsHero({ farmland }: { farmland: FarmlandDetailResponse }) {
   const router = useRouter();
   const scalerRef = useRef<HTMLDivElement>(null);
   const shellRef = useRef<HTMLDivElement>(null);
@@ -58,7 +59,7 @@ export default function DetailsHero() {
               transition={{ duration: 0.6, delay: 0.3 }}
               style={{ margin: "0 0 12px", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "48px", lineHeight: 1, letterSpacing: "-1.5px", color: "#FFFFFF" }}
             >
-              GLC SOS 01
+              {farmland.farmland_code}
             </motion.h1>
             <motion.span
               initial={{ opacity: 0, y: 8 }}
@@ -79,8 +80,8 @@ export default function DetailsHero() {
           >
             <div className="grid grid-cols-2 gap-4">
               {[
-                { label: "YOUR HOLDING", value: "5.0 Acres", color: "#131600" },
-                { label: "CURRENT ESTIMATED VALUE", value: "₹1.50 Cr", color: "#091426" },
+                { label: "YOUR HOLDING", value: `${farmland.land_specifications?.total_acers || 0} Acres`, color: "#131600" },
+                { label: "CURRENT ESTIMATED VALUE", value: `₹${(farmland.price / 10000000).toFixed(2)} Cr`, color: "#091426" },
                 { label: "MANAGEMENT PLAN", value: "50/50 Intercropping System", color: "#091426" },
                 { label: "NEXT TARGET PAYOUT", value: "May 2026 (Estimated)", color: "#00629E" },
               ].map((item) => (
@@ -147,7 +148,7 @@ export default function DetailsHero() {
                   transition={{ duration: 0.6, delay: 0.2 }}
                   style={{ margin: "0 0 16px 0", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "64px", lineHeight: "1", letterSpacing: "-1.5px", color: "#FFFFFF" }}
                 >
-                  GLC SOS 01
+                  {farmland.farmland_code}
                 </motion.h1>
                 <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "22px", color: "rgba(255,255,255,0.9)" }}>Sandalwood &amp; Organic Estate - Zaheerabad</span>
               </div>
@@ -157,11 +158,11 @@ export default function DetailsHero() {
                 <div style={{ boxSizing: "border-box", width: "418px", height: "122px", position: "relative" }}>
                   <div style={{ position: "absolute", height: "51px", left: "0px", right: "225px", top: "0px", display: "flex", flexDirection: "column", gap: "4px" }}>
                     <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1px", textTransform: "uppercase", color: "#45474C" }}>YOUR HOLDING</span>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "24px", lineHeight: "32px", color: "#131600" }}>5.0 Acres</span>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "24px", lineHeight: "32px", color: "#131600" }}>{farmland.land_specifications?.total_acers || 0} Acres</span>
                   </div>
                   <div style={{ position: "absolute", height: "51px", left: "225px", right: "0px", top: "0px", display: "flex", flexDirection: "column", gap: "4px" }}>
                     <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1px", textTransform: "uppercase", color: "#45474C" }}>CURRENT ESTIMATED VALUE</span>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "24px", lineHeight: "32px", color: "#091426" }}>₹1.50 Cr</span>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "24px", lineHeight: "32px", color: "#091426" }}>₹{(farmland.price / 10000000).toFixed(2)} Cr</span>
                   </div>
                   <div style={{ position: "absolute", height: "39px", left: "0px", right: "225px", top: "83px", display: "flex", flexDirection: "column" }}>
                     <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1px", textTransform: "uppercase", color: "#45474C" }}>MANAGEMENT PLAN</span>

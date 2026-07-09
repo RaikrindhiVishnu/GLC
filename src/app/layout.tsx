@@ -14,6 +14,9 @@ export const metadata: Metadata = {
   description: "Invest in sustainable, high-yield organic farmlands with Green Land Capital.",
 };
 
+import { SearchProvider } from "@/app/search/SearchContext";
+import { StoreProvider } from "@/store/StoreProvider";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -22,11 +25,15 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${jakarta.variable} antialiased font-jakarta`} suppressHydrationWarning>
-        <SmoothScroll>
-          {children}
-        </SmoothScroll>
+        <StoreProvider>
+          <SearchProvider>
+            <SmoothScroll>
+              {children}
+            </SmoothScroll>
 
-        <SparkleButton />
+            <SparkleButton />
+          </SearchProvider>
+        </StoreProvider>
       </body>
     </html>
   );

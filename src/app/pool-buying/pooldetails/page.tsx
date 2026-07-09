@@ -27,7 +27,7 @@ export default function PoolDetailsPage() {
       <PoolDetailsHero />
 
       {/* ─── SECTION 2: SPLIT CONSOLE MAIN CONTENT LAYER ─── */}
-      <section className="flex flex-col lg:flex-row items-start justify-center w-full max-w-7xl px-4 lg:px-6 mt-16 lg:mt-24 mb-16 lg:mb-24 gap-6 lg:gap-8 box-border" style={{ zIndex: 30 }}>
+      <section className="flex flex-col lg:flex-row items-start justify-center w-full max-w-[1440px] px-6 mt-16 lg:mt-[40px] mb-16 lg:mb-24 gap-[32px] box-border" style={{ zIndex: 30 }}>
         <LeftConsole />
         <RightConsole />
       </section>

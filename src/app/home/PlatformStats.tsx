@@ -15,7 +15,7 @@ export default function PlatformStats() {
     <section id="platform-stats" className="w-full bg-transparent py-12 lg:py-[70px] overflow-hidden">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center gap-10 lg:gap-[80px]">
-          
+
           {/* Heading */}
           <h2 className="max-w-[700px] m-0 font-jakarta font-bold text-[28px] md:text-[36px] leading-[1.3] text-center text-[#0F2F4C] tracking-[-1px] flex flex-wrap justify-center gap-x-[8px]">
             {"Empowering investors through data-driven agricultural assets.".split(" ").map((word, i) => (

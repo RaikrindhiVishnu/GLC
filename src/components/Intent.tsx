@@ -30,29 +30,25 @@ export default function Intent() {
       {/* ================= MOBILE ================= */}
       <div className="relative z-10 flex md:hidden w-full min-h-[620px] flex-col items-center justify-center px-6 py-14">
         {/* Glass Card */}
-        <div className="relative w-full max-w-[340px] h-[220px] rounded-[28px] border-[5px] border-white bg-white/10 backdrop-blur-sm shadow-2xl overflow-hidden">
+        <div className="relative w-full max-w-[340px] h-[220px] rounded-[28px] p-[5px] bg-gradient-to-br from-[#FFFFFF] to-white/10 shadow-2xl">
+          <div className="w-full h-full rounded-[23px] bg-white/10 backdrop-blur-sm overflow-hidden relative">
+            {/* Gradient */}
+            <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-40" />
 
-          {/* Gradient */}
-          <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-40" />
-
-          {/* Play Button */}
-          <div className="absolute inset-0 flex items-center justify-center">
-
-            <div className="relative w-[68px] h-[68px] rounded-full bg-white shadow-lg flex items-center justify-center">
-
-              <div className="relative w-[30px] h-[30px]">
-                <Image
-                  src="/assets/intent/Play.svg"
-                  alt="Play"
-                  fill
-                  className="object-contain"
-                />
+            {/* Play Button */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="relative w-[68px] h-[68px] rounded-full bg-white shadow-lg flex items-center justify-center">
+                <div className="relative w-[30px] h-[30px]">
+                  <Image
+                    src="/assets/intent/Play.svg"
+                    alt="Play"
+                    fill
+                    className="object-contain"
+                  />
+                </div>
               </div>
-
             </div>
-
           </div>
-
         </div>
 
         {/* Content */}
@@ -76,28 +72,24 @@ export default function Intent() {
       <div className="hidden md:flex lg:hidden relative z-10 w-full min-h-[820px] flex-col items-center justify-center px-10 py-20">
 
         {/* Glass Card */}
-        <div className="relative w-full max-w-[620px] h-[340px] rounded-[32px] border-[6px] border-white bg-white/10 backdrop-blur-sm shadow-2xl overflow-hidden">
+        <div className="relative w-full max-w-[620px] h-[340px] rounded-[32px] p-[6px] bg-gradient-to-br from-[#FFFFFF] to-white/10 shadow-2xl">
+          <div className="w-full h-full rounded-[26px] bg-white/10 backdrop-blur-sm overflow-hidden relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-40" />
 
-          <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-40" />
-
-          {/* Play Button */}
-          <div className="absolute inset-0 flex items-center justify-center">
-
-            <div className="relative w-[78px] h-[78px] rounded-full bg-white shadow-lg flex items-center justify-center">
-
-              <div className="relative w-[34px] h-[34px]">
-                <Image
-                  src="/assets/intent/Play.svg"
-                  alt="Play"
-                  fill
-                  className="object-contain"
-                />
+            {/* Play Button */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="relative w-[78px] h-[78px] rounded-full bg-white shadow-lg flex items-center justify-center">
+                <div className="relative w-[34px] h-[34px]">
+                  <Image
+                    src="/assets/intent/Play.svg"
+                    alt="Play"
+                    fill
+                    className="object-contain"
+                  />
+                </div>
               </div>
-
             </div>
-
           </div>
-
         </div>
 
         {/* Content */}
@@ -122,7 +114,7 @@ export default function Intent() {
 
         {/* Glass Container */}
         <div
-          className="absolute bg-white/10 backdrop-blur-sm border-[6px] border-white rounded-[32px] overflow-hidden shadow-2xl"
+          className="absolute rounded-[32px] p-[6px] bg-gradient-to-br from-[#FFFFFF] to-white/10 shadow-2xl"
           style={{
             width: "664px",
             height: "386px",
@@ -130,7 +122,9 @@ export default function Intent() {
             top: "267px",
           }}
         >
-          <div className="absolute inset-0 opacity-40 bg-gradient-to-br from-white/20 to-transparent pointer-events-none" />
+          <div className="w-full h-full rounded-[26px] bg-white/10 backdrop-blur-sm overflow-hidden relative">
+            <div className="absolute inset-0 opacity-40 bg-gradient-to-br from-white/20 to-transparent pointer-events-none" />
+          </div>
         </div>
 
         {/* Play Button */}

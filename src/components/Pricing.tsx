@@ -147,7 +147,7 @@ export default function Pricing() {
                   {tier.name}
                 </h3>
 
-                <div className="mt-4 text-[58px] md:text-[68px] font-extrabold leading-none text-[#0F2F4C] font-jakarta break-all">
+                <div className="mt-4 text-[58px] md:text-[68px] font-semibold leading-none text-[#0F2F4C] font-jakarta break-all">
                   {tier.price}
                 </div>
 
@@ -247,10 +247,10 @@ export default function Pricing() {
               }}
               viewport={{ once: true }}
               className={`relative flex flex-col w-full overflow-hidden transition-all duration-500 ${tier.highlight
-                  ? "max-w-[483.7px] min-h-[642px] z-20 shadow-[0px_30px_60px_rgba(0,0,0,0.12)] rounded-[42px] border-[4px] border-[#164573]"
-                  : i === 0
-                    ? "max-w-[335px] min-h-[428px] z-10 shadow-[0px_15px_40px_rgba(0,0,0,0.08)] rounded-l-[42px] rounded-r-none border border-[#F2F2F2]"
-                    : "max-w-[335px] min-h-[428px] z-10 shadow-[0px_15px_40px_rgba(0,0,0,0.08)] rounded-r-[42px] rounded-l-none border border-[#F2F2F2]"
+                ? "max-w-[483.7px] min-h-[642px] z-20 shadow-[0px_30px_60px_rgba(0,0,0,0.12)] rounded-[42px] border-[4px] border-[#164573]"
+                : i === 0
+                  ? "max-w-[335px] min-h-[428px] z-10 shadow-[0px_15px_40px_rgba(0,0,0,0.08)] rounded-l-[42px] rounded-r-none border border-[#F2F2F2]"
+                  : "max-w-[335px] min-h-[428px] z-10 shadow-[0px_15px_40px_rgba(0,0,0,0.08)] rounded-r-[42px] rounded-l-none border border-[#F2F2F2]"
                 } bg-white`}
             >
 
@@ -277,17 +277,17 @@ export default function Pricing() {
 
                 <h3
                   className={`mt-2 font-bold text-[#0F2F4C] font-jakarta ${tier.highlight
-                      ? "text-[32px]"
-                      : "text-[26px]"
+                    ? "text-[32px]"
+                    : "text-[26px]"
                     }`}
                 >
                   {tier.name}
                 </h3>
 
                 <div
-                  className={`mt-4 font-extrabold text-[#0F2F4C] font-jakarta leading-none ${tier.highlight
-                      ? "text-[80px]"
-                      : "text-[52px]"
+                  className={`mt-4 font-semibold text-[#0F2F4C] font-jakarta leading-none ${tier.highlight
+                    ? "text-[80px]"
+                    : "text-[52px]"
                     }`}
                 >
                   {tier.price}
@@ -303,8 +303,8 @@ export default function Pricing() {
 
                 <ul
                   className={`flex-1 ${tier.highlight
-                      ? "space-y-6"
-                      : "space-y-5"
+                    ? "space-y-6"
+                    : "space-y-5"
                     }`}
                 >
 

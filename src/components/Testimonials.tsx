@@ -10,36 +10,42 @@ export default function Testimonials() {
       role: "Investment Analyst",
       text: "GLC has completely changed my view on agricultural investment. The transparency is unlike anything I've seen in the sector.",
       image: "/assets/home/person.svg",
+      stars: 5,
     },
     {
       name: "Sarah Jenkins",
       role: "Land Owner",
       text: "The process of fractional ownership is seamless. I'm already looking into my third pool.",
       image: "/assets/home/person2.svg",
+      stars: 4,
     },
     {
       name: "David Kumar",
       role: "Serial Investor",
       text: "Solid yields and great professional management. The maintenance team really knows what they're doing.",
       image: "/assets/home/person.svg",
+      stars: 5,
     },
     {
       name: "Vikram Mehta",
       role: "Tech Entrepreneur",
       text: "The process of fractional ownership is seamless. I'm already looking into my third pool.",
       image: "/assets/home/person2.svg",
+      stars: 4,
     },
     {
       name: "Ananya Sharma",
       role: "Wealth Manager",
       text: "GLC has completely changed my view on agricultural investment. The transparency is unlike anything I've seen in the sector.",
       image: "/assets/home/person.svg",
+      stars: 5,
     },
     {
       name: "Siddharth Rao",
       role: "Retiree",
       text: "Solid yields and great professional management. The maintenance team really knows what they're doing.",
       image: "/assets/home/person2.svg",
+      stars: 4,
     },
   ];
 
@@ -185,10 +191,10 @@ function TestimonialCard({ t }: { t: any }) {
       {/* Stars */}
       <div className="flex gap-1 mb-4">
 
-        {[1, 2, 3, 4, 5].map((s) => (
+        {Array.from({ length: 5 }).map((_, i) => (
           <div
-            key={s}
-            className="w-[16px] h-[16px] md:w-[20px] md:h-[19px] bg-[#BDD327]"
+            key={i}
+            className={`w-[16px] h-[16px] md:w-[20px] md:h-[19px] ${i < (t.stars || 5) ? 'bg-[#BDD327]' : 'bg-gray-300'}`}
             style={{
               clipPath:
                 "polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)",

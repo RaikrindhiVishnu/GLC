@@ -46,7 +46,7 @@ const farmlands = [
 export default function PopularFarmlands() {
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
-  
+
   // Drag scroll states
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
@@ -67,7 +67,7 @@ export default function PopularFarmlands() {
     e.preventDefault();
     const x = e.pageX - containerRef.current.offsetLeft;
     const walk = (x - startX) * 2.0; // Drag speed multiplier
-    
+
     if (Math.abs(walk) > 5) {
       setDragged(true);
     }
@@ -87,7 +87,7 @@ export default function PopularFarmlands() {
 
   return (
     <section id="popular-farmlands" className="w-full bg-transparent py-12 lg:py-[70px] overflow-hidden">
-      
+
       {/* Section Header Wrapper (Constrained to Page Margin) */}
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 lg:mb-8">
         <div className="flex justify-between items-center w-full">
@@ -111,21 +111,21 @@ export default function PopularFarmlands() {
       </div>
 
       {/* Cards Scrollable Container (Free Drag-to-Scroll + Asymmetric Offset Layout) */}
-      <div 
+      <div
         ref={containerRef}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUpOrLeave}
         onMouseLeave={handleMouseUpOrLeave}
-        className={`flex gap-[26.62px] w-full overflow-x-auto pb-4 hide-scrollbar pl-4 sm:pl-6 lg:pl-8 xl:pl-[calc((100vw-1280px)/2+32px)] pr-4 sm:pr-6 lg:pr-8 select-none ${
-          isDragging ? "cursor-grabbing" : "cursor-grab"
-        }`}
+        className={`flex gap-[26.62px] w-full overflow-x-auto pb-4 hide-scrollbar pl-4 sm:pl-6 lg:pl-8 xl:pl-[calc((100vw-1280px)/2+32px)] pr-4 sm:pr-6 lg:pr-8 select-none ${isDragging ? "cursor-grabbing" : "cursor-grab"
+          }`}
       >
-        <style dangerouslySetInnerHTML={{ __html: `
+        <style dangerouslySetInnerHTML={{
+          __html: `
           #popular-farmlands .hide-scrollbar::-webkit-scrollbar { display: none; }
           #popular-farmlands .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         `}} />
-        
+
         {farmlands.map((land, i) => (
           <motion.div
             key={land.id}
@@ -140,7 +140,7 @@ export default function PopularFarmlands() {
             <div className="relative w-full h-[180px] lg:w-[266.58px] lg:h-[260.43px] shrink-0 overflow-hidden pointer-events-none">
               {/* Image Overlay Gradient */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent z-10" />
-              
+
               <Image
                 src={land.img}
                 alt={land.title}
@@ -151,15 +151,15 @@ export default function PopularFarmlands() {
 
             {/* Right Side: Content (55%) */}
             <div className="flex flex-1 flex-col justify-between pt-6 px-6 pb-6 lg:pt-[53.25px] lg:px-[33.28px] lg:pb-[33.28px] bg-white box-border pointer-events-none relative">
-              
+
               {/* Container Stack */}
               <div className="flex flex-col items-start w-full">
-                
+
                 {/* Title */}
                 <h3 className="m-0 font-jakarta font-extrabold text-[20px] lg:text-[24px] leading-[37px] tracking-[-1.25px] text-[#001F3F] capitalize">
                   {land.title}
                 </h3>
-                
+
                 {/* Location Wrapper */}
                 <div className="flex items-center gap-[4.99px] pb-[16.64px] mt-[4.99px]">
                   {/* Precise Pin Icon */}

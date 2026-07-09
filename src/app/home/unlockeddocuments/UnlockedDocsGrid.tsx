@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { useGetUserUnlockedFarmlandsQuery } from "../../../services/unlocked";
 
 export default function UnlockedDocsGrid() {
   const router = useRouter();
@@ -33,44 +34,17 @@ export default function UnlockedDocsGrid() {
 
   const filterTabs = ["All Unlocks", "Legal Dossiers", "Risk Reports"];
 
-  const cardsData = [
-    {
-      id: "GLC SOS 04",
-      location: "West Godavari",
-      tag: "PREMIUM",
-      acres: "200",
-      val: "₹4.2Cr",
-      dateStr: "Unlocked Oct 12",
-      safeStatus: "SAFE",
-      item3: "Clear Title",
-      item4: "Organic-Ready",
-      leftPos: "0px",
-    },
-    {
-      id: "GLC KRU 12",
-      location: "Kurnool District",
-      tag: "PREMIUM",
-      acres: "145",
-      val: "₹3.1Cr",
-      dateStr: "Unlocked Oct 08",
-      safeStatus: "SAFE",
-      item3: "Title Confirmed",
-      item4: "Artesian Well",
-      leftPos: "416px",
-    },
-    {
-      id: "GLC NLR 29",
-      location: "Nellore Plains",
-      tag: "PREMIUM",
-      acres: "82",
-      val: "₹1.8Cr",
-      dateStr: "Unlocked Sep 30",
-      safeStatus: "SAFE",
-      item3: "Digital Ledger",
-      item4: "Solar Grid Zone",
-      leftPos: "832px",
-    },
-  ];
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  const userId = 5; // Hardcoded to 5 for unlocked documents
+  const { data: res, isLoading: isQueryLoading } = useGetUserUnlockedFarmlandsQuery(
+    { userId },
+    { skip: !mounted || !userId }
+  );
+  
+  const isLoading = !mounted || isQueryLoading;
+  const farmlands = res?.data || [];
 
   return (
     <div style={{ width: "100%", overflow: "hidden" }}>
@@ -161,9 +135,17 @@ export default function UnlockedDocsGrid() {
 
           {/* Cards */}
           <div className="flex flex-col gap-4">
-            {cardsData.map((card, idx) => (
+            {isLoading ? (
+              <div className="flex justify-center items-center h-[200px]">
+                <span className="font-jakarta text-[#0F2F4C]">Loading unlocked documents...</span>
+              </div>
+            ) : farmlands.length === 0 ? (
+              <div className="flex justify-center items-center h-[200px]">
+                <span className="font-jakarta text-[#0F2F4C]">No unlocked documents found.</span>
+              </div>
+            ) : farmlands.map((card, idx) => (
               <motion.div
-                key={card.id}
+                key={card.farmland_id}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
@@ -173,14 +155,14 @@ export default function UnlockedDocsGrid() {
                 {/* Header row */}
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                   <div>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "18px", color: "#0F2F4C" }}>{card.id}</span>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "18px", color: "#0F2F4C" }}>{card.farm_code}</span>
                     <div style={{ display: "flex", alignItems: "center", gap: "4px", marginTop: "4px" }}>
                       <span style={{ fontSize: "12px" }}>📍</span>
-                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "13px", color: "#45474C", fontWeight: 500 }}>{card.location}</span>
+                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "13px", color: "#45474C", fontWeight: 500 }}>Unknown Location</span>
                     </div>
                   </div>
                   <div style={{ background: "#2780C4", borderRadius: "9999px", padding: "4px 10px", flexShrink: 0 }}>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "10px", fontWeight: 700, color: "#FFFFFF", letterSpacing: "1px" }}>{card.tag}</span>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "10px", fontWeight: 700, color: "#FFFFFF", letterSpacing: "1px" }}>PREMIUM</span>
                   </div>
                 </div>
 
@@ -188,21 +170,21 @@ export default function UnlockedDocsGrid() {
                 <div style={{ display: "flex", flexDirection: "row", gap: "8px" }}>
                   <div style={{ flex: 1, background: "#F3F4F5", borderRadius: "16px", padding: "14px" }}>
                     <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "10px", fontWeight: 700, color: "#75777D", letterSpacing: "0.5px", textTransform: "uppercase" }}>ACRES</span>
-                    <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "18px", color: "#0F2F4C", marginTop: "4px" }}>{card.acres}</div>
+                    <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "18px", color: "#0F2F4C", marginTop: "4px" }}>N/A</div>
                   </div>
                   <div style={{ flex: 1, background: "#F3F4F5", borderRadius: "16px", padding: "14px" }}>
                     <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "10px", fontWeight: 700, color: "#75777D", letterSpacing: "0.5px", textTransform: "uppercase" }}>VALUE</span>
-                    <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "18px", color: "#0F2F4C", marginTop: "4px" }}>{card.val}</div>
+                    <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "18px", color: "#0F2F4C", marginTop: "4px" }}>N/A</div>
                   </div>
                 </div>
 
                 {/* Status indicators */}
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "8px 16px" }}>
                   {[
-                    { text: card.dateStr, stroke: "#00629E", textColor: "#45474C" },
-                    { text: card.safeStatus, stroke: "#047857", textColor: "#047857" },
-                    { text: card.item3, stroke: "#00629E", textColor: "#45474C" },
-                    { text: card.item4, stroke: "#00629E", textColor: "#45474C" },
+                    { text: `Unlocked ${new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`, stroke: "#00629E", textColor: "#45474C" },
+                    { text: "SAFE", stroke: "#047857", textColor: "#047857" },
+                    { text: "Clear Title", stroke: "#00629E", textColor: "#45474C" },
+                    { text: "Organic-Ready", stroke: "#00629E", textColor: "#45474C" },
                   ].map((s) => (
                     <div key={s.text} style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={s.stroke} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
@@ -340,22 +322,30 @@ export default function UnlockedDocsGrid() {
 
                 {/* Dossier Grid */}
                 <div style={{ width: "1216px", height: "472px", position: "relative" }}>
-                  {cardsData.map((card, idx) => (
+                  {isLoading ? (
+                    <div style={{ width: "100%", height: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "16px", color: "#0F2F4C" }}>Loading unlocked documents...</span>
+                    </div>
+                  ) : farmlands.length === 0 ? (
+                    <div style={{ width: "100%", height: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "16px", color: "#0F2F4C" }}>No unlocked documents found.</span>
+                    </div>
+                  ) : farmlands.map((card, idx) => (
                     <div
-                      key={card.id}
-                      style={{ boxSizing: "border-box", display: "flex", flexDirection: "column", alignItems: "flex-start", padding: "32px", gap: "24px", position: "absolute", width: "384px", height: "465px", left: card.leftPos, top: "0px", background: "#FFFFFF", boxShadow: "0px 1px 2px rgba(0,0,0,0.05)", borderRadius: "32px" }}
+                      key={card.farmland_id}
+                      style={{ boxSizing: "border-box", display: "flex", flexDirection: "column", alignItems: "flex-start", padding: "32px", gap: "24px", position: "absolute", width: "384px", height: "465px", left: `${idx * 416}px`, top: "0px", background: "#FFFFFF", boxShadow: "0px 1px 2px rgba(0,0,0,0.05)", borderRadius: "32px" }}
                     >
                       {/* Header */}
                       <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", width: "320px", height: "49px" }}>
                         <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                          <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "20px", color: "#0F2F4C" }}>{card.id}</span>
+                          <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "20px", color: "#0F2F4C" }}>{card.farm_code}</span>
                           <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
                             <span style={{ fontSize: "14px" }}>📍</span>
-                            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "14px", color: "#45474C" }}>{card.location}</span>
+                            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "14px", color: "#45474C" }}>Unknown Location</span>
                           </div>
                         </div>
                         <div style={{ background: "#2780C4", borderRadius: "9999px", padding: "4px 12px" }}>
-                          <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1px", textTransform: "uppercase", color: "#FFFFFF" }}>{card.tag}</span>
+                          <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1px", textTransform: "uppercase", color: "#FFFFFF" }}>PREMIUM</span>
                         </div>
                       </div>
 
@@ -363,11 +353,11 @@ export default function UnlockedDocsGrid() {
                       <div style={{ width: "320px", height: "79px", position: "relative" }}>
                         <div style={{ boxSizing: "border-box", display: "flex", flexDirection: "column", padding: "16px", gap: "4px", position: "absolute", width: "152px", height: "79px", left: "0px", top: "0px", background: "#F3F4F5", borderRadius: "32px" }}>
                           <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "0.5px", textTransform: "uppercase", color: "#75777D" }}>ACRES</span>
-                          <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "18px", color: "#0F2F4C" }}>{card.acres}</span>
+                          <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "18px", color: "#0F2F4C" }}>N/A</span>
                         </div>
                         <div style={{ boxSizing: "border-box", display: "flex", flexDirection: "column", padding: "16px", gap: "4px", position: "absolute", width: "152px", height: "79px", right: "0px", top: "0px", background: "#F3F4F5", borderRadius: "32px" }}>
                           <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "0.5px", textTransform: "uppercase", color: "#75777D" }}>VALUE</span>
-                          <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "18px", color: "#0F2F4C" }}>{card.val}</span>
+                          <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "18px", color: "#0F2F4C" }}>N/A</span>
                         </div>
                       </div>
 
@@ -375,19 +365,19 @@ export default function UnlockedDocsGrid() {
                       <div style={{ width: "320px", height: "68px", position: "relative" }}>
                         <div style={{ display: "flex", alignItems: "center", gap: "8px", position: "absolute", height: "24px", left: "0px", top: "8px" }}>
                           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#00629E" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
-                          <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "12px", color: "#45474C" }}>{card.dateStr}</span>
+                          <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "12px", color: "#45474C" }}>{`Unlocked ${new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`}</span>
                         </div>
                         <div style={{ display: "flex", alignItems: "center", gap: "8px", position: "absolute", height: "24px", left: "166px", top: "8px" }}>
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#047857" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
-                          <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "12px", color: "#047857" }}>{card.safeStatus}</span>
+                          <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "12px", color: "#047857" }}>SAFE</span>
                         </div>
                         <div style={{ display: "flex", alignItems: "center", gap: "8px", position: "absolute", height: "24px", left: "0px", top: "44px" }}>
                           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#00629E" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
-                          <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "12px", color: "#45474C" }}>{card.item3}</span>
+                          <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "12px", color: "#45474C" }}>Clear Title</span>
                         </div>
                         <div style={{ display: "flex", alignItems: "center", gap: "8px", position: "absolute", height: "24px", left: "166px", top: "44px" }}>
                           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#00629E" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
-                          <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "12px", color: "#45474C" }}>{card.item4}</span>
+                          <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "12px", color: "#45474C" }}>Organic-Ready</span>
                         </div>
                       </div>
 

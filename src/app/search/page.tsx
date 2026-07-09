@@ -9,6 +9,8 @@ import TrendingFeaturedSection from "./TrendingFeaturedSection";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 
+import { SearchProvider } from "./SearchContext";
+
 export default function SearchScreen() {
   return (
     <main style={{ minHeight: "100vh", background: "#FFFFFF", display: "flex", flexDirection: "column" }}>

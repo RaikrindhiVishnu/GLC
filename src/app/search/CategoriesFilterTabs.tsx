@@ -2,25 +2,61 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-
-// Complete pristine list of 7 Staggered Liquid Glass Chips mapped exactly to user input tokens
-const initialGlassChips = [
-  { id: "chip-1", label: "Vizag", weight: 700 },
-  { id: "chip-2", label: "Andhra Pradesh", weight: 500 },
-  { id: "chip-3", label: "1 - 5 Cr", weight: 500 },
-  { id: "chip-4", label: "20 Acres", weight: 500 },
-  { id: "chip-5", label: "GLC’s Exclusive", weight: 500 },
-  { id: "chip-6", label: "Canal Access", weight: 500 },
-  { id: "chip-7", label: "Senior Water Rights", weight: 500 },
-];
+import { useSearchContext } from "./SearchContext";
 
 export default function CategoriesFilterTabs() {
-  const [glassChips, setGlassChips] = useState(initialGlassChips);
+  const { filters, setFilters, masterData, geoData } = useSearchContext();
 
-  const dismissChip = (id: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setGlassChips((prev) => prev.filter((chip) => chip.id !== id));
+  // Generate chips dynamically based on filters
+  const generateChips = () => {
+    const chips: { id: string, label: string, weight: number, onDismiss: () => void }[] = [];
+
+    // State
+    if (filters.state_id && filters.state_id.length > 0) {
+      const stateId = filters.state_id[0];
+      const stateName = geoData?.states?.slice(1)?.find(s => s[0] === stateId)?.[3] || `State ${stateId}`;
+      chips.push({
+        id: `state-${stateId}`,
+        label: stateName,
+        weight: 700,
+        onDismiss: () => setFilters({ ...filters, state_id: [] })
+      });
+    }
+
+    // District
+    if (filters.district_id && filters.district_id.length > 0) {
+      const districtId = filters.district_id[0];
+      const districtName = geoData?.districts?.slice(1)?.find(d => d[0] === districtId)?.[3] || `District ${districtId}`;
+      chips.push({
+        id: `district-${districtId}`,
+        label: districtName,
+        weight: 500,
+        onDismiss: () => setFilters({ ...filters, district_id: [] })
+      });
+    }
+
+    // Tags
+    if (filters.tag_ids && filters.tag_ids.length > 0) {
+      filters.tag_ids.forEach(tagId => {
+        const tagName = masterData?.data?.tagResult?.find((t: any) => t.id === tagId)?.name || `Tag ${tagId}`;
+        chips.push({
+          id: `tag-${tagId}`,
+          label: tagName,
+          weight: 500,
+          onDismiss: () => setFilters({
+            ...filters,
+            tag_ids: filters.tag_ids?.filter(id => id !== tagId)
+          })
+        });
+      });
+    }
+
+    return chips;
   };
+
+  const activeChips = generateChips();
+
+  if (activeChips.length === 0) return null;
 
   return (
     <div style={{ width: "100%", marginTop: "30px", marginBottom: "10px" }}>
@@ -42,7 +78,7 @@ export default function CategoriesFilterTabs() {
         }}
         className="px-4 sm:px-6 lg:px-15 py-2.5"
       >
-        {glassChips.map((chip, i) => (
+        {activeChips.map((chip, i) => (
           <motion.div
             key={chip.id}
             initial={{ opacity: 0, y: 15 }}
@@ -98,7 +134,10 @@ export default function CategoriesFilterTabs() {
 
             {/* Dismiss Cross Trigger vector (maki:cross) */}
             <button
-              onClick={(e) => dismissChip(chip.id, e)}
+              onClick={(e) => {
+                e.stopPropagation();
+                chip.onDismiss();
+              }}
               style={{
                 background: "transparent",
                 border: "none",

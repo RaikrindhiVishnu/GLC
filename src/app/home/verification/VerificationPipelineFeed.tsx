@@ -1,12 +1,26 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { useGetVerificationLandsByUserIdQuery } from "../../../services/verification";
 
 export default function VerificationPipelineFeed() {
   const router = useRouter();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  const userId = 2; // Hardcoded to 2 as per backend request
+  
+  const { data: res, isLoading: isQueryLoading } = useGetVerificationLandsByUserIdQuery(
+    { user_id: userId },
+    { skip: !mounted || !userId }
+  );
+  
+  const isLoading = !mounted || isQueryLoading;
+  const lands = res?.data || [];
+
   return (
     <section className="w-full max-w-7xl mx-auto px-4 lg:px-8 py-16 lg:py-24 box-border flex flex-col">
       {/* ─── FEED HEADER ─── */}
@@ -244,79 +258,90 @@ export default function VerificationPipelineFeed() {
           style={{ boxSizing: "border-box", display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "32px" }}
         >
           {/* Widget 1: Asset Context Card */}
-          <div
-            style={{
-              boxSizing: "border-box",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-start",
-              padding: "32px",
-              width: "100%",
-              background: "#FFFFFF",
-              border: "1px solid rgba(197, 198, 205, 0.15)",
-              boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)",
-              borderRadius: "32px",
-            }}
-          >
-            {/* Padded Preview Screen placeholder slot */}
+          {isLoading ? (
+            <div className="flex justify-center items-center w-full h-[200px] bg-white rounded-[32px] border border-gray-100 shadow-sm">
+              <span className="font-jakarta text-[#0F2F4C]">Loading verification assets...</span>
+            </div>
+          ) : lands.length === 0 ? (
+            <div className="flex justify-center items-center w-full h-[200px] bg-white rounded-[32px] border border-gray-100 shadow-sm">
+              <span className="font-jakarta text-[#0F2F4C]">No active verification assets found.</span>
+            </div>
+          ) : lands.map((land) => (
             <div
+              key={land.farmland_id}
               style={{
-                position: "relative",
+                boxSizing: "border-box",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                padding: "32px",
                 width: "100%",
-                height: "178px",
-                borderRadius: "20px",
-                overflow: "hidden",
-                marginBottom: "20px",
-                background: "#F3F4F5",
+                background: "#FFFFFF",
+                border: "1px solid rgba(197, 198, 205, 0.15)",
+                boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)",
+                borderRadius: "32px",
               }}
             >
-              <Image
-                src="/assets/verification-of-farmland/pipeline.svg"
-                alt="GLC SOS 01 Estate Direct Mapping"
-                fill
-                style={{ objectFit: "cover" }}
-              />
-            </div>
+              {/* Padded Preview Screen placeholder slot */}
+              <div
+                style={{
+                  position: "relative",
+                  width: "100%",
+                  height: "178px",
+                  borderRadius: "20px",
+                  overflow: "hidden",
+                  marginBottom: "20px",
+                  background: "#F3F4F5",
+                }}
+              >
+                <Image
+                  src={land.farmland_img || "/assets/verification-of-farmland/pipeline.svg"}
+                  alt={land.farmland_code}
+                  fill
+                  style={{ objectFit: "cover" }}
+                />
+              </div>
 
-            {/* Header info layout line */}
-            <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", width: "100%", marginBottom: "24px" }}>
-              <div style={{ display: "flex", flexDirection: "column" }}>
-                <h3 style={{ margin: 0, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "24px", color: "#131600" }}>
-                  GLC SOS 01
-                </h3>
-                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "16px", color: "#2780C4" }}>
-                  Zaheerabad Region
-                </span>
+              {/* Header info layout line */}
+              <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", width: "100%", marginBottom: "24px" }}>
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                  <h3 style={{ margin: 0, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "24px", color: "#131600" }}>
+                    {land.farmland_code}
+                  </h3>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "16px", color: "#2780C4" }}>
+                    Unknown Location
+                  </span>
+                </div>
+                {/* Context Tag Flag */}
+                <div style={{ background: "#CFE5FF", borderRadius: "9999px", padding: "4px 12px", marginTop: "4px" }}>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", color: "#004A78" }}>
+                    {land.is_active ? "Active" : "Inactive"}
+                  </span>
+                </div>
               </div>
-              {/* Context Tag Flag */}
-              <div style={{ background: "#CFE5FF", borderRadius: "9999px", padding: "4px 12px", marginTop: "4px" }}>
-                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", color: "#004A78" }}>
-                  IO Audit Active
-                </span>
-              </div>
-            </div>
 
-            {/* Matrix Data Footer Layout split with top boundary */}
-            <div style={{ boxSizing: "border-box", display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", paddingTop: "16px", borderTop: "1px solid #F3F4F5" }}>
-              <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "11px", letterSpacing: "1px", color: "rgba(69, 71, 76, 0.6)" }}>
-                  EST. COMPLETION
-                </span>
-                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "15px", color: "#131600" }}>
-                  Oct 24, 2024
-                </span>
-              </div>
-              <div style={{ height: "32px", width: "1px", background: "#F3F4F5" }} />
-              <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "11px", letterSpacing: "1px", color: "rgba(69, 71, 76, 0.6)" }}>
-                  ASSET ID
-                </span>
-                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "15px", color: "#131600" }}>
-                  RE-99210
-                </span>
+              {/* Matrix Data Footer Layout split with top boundary */}
+              <div style={{ boxSizing: "border-box", display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", paddingTop: "16px", borderTop: "1px solid #F3F4F5" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "11px", letterSpacing: "1px", color: "rgba(69, 71, 76, 0.6)" }}>
+                    CREATED ON
+                  </span>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "15px", color: "#131600" }}>
+                    {new Date(land.created_on).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                  </span>
+                </div>
+                <div style={{ height: "32px", width: "1px", background: "#F3F4F5" }} />
+                <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "11px", letterSpacing: "1px", color: "rgba(69, 71, 76, 0.6)" }}>
+                    ASSET ID
+                  </span>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "15px", color: "#131600" }}>
+                    RE-{land.farmland_id}
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
+          ))}
 
           {/* Widget 2: Live Activity Log Card */}
           <div

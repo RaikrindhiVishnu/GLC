@@ -17,15 +17,17 @@ export default function LeftConsole() {
         display: "flex",
         flexDirection: "column",
         alignItems: "flex-start",
-        padding: "32px",
-        gap: "40px",
+        padding: "40px",
+        gap: "48px",
         width: "100%",
+        maxWidth: "678px",
+        minHeight: "700px",
         background: "#FFFFFF",
         borderRadius: "32px",
         boxShadow: "0px 25px 50px -12px rgba(9, 20, 38, 0.05)",
         position: "relative",
+        flexShrink: 0,
       }}
-      className="lg:p-10 lg:rounded-[48px]"
     >
       {/* Header Block */}
       <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "4px", width: "100%" }}>
@@ -46,8 +48,8 @@ export default function LeftConsole() {
           style={{
             position: "relative",
             width: "100%",
-            maxWidth: "448px",
-            aspectRatio: "1 / 1",
+            maxWidth: "598px",
+            aspectRatio: "598 / 544",
             borderRadius: "16px",
             overflow: "hidden",
             boxShadow: "inset 0px 0px 0px 1px rgba(0,0,0,0.05)",

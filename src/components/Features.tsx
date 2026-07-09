@@ -219,23 +219,23 @@ export default function Features() {
 
                     {/* Left */}
                     <div className="flex flex-col justify-center">
-                      <span className="text-[12px] text-[#5C5C5C]">
-                        Next Harvest:
+                      <span className="text-[12px] font-medium text-[#0F2F4C]">
+                        Est. Harvest:
                       </span>
 
                       <span className="text-[24px] font-bold text-[#0F2F4C] leading-none mt-1">
                         Nov 2026
                       </span>
 
-                      <span className="text-[11px] text-[#5C5C5C] mt-1">
-                        Red Sandalwood
+                      <span className="text-[11px] font-medium text-[#5C5C5C] mt-1">
+                        Current Crop: Red Sandalwood
                       </span>
                     </div>
 
                     {/* Animated Bars */}
                     <div className="flex items-end gap-[5px] h-[60px]">
 
-                      {[40, 58, 75, 52, 90, 68, 96].map((h, i) => (
+                      {[40, 66, 86, 100, 74, 82, 96, 70].map((h, i) => (
                         <motion.div
                           key={i}
                           initial={{ height: 0 }}
@@ -267,7 +267,7 @@ export default function Features() {
                     {/* Left Bars */}
                     <div className="flex items-end gap-[4px] h-[60px]">
 
-                      {[65, 40, 88, 52, 95, 70, 82, 60].map((h, i) => (
+                      {[60, 40, 75, 55, 85, 45, 95, 65, 80, 50, 90, 60].map((h, i) => (
                         <motion.div
                           key={i}
                           initial={{ height: 0 }}
@@ -287,20 +287,20 @@ export default function Features() {
                     </div>
 
                     {/* Right Text */}
-                    <div className="flex flex-col items-end">
+                    <div className="flex flex-col items-end text-right">
 
-                      <span className="text-[12px] text-[#5C5C5C]">
+                      <span className="text-[12px] font-normal text-[#0F2F4C]">
                         Last Payout:
                       </span>
 
-                      <span className="text-[28px] font-bold text-[#0F2F4C] leading-none mt-1">
+                      <span className="text-[28px] font-bold text-[#0F2F4C] leading-none my-1 tracking-tight">
                         <DynamicCounter
                           value={380000}
                           prefix="₹"
                         />
                       </span>
 
-                      <span className="text-[11px] text-[#2780C4] mt-1">
+                      <span className="text-[11px] text-[#5C5C5C]">
                         Gross Revenue INR
                       </span>
 

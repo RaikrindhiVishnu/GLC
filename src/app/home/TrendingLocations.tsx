@@ -42,7 +42,8 @@ export default function TrendingLocations() {
 
       {/* Cards — full-width scroll container matching PopularFarmlands layout */}
       <div className="flex lg:grid lg:grid-cols-4 gap-6.5 lg:gap-6 w-full overflow-x-auto lg:overflow-x-visible pb-4 lg:pb-0 hide-scrollbar pl-4 sm:pl-6 lg:pl-8 xl:pl-[calc((100vw-1280px)/2+32px)] pr-4 sm:pr-6 lg:pr-8">
-        <style dangerouslySetInnerHTML={{ __html: `
+        <style dangerouslySetInnerHTML={{
+          __html: `
           #trending-locations .hide-scrollbar::-webkit-scrollbar { display: none; }
           #trending-locations .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         `}} />

@@ -88,9 +88,14 @@ export default function SearchHeroSection() {
             />
             <button
               onClick={() => setIsFilterOpen(true)}
-              className="flex h-10.5 min-w-10.5 items-center justify-center rounded-full bg-white hover:bg-gray-100 transition-colors shrink-0 cursor-pointer"
+              className="relative flex h-10.5 w-10.5 min-w-10.5 items-center justify-center rounded-full bg-white hover:bg-gray-100 transition-colors shrink-0 cursor-pointer shadow-sm"
             >
-              <Image src="/assets/home/HeroScreen/inside search.svg" alt="Search" width={16} height={16} />
+              <Image src="/assets/home/HeroScreen/inside search.svg" alt="Search" width={18} height={18} />
+              
+              {/* Notification Badge */}
+              <div className="absolute -top-2 -right-1.5 flex h-[22px] min-w-[22px] items-center justify-center rounded-full bg-[#152744] px-1 text-[12px] font-medium text-white shadow-md font-jakarta leading-none">
+                11
+              </div>
             </button>
           </motion.div>
 
