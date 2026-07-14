@@ -134,6 +134,7 @@ function AppNavbar({ active, className, forceScrolled }: { active?: NavbarActive
       </button>
 
       {/* Central Desktop Capsule Menu (hidden on mobile, absolute centered on desktop) */}
+      {active !== "none" && (
       <div
         style={{
           ...CAPSULE_STYLE,
@@ -226,6 +227,7 @@ function AppNavbar({ active, className, forceScrolled }: { active?: NavbarActive
           </button>
         )}
       </div>
+      )}
 
       {/* Desktop Utility Group (hidden on mobile) */}
       <div className="hidden md:flex items-center gap-3 shrink-0">

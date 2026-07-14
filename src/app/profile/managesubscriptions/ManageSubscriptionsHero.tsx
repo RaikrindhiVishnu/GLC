@@ -22,51 +22,34 @@ export default function ManageSubscriptionsHero() {
         style={{ width: "100%", height: "100%", objectFit: "cover", position: "absolute", inset: 0, zIndex: 0 }}
       />
 
-      <Navbar variant="app" active="profile" />
+      <Navbar variant="app" active="none" />
 
       <div
         style={{ position: "absolute", inset: 0, zIndex: 5, boxSizing: "border-box" }}
-        className="flex flex-col items-center justify-center px-4 pointer-events-none"
+        className="flex flex-col items-center justify-center px-4 pointer-events-none mt-16"
       >
-        <div className="w-full max-w-254.5 flex flex-col items-center pointer-events-auto">
+        <div className="w-full flex flex-col items-center pointer-events-auto">
 
           <h1
-            className="text-shadow-premium flex flex-col items-center justify-center font-jakarta font-extrabold tracking-[-4px] text-white"
+            className="text-shadow-premium font-jakarta font-extrabold text-white text-center m-0"
+            style={{
+              fontSize: "clamp(48px, 8vw, 100px)",
+              lineHeight: "1",
+              letterSpacing: "-1.8px"
+            }}
           >
-            <span className="flex text-[48px] leading-none md:text-[76px] flex-wrap gap-x-2 md:gap-x-4 justify-center">
-              {"Manage".split(" ").map((word, i) => (
-                <motion.span
-                  key={i}
-                  initial={{ opacity: 0, filter: "blur(8px)", y: 15 }}
-                  animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
-                  transition={{ duration: 0.8, delay: i * 0.15 }}
-                >
-                  {word}
-                </motion.span>
-              ))}
-            </span>
-            <span className="flex text-[48px] leading-none md:text-[76px] flex-wrap gap-x-2 md:gap-x-4 justify-center mt-1">
-              {"Subscription".split(" ").map((word, i) => (
-                <motion.span
-                  key={i}
-                  initial={{ opacity: 0, filter: "blur(8px)", y: 15 }}
-                  animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.15 + i * 0.15 }}
-                >
-                  {word}
-                </motion.span>
-              ))}
-            </span>
+            Manage Subscription
           </h1>
 
-          <motion.p
-            initial={{ opacity: 0, y: 25 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.45 }}
-            className="mt-9 font-jakarta font-medium text-[14px] md:text-[16px] leading-relaxed text-white text-center max-w-175"
+          <p
+            className="font-jakarta font-medium text-white text-center mt-[37px] max-w-[996px]"
+            style={{
+              fontSize: "clamp(16px, 4vw, 24px)",
+              lineHeight: "1.35",
+            }}
           >
             Track the real-time progress of your asset through our rigorous 4-tier legal, agronomy, and intelligence audit pipeline
-          </motion.p>
+          </p>
 
         </div>
       </div>

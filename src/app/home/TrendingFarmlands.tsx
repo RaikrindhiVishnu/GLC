@@ -70,7 +70,7 @@ export default function TrendingFarmlands() {
               </motion.span>
             ))}
           </h2>
-          <button onClick={() => router.push("/search")} className="bg-transparent border-none font-jakarta font-extrabold text-[14px] md:text-[18px] leading-[40px] text-[#0F2F4C] cursor-pointer [-webkit-tap-highlight-color:transparent] hover:opacity-70 transition-opacity">
+          <button onClick={() => router.push("/home/trendingfarmlands")} className="bg-transparent border-none font-jakarta font-extrabold text-[14px] md:text-[18px] leading-[40px] text-[#0F2F4C] cursor-pointer [-webkit-tap-highlight-color:transparent] hover:opacity-70 transition-opacity">
             View all
           </button>
         </div>

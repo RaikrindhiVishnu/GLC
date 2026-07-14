@@ -1,0 +1,3678 @@
+<USER_REQUEST>
+i need like this profile page before verified after verified and upload adhar and phone when click them open the file manager  /* Profile Frame */
+
+position: absolute;
+width: 1440px;
+height: 1768px;
+left: 0px;
+top: 0px;
+
+background: #F8F9FA;
+
+
+/* Ellipse 8 */
+
+position: absolute;
+width: 55.45px;
+height: 55.45px;
+left: 590.48px;
+top: 792.06px;
+
+background: #BEBEBE;
+
+
+/* Frame 2 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+padding: 10px 15px;
+gap: 10px;
+
+position: absolute;
+width: 56px;
+height: 35px;
+left: 240px;
+top: -60.96px;
+
+background: #FFFFFF;
+border-radius: 37px;
+
+
+/* Frame 3 */
+
+position: absolute;
+width: 356.7px;
+height: 35.07px;
+left: calc(50% - 356.7px/2 + 0px);
+top: -64.62px;
+
+background: #FFFFFF;
+border-radius: 37.0723px;
+
+
+/* mingcute:search-line */
+
+position: absolute;
+width: 22.04px;
+height: 22.04px;
+left: 321.63px;
+top: 6.01px;
+
+
+
+/* Group */
+
+position: absolute;
+left: 0%;
+right: 0%;
+top: 0%;
+bottom: 0%;
+
+
+
+/* Vector */
+
+position: absolute;
+left: 0%;
+right: 0%;
+top: 0%;
+bottom: 0%;
+
+
+
+/* Rectangle 2 */
+
+position: absolute;
+width: 1440px;
+height: 479.05px;
+left: 0px;
+top: 0.28px;
+
+background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url(.jpg), #D9D9D9;
+
+
+/* Frame 10 */
+
+position: absolute;
+width: 391px;
+height: 536px;
+left: 23px;
+top: 502px;
+
+background: #FFFFFF;
+border-radius: 32px;
+
+
+/* Identity & Contact Section */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 12px;
+
+position: absolute;
+width: 342px;
+height: 250px;
+left: 16.35px;
+top: 32px;
+
+
+
+/* Heading 4 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px 16px;
+
+width: 342px;
+height: 28px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Identity & Contact */
+
+width: 310px;
+height: 28px;
+
+font-family: 'Plus Jakarta Sans';
+font-style: normal;
+font-weight: 700;
+font-size: 16px;
+line-height: 28px;
+/* identical to box height, or 175% */
+display: flex;
+align-items: center;
+text-transform: uppercase;
+
+color: #0F2F4C;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Background+Shadow */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+
+width: 342px;
+height: 210px;
+
+background: #FFFFFF;
+box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
+border-radius: 32px;
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+align-items: center;
+padding: 20px 24px;
+gap: 121px;
+
+width: 342px;
+height: 64px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+
+width: 64.97px;
+height: 20px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Text */
+
+width: 64.97px;
+height: 20px;
+
+font-family: 'Plus Jakarta Sans';
+font-style: normal;
+font-weight: 500;
+font-size: 14px;
+line-height: 20px;
+/* identical to box height, or 143% */
+display: flex;
+align-items: center;
+
+color: #71717A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+
+width: 108.03px;
+height: 24px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Text */
+
+width: 108.03px;
+height: 24px;
+
+font-family: 'Plus Jakarta Sans';
+font-style: normal;
+font-weight: 700;
+font-size: 16px;
+line-height: 24px;
+/* identical to box height, or 150% */
+display: flex;
+align-items: center;
+
+color: #0F2F4C;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* HorizontalBorder */
+
+box-sizing: border-box;
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+align-items: center;
+padding: 20px 24px;
+
+width: 342px;
+height: 81px;
+
+border-top: 1px solid #FAFAFA;
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px 39.83px 0px 0px;
+
+width: 93.94px;
+height: 40px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Text */
+
+width: 54.11px;
+height: 40px;
+
+font-family: 'Plus Jakarta Sans';
+font-style: normal;
+font-weight: 500;
+font-size: 14px;
+line-height: 20px;
+/* or 143% */
+display: flex;
+align-items: center;
+
+color: #71717A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 8px;
+
+width: 204px;
+height: 24px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px 38.78px 0px 0px;
+
+width: 128px;
+height: 24px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* +91 98765 43210 */
+
+width: 128px;
+height: 24px;
+
+font-family: 'Plus Jakarta Sans';
+font-style: normal;
+font-weight: 700;
+font-size: 16px;
+line-height: 24px;
+/* identical to box height, or 150% */
+display: flex;
+align-items: center;
+
+color: #0F2F4C;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Background */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 2px 24.09px 2px 8px;
+
+width: 68px;
+height: 19px;
+
+background: #EFF6FF;
+border-radius: 9999px;
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* SEND OTP */
+
+width: 50px;
+height: 15px;
+
+font-family: 'Plus Jakarta Sans';
+font-style: normal;
+font-weight: 700;
+font-size: 10px;
+line-height: 15px;
+/* identical to box height, or 150% */
+display: flex;
+align-items: center;
+
+color: #2563EB;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* HorizontalBorder */
+
+box-sizing: border-box;
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+align-items: center;
+padding: 20px 24px;
+gap: 43.11px;
+
+width: 342px;
+height: 65px;
+
+border-top: 1px solid #FAFAFA;
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+
+width: 94.05px;
+height: 20px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Text */
+
+width: 94.05px;
+height: 20px;
+
+font-family: 'Plus Jakarta Sans';
+font-style: normal;
+font-weight: 500;
+font-size: 14px;
+line-height: 20px;
+/* identical to box height, or 143% */
+display: flex;
+align-items: center;
+
+color: #71717A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+
+width: 156.84px;
+height: 24px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* arjun.w@gmail.com */
+
+width: 156.84px;
+height: 24px;
+
+font-family: 'Plus Jakarta Sans';
+font-style: normal;
+font-weight: 700;
+font-size: 16px;
+line-height: 24px;
+/* identical to box height, or 150% */
+display: flex;
+align-items: center;
+
+color: #0F2F4C;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Regulatory Compliance Section */
+
+position: absolute;
+width: 342px;
+height: 202px;
+left: 16.35px;
+top: 302px;
+
+
+
+/* Heading 4 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px 16px;
+
+position: absolute;
+height: 16px;
+left: 0px;
+right: 0px;
+top: 0px;
+
+
+
+/* Text */
+
+width: 189.64px;
+height: 16px;
+
+font-family: 'Plus Jakarta Sans';
+font-style: normal;
+font-weight: 700;
+font-size: 12px;
+line-height: 16px;
+/* identical to box height, or 133% */
+display: flex;
+align-items: center;
+letter-spacing: 1.2px;
+text-transform: uppercase;
+
+color: #71717A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px 16px;
+gap: 8px;
+
+position: absolute;
+height: 33.75px;
+left: -2px;
+right: 2px;
+top: 161.25px;
+
+opacity: 0.6;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+
+width: 9.33px;
+height: 12.25px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Icon */
+
+width: 9.33px;
+height: 12.25px;
+
+background: #0F2F4C;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px 52.53px 0.75px 0px;
+
+width: 287.98px;
+height: 33.75px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Text */
+
+width: 235.45px;
+height: 33px;
+
+font-family: 'Plus Jakarta Sans';
+font-style: normal;
+font-weight: 500;
+font-size: 11px;
+line-height: 16px;
+/* or 150% */
+display: flex;
+align-items: center;
+
+color: #71717A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Frame 2147240556 */
+
+position: absolute;
+width: 353px;
+height: 47.49px;
+left: 20px;
+top: 340px;
+
+
+
+/* Text */
+
+position: absolute;
+width: 191px;
+height: 46px;
+right: 165px;
+bottom: 2.49px;
+
+
+
+/* Background */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 190.68px;
+height: 45.37px;
+right: 0.32px;
+bottom: -0.49px;
+
+background: #FEFEFE;
+border: 1.41767px solid #F8F8F8;
+border-radius: 21.2651px;
+
+
+/* Background */
+
+position: absolute;
+width: 1.42px;
+height: 17.01px;
+right: 148.47px;
+bottom: 12.27px;
+
+background: #EFEFEF;
+
+
+/* hugeicons:identity-card */
+
+position: absolute;
+width: 17.01px;
+height: 17.01px;
+right: 156.98px;
+bottom: 13.69px;
+
+
+
+/* Group */
+
+position: absolute;
+left: 8.34%;
+right: 8.33%;
+top: 14.58%;
+bottom: 14.59%;
+
+
+
+/* Vector */
+
+position: absolute;
+left: 8.34%;
+right: 8.33%;
+top: 14.58%;
+bottom: 14.59%;
+
+border: 1.06325px solid #A1999B;
+
+
+/* Vector */
+
+position: absolute;
+left: 20.84%;
+right: 54.16%;
+top: 58.32%;
+bottom: 33.35%;
+
+border: 1.06325px solid #A1999B;
+
+
+/* Vector */
+
+position: absolute;
+left: 26.04%;
+right: 59.38%;
+top: 33.33%;
+bottom: 52.09%;
+
+border: 1.06325px solid #A1999B;
+
+
+/* Vector */
+
+position: absolute;
+left: 58.33%;
+right: 20.83%;
+top: 35.41%;
+bottom: 35.43%;
+
+border: 1.06325px solid #A1999B;
+
+
+/* Password */
+
+position: absolute;
+width: 122px;
+height: 12px;
+right: 19.38px;
+bottom: 15.86px;
+
+font-family: 'Plus Jakarta Sans';
+font-style: normal;
+font-weight: 400;
+font-size: 9.21486px;
+line-height: 12px;
+/* identical to box height */
+display: flex;
+align-items: center;
+
+color: #BDBDBD;
+
+
+
+/* Background+Border */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 78px;
+height: 46px;
+left: 194px;
+top: -1px;
+
+background: #F3F3F5;
+border: 1.41767px dashed rgba(0, 0, 0, 0.3);
+border-radius: 22.6827px;
+
+
+/* grommet-icons:document-upload */
+
+position: absolute;
+width: 14px;
+height: 14px;
+left: calc(50% - 14px/2 - 17.73px);
+top: calc(50% - 14px/2 + 0.12px);
+
+
+
+/* Vector */
+
+position: absolute;
+left: 12.49%;
+right: 12.51%;
+top: 4.17%;
+bottom: 4.16%;
+
+border: 1.16667px solid #000000;
+
+
+/* Background+Border */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 78px;
+height: 46px;
+left: 275px;
+top: -1px;
+
+background: #F3F3F5;
+border: 1.41767px dashed rgba(188, 201, 201, 0.3);
+border-radius: 22.6827px;
+
+
+/* grommet-icons:document-upload */
+
+position: absolute;
+width: 14px;
+height: 14px;
+left: calc(50% - 14px/2 - 17.74px);
+top: calc(50% - 14px/2 - 0.55px);
+
+
+
+/* Vector */
+
+position: absolute;
+left: 12.49%;
+right: 12.51%;
+top: 4.17%;
+bottom: 4.16%;
+
+border: 1.16667px solid #A49999;
+
+
+/* Password */
+
+position: absolute;
+width: 23px;
+height: 12px;
+right: 20.98px;
+bottom: 15.99px;
+
+font-family: 'Plus Jakarta Sans';
+font-style: normal;
+font-weight: 400;
+font-size: 9.21486px;
+line-height: 12px;
+/* identical to box height */
+display: flex;
+align-items: center;
+
+color: #BDBDBD;
+
+
+
+/* Frame 2147240557 */
+
+position: absolute;
+width: 353px;
+height: 45.37px;
+left: 20px;
+top: 397px;
+
+
+
+/* Text */
+
+position: absolute;
+width: 272.19px;
+height: 45.37px;
+right: 83.81px;
+bottom: 0px;
+
+
+
+/* Background */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 272.9px;
+height: 45.37px;
+right: -0.71px;
+bottom: 0px;
+
+background: #FEFEFE;
+border: 1.41767px solid #F8F8F8;
+border-radius: 21.2651px;
+
+
+/* Background */
+
+position: absolute;
+width: 1.42px;
+height: 17.01px;
+right: 228.95px;
+bottom: 12.76px;
+
+background: #EFEFEF;
+
+
+/* solar:card-linear */
+
+position: absolute;
+width: 17.01px;
+height: 17.01px;
+right: 238.17px;
+bottom: 12.76px;
+
+
+
+/* Group */
+
+position: absolute;
+left: 8.34%;
+right: 8.33%;
+top: 16.67%;
+bottom: 16.66%;
+
+
+
+/* Vector */
+
+position: absolute;
+left: 8.34%;
+right: 8.33%;
+top: 16.67%;
+bottom: 16.66%;
+
+border: 1.06325px solid #A1999B;
+
+
+/* Vector */
+
+position: absolute;
+left: 8.34%;
+right: 8.33%;
+top: 41.68%;
+bottom: 58.32%;
+
+border: 1.06325px solid #A1999B;
+
+
+/* Password */
+
+position: absolute;
+width: 119px;
+height: 12px;
+right: 102.86px;
+bottom: 16.35px;
+
+font-family: 'Plus Jakarta Sans';
+font-style: normal;
+font-weight: 400;
+font-size: 9.21486px;
+line-height: 12px;
+/* identical to box height */
+display: flex;
+align-items: center;
+
+color: #BDBDBD;
+
+
+
+/* Background+Border */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 78px;
+height: 46px;
+left: 275.03px;
+top: 0px;
+
+background: #F3F3F5;
+border: 1.41767px dashed rgba(188, 201, 201, 0.3);
+border-radius: 22.6827px;
+
+
+/* Group 2085665724 */
+
+position: absolute;
+width: 52.76px;
+height: 14px;
+left: calc(50% - 52.76px/2 + 0.35px);
+top: calc(50% - 14px/2);
+
+
+
+/* grommet-icons:document-upload */
+
+position: absolute;
+width: 14px;
+height: 14px;
+left: calc(50% - 14px/2 - 19.03px);
+top: calc(50% - 14px/2);
+
+
+
+/* Vector */
+
+position: absolute;
+left: 12.49%;
+right: 12.51%;
+top: 4.17%;
+bottom: 4.16%;
+
+border: 1.16667px solid #A49999;
+
+
+/* Password */
+
+position: absolute;
+width: 33px;
+height: 12px;
+right: 12.27px;
+bottom: 17px;
+
+font-family: 'Plus Jakarta Sans';
+font-style: normal;
+font-weight: 400;
+font-size: 9.21486px;
+line-height: 12px;
+/* identical to box height */
+display: flex;
+align-items: center;
+
+color: #BDBDBD;
+
+
+
+/* Rectangle 18 */
+
+position: absolute;
+width: 61.43px;
+height: 6.1px;
+left: 629.83px;
+top: 909.97px;
+
+background: #0866FF;
+border-radius: 31px;
+
+
+/* teenyicons:home-solid */
+
+position: absolute;
+width: 23.84px;
+height: 23.84px;
+left: 1154px;
+top: -58.91px;
+
+
+
+/* fluent:people-24-filled */
+
+position: absolute;
+width: 30.12px;
+height: 30.12px;
+left: 1235.16px;
+top: -62px;
+
+
+
+/* solar:shop-bold */
+
+position: absolute;
+width: 30.12px;
+height: 30.12px;
+left: 1322.59px;
+top: -62px;
+
+
+
+/* Frame 12 */
+
+position: absolute;
+width: 569px;
+height: 950.36px;
+left: calc(50% - 569px/2 + 0.5px);
+top: 226.64px;
+
+
+
+/* Frame 12 */
+
+position: absolute;
+width: 569px;
+height: 732px;
+left: 0px;
+top: 157.36px;
+
+border-radius: 37px;
+
+
+/* Rectangle 3 */
+
+position: absolute;
+width: 569px;
+height: 732px;
+left: 0px;
+top: 0px;
+
+background: #091426;
+border-radius: 45px;
+
+
+/* Arjun Vardhan */
+
+position: absolute;
+width: 278px;
+height: 57px;
+left: 124.55px;
+top: 186.22px;
+
+font-family: 'Plus Jakarta Sans';
+font-style: normal;
+font-weight: 600;
+font-size: 45px;
+line-height: 57px;
+/* identical to box height */
+letter-spacing: -0.04em;
+
+color: #FFFFFF;
+
+
+
+/* Group 7 */
+
+position: absolute;
+width: 498.14px;
+height: 52.14px;
+left: 35px;
+top: 283.91px;
+
+
+
+/* Frame 6 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+padding: 13px 20px;
+gap: 7px;
+
+position: absolute;
+width: 284px;
+height: 50px;
+left: 35px;
+top: 284px;
+
+background: #2780C4;
+border-radius: 20px;
+
+
+/* Silver Tier • 4 Unlocks Available */
+
+width: 244px;
+height: 22px;
+
+font-family: 'Plus Jakarta Sans';
+font-style: normal;
+font-weight: 400;
+font-size: 17.6189px;
+line-height: 22px;
+letter-spacing: -0.02em;
+
+color: #FFFFFF;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Frame 7 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: flex-start;
+padding: 13px 14px;
+gap: 7px;
+
+position: absolute;
+width: 142px;
+height: 50px;
+left: 329px;
+top: 283.98px;
+
+background: #F8F9FA;
+border-radius: 20px;
+
+
+/* ri:pencil-fill */
+
+width: 24px;
+height: 24px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Vector */
+
+position: absolute;
+left: 12.5%;
+right: 12.62%;
+top: 12.6%;
+bottom: 12.52%;
+
+background: #0F2F4C;
+
+
+/* Edit Profile */
+
+width: 83px;
+height: 22px;
+
+font-family: 'Plus Jakarta Sans';
+font-style: normal;
+font-weight: 400;
+font-size: 17.6189px;
+line-height: 22px;
+letter-spacing: -0.04em;
+
+color: #0F2F4C;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Group 6 */
+
+position: absolute;
+width: 52.14px;
+height: 52.14px;
+left: 481px;
+top: 283.91px;
+
+
+
+/* Ellipse 9 */
+
+position: absolute;
+width: 52.14px;
+height: 52.14px;
+left: 481px;
+top: 283.91px;
+
+background: #F8F9FA;
+
+
+/* ep:arrow-up-bold */
+
+position: absolute;
+width: 21px;
+height: 22px;
+left: 497.66px;
+top: 297.99px;
+
+
+
+/* Icon */
+
+position: absolute;
+left: 2.34%;
+right: 11.94%;
+top: 8.45%;
+bottom: 0.64%;
+
+background: #0F2F4C;
+
+
+/* Group 19 */
+
+position: absolute;
+width: 434.54px;
+height: 137.95px;
+left: 48px;
+top: 386.05px;
+
+
+
+/* Group 10 */
+
+position: absolute;
+width: 236px;
+height: 29px;
+left: 48px;
+top: 386.05px;
+
+
+
+/* Total Estimated Assests */
+
+position: absolute;
+width: 236px;
+height: 29px;
+left: 48px;
+top: 386.05px;
+
+font-family: 'Plus Jakarta Sans';
+font-style: normal;
+font-weight: 400;
+font-size: 22.8806px;
+line-height: 29px;
+/* identical to box height */
+letter-spacing: -0.04em;
+
+color: #FFFFFF;
+
+
+
+/* Heading 2 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+
+position: absolute;
+width: 430px;
+height: 76px;
+left: 48px;
+top: 448px;
+
+
+
+/* ₹1,248,500.00 */
+
+width: 430px;
+height: 76px;
+
+font-family: 'Plus Jakarta Sans';
+font-style: normal;
+font-weight: 800;
+font-size: 60px;
+line-height: 60px;
+/* or 100% */
+display: flex;
+align-items: center;
+letter-spacing: -3px;
+
+color: #FFFFFF;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Line 1 */
+
+position: absolute;
+width: 429.76px;
+height: 0px;
+left: 52.79px;
+top: 432.72px;
+
+border: 1px solid #CCCCCC;
+
+
+/* Frame 2131331366 */
+
+position: absolute;
+width: 37px;
+height: 37px;
+right: 123.66px;
+bottom: 555.5px;
+
+
+
+/* Overlay+Shadow */
+
+position: absolute;
+left: 0px;
+right: 0px;
+top: 0px;
+bottom: 0px;
+
+background: radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%);
+box-shadow: 0px 10.8824px 16.3235px -3.26471px rgba(0, 0, 0, 0.1), 0px 4.35294px 6.52941px -4.35294px rgba(0, 0, 0, 0.1);
+border-radius: 10881.3px;
+
+
+/* Vector */
+
+position: absolute;
+left: 25.68%;
+right: 25.68%;
+top: 29.73%;
+bottom: 29.73%;
+
+background: #FFFFFF;
+
+
+/* Frame 9 */
+
+position: absolute;
+width: 245px;
+height: 185px;
+left: 369px;
+top: 592px;
+
+
+
+/* Glowing Tech Blue neon ring background element */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 320px;
+height: 320px;
+right: -75px;
+bottom: -135px;
+
+border: 24px solid rgba(0, 98, 158, 0.3);
+filter: blur(20px);
+border-radius: 9999px;
+
+
+/* Border */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 256px;
+height: 256px;
+right: -35px;
+bottom: -95px;
+
+border: 1px solid rgba(0, 98, 158, 0.5);
+border-radius: 9999px;
+
+
+/* Overlay+Blur */
+
+position: absolute;
+width: 128px;
+height: 128px;
+right: 45px;
+bottom: -15px;
+
+background: rgba(0, 98, 158, 0.2);
+filter: blur(32px);
+border-radius: 9999px;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 15.99px;
+
+position: absolute;
+width: 714.67px;
+height: 46px;
+left: 48px;
+top: 574px;
+
+
+
+/* Button */
+
+box-sizing: border-box;
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+padding: 12px 24px;
+
+width: 145.02px;
+height: 46px;
+
+background: rgba(255, 255, 255, 0.05);
+border: 1px solid rgba(255, 255, 255, 0.2);
+border-radius: 32px;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Text */
+
+width: 95.02px;
+height: 20px;
+
+font-family: 'Plus Jakarta Sans';
+font-style: normal;
+font-weight: 700;
+font-size: 14px;
+line-height: 20px;
+/* identical to box height, or 143% */
+display: flex;
+align-items: center;
+text-align: center;
+
+color: #FFFFFF;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Button */
+
+box-sizing: border-box;
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+padding: 12px 24px;
+
+width: 194.48px;
+height: 46px;
+
+background: rgba(255, 255, 255, 0.05);
+border: 1px solid rgba(255, 255, 255, 0.2);
+border-radius: 32px;
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Text */
+
+width: 144.48px;
+height: 20px;
+
+font-family: 'Plus Jakarta Sans';
+font-style: normal;
+font-weight: 700;
+font-size: 14px;
+line-height: 20px;
+/* identical to box height, or 143% */
+display: flex;
+align-items: center;
+text-align: center;
+
+color: #FFFFFF;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: flex-start;
+padding: 0px;
+
+position: absolute;
+width: 241.24px;
+height: 241.24px;
+left: 163.5px;
+top: 39.36px;
+
+
+
+/* Overlay+Shadow */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: flex-start;
+padding: 0px;
+
+width: 241.24px;
+height: 241.24px;
+
+background: rgba(255, 255, 255, 0.002);
+box-shadow: 0px 0px 0px 6.03103px #FFFFFF, 0px 37.6939px 75.3879px -18.0931px rgba(0, 0, 0, 0.25);
+border-radius: 72.3724px;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* AB6AXuAaCE0VUMZkiv4NIa452JgDxyIpzw0-STOvoLhblmGIkopFSx9ojh4Rt_0NnohfOg2VKrk0Pqcqwaiy6KGjGpXo67GOa4JRG9djSM9SFAE8ZV8thbceU8aVUY9vek3ZoNe4TVI0PGcDfVJEwpNXhBAdyWi0XK46NFuhSa_EJCqy66EW0asHCb-n_7bslmvfy84KRvYJDkmPkY_3RwZDLAeqjwqMxgGZ2bE4hmETsGNto-xLlNU05YKDHEEvq916D9mvbOtRUZM41H4 */
+
+width: 241.24px;
+height: 241.24px;
+
+background: url(36669.jpg);
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 1;
+
+
+/* Frame 2147240626 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 16px;
+
+position: absolute;
+width: 556px;
+height: 342.5px;
+left: 440px;
+top: 1147px;
+
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px 8px;
+gap: 12px;
+
+width: 556px;
+height: 16.5px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Heading 4 */
+
+width: 156.94px;
+height: 16.5px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Land Purchase Tracking */
+
+position: absolute;
+width: 194px;
+height: 16px;
+left: 0px;
+top: -1px;
+
+font-family: 'Plus Jakarta Sans';
+font-style: normal;
+font-weight: 700;
+font-size: 12px;
+line-height: 16px;
+/* identical to box height, or 133% */
+display: flex;
+align-items: center;
+letter-spacing: 1.2px;
+text-transform: uppercase;
+
+color: #71717A;
+
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 16px;
+
+width: 556px;
+height: 310px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Card 5 */
+
+width: 556px;
+height: 147px;
+
+background: #FFFFFF;
+box-shadow: 0px 7.6px 25.3333px rgba(0, 31, 63, 0.04);
+border-radius: 30.4px;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Container */
+
+position: absolute;
+width: 171px;
+height: 174px;
+left: 0px;
+top: 0.5px;
+
+
+
+/* Rectangle 4162 */
+
+position: absolute;
+width: 183px;
+height: 175px;
+left: 0px;
+top: 0px;
+
+background: url(.jpg);
+border-radius: 11.7081px;
+
+
+/* GLC SOS 01 */
+
+position: absolute;
+width: 104px;
+height: 19px;
+left: 205px;
+top: 26.5px;
+
+font-family: 'Plus Jakarta Sans';
+font-style: normal;
+font-weight: 800;
+font-size: 18px;
+line-height: 19px;
+/* identical to box height, or 106% */
+display: flex;
+align-items: center;
+
+color: #001F3F;
+
+
+
+/* Group 2085665749 */
+
+position: absolute;
+width: 122.01px;
+height: 11px;
+left: 205px;
+top: 51px;
+
+
+
+/* Shadnagar , Hyderbad */
+
+position: absolute;
+width: 111px;
+height: 11px;
+left: 216.01px;
+top: 51px;
+
+font-family: 'Plus Jakarta Sans';
+font-style: normal;
+font-weight: 500;
+font-size: 10px;
+line-height: 10px;
+/* identical to box height, or 101% */
+display: flex;
+align-items: center;
+letter-spacing: 0.19px;
+text-transform: capitalize;
+
+color: #64748B;
+
+
+
+/* weui:location-outlined */
+
+position: absolute;
+width: 9.99px;
+height: 9.99px;
+left: 205px;
+top: 52px;
+
+transform: rotate(0.01deg);
+
+
+/* Vector */
+
+position: absolute;
+left: 16.71%;
+right: 16.62%;
+top: 8.31%;
+bottom: 6.65%;
+
+background: #64748B;
+transform: rotate(0.01deg);
+
+
+/* Progress Tracking */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 8.5px;
+
+position: absolute;
+height: 31.5px;
+left: 205px;
+right: -15px;
+top: calc(50% - 31.5px/2 + 31.75px);
+
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+
+width: 366px;
+height: 15px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* 75% Purchase Process Complete */
+
+width: 158px;
+height: 15px;
+
+font-family: 'Plus Jakarta Sans';
+font-style: normal;
+font-weight: 600;
+font-size: 9.56643px;
+line-height: 15px;
+/* identical to box height, or 156% */
+display: flex;
+align-items: center;
+
+color: #0A1B3D;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Custom Progress Bar */
+
+width: 270px;
+height: 8px;
+
+background: #F3F4F6;
+border-radius: 5314.15px;
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Progressbar */
+
+position: absolute;
+left: 0%;
+right: 14.44%;
+top: -0.5px;
+bottom: 0.5px;
+
+background: #2780C4;
+border-radius: 5314.15px;
+
+
+/* Separator - Subtle Divider:margin */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px 0px 32px;
+
+position: absolute;
+width: 155px;
+height: 33px;
+left: 205px;
+top: 73px;
+
+
+
+/* Separator - Subtle Divider */
+
+box-sizing: border-box;
+
+width: 155px;
+height: 1px;
+
+border-top: 1px solid #F3F4F6;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Card 6 */
+
+width: 556px;
+height: 147px;
+
+background: #FFFFFF;
+box-shadow: 0px 7.6px 25.3333px rgba(0, 31, 63, 0.04);
+border-radius: 30.4px;
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Container */
+
+position: absolute;
+width: 170px;
+height: 174px;
+left: 0px;
+top: 0.5px;
+
+
+
+/* Rectangle 4162 */
+
+position: absolute;
+width: 175px;
+height: 175px;
+left: 0px;
+top: 0px;
+
+background: url(.jpg);
+
+
+/* GLC SOS 02 */
+
+position: absolute;
+width: 107px;
+height: 19px;
+left: 204px;
+top: 19.5px;
+
+font-family: 'Plus Jakarta Sans';
+font-style: normal;
+font-weight: 800;
+font-size: 18px;
+line-height: 19px;
+/* identical to box height, or 106% */
+display: flex;
+align-items: center;
+
+color: #001F3F;
+
+
+
+/* Group 2085665749 */
+
+position: absolute;
+width: 122.01px;
+height: 11px;
+left: 204px;
+top: 44.5px;
+
+
+
+/* Shadnagar , Hyderbad */
+
+position: absolute;
+width: 111px;
+height: 11px;
+left: 215.01px;
+top: 44.5px;
+
+font-family: 'Plus Jakarta Sans';
+font-style: normal;
+font-weight: 500;
+font-size: 10px;
+line-height: 10px;
+/* identical to box height, or 101% */
+display: flex;
+align-items: center;
+letter-spacing: 0.19px;
+text-transform: capitalize;
+
+color: #64748B;
+
+
+
+/* weui:location-outlined */
+
+position: absolute;
+width: 9.99px;
+height: 9.99px;
+left: 204px;
+top: 45.5px;
+
+transform: rotate(0.01deg);
+
+
+/* Vector */
+
+position: absolute;
+left: 16.71%;
+right: 16.62%;
+top: 8.31%;
+bottom: 6.65%;
+
+background: #64748B;
+transform: rotate(0.01deg);
+
+
+/* Progress Tracking */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 8.5px;
+
+position: absolute;
+height: 31.5px;
+left: 204px;
+right: -14px;
+top: calc(50% - 31.5px/2 + 24.94px);
+
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+
+width: 366px;
+height: 15px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* 42% Purchase Process Complete */
+
+width: 158px;
+height: 15px;
+
+font-family: 'Plus Jakarta Sans';
+font-style: normal;
+font-weight: 600;
+font-size: 9.56643px;
+line-height: 15px;
+/* identical to box height, or 156% */
+display: flex;
+align-items: center;
+
+color: #0A1B3D;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Custom Progress Bar */
+
+width: 270px;
+height: 8px;
+
+background: #F3F4F6;
+border-radius: 5314.15px;
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Progressbar */
+
+position: absolute;
+left: 0%;
+right: 57.89%;
+top: 0px;
+bottom: 0px;
+
+background: #2780C4;
+border-radius: 5314.15px;
+
+
+/* Separator - Subtle Divider:margin */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px 0px 32px;
+
+position: absolute;
+width: 155px;
+height: 33px;
+left: 204px;
+top: 67px;
+
+
+
+/* Separator - Subtle Divider */
+
+box-sizing: border-box;
+
+width: 155px;
+height: 1px;
+
+border-top: 1px solid #F3F4F6;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Right Column: Operations */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px 8px 0px 0px;
+gap: 24px;
+
+position: absolute;
+height: 1008px;
+max-height: 1200px;
+left: 1050px;
+right: 49px;
+top: 511px;
+overflow: scroll;
+
+
+
+/* Section - Active Investments */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 16px;
+
+width: 333px;
+height: 240px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Heading 3 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+align-items: center;
+padding: 0px;
+gap: 159.37px;
+
+width: 333px;
+height: 12px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Text */
+
+width: 156.17px;
+height: 12px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 600;
+font-size: 12px;
+line-height: 12px;
+/* identical to box height, or 100% */
+display: flex;
+align-items: center;
+letter-spacing: 1.2px;
+text-transform: uppercase;
+
+color: #43474E;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 16px;
+
+width: 333px;
+height: 212px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Item 1 - Yielding (Elevated Glass) */
+
+box-sizing: border-box;
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 20px;
+
+width: 333px;
+height: 98px;
+
+background: linear-gradient(107.62deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.3) 100%);
+border: 1px solid rgba(255, 255, 255, 0.8);
+box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.05);
+backdrop-filter: blur(10px);
+/* Note: backdrop-filter has minimal browser support */
+border-radius: 40px;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+align-items: center;
+padding: 0px;
+
+width: 291px;
+height: 56px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 16px;
+
+width: 219.31px;
+height: 56px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Overlay+Border+Shadow+OverlayBlur */
+
+box-sizing: border-box;
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+padding: 0px;
+
+width: 53.31px;
+height: 56px;
+
+background: rgba(255, 255, 255, 0.6);
+border: 1px solid #FFFFFF;
+box-shadow: inset 0px 2px 4px 1px #FFFFFF;
+backdrop-filter: blur(2px);
+/* Note: backdrop-filter has minimal browser support */
+border-radius: 16px;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Shadow */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+
+width: 17px;
+height: 16.99px;
+
+filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.05));
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Icon */
+
+width: 17px;
+height: 16.99px;
+
+background: #059669;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 4px;
+
+width: 150px;
+height: 48px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+
+width: 150px;
+height: 28px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Text */
+
+width: 98.97px;
+height: 28px;
+
+font-family: 'Plus Jakarta Sans';
+font-style: normal;
+font-weight: 800;
+font-size: 18px;
+line-height: 28px;
+/* identical to box height, or 156% */
+display: flex;
+align-items: center;
+letter-spacing: -0.45px;
+
+color: #18181B;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+
+width: 150px;
+height: 16px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Medchal • ‹12.5L • 0.5 Ac */
+
+width: 150px;
+height: 16px;
+
+font-family: 'Plus Jakarta Sans';
+font-style: normal;
+font-weight: 500;
+font-size: 12px;
+line-height: 16px;
+/* identical to box height, or 133% */
+display: flex;
+align-items: center;
+letter-spacing: 0.3px;
+
+color: #71717A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Item 2 - Escrow (Subtle Depth) */
+
+box-sizing: border-box;
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 20px;
+
+width: 333px;
+height: 98px;
+
+background: linear-gradient(107.62deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.3) 100%);
+opacity: 0.9;
+border: 1px solid rgba(255, 255, 255, 0.8);
+box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.05);
+backdrop-filter: blur(10px);
+/* Note: backdrop-filter has minimal browser support */
+border-radius: 40px;
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+align-items: center;
+padding: 0px;
+
+width: 291px;
+height: 56px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 16px;
+
+width: 217.23px;
+height: 56px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Overlay+Border+Shadow+OverlayBlur */
+
+box-sizing: border-box;
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+padding: 0px;
+
+width: 45.23px;
+height: 56px;
+
+background: rgba(255, 255, 255, 0.4);
+border: 1px solid rgba(255, 255, 255, 0.6);
+box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
+backdrop-filter: blur(2px);
+/* Note: backdrop-filter has minimal browser support */
+border-radius: 16px;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+
+width: 17px;
+height: 16.99px;
+
+opacity: 0.8;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Icon */
+
+width: 17px;
+height: 16.99px;
+
+background: #D97706;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 4px;
+
+width: 156px;
+height: 48px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+
+width: 156px;
+height: 28px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* GLC SOS 02 */
+
+width: 106px;
+height: 28px;
+
+font-family: 'Plus Jakarta Sans';
+font-style: normal;
+font-weight: 800;
+font-size: 18px;
+line-height: 28px;
+/* identical to box height, or 156% */
+display: flex;
+align-items: center;
+letter-spacing: -0.45px;
+
+color: #27272A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+
+width: 156px;
+height: 16px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Vikarabad • ‹5.0L • 0.2 Ac */
+
+width: 156px;
+height: 16px;
+
+font-family: 'Plus Jakarta Sans';
+font-style: normal;
+font-weight: 500;
+font-size: 12px;
+line-height: 16px;
+/* identical to box height, or 133% */
+display: flex;
+align-items: center;
+letter-spacing: 0.3px;
+
+color: #71717A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Frame 2147240621 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 16px;
+
+width: 342px;
+height: 130.5px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px 8px;
+gap: 12px;
+
+width: 342px;
+height: 16.5px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Heading 4 */
+
+width: 156.94px;
+height: 16.5px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Site Vists in queue */
+
+position: absolute;
+width: 189.64px;
+height: 16px;
+left: 0px;
+top: -1px;
+
+font-family: 'Plus Jakarta Sans';
+font-style: normal;
+font-weight: 700;
+font-size: 12px;
+line-height: 16px;
+/* identical to box height, or 133% */
+display: flex;
+align-items: center;
+letter-spacing: 1.2px;
+text-transform: uppercase;
+
+color: #71717A;
+
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 16px;
+
+width: 342px;
+height: 98px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Item 1 - Yielding (Elevated Glass) */
+
+box-sizing: border-box;
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 20px;
+
+width: 342px;
+height: 98px;
+
+background: linear-gradient(107.62deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.3) 100%);
+border: 1px solid rgba(255, 255, 255, 0.8);
+box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.05);
+backdrop-filter: blur(10px);
+/* Note: backdrop-filter has minimal browser support */
+border-radius: 40px;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+align-items: center;
+padding: 0px;
+
+width: 300px;
+height: 56px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 16px;
+
+width: 219.31px;
+height: 56px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Overlay+Border+Shadow+OverlayBlur */
+
+box-sizing: border-box;
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+padding: 0px;
+
+width: 53.31px;
+height: 56px;
+
+background: rgba(255, 255, 255, 0.6);
+border: 1px solid #FFFFFF;
+box-shadow: inset 0px 2px 4px 1px #FFFFFF;
+backdrop-filter: blur(2px);
+/* Note: backdrop-filter has minimal browser support */
+border-radius: 16px;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Shadow */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+
+width: 17px;
+height: 16.99px;
+
+filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.05));
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Icon */
+
+width: 17px;
+height: 16.99px;
+
+background: #059669;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 4px;
+
+width: 150px;
+height: 48px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+
+width: 150px;
+height: 28px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Text */
+
+width: 98.97px;
+height: 28px;
+
+font-family: 'Plus Jakarta Sans';
+font-style: normal;
+font-weight: 800;
+font-size: 18px;
+line-height: 28px;
+/* identical to box height, or 156% */
+display: flex;
+align-items: center;
+letter-spacing: -0.45px;
+
+color: #18181B;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+
+width: 150px;
+height: 16px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Medchal • ‹12.5L • 0.5 Ac */
+
+width: 150px;
+height: 16px;
+
+font-family: 'Plus Jakarta Sans';
+font-style: normal;
+font-weight: 500;
+font-size: 12px;
+line-height: 16px;
+/* identical to box height, or 133% */
+display: flex;
+align-items: center;
+letter-spacing: 0.3px;
+
+color: #71717A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Frame 2147240625 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 16px;
+
+width: 342px;
+height: 130.5px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+flex-grow: 0;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px 8px;
+gap: 12px;
+
+width: 342px;
+height: 16.5px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Heading 4 */
+
+width: 156.94px;
+height: 16.5px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Site Vists completed */
+
+position: absolute;
+width: 189.64px;
+height: 16px;
+left: 0px;
+top: -1px;
+
+font-family: 'Plus Jakarta Sans';
+font-style: normal;
+font-weight: 700;
+font-size: 12px;
+line-height: 16px;
+/* identical to box height, or 133% */
+display: flex;
+align-items: center;
+letter-spacing: 1.2px;
+text-transform: uppercase;
+
+color: #71717A;
+
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 16px;
+
+width: 342px;
+height: 98px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Item 2 - Escrow (Subtle Depth) */
+
+box-sizing: border-box;
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 20px;
+
+width: 342px;
+height: 98px;
+
+background: linear-gradient(107.62deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.3) 100%);
+opacity: 0.9;
+border: 1px solid rgba(255, 255, 255, 0.8);
+box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.05);
+backdrop-filter: blur(10px);
+/* Note: backdrop-filter has minimal browser support */
+border-radius: 40px;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+align-items: center;
+padding: 0px;
+
+width: 300px;
+height: 56px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 16px;
+
+width: 217.23px;
+height: 56px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Overlay+Border+Shadow+OverlayBlur */
+
+box-sizing: border-box;
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+padding: 0px;
+
+width: 45.23px;
+height: 56px;
+
+background: rgba(255, 255, 255, 0.4);
+border: 1px solid rgba(255, 255, 255, 0.6);
+box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
+backdrop-filter: blur(2px);
+/* Note: backdrop-filter has minimal browser support */
+border-radius: 16px;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+
+width: 17px;
+height: 16.99px;
+
+opacity: 0.8;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Icon */
+
+width: 17px;
+height: 16.99px;
+
+background: #D97706;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 4px;
+
+width: 156px;
+height: 48px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+
+width: 156px;
+height: 28px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* GLC SOS 02 */
+
+width: 106px;
+height: 28px;
+
+font-family: 'Plus Jakarta Sans';
+font-style: normal;
+font-weight: 800;
+font-size: 18px;
+line-height: 28px;
+/* identical to box height, or 156% */
+display: flex;
+align-items: center;
+letter-spacing: -0.45px;
+
+color: #27272A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+
+width: 156px;
+height: 16px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Vikarabad • ‹5.0L • 0.2 Ac */
+
+width: 156px;
+height: 16px;
+
+font-family: 'Plus Jakarta Sans';
+font-style: normal;
+font-weight: 500;
+font-size: 12px;
+line-height: 16px;
+/* identical to box height, or 133% */
+display: flex;
+align-items: center;
+letter-spacing: 0.3px;
+
+color: #71717A;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Frame 2147240626 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 16px;
+
+width: 342px;
+height: 130.5px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 3;
+flex-grow: 0;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px 8px;
+gap: 12px;
+
+width: 342px;
+height: 16.5px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Heading 4 */
+
+width: 156.94px;
+height: 16.5px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Active Listing */
+
+position: absolute;
+width: 189.64px;
+height: 16px;
+left: 0px;
+top: -1px;
+
+font-family: 'Plus Jakarta Sans';
+font-style: normal;
+font-weight: 700;
+font-size: 12px;
+line-height: 16px;
+/* identical to box height, or 133% */
+display: flex;
+align-items: center;
+letter-spacing: 1.2px;
+text-transform: uppercase;
+
+color: #71717A;
+
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 16px;
+
+width: 342px;
+height: 98px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Item 2 - Escrow (Subtle Depth) */
+
+box-sizing: border-box;
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 20px;
+
+width: 342px;
+height: 98px;
+
+background: linear-gradient(107.62deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.3) 100%);
+opacity: 0.9;
+border: 1px solid rgba(255, 255, 255, 0.8);
+box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.05);
+backdrop-filter: blur(10px);
+/* Note: backdrop-filter has minimal browser support */
+border-radius: 40px;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+align-items: center;
+padding: 0px;
+
+width: 300px;
+height: 56px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 16px;
+
+width: 217.23px;
+height: 56px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Overlay+Border+Shadow+OverlayBlur */
+
+box-sizing: border-box;
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+padding: 0px;
+
+width: 45.23px;
+height: 56px;
+
+background: rgba(255, 255, 255, 0.4);
+border: 1px solid rgba(255, 255, 255, 0.6);
+box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
+backdrop-filter: blur(2px);
+/* Note: backdrop-filter has minimal browser support */
+border-radius: 16px;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Container */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+
+width: 17px;
+height: 16.99px;
+
+opacity: 0.8;
+
+/* Inside auto layout */
+flex: none;
+
+<truncated 9840 bytes>
+
+NOTE: The output was truncated because it was too long. Use a more targeted query or a smaller range to get the information you need.

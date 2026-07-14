@@ -1,11 +1,16 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Plus_Jakarta_Sans, Manrope } from "next/font/google";
 import "./globals.css";
 import SparkleButton from "@/components/SparkleButton";
 import SmoothScroll from "@/components/SmoothScroll";
 
 const jakarta = Plus_Jakarta_Sans({
   variable: "--font-jakarta",
+  subsets: ["latin"],
+});
+
+const manrope = Manrope({
+  variable: "--font-manrope",
   subsets: ["latin"],
 });
 
@@ -24,7 +29,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${jakarta.variable} antialiased font-jakarta`} suppressHydrationWarning>
+      <body className={`${jakarta.variable} ${manrope.variable} antialiased font-jakarta`} suppressHydrationWarning>
         <StoreProvider>
           <SearchProvider>
             <SmoothScroll>

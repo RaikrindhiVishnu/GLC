@@ -7,6 +7,7 @@ import CompareHero from "./CompareHero";
 import FilterChips from "./FilterChips";
 import FeaturedCard from "./FeaturedCard";
 import StandardCard from "./StandardCard";
+import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 
 export default function CompareFarmlandPremium() {
@@ -81,6 +82,8 @@ export default function CompareFarmlandPremium() {
           </div>
         </div>
       </div>
+
+      <CTA />
 
       {/* Standard Footer Components */}
       <Footer />

@@ -44,7 +44,7 @@ export default function MaintenanceHero() {
             animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-[42px] sm:text-[64px]"
-            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, letterSpacing: "-1.5px", color: "#FFFFFF", margin: "0 0 20px", lineHeight: 1.1 }}
+            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, letterSpacing: "-1.5px", color: "#FFFFFF", margin: "0 0 20px", lineHeight: 1.1, whiteSpace: "nowrap" }}
           >
             Maintenance of Farmland
           </motion.h1>
@@ -52,7 +52,7 @@ export default function MaintenanceHero() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.45 }}
-            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "16px", lineHeight: "26px", color: "rgba(255,255,255,0.8)", maxWidth: "480px", margin: 0 }}
+            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "16px", lineHeight: "26px", color: "rgba(255,255,255,0.8)", maxWidth: "800px", margin: 0 }}
           >
             Track the real-time progress of your asset through our rigorous 4-tier legal, agronomy, and intelligence audit pipeline
           </motion.p>
@@ -93,12 +93,12 @@ export default function MaintenanceHero() {
                 <img src="/assets/home/HeroScreen/person.svg" alt="Profile" style={{ width: "100%", height: "100%", objectFit: "cover", transform: "scale(1.5)" }} />
               </div>
 
-              <div style={{ position: "absolute", width: "896px", left: "calc(50% - 448px)", top: "380px", display: "flex", flexDirection: "column", alignItems: "center", gap: "32px", pointerEvents: "auto" }}>
+              <div style={{ position: "absolute", width: "1200px", left: "calc(50% - 600px)", top: "340px", display: "flex", flexDirection: "column", alignItems: "center", gap: "24px", pointerEvents: "auto" }}>
                 <motion.h1
                   initial={{ opacity: 0, filter: "blur(8px)", y: 20 }}
                   animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
                   transition={{ duration: 0.8, delay: 0.2 }}
-                  style={{ margin: 0, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "100px", lineHeight: "1", textAlign: "center", letterSpacing: "-1.8px", color: "#FFFFFF" }}
+                  style={{ margin: 0, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "96px", lineHeight: "1", textAlign: "center", letterSpacing: "-1.8px", color: "#FFFFFF", whiteSpace: "nowrap" }}
                 >
                   Maintenance of Farmland
                 </motion.h1>

@@ -82,7 +82,7 @@ export default function YourListings() {
               </motion.span>
             ))}
           </h2>
-          <button onClick={() => router.push("/home/myassets")} className="bg-transparent border-none font-jakarta font-extrabold text-[14px] md:text-[18px] leading-[40px] text-[#0F2F4C] cursor-pointer [-webkit-tap-highlight-color:transparent] hover:opacity-70 transition-opacity">
+          <button onClick={() => router.push("/home/yourlisting")} className="bg-transparent border-none font-jakarta font-extrabold text-[14px] md:text-[18px] leading-[40px] text-[#0F2F4C] cursor-pointer [-webkit-tap-highlight-color:transparent] hover:opacity-70 transition-opacity">
             View All
           </button>
         </div>

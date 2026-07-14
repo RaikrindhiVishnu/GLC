@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-export default function CompareNavigation() {
+export default function CompareNavigation({ hideProfileImage = false }: { hideProfileImage?: boolean }) {
   const router = useRouter();
 
   return (
@@ -56,7 +56,6 @@ export default function CompareNavigation() {
       </div>
 
       {/* Right Icons */}
-      {/* Right Icons */}
       <div className="absolute right-[60px] flex gap-[16px] pointer-events-auto items-center">
         {/* Lock/Unlock Icon */}
         <button 
@@ -87,16 +86,18 @@ export default function CompareNavigation() {
         </button>
         
         {/* User Avatar */}
-        <div 
-          className="w-[52px] h-[52px] ml-[8px] cursor-pointer"
-          onClick={() => router.push("/profile")}
-          style={{
-            background: "url('/assets/home/HeroScreen/person.svg') center/cover",
-            border: "1.8px solid #FFFFFF",
-            boxShadow: "0px 1.8px 10.8px rgba(0, 0, 0, 0.03)",
-            borderRadius: "50%",
-          }}
-        />
+        {!hideProfileImage && (
+          <div 
+            className="w-[52px] h-[52px] ml-[8px] cursor-pointer rounded-full overflow-hidden"
+            onClick={() => router.push("/profile")}
+            style={{
+              border: "1.8px solid #FFFFFF",
+              boxShadow: "0px 1.8px 10.8px rgba(0, 0, 0, 0.03)",
+            }}
+          >
+            <img src="/assets/home/HeroScreen/person.svg" alt="User" style={{ width: "100%", height: "100%", objectFit: "cover", transform: "scale(1.5)" }} />
+          </div>
+        )}
       </div>
     </nav>
   );

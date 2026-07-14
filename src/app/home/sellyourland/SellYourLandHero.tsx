@@ -93,7 +93,7 @@ export default function SellYourLandHero() {
                 <img src="/assets/home/HeroScreen/person.svg" alt="Profile" style={{ width: "100%", height: "100%", objectFit: "cover", transform: "scale(1.5)" }} />
               </div>
 
-              <div style={{ position: "absolute", width: "896px", left: "calc(50% - 448px)", top: "380px", display: "flex", flexDirection: "column", alignItems: "center", gap: "32px", pointerEvents: "auto" }}>
+              <div style={{ position: "absolute", width: "896px", left: "calc(50% - 448px)", top: "220px", display: "flex", flexDirection: "column", alignItems: "center", gap: "32px", pointerEvents: "auto" }}>
                 <motion.h1
                   initial={{ opacity: 0, filter: "blur(8px)", y: 20 }}
                   animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}

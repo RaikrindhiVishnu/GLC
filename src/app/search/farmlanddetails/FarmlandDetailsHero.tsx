@@ -40,7 +40,7 @@ export default function FarmlandDetailsHero({ title, locationSubtitle, tags, her
       <div style={{ position: "absolute", inset: 0, background: "linear-gradient(0deg, rgba(0,0,0,0.25), rgba(0,0,0,0.25))", zIndex: 1 }} />
       <div style={{ position: "absolute", inset: 0, background: "linear-gradient(0deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0) 100%)", zIndex: 2 }} />
 
-      <Navbar variant="app" active="search" />
+      <Navbar variant="app" active="none" />
 
       {/* Bottom-anchored content */}
       <div

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import AiCurationModal from "./AiCurationModal";
 
 const glassStyle: React.CSSProperties = {
   background: "rgba(255, 255, 255, 0.25)", // Increased from 0.15 for better mobile visibility
@@ -23,6 +24,7 @@ export default function SparkleButton() {
   const router = useRouter();
   const [isGlass, setIsGlass] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -82,27 +84,38 @@ export default function SparkleButton() {
   };
 
   return (
-    <button
-      onClick={() => router.push("/home/ai-generated-farmlands")}
-      className="fixed bottom-8 right-6 md:right-[60px] z-50 flex h-[52px] w-[52px] items-center justify-center rounded-full transition-all duration-500 cursor-pointer"
-      style={isGlass ? glassStyle : solidStyle}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      title="A.I. Suggested Farmlands"
-    >
-      <svg width="24" height="24" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path 
-          d="M14 3L15.8 10.2L23 12L15.8 13.8L14 21L12.2 13.8L5 12L12.2 10.2L14 3Z" 
-          fill={getSparkleColor(true)} 
-          className="transition-colors duration-300"
+    <>
+      <button
+        onClick={() => setIsModalOpen(true)}
+        className="fixed bottom-8 right-6 md:right-[60px] z-50 flex h-[52px] w-[52px] items-center justify-center rounded-full transition-all duration-500 cursor-pointer"
+        style={isGlass ? glassStyle : solidStyle}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        title="A.I. Suggested Farmlands"
+      >
+        <svg width="24" height="24" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path 
+            d="M14 3L15.8 10.2L23 12L15.8 13.8L14 21L12.2 13.8L5 12L12.2 10.2L14 3Z" 
+            fill={getSparkleColor(true)} 
+            className="transition-colors duration-300"
+          />
+          <path 
+            d="M22 18L22.9 21.1L26 22L22.9 22.9L22 26L21.1 22.9L18 22L21.1 21.1L22 18Z" 
+            fill={getSparkleColor(false)} 
+            opacity={isGlass ? "0.7" : "0.5"}
+            className="transition-colors duration-300"
+          />
+        </svg>
+      </button>
+      {isModalOpen && (
+        <AiCurationModal
+          onClose={() => setIsModalOpen(false)}
+          onGenerate={() => {
+            setIsModalOpen(false);
+            router.push("/home/ai-generated-farmlands");
+          }}
         />
-        <path 
-          d="M22 18L22.9 21.1L26 22L22.9 22.9L22 26L21.1 22.9L18 22L21.1 21.1L22 18Z" 
-          fill={getSparkleColor(false)} 
-          opacity={isGlass ? "0.7" : "0.5"}
-          className="transition-colors duration-300"
-        />
-      </svg>
-    </button>
+      )}
+    </>
   );
 }

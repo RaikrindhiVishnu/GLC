@@ -98,7 +98,7 @@ export default function ManageSubscriptionsPage() {
                   📅
                 </div>
                 <span className="font-normal text-xs sm:text-sm text-[#45474C] truncate">
-                  Next Autorenewal: Nov 1, 2026
+                  Next Auto-renew: Nov 1, 2026
                 </span>
               </div>
 
@@ -327,9 +327,13 @@ export default function ManageSubscriptionsPage() {
                 <div className="w-full flex flex-col items-center gap-3 pt-8 mt-auto">
                   <button
                     onClick={() => router.push("/pricing")}
-                    className="w-full py-4 bg-[radial-gradient(circle_at_center,#2780C4_0%,#164573_100%)] hover:opacity-95 transition-all active:scale-95 text-white font-bold text-sm sm:text-base rounded-full shadow-lg border-none cursor-pointer block tracking-wide"
+                    className="w-full flex items-center justify-center gap-2 py-4 bg-[radial-gradient(circle_at_center,#2780C4_0%,#164573_100%)] hover:opacity-95 transition-all active:scale-95 text-white font-bold text-sm sm:text-base rounded-full shadow-lg border-none cursor-pointer block tracking-wide"
                   >
-                    ★ UPGRADE TO PLATINUM
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                      <circle cx="12" cy="7" r="4" />
+                    </svg>
+                    UPGRADE TO PLATINUM
                   </button>
 
                   <span className="font-medium text-[10px] sm:text-[11px] text-[#8590A6] tracking-wide text-center block px-2">

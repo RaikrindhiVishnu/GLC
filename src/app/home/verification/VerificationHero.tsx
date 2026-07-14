@@ -6,7 +6,13 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 
-export default function VerificationHero() {
+export default function VerificationHero({ 
+  title = "Verification of Farmland", 
+  subtitle = "Track the real-time progress of your asset through our rigorous 4-tier legal, agronomy, and intelligence audit pipeline" 
+}: { 
+  title?: string; 
+  subtitle?: string; 
+}) {
   const router = useRouter();
   const scalerRef = useRef<HTMLDivElement>(null);
   const shellRef = useRef<HTMLDivElement>(null);
@@ -33,7 +39,7 @@ export default function VerificationHero() {
     <>
       {/* ══ MOBILE LAYOUT (< lg) ══ */}
       <div className="block lg:hidden relative w-full h-[80vh] min-h-125 overflow-hidden" style={{ background: "#091426" }}>
-        <Image src="/assets/verification-of-farmland/hero.svg" alt="Verification of Farmland Hero" fill priority style={{ objectFit: "cover", objectPosition: "center", zIndex: 0 }} />
+        <Image src="/assets/verification-of-farmland/Rectangle 4166 (21).svg" alt={`${title} Hero`} fill priority style={{ objectFit: "cover", objectPosition: "center", zIndex: 0 }} />
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(0deg, rgba(0,0,0,0.65), rgba(0,0,0,0.4))", zIndex: 1 }} />
         <div style={{ position: "relative", zIndex: 10 }}>
           <Navbar variant="app" active="search" />
@@ -46,7 +52,7 @@ export default function VerificationHero() {
             className="text-[42px] sm:text-[64px]"
             style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, letterSpacing: "-1.5px", color: "#FFFFFF", margin: "0 0 20px", lineHeight: 1.1 }}
           >
-            Verification of Farmland
+            {title}
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 10 }}
@@ -54,7 +60,7 @@ export default function VerificationHero() {
             transition={{ duration: 0.6, delay: 0.45 }}
             style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "16px", lineHeight: "26px", color: "rgba(255,255,255,0.8)", maxWidth: "480px", margin: 0 }}
           >
-            Track the real-time progress of your asset through our rigorous 4-tier legal, agronomy, and intelligence audit pipeline
+            {subtitle}
           </motion.p>
         </div>
       </div>
@@ -63,7 +69,7 @@ export default function VerificationHero() {
       <div className="hidden lg:block" ref={shellRef} style={{ position: "relative", width: "100%", overflow: "hidden" }}>
         <div ref={scalerRef} style={{ position: "absolute", top: 0, left: "50%", marginLeft: "-720px", width: "1440px", height: "960px", transformOrigin: "top center" }}>
           <section style={{ position: "relative", width: "1440px", height: "960px", background: "#091426", overflow: "hidden", display: "flex", justifyContent: "center" }}>
-            <Image src="/assets/verification-of-farmland/hero.svg" alt="Verification of Farmland Hero" fill priority style={{ objectFit: "cover", objectPosition: "center", zIndex: 0 }} />
+            <Image src="/assets/verification-of-farmland/Rectangle 4166 (21).svg" alt={`${title} Hero`} fill priority style={{ objectFit: "cover", objectPosition: "center", zIndex: 0 }} />
             <div style={{ position: "absolute", inset: 0, background: "linear-gradient(0deg, rgba(0,0,0,0.55), rgba(0,0,0,0.45))", zIndex: 1 }} />
 
             <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: "1440px", height: "960px", zIndex: 20, pointerEvents: "none" }}>
@@ -93,14 +99,14 @@ export default function VerificationHero() {
                 <img src="/assets/home/HeroScreen/person.svg" alt="Profile" style={{ width: "100%", height: "100%", objectFit: "cover", transform: "scale(1.5)" }} />
               </div>
 
-              <div style={{ position: "absolute", width: "896px", left: "calc(50% - 448px)", top: "380px", display: "flex", flexDirection: "column", alignItems: "center", gap: "32px", pointerEvents: "auto" }}>
+              <div style={{ position: "absolute", width: "1059px", left: "calc(50% - 529px)", top: "40%", transform: "translateY(-50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: "32px", pointerEvents: "auto" }}>
                 <motion.h1
                   initial={{ opacity: 0, filter: "blur(8px)", y: 20 }}
                   animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
                   transition={{ duration: 0.8, delay: 0.2 }}
-                  style={{ margin: 0, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "100px", lineHeight: "1", textAlign: "center", letterSpacing: "-1.8px", color: "#FFFFFF" }}
+                  style={{ margin: 0, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "100px", lineHeight: "1", textAlign: "center", letterSpacing: "-1.8px", color: "#FFFFFF", whiteSpace: "nowrap" }}
                 >
-                  Verification of Farmland
+                  {title}
                 </motion.h1>
                 <motion.p
                   initial={{ opacity: 0, y: 15 }}
@@ -108,7 +114,7 @@ export default function VerificationHero() {
                   transition={{ duration: 0.6, delay: 0.4 }}
                   style={{ margin: 0, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "24px", lineHeight: "32px", textAlign: "center", color: "#FFFFFF", maxWidth: "996px" }}
                 >
-                  Track the real-time progress of your asset through our rigorous 4-tier legal, agronomy, and intelligence audit pipeline
+                  {subtitle}
                 </motion.p>
               </div>
             </div>

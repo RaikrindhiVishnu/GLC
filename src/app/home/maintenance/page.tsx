@@ -1,6 +1,6 @@
 import React from "react";
 import MaintenanceHero from "./MaintenanceHero";
-import MaintenanceOnboardSection from "./MaintenanceOnboardSection";
+import MaintenanceListings from "./MaintenanceListings";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 
@@ -10,8 +10,8 @@ export default function MaintenanceOfFarmlandPage() {
       {/* 1. Cinematic Hero Overlay Module */}
       <MaintenanceHero />
 
-      {/* 2. Onboard Split Control Panel Form Widget */}
-      <MaintenanceOnboardSection />
+      {/* 2. Listings Module */}
+      <MaintenanceListings />
 
       {/* 3. Universal Yield Branding Graphic Landscape Banner */}
       <CTA />

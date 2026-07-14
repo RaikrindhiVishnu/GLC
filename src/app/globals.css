@@ -83,11 +83,55 @@ html.lenis body {
   .custom-scrollbar::-webkit-scrollbar {
     width: 4px;
   }
+
   .custom-scrollbar::-webkit-scrollbar-track {
     background: transparent;
   }
+
   .custom-scrollbar::-webkit-scrollbar-thumb {
     background: rgba(0, 0, 0, 0.1);
     border-radius: 10px;
+  }
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+* {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+/* ── Modal scroll areas: SHOW scrollbar (overrides the global hide above) ── */
+.custom-modal-scrollbar {
+  scrollbar-width: thin !important;
+  -ms-overflow-style: auto !important;
+}
+
+.custom-modal-scrollbar::-webkit-scrollbar {
+  display: block !important;
+  width: 6px !important;
+}
+
+.custom-modal-scrollbar::-webkit-scrollbar-track {
+  background: #f0f1f2 !important;
+  border-radius: 10px !important;
+}
+
+.custom-modal-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #99A6B5 !important;
+  border-radius: 10px !important;
+}
+
+@layer utilities {
+  .modal-open {
+    overflow: hidden !important;
+    height: 100vh !important;
+    touch-action: none !important;
   }
 }

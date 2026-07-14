@@ -14,12 +14,12 @@ export default function CompareHero() {
       />
 
       {/* Content */}
-      <div className="relative z-10 w-full max-w-4xl mx-auto px-8 flex flex-col items-center gap-9.25">
+      <div className="relative z-10 w-full max-w-6xl mx-auto px-8 flex flex-col items-center gap-9.25">
         <motion.h1
           initial={{ opacity: 0, filter: "blur(8px)", y: 15 }}
           animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-center text-white"
+          className="text-center text-white whitespace-nowrap"
           style={{
             fontFamily: "'Plus Jakarta Sans', sans-serif",
             fontWeight: 800,
@@ -34,7 +34,7 @@ export default function CompareHero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.2 }}
-          className="text-center text-white w-275 max-w-[95vw]"
+          className="text-center text-white w-full px-4"
           style={{
             fontFamily: "'Plus Jakarta Sans', sans-serif",
             fontWeight: 500,
@@ -42,8 +42,7 @@ export default function CompareHero() {
             lineHeight: "1.55",
           }}
         >
-          Track the real-time progress of your asset through our rigorous 4-tier legal, agronomy,
-          {" "}and intelligence audit pipeline
+          <span className="md:whitespace-nowrap">Compare farmland locations, pricing, amenities, legal status, and investment potential</span> <br className="hidden md:block" /> <span className="md:whitespace-nowrap">to confidently choose the property that best matches your goals.</span>
         </motion.p>
       </div>
 

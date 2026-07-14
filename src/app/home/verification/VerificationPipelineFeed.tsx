@@ -3,13 +3,16 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useGetVerificationLandsByUserIdQuery } from "../../../services/verification";
 
 export default function VerificationPipelineFeed() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
+
+  const farmlandIdParam = searchParams.get("farmland");
 
   const userId = 2; // Hardcoded to 2 as per backend request
   
@@ -19,7 +22,24 @@ export default function VerificationPipelineFeed() {
   );
   
   const isLoading = !mounted || isQueryLoading;
-  const lands = res?.data || [];
+  const allLands = res?.data || [];
+  
+  // If farmland param is present, try to filter, or we can use mock data if needed.
+  // The user asked to show mock farmland details based on the query parameter.
+  const lands = farmlandIdParam 
+    ? allLands.filter((land: any) => land.farmland_code === farmlandIdParam.replace(/-/g, ' ')) 
+    : allLands;
+
+  // In case we want to show a specific mock when not found in allLands
+  const displayLands = (farmlandIdParam && lands.length === 0) 
+    ? [{ 
+        farmland_id: 999, 
+        farmland_code: farmlandIdParam.replace(/-/g, ' '), 
+        is_active: true, 
+        created_on: new Date().toISOString(),
+        farmland_img: "/assets/verification-of-farmland/pipeline.svg"
+      }] 
+    : lands;
 
   return (
     <section className="w-full max-w-7xl mx-auto px-4 lg:px-8 py-16 lg:py-24 box-border flex flex-col">
@@ -262,11 +282,11 @@ export default function VerificationPipelineFeed() {
             <div className="flex justify-center items-center w-full h-[200px] bg-white rounded-[32px] border border-gray-100 shadow-sm">
               <span className="font-jakarta text-[#0F2F4C]">Loading verification assets...</span>
             </div>
-          ) : lands.length === 0 ? (
+          ) : displayLands.length === 0 ? (
             <div className="flex justify-center items-center w-full h-[200px] bg-white rounded-[32px] border border-gray-100 shadow-sm">
               <span className="font-jakarta text-[#0F2F4C]">No active verification assets found.</span>
             </div>
-          ) : lands.map((land) => (
+          ) : displayLands.map((land: any) => (
             <div
               key={land.farmland_id}
               style={{

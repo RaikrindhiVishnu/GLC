@@ -20,8 +20,11 @@ export default function TrendingLocations() {
 
       {/* Header — constrained to page margin */}
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 lg:mb-8">
-        <div className="flex justify-between items-center w-full">
-          <h2 className="font-jakarta font-extrabold text-[20px] md:text-[24px] leading-[1.2] text-brand-primary m-0 flex gap-x-1.5">
+        <div 
+          className="flex justify-between items-center w-full cursor-pointer group"
+          onClick={() => router.push("/topselling")}
+        >
+          <h2 className="font-jakarta font-extrabold text-[20px] md:text-[24px] leading-[1.2] text-brand-primary m-0 flex gap-x-1.5 group-hover:opacity-80 transition-opacity">
             {"Top Selling Locations".split(" ").map((word, i) => (
               <motion.span
                 key={i}
@@ -34,7 +37,7 @@ export default function TrendingLocations() {
               </motion.span>
             ))}
           </h2>
-          <button onClick={() => router.push("/search")} className="bg-transparent border-none font-jakarta font-extrabold text-[14px] md:text-[18px] leading-10 text-brand-primary cursor-pointer [-webkit-tap-highlight-color:transparent] hover:opacity-70 transition-opacity">
+          <button className="bg-transparent border-none font-jakarta font-extrabold text-[14px] md:text-[18px] leading-10 text-brand-primary cursor-pointer [-webkit-tap-highlight-color:transparent] group-hover:opacity-70 transition-opacity">
             View All
           </button>
         </div>

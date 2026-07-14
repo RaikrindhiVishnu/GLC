@@ -5,7 +5,6 @@ import PricingHeroSection from "./PricingHeroSection";
 import PricingBentoGrid from "./PricingBentoGrid";
 import VerificationStandardsSection from "./VerificationStandardsSection";
 import TransformingLegacyGallery from "./TransformingLegacyGallery";
-import TrendingFeaturedSection from "./TrendingFeaturedSection";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 import CheckoutScreen from "./checkoutscreen/CheckoutScreen";
@@ -46,10 +45,7 @@ export default function PricingScreen() {
       {/* ─── SECTION 4: TRANSFORMING LAND INTO LEGACY GALLERY ─── */}
       <TransformingLegacyGallery />
 
-      {/* ─── SECTION 5: TRENDING FEATURED FARMLANDS ─── */}
-      <TrendingFeaturedSection />
-
-      {/* ─── SECTION 6: BOTTOM LANDSCAPE BANNER & FOOTER LIBRARY ─── */}
+      {/* ─── SECTION 5: BOTTOM LANDSCAPE BANNER & FOOTER LIBRARY ─── */}
       <section style={{ width: "100%", display: "flex", flexDirection: "column", position: "relative" }}>
         <CTA />
         <Footer />

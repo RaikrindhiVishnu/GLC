@@ -683,9 +683,7 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
                 tag_ids: selectedLeft
               });
               onClose();
-              if (window.location.pathname !== '/search') {
-                window.location.href = '/search';
-              }
+              window.location.href = '/search/farmlanddetails/compare_premium';
             }}
             style={{
               background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)",

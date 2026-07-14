@@ -1,14 +1,44 @@
 "use client";
 
+import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
+import SiteVisitCompletedModal from "@/components/SiteVisitCompletedModal";
+import SiteVisitQueueModal from "@/components/SiteVisitQueueModal";
+import LandPurchaseTrackingModal from "@/components/LandPurchaseTrackingModal";
 
 export default function ProfileScreen() {
   const router = useRouter();
+
+  const [isPhoneVerified, setIsPhoneVerified] = useState(false);
+  const [isAadhaarVerified, setIsAadhaarVerified] = useState(false);
+  const [isPanVerified, setIsPanVerified] = useState(false);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploadTarget, setUploadTarget] = useState<"aadhaar" | "pan" | null>(null);
+  const [isSiteVisitModalOpen, setIsSiteVisitModalOpen] = useState(false);
+  const [isSiteVisitQueueModalOpen, setIsSiteVisitQueueModalOpen] = useState(false);
+  const [isTrackingModalOpen, setIsTrackingModalOpen] = useState(false);
+
+  const triggerUpload = (target: "aadhaar" | "pan") => {
+    setUploadTarget(target);
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      if (uploadTarget === "aadhaar") setIsAadhaarVerified(true);
+      if (uploadTarget === "pan") setIsPanVerified(true);
+    }
+    // reset input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
 
   return (
     <main
@@ -22,6 +52,13 @@ export default function ProfileScreen() {
         position: "relative",
       }}
     >
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileChange}
+        style={{ display: "none" }}
+        accept="image/*,.pdf"
+      />
       {/* ─── HERO BACKGROUND (desktop only) ─── */}
       <div
         className="hidden lg:block"
@@ -74,20 +111,20 @@ export default function ProfileScreen() {
               <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", marginBottom: "18px" }}>
                 <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "22px", letterSpacing: "-0.04em", color: "#FFFFFF" }}>Arjun Vardhan</span>
                 <div style={{ width: "20px", height: "20px", borderRadius: "50%", background: "#2780C4", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="#FFFFFF"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="#FFFFFF"><path d="M2 19h20v2H2v-2zm1.5-3l1.5-10 5.5 4 3-5 3 5 5.5-4 1.5 10H3.5z" /></svg>
                 </div>
               </div>
 
               {/* Edit Profile + Share row */}
               <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
                 <button onClick={() => router.push("/profile")} style={{ flex: 1, height: "46px", background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)", border: "none", borderRadius: "14px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="#FFFFFF"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="#FFFFFF"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" /></svg>
                   <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "14px", color: "#FFFFFF", letterSpacing: "0.5px", textTransform: "uppercase" }}>Edit Profile</span>
                 </button>
                 <button style={{ width: "46px", height: "46px", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", flexShrink: 0 }}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
-                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                    <circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" />
+                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" /><line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
                   </svg>
                 </button>
               </div>
@@ -99,7 +136,7 @@ export default function ProfileScreen() {
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "6px" }}>
                 <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 600, fontSize: "11px", letterSpacing: "1px", color: "rgba(255,255,255,0.5)", textTransform: "uppercase" }}>Active Plan</span>
                 <div style={{ width: "26px", height: "26px", borderRadius: "50%", border: "1px solid rgba(255,255,255,0.25)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
                 </div>
               </div>
               <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "20px", color: "#FFFFFF" }}>Silver Tier</span>
@@ -132,16 +169,20 @@ export default function ProfileScreen() {
             <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "13px", color: "#0F2F4C", textTransform: "uppercase" }}>Identity & Contact</span>
           </div>
           {[
-            { label: "Full Name", value: "Arjun Vardhan", badge: null },
-            { label: "Mobile Number", value: "+91 98765 43210", badge: "OTP VERIFIED" },
-            { label: "Email Address", value: "arjun.w@gmail.com", badge: null },
+            { label: "Full Name", value: "Arjun Vardhan", type: "name" },
+            { label: "Mobile Number", value: "+91 98765 43210", type: "phone" },
+            { label: "Email Address", value: "arjun.w@gmail.com", type: "email" },
           ].map((row, i) => (
             <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "13px 4px", borderTop: i > 0 ? "1px solid #F5F5F5" : "none" }}>
               <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 500, fontSize: "13px", color: "#71717A" }}>{row.label}</span>
               <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                 <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "14px", color: "#0F2F4C" }}>{row.value}</span>
-                {row.badge && (
-                  <span style={{ background: "#EFF6FF", color: "#2563EB", fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "9px", padding: "2px 6px", borderRadius: "9999px" }}>{row.badge}</span>
+                {row.type === "phone" && (
+                  isPhoneVerified ? (
+                    <span style={{ background: "#EFF6FF", color: "#2563EB", fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "9px", padding: "2px 6px", borderRadius: "9999px" }}>OTP VERIFIED</span>
+                  ) : (
+                    <button onClick={() => setIsPhoneVerified(true)} style={{ background: "#EFF6FF", color: "#2563EB", border: "none", cursor: "pointer", fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "9px", padding: "4px 8px", borderRadius: "9999px" }}>SEND OTP</button>
+                  )
                 )}
               </div>
             </div>
@@ -158,93 +199,253 @@ export default function ProfileScreen() {
           <div style={{ paddingBottom: "12px" }}>
             <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "13px", color: "#71717A", textTransform: "uppercase", letterSpacing: "1.2px" }}>Regulatory Compliance</span>
           </div>
-          {[{ label: "Primary ID / Aadhaar" }, { label: "PAN Card Number" }].map((row, i) => (
-            <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "13px 4px", borderTop: i > 0 ? "1px solid #F5F5F5" : "none" }}>
-              <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 500, fontSize: "13px", color: "#71717A" }}>{row.label}</span>
-              <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="#059669"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" /></svg>
-                <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "14px", color: "#059669" }}>Verified</span>
+
+          {/* Aadhaar Row */}
+          <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: "13px 4px" }}>
+            {isAadhaarVerified ? (
+              <>
+                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "13px", color: "#71717A" }}>Primary ID / Aadhaar</span>
+                <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+                  <img src="/assets/profile account/Container (16).svg" alt="Verified" />
+                </div>
+              </>
+            ) : (
+              <div style={{ display: "flex", width: "100%", gap: "8px", alignItems: "center" }}>
+                <div style={{ flex: 1, height: "46px", background: "#FEFEFE", border: "1.4px solid #F8F8F8", borderRadius: "21px", display: "flex", alignItems: "center", padding: "0 14px", gap: "8px" }}>
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#A1999B" strokeWidth="1"><rect x="3" y="4" width="18" height="16" rx="2" ry="2" /><line x1="7" y1="8" x2="11" y2="8" /><line x1="7" y1="12" x2="17" y2="12" /><line x1="7" y1="16" x2="17" y2="16" /></svg>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#BDBDBD", whiteSpace: "nowrap" }}>Enter & Upload Aadhar Card</span>
+                </div>
+                <button onClick={() => triggerUpload("aadhaar-front")} style={{ width: "78px", height: "46px", background: "#F3F3F5", border: "1.4px dashed rgba(0,0,0,0.3)", borderRadius: "23px", display: "flex", alignItems: "center", justifyContent: "center", gap: "4px", cursor: "pointer", flexShrink: 0 }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="1.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>
+                </button>
+                <button onClick={() => triggerUpload("aadhaar-back")} style={{ width: "78px", height: "46px", background: "#F3F3F5", border: "1.4px dashed rgba(188,201,201,0.3)", borderRadius: "23px", display: "flex", alignItems: "center", justifyContent: "center", gap: "4px", cursor: "pointer", flexShrink: 0 }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A49999" strokeWidth="1.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "9px", color: "#BDBDBD" }}>Back</span>
+                </button>
               </div>
-            </div>
-          ))}
+            )}
+          </div>
+
+          {/* PAN Row */}
+          <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: "13px 4px", borderTop: "1px solid #F5F5F5" }}>
+            {isPanVerified ? (
+              <>
+                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "13px", color: "#71717A" }}>PAN Card Number</span>
+                <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+                  <img src="/assets/profile account/Container (16).svg" alt="Verified" />
+                </div>
+              </>
+            ) : (
+              <div style={{ display: "flex", width: "100%", gap: "8px", alignItems: "center" }}>
+                <div style={{ flex: 1, height: "46px", background: "#FEFEFE", border: "1.4px solid #F8F8F8", borderRadius: "21px", display: "flex", alignItems: "center", padding: "0 14px", gap: "8px" }}>
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#A1999B" strokeWidth="1"><rect x="3" y="4" width="18" height="16" rx="2" ry="2" /><line x1="7" y1="8" x2="11" y2="8" /><line x1="7" y1="12" x2="17" y2="12" /><line x1="7" y1="16" x2="17" y2="16" /></svg>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#BDBDBD", whiteSpace: "nowrap" }}>Enter and Upload PAN Card</span>
+                </div>
+                <button onClick={() => triggerUpload("pan")} style={{ width: "78px", height: "46px", background: "#F3F3F5", border: "1.4px dashed rgba(188,201,201,0.3)", borderRadius: "23px", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", flexShrink: 0 }}>Upload</button>
+              </div>
+            )}
+          </div>
+
           <div style={{ display: "flex", alignItems: "center", gap: "6px", padding: "10px 4px 0", opacity: 0.6 }}>
             <svg width="11" height="11" viewBox="0 0 24 24" fill="#0F2F4C" style={{ flexShrink: 0 }}><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z" /></svg>
             <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontSize: "11px", color: "#71717A", lineHeight: "16px" }}>Your data is encrypted per SEBI guidelines.</span>
           </div>
         </motion.div>
 
-        {/* Active Operations */}
+        {/* Land Purchase Tracking (Mobile) */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.5 }}
-          style={{ margin: "12px 16px 0", background: "#FFFFFF", borderRadius: "24px", padding: "20px 24px", boxShadow: "0px 4px 12px rgba(0,0,0,0.04)" }}
+          style={{ margin: "12px 16px 0" }}
         >
-          <div style={{ paddingBottom: "16px" }}>
-            <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "13px", color: "#0F2F4C", textTransform: "uppercase" }}>Active Operations</span>
+          <div style={{ padding: "0 16px 12px" }}>
+            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Land Purchase Tracking</span>
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-            {[
-              { dot: "#2780C4", title: "Farmhouse Construction", sub: "Plot 24A - Concrete Foundation Phase", progress: 65, line: true },
-              { dot: "#00629E", title: "Maintenance Cycle", sub: "Orchard 09 - Seasonal Pruning", progress: null, line: true },
-              { dot: "#75777D", title: "Verifications", sub: "Annual Soil Report pending", progress: null, line: false },
-            ].map((op, i) => (
-              <div key={i} style={{ display: "flex", gap: "14px" }}>
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "8px" }}>
-                  <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: op.dot, flexShrink: 0 }} />
-                  {op.line && <div style={{ width: "2px", flex: 1, background: "#E7E8E9", marginTop: "4px", minHeight: "32px" }} />}
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+            {/* Card 5 */}
+            <div onClick={() => setIsTrackingModalOpen(true)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", boxShadow: "0px 4px 12px rgba(0,0,0,0.04)", borderRadius: "20px", padding: "16px", position: "relative", display: "flex", flexDirection: "column" }}>
+              <div style={{ display: "flex", gap: "12px", width: "100%" }}>
+                <div style={{ width: "80px", height: "80px", borderRadius: "10px", overflow: "hidden", position: "relative", flexShrink: 0 }}>
+                  <Image src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&q=80" alt="Property" fill style={{ objectFit: "cover" }} />
                 </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: "3px", flex: 1 }}>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "14px", color: "#0F2F4C" }}>{op.title}</span>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 400, fontSize: "13px", color: "#45474C" }}>{op.sub}</span>
-                  {op.progress && (
-                    <div style={{ width: "100%", height: "5px", background: "#F3F4F5", borderRadius: "9999px", overflow: "hidden", marginTop: "4px" }}>
-                      <div style={{ width: `${op.progress}%`, height: "100%", background: "#2780C4" }} />
+                <div style={{ display: "flex", flexDirection: "column", flexGrow: 1, justifyContent: "center" }}>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "14px", color: "#001F3F" }}>GLC SOS 01</span>
+                  <div style={{ display: "flex", alignItems: "center", gap: "4px", marginTop: "2px" }}>
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#64748B" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#64748B", textTransform: "capitalize" }}>Shadnagar</span>
+                  </div>
+                  <div style={{ marginTop: "12px", display: "flex", flexDirection: "column", gap: "6px" }}>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "9px", color: "#0A1B3D" }}>75% Purchase Process Complete</span>
+                    <div style={{ width: "100%", height: "6px", background: "#F3F4F6", borderRadius: "9999px", overflow: "hidden" }}>
+                      <div style={{ width: "75%", height: "100%", background: "#2780C4" }} />
                     </div>
-                  )}
+                  </div>
                 </div>
               </div>
-            ))}
-          </div>
-          <div style={{ paddingTop: "14px", borderTop: "1px solid #F5F5F5", marginTop: "16px" }}>
-            <button onClick={() => router.push("/home/ai-generated-farmlands")} style={{ background: "transparent", border: "none", display: "flex", alignItems: "center", gap: "6px", cursor: "pointer", padding: 0 }}>
-              <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "14px", color: "#00629E" }}>View Live Feeds</span>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#00629E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
-            </button>
+            </div>
+            {/* Card 6 */}
+            <div onClick={() => setIsTrackingModalOpen(true)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", boxShadow: "0px 4px 12px rgba(0,0,0,0.04)", borderRadius: "20px", padding: "16px", position: "relative", display: "flex", flexDirection: "column" }}>
+              <div style={{ display: "flex", gap: "12px", width: "100%" }}>
+                <div style={{ width: "80px", height: "80px", borderRadius: "10px", overflow: "hidden", position: "relative", flexShrink: 0 }}>
+                  <Image src="https://images.unsplash.com/photo-1592595896616-c3716229b43c?w=400&q=80" alt="Property" fill style={{ objectFit: "cover" }} />
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", flexGrow: 1, justifyContent: "center" }}>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "14px", color: "#001F3F" }}>GLC SOS 02</span>
+                  <div style={{ display: "flex", alignItems: "center", gap: "4px", marginTop: "2px" }}>
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#64748B" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#64748B", textTransform: "capitalize" }}>Shadnagar</span>
+                  </div>
+                  <div style={{ marginTop: "12px", display: "flex", flexDirection: "column", gap: "6px" }}>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "9px", color: "#0A1B3D" }}>42% Purchase Process Complete</span>
+                    <div style={{ width: "100%", height: "6px", background: "#F3F4F6", borderRadius: "9999px", overflow: "hidden" }}>
+                      <div style={{ width: "42%", height: "100%", background: "#2780C4" }} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </motion.div>
 
-        {/* Support & Preferences */}
+        {/* Active Investments (Mobile) */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.6 }}
-          style={{ margin: "12px 16px 40px" }}
+          style={{ margin: "16px 16px 0" }}
         >
-          <div style={{ padding: "0 16px 10px" }}>
-            <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "13px", letterSpacing: "1.2px", color: "#0F2F4C", textTransform: "uppercase" }}>Support & Preferences</span>
+          <div style={{ padding: "0 16px 12px" }}>
+            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Active Investments</span>
           </div>
-          <div style={{ background: "#FFFFFF", borderRadius: "24px", boxShadow: "0px 4px 12px rgba(0,0,0,0.04)", overflow: "hidden" }}>
-            <div
-              style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 20px", cursor: "pointer" }}
-              onClick={() => router.push("/home/supportcenter")}
-            >
-              <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A1A1AA" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>
-                <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "15px", color: "#0F2F4C" }}>Support Centre</span>
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+            {[
+              { title: "GLC SOS 01", subtitle: "Medchal • ‹12.5L • 0.5 Ac", color: "#059669" },
+              { title: "GLC SOS 02", subtitle: "Vikarabad • ‹5.0L • 0.2 Ac", color: "#D97706" }
+            ].map((item, idx) => (
+              <div key={idx} onClick={() => router.push(`/profile/active-investment/${idx + 1}`)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", borderRadius: "24px", padding: "16px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0px 4px 15px rgba(0,0,0,0.02)" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+                  <div style={{ width: "42px", height: "42px", background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.04)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 2px 5px rgba(0,0,0,0.02)" }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={item.color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.title}</span>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>{item.subtitle}</span>
+                  </div>
+                </div>
               </div>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#D4D4D8" strokeWidth="2.5"><polyline points="9 18 15 12 9 6" /></svg>
-            </div>
-            <div
-              style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 20px", borderTop: "1px solid #F5F5F5", cursor: "pointer" }}
-              onClick={() => router.push("/profile/savedfarmlands")}
-            >
-              <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A1A1AA" strokeWidth="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" /></svg>
-                <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "15px", color: "#0F2F4C" }}>Saved Farmlands</span>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Site Visits in queue (Mobile) */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.7 }}
+          style={{ margin: "16px 16px 0" }}
+        >
+          <div style={{ padding: "0 16px 12px" }}>
+            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Site Vists in queue</span>
+          </div>
+          {[
+            { title: "GLC SOS 01", subtitle: "Medchal • ‹12.5L • 0.5 Ac", color: "#059669" }
+          ].map((item, idx) => (
+            <div key={idx} onClick={() => setIsSiteVisitQueueModalOpen(true)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", borderRadius: "24px", padding: "16px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0px 4px 15px rgba(0,0,0,0.02)" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+                <div style={{ width: "42px", height: "42px", background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.04)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 2px 5px rgba(0,0,0,0.02)" }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={item.color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.title}</span>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>{item.subtitle}</span>
+                </div>
               </div>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#D4D4D8" strokeWidth="2.5"><polyline points="9 18 15 12 9 6" /></svg>
             </div>
+          ))}
+        </motion.div>
+
+        {/* Site Visits Completed (Mobile) */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.75 }}
+          style={{ margin: "16px 16px 0" }}
+        >
+          <div style={{ padding: "0 16px 12px" }}>
+            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Site Vists Completed</span>
+          </div>
+          {[
+            { title: "GLC SOS 02", subtitle: "Vikarabad • ‹5.0L • 0.2 Ac", color: "#D97706" }
+          ].map((item, idx) => (
+            <div key={idx} onClick={() => setIsSiteVisitModalOpen(true)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", borderRadius: "24px", padding: "16px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0px 4px 15px rgba(0,0,0,0.02)" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+                <div style={{ width: "42px", height: "42px", background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.04)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 2px 5px rgba(0,0,0,0.02)" }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={item.color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.title}</span>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>{item.subtitle}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </motion.div>
+
+        {/* Active Listing (Mobile) */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.8 }}
+          style={{ margin: "16px 16px 0" }}
+        >
+          <div style={{ padding: "0 16px 12px" }}>
+            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Active Listing</span>
+          </div>
+          {[
+            { title: "GLC SOS 02", subtitle: "Vikarabad • ‹5.0L • 0.2 Ac", color: "#D97706" }
+          ].map((item, idx) => (
+            <div key={idx} style={{ width: "100%", background: "#FFFFFF", borderRadius: "24px", padding: "16px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0px 4px 15px rgba(0,0,0,0.02)" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+                <div style={{ width: "42px", height: "42px", background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.04)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 2px 5px rgba(0,0,0,0.02)" }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={item.color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.title}</span>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>{item.subtitle}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </motion.div>
+
+        {/* Active Deals In Queue (Mobile) */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.85 }}
+          style={{ margin: "16px 16px 40px" }}
+        >
+          <div style={{ padding: "0 16px 12px" }}>
+            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Active Deals In Queue</span>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+            {[
+              { title: "GLC SOS 01", subtitle: "Medchal • ‹12.5L • 0.5 Ac", color: "#059669" },
+              { title: "GLC SOS 02", subtitle: "Vikarabad • ‹5.0L • 0.2 Ac", color: "#D97706" }
+            ].map((item, idx) => (
+              <div key={idx} style={{ width: "100%", background: "#FFFFFF", borderRadius: "24px", padding: "16px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0px 4px 15px rgba(0,0,0,0.02)" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+                  <div style={{ width: "42px", height: "42px", background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.04)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 2px 5px rgba(0,0,0,0.02)" }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={item.color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.title}</span>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>{item.subtitle}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </motion.div>
 
@@ -256,7 +457,7 @@ export default function ProfileScreen() {
             onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E53935" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" />
             </svg>
             <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "14px", color: "#E53935", letterSpacing: "0.5px", textTransform: "uppercase" }}>Sign Out</span>
           </button>
@@ -268,7 +469,7 @@ export default function ProfileScreen() {
       {/* ══════════════════════════════════════════════ */}
       <div
         className="hidden lg:block"
-        style={{ position: "relative", width: "1440px", minHeight: "1260px", background: "transparent", flexShrink: 0 }}
+        style={{ position: "relative", width: "1440px", height: "1768px", minHeight: "1768px", background: "transparent", flexShrink: 0 }}
       >
         <Navbar variant="app" active="profile" />
 
@@ -321,8 +522,8 @@ export default function ProfileScreen() {
               </button>
               <button onClick={() => router.push("/profile")} style={{ width: "50px", height: "50px", background: "#F8F9FA", borderRadius: "50%", border: "none", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "opacity 0.2s ease" }} onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.85")} onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F2F4C" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
-                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                  <circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" />
+                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" /><line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
                 </svg>
               </button>
             </div>
@@ -346,19 +547,78 @@ export default function ProfileScreen() {
           </div>
         </motion.div>
 
-        {/* ─── LEFT SIDEBAR ─── */}
+        {/* ─── LAND PURCHASE TRACKING (CENTER COLUMN) ─── */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.4 }}
+          style={{ position: "absolute", width: "569px", left: "calc(50% - 569px/2)", top: "1147px", zIndex: 10, display: "flex", flexDirection: "column", gap: "16px" }}
+        >
+          <div style={{ padding: "0 8px" }}>
+            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Land Purchase Tracking</span>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: "16px", width: "100%" }}>
+            {/* Card 5 */}
+            <div onClick={() => setIsTrackingModalOpen(true)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", boxShadow: "0px 7.6px 25.33px rgba(0, 31, 63, 0.04)", borderRadius: "20px", padding: "16px", position: "relative", display: "flex", flexDirection: "column" }}>
+              <div style={{ display: "flex", gap: "14px", width: "100%" }}>
+                <div style={{ width: "90px", height: "90px", borderRadius: "10px", overflow: "hidden", position: "relative", flexShrink: 0 }}>
+                  <Image src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&q=80" alt="Property" fill style={{ objectFit: "cover" }} />
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", flexGrow: 1, justifyContent: "center" }}>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "16px", color: "#001F3F", lineHeight: "17px" }}>GLC SOS 01</span>
+                  <div style={{ display: "flex", alignItems: "center", gap: "4px", marginTop: "4px" }}>
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#64748B" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", letterSpacing: "0.19px", color: "#64748B", textTransform: "capitalize" }}>Shadnagar, Hyderabad</span>
+                  </div>
+
+                  <div style={{ marginTop: "14px", display: "flex", flexDirection: "column", gap: "6px" }}>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "10px", color: "#0A1B3D" }}>75% Purchase Process Complete</span>
+                    <div style={{ width: "100%", height: "6px", background: "#F3F4F6", borderRadius: "9999px", overflow: "hidden" }}>
+                      <div style={{ width: "75%", height: "100%", background: "#2780C4", borderRadius: "9999px" }} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Card 6 */}
+            <div onClick={() => setIsTrackingModalOpen(true)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", boxShadow: "0px 7.6px 25.33px rgba(0, 31, 63, 0.04)", borderRadius: "20px", padding: "16px", position: "relative", display: "flex", flexDirection: "column" }}>
+              <div style={{ display: "flex", gap: "14px", width: "100%" }}>
+                <div style={{ width: "90px", height: "90px", borderRadius: "10px", overflow: "hidden", position: "relative", flexShrink: 0 }}>
+                  <Image src="https://images.unsplash.com/photo-1592595896616-c3716229b43c?w=400&q=80" alt="Property" fill style={{ objectFit: "cover" }} />
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", flexGrow: 1, justifyContent: "center" }}>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "16px", color: "#001F3F", lineHeight: "17px" }}>GLC SOS 02</span>
+                  <div style={{ display: "flex", alignItems: "center", gap: "4px", marginTop: "4px" }}>
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#64748B" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", letterSpacing: "0.19px", color: "#64748B", textTransform: "capitalize" }}>Shadnagar, Hyderabad</span>
+                  </div>
+
+                  <div style={{ marginTop: "14px", display: "flex", flexDirection: "column", gap: "6px" }}>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "10px", color: "#0A1B3D" }}>42% Purchase Process Complete</span>
+                    <div style={{ width: "100%", height: "6px", background: "#F3F4F6", borderRadius: "9999px", overflow: "hidden" }}>
+                      <div style={{ width: "42%", height: "100%", background: "#2780C4", borderRadius: "9999px" }} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* ─── LEFT SIDEBAR (IDENTITY & REGULATORY) ─── */}
         <motion.div
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.7, delay: 0.35 }}
-          style={{ position: "absolute", width: "391px", height: "590px", left: "23px", top: "502px", background: "#FFFFFF", borderRadius: "32px", boxShadow: "0px 10px 25px -5px rgba(0,0,0,0.03)", boxSizing: "border-box", padding: "32px 16px", display: "flex", flexDirection: "column", gap: "24px", zIndex: 10 }}
+          style={{ position: "absolute", width: "391px", left: "23px", top: "502px", background: "#FFFFFF", borderRadius: "32px", boxShadow: "0px 10px 25px -5px rgba(0,0,0,0.03)", boxSizing: "border-box", padding: "32px 16px", display: "flex", flexDirection: "column", gap: "24px", zIndex: 10 }}
         >
           {/* Identity & Contact */}
           <div style={{ display: "flex", flexDirection: "column", gap: "12px", width: "100%" }}>
             <div style={{ padding: "0 16px" }}>
               <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C", textTransform: "uppercase" }}>Identity & Contact</span>
             </div>
-            <div style={{ background: "#FFFFFF", borderRadius: "24px", border: "1px solid #FAFAFA", boxShadow: "0px 1px 4px rgba(0,0,0,0.02)", width: "100%", display: "flex", flexDirection: "column" }}>
+            <div style={{ background: "#FFFFFF", borderRadius: "32px", boxShadow: "0px 1px 2px rgba(0,0,0,0.05)", width: "100%", display: "flex", flexDirection: "column" }}>
               <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: "16px 20px" }}>
                 <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "14px", color: "#71717A", whiteSpace: "nowrap" }}>Full Name</span>
                 <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C" }}>Arjun Vardhan</span>
@@ -367,7 +627,11 @@ export default function ProfileScreen() {
                 <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "14px", color: "#71717A", whiteSpace: "nowrap" }}>Mobile Number</span>
                 <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "8px" }}>
                   <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C", whiteSpace: "nowrap" }}>+91 98765 43210</span>
-                  <span style={{ background: "#EFF6FF", color: "#2563EB", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", padding: "2px 8px", borderRadius: "9999px", whiteSpace: "nowrap" }}>OTP VERIFIED</span>
+                  {isPhoneVerified ? (
+                    <span style={{ background: "#EFF6FF", color: "#2563EB", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", padding: "2px 8px", borderRadius: "9999px", whiteSpace: "nowrap" }}>OTP VERIFIED</span>
+                  ) : (
+                    <button onClick={() => setIsPhoneVerified(true)} style={{ background: "#EFF6FF", color: "#2563EB", border: "none", cursor: "pointer", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", padding: "4px 10px", borderRadius: "9999px", whiteSpace: "nowrap" }}>SEND OTP</button>
+                  )}
                 </div>
               </div>
               <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: "16px 20px", borderTop: "1px solid #FAFAFA" }}>
@@ -382,121 +646,227 @@ export default function ProfileScreen() {
             <div style={{ padding: "0 16px" }}>
               <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Regulatory Compliance</span>
             </div>
-            <div style={{ background: "#FFFFFF", borderRadius: "24px", border: "1px solid #FAFAFA", boxShadow: "0px 1px 4px rgba(0,0,0,0.02)", width: "100%", display: "flex", flexDirection: "column" }}>
-              {[{ label: "Primary ID / Aadhaar" }, { label: "PAN Card Number" }].map((row, i) => (
-                <div key={i} style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: "16px 20px", borderTop: i > 0 ? "1px solid #FAFAFA" : "none" }}>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "14px", color: "#71717A" }}>{row.label}</span>
-                  <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "6px" }}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="#059669"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" /></svg>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#059669" }}>Verified</span>
+            <div style={{ background: "#FFFFFF", borderRadius: "32px", boxShadow: "0px 1px 2px rgba(0,0,0,0.05)", width: "100%", display: "flex", flexDirection: "column" }}>
+
+              {/* Aadhaar Row */}
+              <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: "16px 20px" }}>
+                {isAadhaarVerified ? (
+                  <>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "14px", color: "#71717A" }}>Primary ID / Aadhaar</span>
+                    <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+                      <img src="/assets/profile account/Container (16).svg" alt="Verified" />
+                    </div>
+                  </>
+                ) : (
+                  <div style={{ display: "flex", width: "100%", gap: "8px", alignItems: "center" }}>
+                    <div style={{ flex: 1, height: "46px", background: "#FEFEFE", border: "1.4px solid #F8F8F8", borderRadius: "21px", display: "flex", alignItems: "center", padding: "0 14px", gap: "8px" }}>
+                      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#A1999B" strokeWidth="1"><rect x="3" y="4" width="18" height="16" rx="2" ry="2" /><line x1="7" y1="8" x2="11" y2="8" /><line x1="7" y1="12" x2="17" y2="12" /><line x1="7" y1="16" x2="17" y2="16" /></svg>
+                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#BDBDBD", whiteSpace: "nowrap" }}>Enter & Upload Aadhar Card</span>
+                    </div>
+                    <button onClick={() => triggerUpload("aadhaar-front")} style={{ width: "78px", height: "46px", background: "#F3F3F5", border: "1.4px dashed rgba(0,0,0,0.3)", borderRadius: "23px", display: "flex", alignItems: "center", justifyContent: "center", gap: "4px", cursor: "pointer", flexShrink: 0 }}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="1.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>
+                    </button>
+                    <button onClick={() => triggerUpload("aadhaar-back")} style={{ width: "78px", height: "46px", background: "#F3F3F5", border: "1.4px dashed rgba(188,201,201,0.3)", borderRadius: "23px", display: "flex", alignItems: "center", justifyContent: "center", gap: "4px", cursor: "pointer", flexShrink: 0 }}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A49999" strokeWidth="1.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>
+                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "9px", color: "#BDBDBD" }}>Back</span>
+                    </button>
                   </div>
-                </div>
-              ))}
+                )}
+              </div>
+
+              {/* PAN Row */}
+              <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: "16px 20px", borderTop: "1px solid #FAFAFA" }}>
+                {isPanVerified ? (
+                  <>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "14px", color: "#71717A" }}>PAN Card Number</span>
+                    <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+                      <img src="/assets/profile account/Container (16).svg" alt="Verified" />
+                    </div>
+                  </>
+                ) : (
+                  <div style={{ display: "flex", width: "100%", gap: "8px", alignItems: "center" }}>
+                    <div style={{ flex: 1, height: "46px", background: "#FEFEFE", border: "1.4px solid #F8F8F8", borderRadius: "21px", display: "flex", alignItems: "center", padding: "0 14px", gap: "8px" }}>
+                      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#A1999B" strokeWidth="1"><rect x="3" y="4" width="18" height="16" rx="2" ry="2" /><line x1="7" y1="8" x2="11" y2="8" /><line x1="7" y1="12" x2="17" y2="12" /><line x1="7" y1="16" x2="17" y2="16" /></svg>
+                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#BDBDBD", whiteSpace: "nowrap" }}>Enter and Upload PAN Card</span>
+                    </div>
+                    <button onClick={() => triggerUpload("pan")} style={{ width: "78px", height: "46px", background: "#F3F3F5", border: "1.4px dashed rgba(188,201,201,0.3)", borderRadius: "23px", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", flexShrink: 0 }}>Upload</button>
+                  </div>
+                )}
+              </div>
+
             </div>
             <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "8px", padding: "4px 16px", opacity: 0.6 }}>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="#0F2F4C" style={{ flexShrink: 0 }}><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z" /></svg>
               <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "11px", color: "#71717A", lineHeight: "16px", width: "235.45px" }}>Your data is encrypted and stored as per SEBI<br />guidelines.</span>
             </div>
           </div>
-
         </motion.div>
 
-        {/* ─── DESKTOP SIGN OUT ─── */}
+        {/* ─── LEFT SIDEBAR (SUPPORT & PREFERENCES) ─── */}
         <motion.div
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.7, delay: 0.45 }}
-          style={{ position: "absolute", width: "391px", left: "23px", top: "1112px", display: "flex", justifyContent: "center", zIndex: 10 }}
+          transition={{ duration: 0.7, delay: 0.4 }}
+          style={{ position: "absolute", width: "391px", left: "23px", top: "1068px", display: "flex", flexDirection: "column", gap: "24px", zIndex: 10 }}
         >
-          <button
-            style={{ background: "transparent", border: "none", display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", padding: 0 }}
-            onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.7")}
-            onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E53935" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
-            </svg>
-            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", color: "#E53935", letterSpacing: "0.5px", textTransform: "uppercase" }}>Sign Out</span>
-          </button>
-        </motion.div>
-
-        {/* ─── RIGHT SIDEBAR: ACTIVE OPERATIONS ─── */}
-        <motion.div
-          initial={{ opacity: 0, x: 30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.7, delay: 0.35 }}
-          style={{ position: "absolute", width: "377px", height: "392px", left: "1034px", top: "502px", background: "#FFFFFF", borderRadius: "32px", boxShadow: "0px 10px 25px -5px rgba(0,0,0,0.03)", boxSizing: "border-box", padding: "32px", display: "flex", flexDirection: "column", zIndex: 10 }}
-        >
-          <div style={{ paddingBottom: "24px" }}>
-            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C", textTransform: "uppercase" }}>Active Operations</span>
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: "20px", flexGrow: 1 }}>
-            <div style={{ display: "flex", flexDirection: "row", gap: "16px", height: "70px" }}>
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "8px" }}>
-                <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#2780C4", flexShrink: 0 }} />
-                <div style={{ width: "2px", height: "54px", background: "#E7E8E9", marginTop: "4px" }} />
-              </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "4px", flexGrow: 1 }}>
-                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C", lineHeight: "20px" }}>Farmhouse Construction</span>
-                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "14px", color: "#45474C", lineHeight: "16px" }}>Plot 24A - Concrete Foundation Phase</span>
-                <div style={{ width: "100%", height: "6px", background: "#F3F4F5", borderRadius: "9999px", overflow: "hidden", marginTop: "4px" }}>
-                  <div style={{ width: "65%", height: "100%", background: "#2780C4" }} />
+          {/* Support & Preferences */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px", width: "100%" }}>
+            <div style={{ padding: "0 16px" }}>
+              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", letterSpacing: "1.2px", color: "#0F2F4C", textTransform: "uppercase" }}>Support & Preferences</span>
+            </div>
+            <div style={{ background: "#FFFFFF", borderRadius: "32px", boxShadow: "0px 1px 2px rgba(0,0,0,0.05)", width: "381px", display: "flex", flexDirection: "column" }}>
+              <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: "20px 24px", cursor: "pointer" }} onClick={() => router.push("/home/supportcenter")}>
+                <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+                  <div style={{ width: "18.33px", height: "16.65px", background: "#A1A1AA", display: "flex", alignItems: "center", justifyContent: "center", maskImage: "url('/assets/profile account/Container (15).svg')", maskSize: "contain", maskRepeat: "no-repeat", WebkitMaskImage: "url('/assets/profile account/Container (15).svg')", WebkitMaskSize: "contain", WebkitMaskRepeat: "no-repeat" }}></div>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C" }}>Support Centre</span>
                 </div>
+                <div style={{ width: "7.4px", height: "12px", background: "#D4D4D8", maskImage: "url('/assets/profile account/Icon (20).svg')", maskSize: "contain", maskRepeat: "no-repeat", WebkitMaskImage: "url('/assets/profile account/Icon (20).svg')", WebkitMaskSize: "contain", WebkitMaskRepeat: "no-repeat" }}></div>
               </div>
-            </div>
-            <div style={{ display: "flex", flexDirection: "row", gap: "16px", height: "56px" }}>
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "8px" }}>
-                <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#00629E", flexShrink: 0 }} />
-                <div style={{ width: "2px", height: "40px", background: "#E7E8E9", marginTop: "4px" }} />
-              </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "4px", flexGrow: 1 }}>
-                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C", lineHeight: "20px" }}>Maintenance Cycle</span>
-                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "14px", color: "#45474C", lineHeight: "16px" }}>Orchard 09 - Seasonal Pruning</span>
-              </div>
-            </div>
-            <div style={{ display: "flex", flexDirection: "row", gap: "16px", height: "40px" }}>
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "8px" }}>
-                <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#75777D", flexShrink: 0 }} />
-              </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "4px", flexGrow: 1 }}>
-                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C", lineHeight: "20px" }}>Verifications</span>
-                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "14px", color: "#45474C", lineHeight: "16px" }}>Annual Soil Report pending</span>
+              <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: "20px 24px", borderTop: "1px solid #FAFAFA", cursor: "pointer" }} onClick={() => router.push("/profile/savedfarmlands")}>
+                <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+                  <div style={{ width: "16px", height: "13.73px", border: "1.6px solid #A1A1AA", borderRadius: "2px", display: "flex", alignItems: "center", justifyContent: "center", maskImage: "url('/assets/profile account/Vector (2).svg')", maskSize: "contain", maskRepeat: "no-repeat", WebkitMaskImage: "url('/assets/profile account/Vector (2).svg')", WebkitMaskSize: "contain", WebkitMaskRepeat: "no-repeat" }}></div>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C" }}>Saved Farmlands</span>
+                </div>
+                <div style={{ width: "7.4px", height: "12px", background: "#D4D4D8", maskImage: "url('/assets/profile account/Icon (20).svg')", maskSize: "contain", maskRepeat: "no-repeat", WebkitMaskImage: "url('/assets/profile account/Icon (20).svg')", WebkitMaskSize: "contain", WebkitMaskRepeat: "no-repeat" }}></div>
               </div>
             </div>
           </div>
-          <div style={{ paddingTop: "16px", borderTop: "1px solid #FAFAFA", display: "flex", alignItems: "center" }}>
-            <button style={{ background: "transparent", border: "none", display: "flex", alignItems: "center", gap: "6px", cursor: "pointer", padding: 0 }} onClick={() => router.push("/home/ai-generated-farmlands")}>
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#00629E" }}>View Live Feeds</span>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00629E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+
+          {/* Desktop Sign Out */}
+          <div style={{ padding: "0 16px" }}>
+            <button
+              style={{ background: "transparent", border: "none", display: "flex", alignItems: "center", gap: "12px", cursor: "pointer", padding: 0 }}
+              onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.7")}
+              onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E53935" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" />
+              </svg>
+              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#E53935", letterSpacing: "1px", textTransform: "uppercase" }}>Sign Out</span>
             </button>
           </div>
         </motion.div>
 
-        {/* ─── RIGHT SIDEBAR: SUPPORT & PREFERENCES ─── */}
+        {/* ─── RIGHT SIDEBAR: OPERATIONS ─── */}
         <motion.div
           initial={{ opacity: 0, x: 30 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.7, delay: 0.5 }}
-          style={{ position: "absolute", width: "377px", height: "157px", left: "1034px", top: "929px", display: "flex", flexDirection: "column", gap: "12px", zIndex: 10 }}
+          transition={{ duration: 0.7, delay: 0.35 }}
+          style={{ position: "absolute", left: "1050px", right: "49px", top: "511px", display: "flex", flexDirection: "column", gap: "24px", paddingRight: "8px", zIndex: 10 }}
         >
-          <div style={{ padding: "0 16px" }}>
-            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", letterSpacing: "1.2px", color: "#0F2F4C", textTransform: "uppercase" }}>Support & Preferences</span>
+          {/* Active Investments */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "16px", width: "100%" }}>
+            <div style={{ padding: "0 8px" }}>
+              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Active Investments</span>
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: "16px", width: "100%" }}>
+              {[
+                { title: "GLC SOS 01", subtitle: "Medchal • ‹12.5L • 0.5 Ac", color: "#059669" },
+                { title: "GLC SOS 02", subtitle: "Vikarabad • ‹5.0L • 0.2 Ac", color: "#D97706" }
+              ].map((item, idx) => (
+                <div key={idx} onClick={() => router.push(`/profile/active-investment/${idx + 1}`)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", borderRadius: "32px", padding: "20px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0px 4px 15px rgba(0,0,0,0.02)" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+                    <div style={{ width: "42px", height: "42px", background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.04)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 2px 5px rgba(0,0,0,0.02)" }}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={item.color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
+                    </div>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.title}</span>
+                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>{item.subtitle}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-          <div style={{ background: "#FFFFFF", borderRadius: "24px", boxShadow: "0px 1px 4px rgba(0,0,0,0.02)", display: "flex", flexDirection: "column", overflow: "hidden" }}>
-            <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", padding: "16px 24px", cursor: "pointer", transition: "background 0.2s ease" }} onMouseEnter={(e) => (e.currentTarget.style.background = "#FAFAFA")} onMouseLeave={(e) => (e.currentTarget.style.background = "#FFFFFF")} onClick={() => router.push("/home/supportcenter")}>
-              <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "16px" }}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A1A1AA" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C" }}>Support Centre</span>
-              </div>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D4D4D8" strokeWidth="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+
+          {/* Site Visits in queue */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "16px", width: "100%" }}>
+            <div style={{ padding: "0 8px" }}>
+              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Site Vists in queue</span>
             </div>
-            <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", padding: "16px 24px", borderTop: "1px solid #FAFAFA", cursor: "pointer", transition: "background 0.2s ease" }} onMouseEnter={(e) => (e.currentTarget.style.background = "#FAFAFA")} onMouseLeave={(e) => (e.currentTarget.style.background = "#FFFFFF")} onClick={() => router.push("/profile/savedfarmlands")}>
-              <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "16px" }}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A1A1AA" strokeWidth="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C" }}>Saved Farmlands</span>
+            {[
+              { title: "GLC SOS 01", subtitle: "Medchal • ‹12.5L • 0.5 Ac", color: "#059669" }
+            ].map((item, idx) => (
+              <div key={idx} onClick={() => setIsSiteVisitQueueModalOpen(true)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", borderRadius: "32px", padding: "20px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0px 4px 15px rgba(0,0,0,0.02)" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+                  <div style={{ width: "42px", height: "42px", background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.04)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 2px 5px rgba(0,0,0,0.02)" }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={item.color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.title}</span>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>{item.subtitle}</span>
+                  </div>
+                </div>
               </div>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D4D4D8" strokeWidth="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            ))}
+          </div>
+
+          {/* Site Visits Completed */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "16px", width: "100%" }}>
+            <div style={{ padding: "0 8px" }}>
+              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Site Vists Completed</span>
             </div>
+            {[
+              { title: "GLC SOS 02", subtitle: "Vikarabad • ‹5.0L • 0.2 Ac", color: "#D97706" }
+            ].map((item, idx) => (
+              <div key={idx} onClick={() => setIsSiteVisitModalOpen(true)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", borderRadius: "32px", padding: "20px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0px 4px 15px rgba(0,0,0,0.02)" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+                  <div style={{ width: "42px", height: "42px", background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.04)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 2px 5px rgba(0,0,0,0.02)" }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={item.color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.title}</span>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>{item.subtitle}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Active Listing */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "16px", width: "100%" }}>
+            <div style={{ padding: "0 8px" }}>
+              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Active Listing</span>
+            </div>
+            {[
+              { title: "GLC SOS 02", subtitle: "Vikarabad • ‹5.0L • 0.2 Ac", color: "#D97706" }
+            ].map((item, idx) => (
+              <div key={idx} onClick={() => router.push(`/profile/active-listing/${idx + 1}`)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", borderRadius: "32px", padding: "20px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0px 4px 15px rgba(0,0,0,0.02)" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+                  <div style={{ width: "42px", height: "42px", background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.04)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 2px 5px rgba(0,0,0,0.02)" }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={item.color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.title}</span>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>{item.subtitle}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Active Deals In Queue */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "16px", width: "100%" }}>
+            <div style={{ padding: "0 8px" }}>
+              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Active Deals In Queue</span>
+            </div>
+            {[
+              { title: "GLC SOS 01", subtitle: "Medchal • ‹12.5L • 0.5 Ac", color: "#059669" },
+              { title: "GLC SOS 02", subtitle: "Vikarabad • ‹5.0L • 0.2 Ac", color: "#D97706" }
+            ].map((item, idx) => (
+              <div key={idx} onClick={() => router.push(`/profile/active-deals/${idx + 1}`)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", borderRadius: "32px", padding: "20px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0px 4px 15px rgba(0,0,0,0.02)" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+                  <div style={{ width: "42px", height: "42px", background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.04)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 2px 5px rgba(0,0,0,0.02)" }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={item.color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.title}</span>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>{item.subtitle}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </motion.div>
       </div>
@@ -506,6 +876,19 @@ export default function ProfileScreen() {
         <CTA />
         <Footer />
       </section>
+
+      <SiteVisitCompletedModal
+        isOpen={isSiteVisitModalOpen}
+        onClose={() => setIsSiteVisitModalOpen(false)}
+      />
+      <SiteVisitQueueModal
+        isOpen={isSiteVisitQueueModalOpen}
+        onClose={() => setIsSiteVisitQueueModalOpen(false)}
+      />
+      <LandPurchaseTrackingModal
+        isOpen={isTrackingModalOpen}
+        onClose={() => setIsTrackingModalOpen(false)}
+      />
     </main>
   );
 }
