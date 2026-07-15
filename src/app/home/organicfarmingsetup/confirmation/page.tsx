@@ -1,14 +1,18 @@
 "use client";
 
-import React from "react";
-import { useRouter } from "next/navigation";
+import React, { Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import OrganicFarmingSetupHero from "../OrganicFarmingSetupHero";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 import { motion } from "framer-motion";
 
-export default function OrganicFarmingSetupConfirmationPage() {
+function OrganicFarmingSetupConfirmationContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const plan = searchParams.get("plan");
+  const isTimber = plan === "timber";
+  const planDisplay = isTimber ? "Premium Timber (60/40) Split" : "Standard Agri-Yield (50/50)";
 
   return (
     <div className="w-full flex flex-col relative min-h-screen bg-[#F8F9FA] select-none box-border overflow-x-hidden font-['Plus_Jakarta_Sans',sans-serif]">
@@ -79,7 +83,7 @@ export default function OrganicFarmingSetupConfirmationPage() {
                   MANAGEMENT PLAN
                 </span>
                 <span className="font-bold text-base sm:text-lg text-[#00629E]">
-                  Standard Agri-Yield (50/50)
+                  {planDisplay}
                 </span>
               </div>
 
@@ -124,7 +128,7 @@ export default function OrganicFarmingSetupConfirmationPage() {
         {/* ─── SECTION 3: ACTION DECK TRIGGER CONTAINER ─── */}
         <div className="mt-12 flex items-center justify-center w-full">
           <button
-            onClick={() => router.push("/home/organicfarmingsetup/confirmation/trackprogress")}
+            onClick={() => router.push(`/home/organicfarmingsetup/confirmation/trackprogress?plan=${plan || ''}`)}
             className="w-[268.44px] h-[68px] bg-[radial-gradient(49.92%_99.29%_at_50%_50%,#2780C4_0%,#164573_100%)] hover:opacity-95 active:scale-[0.99] transition-all text-white font-bold text-lg rounded-full shadow-md border-none cursor-pointer flex items-center justify-center gap-3 tracking-wide"
           >
             <span>TRACK PROGRESS</span>
@@ -142,5 +146,13 @@ export default function OrganicFarmingSetupConfirmationPage() {
       </div>
 
     </div>
+  );
+}
+
+export default function OrganicFarmingSetupConfirmationPage() {
+  return (
+    <Suspense fallback={<div className="w-full min-h-screen bg-[#F8F9FA]" />}>
+      <OrganicFarmingSetupConfirmationContent />
+    </Suspense>
   );
 }

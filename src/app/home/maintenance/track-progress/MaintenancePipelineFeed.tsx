@@ -12,6 +12,8 @@ export default function MaintenancePipelineFeed({ serviceSlug = "fencing-securit
   useEffect(() => setMounted(true), []);
 
   const farmlandIdParam = searchParams.get("farmland") || "GLC-SOS-01";
+  const plan = searchParams.get("plan");
+  const organicPlanDisplay = plan === "timber" ? "Premium Timber (60/40) Split" : "Standard Agri-Yield (50/50)";
 
   // Service specific data mapping
   const serviceData: Record<string, { title: string, listTitle: string, phases: string[], price: string, subtext: string, middleImage: string | null }> = {
@@ -41,7 +43,7 @@ export default function MaintenancePipelineFeed({ serviceSlug = "fencing-securit
     },
     "organic-farm-setup": {
       title: "Organic Farm Setup",
-      listTitle: "Standard Agri-Yield (50/50)",
+      listTitle: organicPlanDisplay,
       price: "₹4,50,000",
       phases: ["Field Officer Validation", "Deep Soil Analysis", "Organic Conversion", "Planting"],
       subtext: "Inspection in progress",

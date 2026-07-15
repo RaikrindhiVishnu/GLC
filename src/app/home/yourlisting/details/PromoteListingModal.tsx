@@ -15,6 +15,9 @@ export default function PromoteListingModal({ isOpen, onClose }: PromoteListingM
   const [isActionOpen, setIsActionOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
+  // Toggle this to test the "booked" scenario for deleting a listing
+  const isBooked = false;
+
   // Prevent body scroll when modal is open
   useEffect(() => {
     if (isOpen) {
@@ -192,7 +195,7 @@ export default function PromoteListingModal({ isOpen, onClose }: PromoteListingM
 
                     {/* SUBMIT REVIEW Button */}
                     <button 
-                      onClick={() => setIsActionOpen(true)}
+                      onClick={onClose}
                       className="flex justify-center items-center w-[400px] h-[66px] rounded-full cursor-pointer hover:opacity-90 transition-opacity"
                       style={{
                         background: "radial-gradient(49.97% 160.36% at 50% 50%, #2780C4 0%, #164573 100%)",
@@ -216,7 +219,13 @@ export default function PromoteListingModal({ isOpen, onClose }: PromoteListingM
 
                   {/* DELETE LISTING Button */}
                   <button 
-                    onClick={() => setIsDeleteOpen(true)}
+                    onClick={() => {
+                      if (isBooked) {
+                        setIsActionOpen(true);
+                      } else {
+                        setIsDeleteOpen(true);
+                      }
+                    }}
                     className="flex flex-row items-center justify-center gap-[8px] h-[45px] rounded-full px-[32px] py-[9px] cursor-pointer hover:bg-red-50 transition-colors mt-2"
                     style={{
                       background: "transparent",

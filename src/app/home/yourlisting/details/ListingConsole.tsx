@@ -138,7 +138,10 @@ export default function ListingConsole() {
               }}
             >
               {/* Edit Photos Row */}
-              <div className="flex flex-row justify-between items-center p-[34px] w-full cursor-pointer hover:bg-gray-50 transition-colors">
+              <div 
+                onClick={() => setIsModalOpen(true)}
+                className="flex flex-row justify-between items-center p-[34px] w-full cursor-pointer hover:bg-gray-50 transition-colors"
+              >
                 <div className="flex flex-col gap-[2px]">
                   <span 
                     style={{
@@ -217,7 +220,6 @@ export default function ListingConsole() {
 
             {/* Promote Listing Button */}
             <button 
-              onClick={() => setIsModalOpen(true)}
               className="flex justify-center items-center w-full h-[68.5px] rounded-full border-none cursor-pointer hover:opacity-90 transition-opacity"
               style={{
                 background: "radial-gradient(50% 130.51% at 50% 50%, #2780C4 0%, #164573 100%)",

@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import NotificationDropdown from "./NotificationDropdown";
 
 export type NavbarVariant = "landing" | "app";
 export type NavbarActive = "home" | "search" | "pricing" | "profile" | "documents" | "compareassets" | "comparepremium" | "none";
@@ -95,6 +96,7 @@ function AppNavbar({ active, className, forceScrolled }: { active?: NavbarActive
   const router = useRouter();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
 
   const currentCapsuleBg = "rgba(255, 255, 255, 0.1)";
   const currentActivePillBg = "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)";
@@ -259,69 +261,55 @@ function AppNavbar({ active, className, forceScrolled }: { active?: NavbarActive
           />
         </button>
 
-        <button
-          type="button"
-          style={{
-            ...UTILITY_BTN_STYLE,
-            position: "relative",
-            background: currentUtilityBg,
-            border: "none",
-            boxShadow: isScrolled ? "0px 4px 24px rgba(0,31,63,0.08)" : UTILITY_BTN_STYLE.boxShadow,
-            backdropFilter: isScrolled ? "none" : "blur(62.6px)",
-            WebkitBackdropFilter: isScrolled ? "none" : "blur(62.6px)",
-            transition: "all 0.3s ease"
-          }}
-          className="w-10 h-10 md:w-[44px] md:h-[44px]"
-          aria-label="Notifications"
-        >
-          <Image
-            src="/assets/home/HeroScreen/notification.svg"
-            alt=""
-            width={22}
-            height={22}
+        <div style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <button
+            type="button"
+            onClick={() => setIsNotificationsOpen(prev => !prev)}
             style={{
-              filter: isScrolled ? darkBlueFilter : "none",
-              transition: "filter 0.3s ease"
+              ...UTILITY_BTN_STYLE,
+              position: "relative",
+              background: currentUtilityBg,
+              border: "none",
+              boxShadow: isScrolled ? "0px 4px 24px rgba(0,31,63,0.08)" : UTILITY_BTN_STYLE.boxShadow,
+              backdropFilter: isScrolled ? "none" : "blur(62.6px)",
+              WebkitBackdropFilter: isScrolled ? "none" : "blur(62.6px)",
+              transition: "all 0.3s ease"
             }}
-          />
-          <span
-            style={{
-              position: "absolute",
-              top: "22%",
-              right: "20%",
-              width: "6px",
-              height: "6px",
-              background: "#E53935",
-              border: "1px solid rgba(255, 255, 255, 0.9)",
-              borderRadius: "50%",
-              zIndex: 1,
-            }}
-          />
-        </button>
+            className="w-10 h-10 md:w-[44px] md:h-[44px]"
+            aria-label="Notifications"
+          >
+            <Image
+              src="/assets/home/HeroScreen/notification.svg"
+              alt=""
+              width={22}
+              height={22}
+              style={{
+                filter: isScrolled ? darkBlueFilter : "none",
+                transition: "filter 0.3s ease"
+              }}
+            />
+            <span
+              style={{
+                position: "absolute",
+                top: "22%",
+                right: "20%",
+                width: "6px",
+                height: "6px",
+                background: "#E53935",
+                border: "1px solid rgba(255, 255, 255, 0.9)",
+                borderRadius: "50%",
+                zIndex: 1,
+              }}
+            />
+          </button>
+          <NotificationDropdown isOpen={isNotificationsOpen} onClose={() => setIsNotificationsOpen(false)} />
+        </div>
 
-        <button
-          type="button"
-          onClick={() => router.push("/profile")}
-          className="w-10 h-10 md:w-11 md:h-11 rounded-full overflow-hidden shadow-[0px_1.8px_10.8px_rgba(0,0,0,0.03)] cursor-pointer relative z-10 [-webkit-tap-highlight-color:transparent] border border-[rgba(255,255,255,0.82)]"
-          aria-label="Account"
-        >
-          <img src="/assets/home/HeroScreen/person.svg" alt="" className="w-full h-full object-cover block scale-150 origin-center" />
-        </button>
       </div>
 
       {/* Mobile Utility & Navigation Group (hidden on desktop) */}
       <div className="flex md:hidden items-center gap-3 shrink-0 relative z-50">
-        <button
-          type="button"
-          onClick={() => {
-            setIsMobileMenuOpen(false);
-            router.push("/profile");
-          }}
-          className={`w-9 h-9 rounded-full overflow-hidden shadow-[0px_1.8px_10.8px_rgba(0,0,0,0.03)] cursor-pointer relative [-webkit-tap-highlight-color:transparent] transition-all duration-300 ${isScrolled ? "border border-[#EDEEEF]" : "border border-[rgba(255,255,255,0.82)]"}`}
-          aria-label="Account"
-        >
-          <img src="/assets/home/HeroScreen/person.svg" alt="" className="w-full h-full object-cover block scale-150 origin-center" />
-        </button>
+
 
         {/* Minimal Animated Hamburger Icon with matching Glass Background Capsule */}
         <button

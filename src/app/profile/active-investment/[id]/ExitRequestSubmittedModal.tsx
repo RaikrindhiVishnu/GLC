@@ -63,18 +63,22 @@ export default function ExitRequestSubmittedModal({
         transition={{ duration: 0.25 }}
         onClick={(e) => e.stopPropagation()}
         style={{
-          width: "100%",
-          maxWidth: "1005px",
-          height: "min(921px, 92vh)",
+          width: "1005px",
+          height: "921px",
+          maxHeight: "95vh",
           background: "#F3F4F5",
-          boxShadow: "0px 40px 80px -20px rgba(9, 20, 38, 0.15)",
           borderRadius: "48px",
+          boxShadow: "0px 40px 80px -20px rgba(9, 20, 38, 0.15)",
           display: "flex",
           flexDirection: "column",
-          overflow: "hidden",
-          position: "relative",
+          overflow: "hidden", /* clips children, but does not scroll */
+          position: "relative"
         }}
       >
+        <style>{`
+          .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+          .hide-scrollbar::-webkit-scrollbar { display: none; }
+        `}</style>
         {/* ── STICKY HEADER ── */}
         <div
           style={{
@@ -121,7 +125,8 @@ export default function ExitRequestSubmittedModal({
 
         {/* ── SCROLLABLE BODY ── */}
         <div
-          className="custom-modal-scrollbar"
+          className="hide-scrollbar"
+          data-lenis-prevent
           style={{
             flex: 1,
             minHeight: 0,

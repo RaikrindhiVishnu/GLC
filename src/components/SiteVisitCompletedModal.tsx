@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useEffect } from "react";
+import { useLenis } from 'lenis/react';
 
 interface SiteVisitCompletedModalProps {
   isOpen: boolean;
@@ -12,46 +13,29 @@ export default function SiteVisitCompletedModal({
   isOpen,
   onClose,
 }: SiteVisitCompletedModalProps) {
+  const lenis = useLenis();
+
   useEffect(() => {
-    if (isOpen) {
-      const scrollY = window.scrollY;
-      document.body.style.position = "fixed";
-      document.body.style.top = `-${scrollY}px`;
-      document.body.style.width = "100%";
-      document.body.style.overflow = "hidden";
-    } else {
-      const scrollY = document.body.style.top;
-      document.body.style.position = "";
-      document.body.style.top = "";
-      document.body.style.width = "";
-      document.body.style.overflow = "";
-      if (scrollY) {
-        window.scrollTo(0, parseInt(scrollY || "0") * -1);
-      }
-    }
+    if (!isOpen) return;
+
+    if (lenis) lenis.stop();
+    document.documentElement.classList.add('modal-open');
+    document.body.classList.add('modal-open');
+
     return () => {
-      document.body.style.position = "";
-      document.body.style.top = "";
-      document.body.style.width = "";
-      document.body.style.overflow = "";
+      if (lenis) lenis.start();
+      document.documentElement.classList.remove('modal-open');
+      document.body.classList.remove('modal-open');
     };
-  }, [isOpen]);
+  }, [isOpen, lenis]);
 
   if (!isOpen) return null;
 
   return (
     <>
       <style>{`
-        .svc-modal-scroll::-webkit-scrollbar {
-          width: 6px;
-        }
-        .svc-modal-scroll::-webkit-scrollbar-track {
-          background: #f0f1f2;
-          border-radius: 10px;
-        }
-        .svc-modal-scroll::-webkit-scrollbar-thumb {
-          background-color: #99A6B5;
-          border-radius: 10px;
+        .hide-scroll::-webkit-scrollbar {
+          display: none;
         }
       `}</style>
 
@@ -80,7 +64,8 @@ export default function SiteVisitCompletedModal({
           style={{
             width: "100%",
             maxWidth: "896px",
-            height: "min(921px, 90vh)",
+            height: "auto",
+            maxHeight: "90vh",
             background: "#FFFFFF",
             boxShadow: "0px 40px 80px -20px rgba(9, 20, 38, 0.15)",
             borderRadius: "48px",
@@ -88,6 +73,7 @@ export default function SiteVisitCompletedModal({
             flexDirection: "column",
             overflow: "hidden", /* clips children, does NOT scroll itself */
           }}
+          data-lenis-prevent
         >
           {/* ── STICKY HEADER (never scrolls) ── */}
           <div
@@ -137,13 +123,16 @@ export default function SiteVisitCompletedModal({
 
           {/* ── SCROLLABLE BODY ── */}
           <div
-            className="custom-modal-scrollbar"
+            className="hide-scroll"
             style={{
               flex: 1,
               minHeight: 0,
               overflowY: "auto",
               overflowX: "hidden",
+              msOverflowStyle: "none",
+              scrollbarWidth: "none",
             }}
+            data-lenis-prevent
           >
             {/* Content */}
             <div style={{

@@ -5,6 +5,8 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import FilterPropertiesModal from "./compare/FilterPropertiesModal";
 import VerifiedDocsModal from "./VerifiedDocsModal";
+import UnlockPremiumReportsModal from "./UnlockPremiumReportsModal";
+import AccessGrantedModal from "./AccessGrantedModal";
 
 interface StickySidebarRightProps {
   title?: string;
@@ -20,6 +22,8 @@ export default function StickySidebarRight({
   const router = useRouter();
   const [isCompareModalOpen, setIsCompareModalOpen] = useState(false);
   const [isDocsModalOpen, setIsDocsModalOpen] = useState(false);
+  const [isPremiumModalOpen, setIsPremiumModalOpen] = useState(false);
+  const [isAccessGrantedOpen, setIsAccessGrantedOpen] = useState(false);
 
   return (
     <aside style={{ width: "100%", display: "flex", flexDirection: "column", gap: "24px" }}>
@@ -84,7 +88,7 @@ export default function StickySidebarRight({
         <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "14px", lineHeight: "23px", color: "#8590A6", textAlign: "center", marginBottom: "24px", maxWidth: "333px" }}>
           Access survey numbers, ownership history, and soil reports.
         </span>
-        <button onClick={() => setIsDocsModalOpen(true)} style={{ width: "100%", height: "56px", background: "#2780C4", borderRadius: "48px", border: "none", color: "#FFFFFF", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", cursor: "pointer" }}>
+        <button onClick={() => setIsPremiumModalOpen(true)} style={{ width: "100%", height: "56px", background: "#2780C4", borderRadius: "48px", border: "none", color: "#FFFFFF", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", cursor: "pointer" }}>
           Unlock All Documents
         </button>
       </motion.div>
@@ -103,6 +107,22 @@ export default function StickySidebarRight({
 
       <FilterPropertiesModal isOpen={isCompareModalOpen} onClose={() => setIsCompareModalOpen(false)} />
       <VerifiedDocsModal isOpen={isDocsModalOpen} onClose={() => setIsDocsModalOpen(false)} />
+      <UnlockPremiumReportsModal 
+        isOpen={isPremiumModalOpen} 
+        onClose={() => setIsPremiumModalOpen(false)}
+        onConfirm={() => {
+          setIsPremiumModalOpen(false);
+          setIsAccessGrantedOpen(true);
+        }}
+      />
+      <AccessGrantedModal
+        isOpen={isAccessGrantedOpen}
+        onClose={() => setIsAccessGrantedOpen(false)}
+        onViewDocuments={() => {
+          setIsAccessGrantedOpen(false);
+          setIsDocsModalOpen(true);
+        }}
+      />
     </aside>
   );
 }

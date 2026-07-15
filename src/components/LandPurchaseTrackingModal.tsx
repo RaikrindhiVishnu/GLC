@@ -39,10 +39,16 @@ export default function LandPurchaseTrackingModal({ isOpen, onClose }: LandPurch
   );
 
   return (
-    <div style={{
-      position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 999999,
-      display: 'flex', alignItems: 'center', justifyContent: 'center'
-    }}>
+    <>
+      <style>{`
+        .hide-scroll::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
+      <div style={{
+        position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 999999,
+        display: 'flex', alignItems: 'center', justifyContent: 'center'
+      }}>
       {/* Main Modal Container */}
       <div style={{
         boxSizing: 'border-box', position: 'relative', width: '1005px', height: '921px', maxHeight: '95vh',
@@ -72,8 +78,9 @@ export default function LandPurchaseTrackingModal({ isOpen, onClose }: LandPurch
         </div>
 
         {/* Scrollable Content Area */}
-        <div data-lenis-prevent="true" className="custom-modal-scrollbar" style={{
-          position: 'relative', width: '100%', flexGrow: 1, overflowY: 'auto', overflowX: 'hidden'
+        <div data-lenis-prevent="true" className="hide-scroll" style={{
+          position: 'relative', width: '100%', flexGrow: 1, overflowY: 'auto', overflowX: 'hidden',
+          msOverflowStyle: 'none', scrollbarWidth: 'none'
         }}>
           
           <div style={{ position: 'relative', width: '1000px', height: '842px', margin: '0 auto' }}>
@@ -281,8 +288,9 @@ export default function LandPurchaseTrackingModal({ isOpen, onClose }: LandPurch
 
             </div>
           </div>
-        </div>
       </div>
-    </div>
+      </div>
+      </div>
+    </>
   );
 }

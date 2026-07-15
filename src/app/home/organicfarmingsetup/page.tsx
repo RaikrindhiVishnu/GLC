@@ -205,7 +205,7 @@ export default function OrganicFarmingSetupPage() {
                         alert("Please accept the Yield Sharing Terms using the toggle switch to finalize your setup parameters.");
                         return;
                       }
-                      router.push("/home/organicfarmingsetup/confirmation");
+                      router.push(`/home/organicfarmingsetup/confirmation?plan=${selectedPlan}`);
                     }}
                     className="w-[261px] h-[56px] bg-[radial-gradient(50%_50%_at_50%_50%,#2780C4_0%,#164573_100%)] hover:opacity-95 active:scale-[0.99] transition-all text-white font-bold text-base rounded-full shadow-md border-none cursor-pointer block tracking-wider text-center"
                   >

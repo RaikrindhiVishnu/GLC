@@ -61,6 +61,10 @@ export default function ExitRequestModal({ isOpen, onClose }: ExitRequestModalPr
               onClick={(e) => e.stopPropagation()}
               className="relative bg-[#F3F4F5] w-[1005px] max-w-full h-[921px] max-h-[95vh] rounded-[48px] shadow-[0px_40px_80px_-20px_rgba(9,20,38,0.15)] overflow-hidden flex flex-col"
             >
+              <style>{`
+                .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+                .hide-scrollbar::-webkit-scrollbar { display: none; }
+              `}</style>
           {/* Header */}
           <div className="w-full h-[66px] bg-white flex items-center justify-between px-10 flex-shrink-0 relative z-20">
             <button onClick={onClose} className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-100 cursor-pointer border-none bg-transparent">
@@ -73,7 +77,7 @@ export default function ExitRequestModal({ isOpen, onClose }: ExitRequestModalPr
           </div>
 
           {/* Scrollable Content */}
-          <div className="flex-1 overflow-y-auto min-h-0 px-6 py-8 relative custom-modal-scrollbar">
+          <div data-lenis-prevent className="flex-1 overflow-y-auto min-h-0 px-6 py-8 relative hide-scrollbar">
              <div className="w-full max-w-[952px] mx-auto flex flex-col lg:flex-row gap-10">
                 
                 {/* Left Column */}

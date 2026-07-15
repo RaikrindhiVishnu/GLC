@@ -95,9 +95,7 @@ export default function VerificationHero({
                 <Image src="/assets/home/HeroScreen/notification.svg" alt="Notifications" width={26} height={26} />
                 <span style={{ position: "absolute", width: "6px", height: "6px", left: "27px", top: "13px", background: "#E53935", border: "0.9px solid rgba(255,255,255,0.9)", borderRadius: "50%" }} />
               </button>
-              <div onClick={() => router.push("/profile")} style={{ position: "absolute", width: "52px", height: "52px", left: "1328px", top: "35px", borderRadius: "50%", border: "0.45px solid rgba(255,255,255,0.82)", overflow: "hidden", cursor: "pointer", pointerEvents: "auto" }}>
-                <img src="/assets/home/HeroScreen/person.svg" alt="Profile" style={{ width: "100%", height: "100%", objectFit: "cover", transform: "scale(1.5)" }} />
-              </div>
+
 
               <div style={{ position: "absolute", width: "1059px", left: "calc(50% - 529px)", top: "40%", transform: "translateY(-50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: "32px", pointerEvents: "auto" }}>
                 <motion.h1

@@ -40,10 +40,16 @@ export default function AiCurationModal({ onClose, onGenerate }: AiCurationModal
   );
 
   return (
-    <div style={{
-      position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 99999,
-      display: 'flex', alignItems: 'center', justifyContent: 'center'
-    }}>
+    <>
+      <style>{`
+        .hide-scroll::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
+      <div style={{
+        position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 99999,
+        display: 'flex', alignItems: 'center', justifyContent: 'center'
+      }}>
       {/* Modal Container */}
       <div style={{
         boxSizing: 'border-box',
@@ -84,10 +90,10 @@ export default function AiCurationModal({ onClose, onGenerate }: AiCurationModal
         </div>
 
         {/* Modal Scrollable Body */}
-        <div data-lenis-prevent="true" className="custom-modal-scrollbar" style={{
+        <div data-lenis-prevent="true" className="hide-scroll" style={{
           display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '32px 32px 140px', gap: '32px',
           position: 'absolute', left: '0px', right: '0px', top: '69px', bottom: '0px',
-          overflowY: 'auto'
+          overflowY: 'auto', msOverflowStyle: 'none', scrollbarWidth: 'none'
         }}>
 
           {/* Intro Section */}
@@ -329,5 +335,6 @@ export default function AiCurationModal({ onClose, onGenerate }: AiCurationModal
 
       </div>
     </div>
+    </>
   );
 }

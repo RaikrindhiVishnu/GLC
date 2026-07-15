@@ -37,7 +37,7 @@ export default function OrganicFarmingSetupHero() {
         }}
       />
 
-      <Navbar variant="app" active="home" />
+      <Navbar variant="app" active="" />
 
       <div
         style={{ position: "absolute", inset: 0, zIndex: 5, boxSizing: "border-box" }}
@@ -46,25 +46,13 @@ export default function OrganicFarmingSetupHero() {
         <div className="w-full max-w-254.5 flex flex-col items-center pointer-events-auto">
 
           <h1 className="text-shadow-premium flex flex-col items-center justify-center font-jakarta font-extrabold tracking-[-4px] text-white">
-            <span className="flex text-[48px] leading-none md:text-[76px] flex-wrap gap-x-2 md:gap-x-4 justify-center">
-              {"Organic Farm".split(" ").map((word, i) => (
+            <span className="flex text-[48px] leading-none md:text-[76px] flex-wrap gap-x-2 md:gap-x-4 justify-center text-center">
+              {"Organic Farm Setup".split(" ").map((word, i) => (
                 <motion.span
                   key={i}
                   initial={{ opacity: 0, filter: "blur(8px)", y: 15 }}
                   animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
                   transition={{ duration: 0.8, delay: i * 0.15 }}
-                >
-                  {word}
-                </motion.span>
-              ))}
-            </span>
-            <span className="flex text-[48px] leading-none md:text-[76px] flex-wrap gap-x-2 md:gap-x-4 justify-center mt-1">
-              {"Setup".split(" ").map((word, i) => (
-                <motion.span
-                  key={i}
-                  initial={{ opacity: 0, filter: "blur(8px)", y: 15 }}
-                  animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.3 + i * 0.15 }}
                 >
                   {word}
                 </motion.span>

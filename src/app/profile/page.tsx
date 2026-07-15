@@ -19,19 +19,19 @@ export default function ProfileScreen() {
   const [isPanVerified, setIsPanVerified] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [uploadTarget, setUploadTarget] = useState<"aadhaar" | "pan" | null>(null);
+  const [uploadTarget, setUploadTarget] = useState<"aadhaar-front" | "aadhaar-back" | "pan" | null>(null);
   const [isSiteVisitModalOpen, setIsSiteVisitModalOpen] = useState(false);
   const [isSiteVisitQueueModalOpen, setIsSiteVisitQueueModalOpen] = useState(false);
   const [isTrackingModalOpen, setIsTrackingModalOpen] = useState(false);
 
-  const triggerUpload = (target: "aadhaar" | "pan") => {
+  const triggerUpload = (target: "aadhaar-front" | "aadhaar-back" | "pan") => {
     setUploadTarget(target);
     fileInputRef.current?.click();
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      if (uploadTarget === "aadhaar") setIsAadhaarVerified(true);
+      if (uploadTarget === "aadhaar-front" || uploadTarget === "aadhaar-back") setIsAadhaarVerified(true);
       if (uploadTarget === "pan") setIsPanVerified(true);
     }
     // reset input
@@ -211,9 +211,9 @@ export default function ProfileScreen() {
               </>
             ) : (
               <div style={{ display: "flex", width: "100%", gap: "8px", alignItems: "center" }}>
-                <div style={{ flex: 1, height: "46px", background: "#FEFEFE", border: "1.4px solid #F8F8F8", borderRadius: "21px", display: "flex", alignItems: "center", padding: "0 14px", gap: "8px" }}>
+                <div style={{ flex: 1, minWidth: 0, height: "46px", background: "#FEFEFE", border: "1.4px solid #F8F8F8", borderRadius: "21px", display: "flex", alignItems: "center", padding: "0 14px", gap: "8px" }}>
                   <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#A1999B" strokeWidth="1"><rect x="3" y="4" width="18" height="16" rx="2" ry="2" /><line x1="7" y1="8" x2="11" y2="8" /><line x1="7" y1="12" x2="17" y2="12" /><line x1="7" y1="16" x2="17" y2="16" /></svg>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#BDBDBD", whiteSpace: "nowrap" }}>Enter & Upload Aadhar Card</span>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#BDBDBD", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Enter & Upload Aadhar Card</span>
                 </div>
                 <button onClick={() => triggerUpload("aadhaar-front")} style={{ width: "78px", height: "46px", background: "#F3F3F5", border: "1.4px dashed rgba(0,0,0,0.3)", borderRadius: "23px", display: "flex", alignItems: "center", justifyContent: "center", gap: "4px", cursor: "pointer", flexShrink: 0 }}>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="1.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>
@@ -659,9 +659,9 @@ export default function ProfileScreen() {
                   </>
                 ) : (
                   <div style={{ display: "flex", width: "100%", gap: "8px", alignItems: "center" }}>
-                    <div style={{ flex: 1, height: "46px", background: "#FEFEFE", border: "1.4px solid #F8F8F8", borderRadius: "21px", display: "flex", alignItems: "center", padding: "0 14px", gap: "8px" }}>
-                      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#A1999B" strokeWidth="1"><rect x="3" y="4" width="18" height="16" rx="2" ry="2" /><line x1="7" y1="8" x2="11" y2="8" /><line x1="7" y1="12" x2="17" y2="12" /><line x1="7" y1="16" x2="17" y2="16" /></svg>
-                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#BDBDBD", whiteSpace: "nowrap" }}>Enter & Upload Aadhar Card</span>
+                    <div style={{ flex: 1, minWidth: 0, height: "46px", background: "#FEFEFE", border: "1.4px solid #F8F8F8", borderRadius: "21px", display: "flex", alignItems: "center", padding: "0 14px", gap: "8px" }}>
+                      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#A1999B" strokeWidth="1" style={{ flexShrink: 0 }}><rect x="3" y="4" width="18" height="16" rx="2" ry="2" /><line x1="7" y1="8" x2="11" y2="8" /><line x1="7" y1="12" x2="17" y2="12" /><line x1="7" y1="16" x2="17" y2="16" /></svg>
+                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#BDBDBD", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Enter & Upload Aadhar Card</span>
                     </div>
                     <button onClick={() => triggerUpload("aadhaar-front")} style={{ width: "78px", height: "46px", background: "#F3F3F5", border: "1.4px dashed rgba(0,0,0,0.3)", borderRadius: "23px", display: "flex", alignItems: "center", justifyContent: "center", gap: "4px", cursor: "pointer", flexShrink: 0 }}>
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="1.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>
