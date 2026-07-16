@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { MapPin } from "lucide-react";
 import { useGetFarmlandByTagAndStateQuery } from "../../services/home";
 
 export default function TrendingFarmlands() {
@@ -55,7 +56,7 @@ export default function TrendingFarmlands() {
     <section id="trending-farmlands" className="w-full bg-transparent py-12 lg:py-[70px] overflow-hidden">
 
       {/* Section Header Wrapper (Constrained to Page Margin) */}
-      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 lg:mb-8">
+      <div className="w-full px-4 md:px-[60px] mb-6 lg:mb-8">
         <div className="flex justify-between items-center w-full">
           <h2 className="font-jakarta font-extrabold text-[20px] md:text-[24px] leading-[1.2] text-[#0F2F4C] m-0 flex gap-x-[6px]">
             {"Trending Farmlands".split(" ").map((word, i) => (
@@ -83,7 +84,7 @@ export default function TrendingFarmlands() {
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUpOrLeave}
         onMouseLeave={handleMouseUpOrLeave}
-        className={`flex gap-4 md:gap-6 lg:gap-[30px] w-full overflow-x-auto pb-4 hide-scrollbar pl-4 sm:pl-6 lg:pl-8 xl:pl-[calc((100vw-1280px)/2+32px)] pr-4 sm:pr-6 lg:pr-8 select-none ${isDragging ? "cursor-grabbing" : "cursor-grab"
+        className={`flex gap-4 md:gap-6 lg:gap-[30px] w-full overflow-x-auto pb-4 hide-scrollbar px-4 md:px-[60px] select-none ${isDragging ? "cursor-grabbing" : "cursor-grab"
           }`}
       >
         <style dangerouslySetInnerHTML={{
@@ -162,9 +163,7 @@ export default function TrendingFarmlands() {
 
                 {/* Footer */}
                 <div className="flex items-center pt-4 lg:pt-[22px] border-t border-[#EDEEEF] gap-2 mt-auto pointer-events-none">
-                  <svg width="10" height="12" viewBox="0 0 12 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
-                    <path d="M6 0C2.68629 0 0 2.68629 0 6C0 10.5 6 16 6 16C6 16 12 10.5 12 6C12 2.68629 9.31371 0 6 0ZM6 8.5C4.61929 8.5 3.5 7.38071 3.5 6C3.5 4.61929 4.61929 3.5 6 8.5C7.38071 8.5 8.5 4.61929 8.5 6C8.5 7.38071 7.38071 8.5 6 8.5Z" fill="#64748B" />
-                  </svg>
+                  <MapPin size={12} color="#64748B" className="shrink-0" />
                   <span className="font-jakarta font-bold text-[10px] lg:text-[11px] leading-[15px] tracking-[0.3px] uppercase text-[#64748B]">
                     {item.farmland_district_id ? `District ${item.farmland_district_id}` : "Unknown Location"}
                   </span>

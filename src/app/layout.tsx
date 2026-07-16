@@ -21,6 +21,7 @@ export const metadata: Metadata = {
 
 import { SearchProvider } from "@/app/search/SearchContext";
 import { StoreProvider } from "@/store/StoreProvider";
+import AuthGuard from "@/components/AuthGuard";
 
 export default function RootLayout({
   children,
@@ -32,11 +33,13 @@ export default function RootLayout({
       <body className={`${jakarta.variable} ${manrope.variable} antialiased font-jakarta`} suppressHydrationWarning>
         <StoreProvider>
           <SearchProvider>
-            <SmoothScroll>
-              {children}
-            </SmoothScroll>
+            <AuthGuard>
+              <SmoothScroll>
+                {children}
+              </SmoothScroll>
 
-            <SparkleButton />
+              <SparkleButton />
+            </AuthGuard>
           </SearchProvider>
         </StoreProvider>
       </body>

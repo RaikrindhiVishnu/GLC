@@ -182,7 +182,7 @@ export default function Pricing() {
 
                       </div>
 
-                      <span className="text-[15px] leading-[1.5] font-medium text-[#45474C] font-jakarta">
+                      <span className="text-[15px] leading-[1.5] font-semibold text-[#45474C] font-jakarta">
                         {feature}
                       </span>
 
@@ -332,7 +332,7 @@ export default function Pricing() {
 
                       </div>
 
-                      <span className="text-[16px] font-medium text-[#45474C] font-jakarta">
+                      <span className="text-[16px] font-semibold text-[#45474C] font-jakarta">
                         {feature}
                       </span>
 

@@ -137,98 +137,98 @@ function AppNavbar({ active, className, forceScrolled }: { active?: NavbarActive
 
       {/* Central Desktop Capsule Menu (hidden on mobile, absolute centered on desktop) */}
       {active !== "none" && (
-      <div
-        style={{
-          ...CAPSULE_STYLE,
-          background: currentCapsuleBg,
-          border: isScrolled ? "1.5px solid #EDEEEF" : "1.5px solid rgba(255, 255, 255, 0)",
-          boxShadow: isScrolled ? "0px 4px 24px rgba(0,31,63,0.08)" : CAPSULE_STYLE.boxShadow,
-          backdropFilter: isScrolled ? "none" : "blur(50px)",
-          WebkitBackdropFilter: isScrolled ? "none" : "blur(50px)",
-        }}
-        className="hidden md:flex w-auto max-w-full h-[52px] md:h-[60px] md:w-[280px] flex-shrink-0 md:absolute md:left-1/2 md:-translate-x-1/2 justify-center"
-        onMouseEnter={(e) => {
-          if (!isScrolled) e.currentTarget.style.background = "rgba(255, 255, 255, 0.18)";
-        }}
-        onMouseLeave={(e) => {
-          if (!isScrolled) e.currentTarget.style.background = "rgba(255, 255, 255, 0.1)";
-        }}
-      >
-        {active === "home" ? (
-          <button style={{ ...ACTIVE_PILL_STYLE, background: currentActivePillBg, transition: "all 0.3s ease" }} className="w-[96px] md:w-[120px] h-[36px] md:h-[44px]" type="button">
-            <ActiveLabel label="HOME" />
-          </button>
-        ) : (
-          <button
-            type="button"
-            onClick={() => router.push("/home")}
-            style={ICON_BTN_STYLE}
-            className="w-10 h-10 md:w-[40px] md:h-[40px]"
-            onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
-            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-            aria-label="Home"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={isScrolled ? "#164573" : "#FFFFFF"} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-              <polyline points="9 22 9 12 15 12 15 22"></polyline>
-            </svg>
-          </button>
-        )}
+        <div
+          style={{
+            ...CAPSULE_STYLE,
+            background: currentCapsuleBg,
+            border: isScrolled ? "1.5px solid #EDEEEF" : "1.5px solid rgba(255, 255, 255, 0)",
+            boxShadow: isScrolled ? "0px 4px 24px rgba(0,31,63,0.08)" : CAPSULE_STYLE.boxShadow,
+            backdropFilter: isScrolled ? "none" : "blur(50px)",
+            WebkitBackdropFilter: isScrolled ? "none" : "blur(50px)",
+          }}
+          className="hidden md:flex w-auto max-w-full h-[52px] md:h-[60px] md:w-[280px] flex-shrink-0 md:absolute md:left-1/2 md:-translate-x-1/2 justify-center"
+          onMouseEnter={(e) => {
+            if (!isScrolled) e.currentTarget.style.background = "rgba(255, 255, 255, 0.18)";
+          }}
+          onMouseLeave={(e) => {
+            if (!isScrolled) e.currentTarget.style.background = "rgba(255, 255, 255, 0.1)";
+          }}
+        >
+          {active === "home" ? (
+            <button style={{ ...ACTIVE_PILL_STYLE, background: currentActivePillBg, transition: "all 0.3s ease" }} className="w-[96px] md:w-[120px] h-[36px] md:h-[44px]" type="button">
+              <ActiveLabel label="HOME" />
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => router.push("/home")}
+              style={ICON_BTN_STYLE}
+              className="w-10 h-10 md:w-[40px] md:h-[40px]"
+              onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
+              onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+              aria-label="Home"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={isScrolled ? "#164573" : "#FFFFFF"} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+              </svg>
+            </button>
+          )}
 
-        {active === "search" ? (
-          <button style={{ ...ACTIVE_PILL_STYLE, background: currentActivePillBg, transition: "all 0.3s ease" }} className="w-[96px] md:w-[120px] h-[36px] md:h-[44px]" type="button">
-            <ActiveLabel label="SEARCH" />
-          </button>
-        ) : (
-          <button
-            type="button"
-            onClick={() => router.push("/search")}
-            style={ICON_BTN_STYLE}
-            className="w-10 h-10 md:w-[40px] md:h-[40px]"
-            onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
-            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-            aria-label="Search"
-          >
-            <Image src="/assets/home/HeroScreen/search.svg" alt="" width={20} height={20} style={{ filter: isScrolled ? darkBlueFilter : "none", transition: "filter 0.3s ease" }} />
-          </button>
-        )}
+          {active === "search" ? (
+            <button style={{ ...ACTIVE_PILL_STYLE, background: currentActivePillBg, transition: "all 0.3s ease" }} className="w-[96px] md:w-[120px] h-[36px] md:h-[44px]" type="button">
+              <ActiveLabel label="SEARCH" />
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => router.push("/search")}
+              style={ICON_BTN_STYLE}
+              className="w-10 h-10 md:w-[40px] md:h-[40px]"
+              onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
+              onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+              aria-label="Search"
+            >
+              <Image src="/assets/home/HeroScreen/search.svg" alt="" width={20} height={20} style={{ filter: isScrolled ? darkBlueFilter : "none", transition: "filter 0.3s ease" }} />
+            </button>
+          )}
 
-        {active === "pricing" ? (
-          <button style={{ ...ACTIVE_PILL_STYLE, background: currentActivePillBg, transition: "all 0.3s ease" }} className="w-[96px] md:w-[120px] h-[36px] md:h-[44px]" type="button">
-            <ActiveLabel label="PRICING" />
-          </button>
-        ) : (
-          <button
-            type="button"
-            onClick={() => router.push("/pricing")}
-            style={ICON_BTN_STYLE}
-            className="w-10 h-10 md:w-[40px] md:h-[40px]"
-            onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
-            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-            aria-label="Pricing"
-          >
-            <Image src="/assets/home/HeroScreen/Vector.svg" alt="" width={20} height={18} style={{ filter: isScrolled ? darkBlueFilter : "none", transition: "filter 0.3s ease" }} />
-          </button>
-        )}
+          {active === "pricing" ? (
+            <button style={{ ...ACTIVE_PILL_STYLE, background: currentActivePillBg, transition: "all 0.3s ease" }} className="w-[96px] md:w-[120px] h-[36px] md:h-[44px]" type="button">
+              <ActiveLabel label="PRICING" />
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => router.push("/pricing")}
+              style={ICON_BTN_STYLE}
+              className="w-10 h-10 md:w-[40px] md:h-[40px]"
+              onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
+              onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+              aria-label="Pricing"
+            >
+              <Image src="/assets/home/HeroScreen/Vector.svg" alt="" width={20} height={18} style={{ filter: isScrolled ? darkBlueFilter : "none", transition: "filter 0.3s ease" }} />
+            </button>
+          )}
 
-        {active === "profile" ? (
-          <button style={{ ...ACTIVE_PILL_STYLE, background: currentActivePillBg, transition: "all 0.3s ease" }} className="w-[96px] md:w-[120px] h-[36px] md:h-[44px]" type="button">
-            <ActiveLabel label="PROFILE" />
-          </button>
-        ) : (
-          <button
-            type="button"
-            onClick={() => router.push("/profile")}
-            style={ICON_BTN_STYLE}
-            className="w-10 h-10 md:w-[40px] md:h-[40px]"
-            onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
-            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-            aria-label="Profile"
-          >
-            <Image src="/assets/home/HeroScreen/user 1.png" alt="" width={20} height={20} style={{ filter: isScrolled ? darkBlueFilter : "none", transition: "filter 0.3s ease" }} />
-          </button>
-        )}
-      </div>
+          {active === "profile" ? (
+            <button style={{ ...ACTIVE_PILL_STYLE, background: currentActivePillBg, transition: "all 0.3s ease" }} className="w-[96px] md:w-[120px] h-[36px] md:h-[44px]" type="button">
+              <ActiveLabel label="PROFILE" />
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => router.push("/profile")}
+              style={ICON_BTN_STYLE}
+              className="w-10 h-10 md:w-[40px] md:h-[40px]"
+              onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
+              onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+              aria-label="Profile"
+            >
+              <Image src="/assets/home/HeroScreen/user 1.png" alt="" width={20} height={20} style={{ filter: isScrolled ? darkBlueFilter : "none", transition: "filter 0.3s ease" }} />
+            </button>
+          )}
+        </div>
       )}
 
       {/* Desktop Utility Group (hidden on mobile) */}

@@ -4,6 +4,7 @@ import React, { useState, useRef } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { MapPin } from "lucide-react";
 
 const farmlands = [
   {
@@ -89,7 +90,7 @@ export default function PopularFarmlands() {
     <section id="popular-farmlands" className="w-full bg-transparent py-12 lg:py-[70px] overflow-hidden">
 
       {/* Section Header Wrapper (Constrained to Page Margin) */}
-      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 lg:mb-8">
+      <div className="w-full px-4 md:px-[60px] mb-6 lg:mb-8">
         <div className="flex justify-between items-center w-full">
           <h2 className="font-jakarta font-extrabold text-[20px] md:text-[24px] leading-[36px] text-[#0F2F4C] m-0 flex gap-x-[6px]">
             {"Most Popular Farmlands".split(" ").map((word, i) => (
@@ -117,7 +118,7 @@ export default function PopularFarmlands() {
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUpOrLeave}
         onMouseLeave={handleMouseUpOrLeave}
-        className={`flex gap-[26.62px] w-full overflow-x-auto pb-4 hide-scrollbar pl-4 sm:pl-6 lg:pl-8 xl:pl-[calc((100vw-1280px)/2+32px)] pr-4 sm:pr-6 lg:pr-8 select-none ${isDragging ? "cursor-grabbing" : "cursor-grab"
+        className={`flex gap-[26.62px] w-full overflow-x-auto pb-4 hide-scrollbar px-4 md:px-[60px] select-none ${isDragging ? "cursor-grabbing" : "cursor-grab"
           }`}
       >
         <style dangerouslySetInnerHTML={{
@@ -162,10 +163,7 @@ export default function PopularFarmlands() {
 
                 {/* Location Wrapper */}
                 <div className="flex items-center gap-[4.99px] pb-[16.64px] mt-[4.99px]">
-                  {/* Precise Pin Icon */}
-                  <svg width="8" height="10" viewBox="0 0 8 10" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
-                    <path d="M4 0C1.79 0 0 1.79 0 4C0 7 4 10 4 10C4 10 8 7 8 4C8 1.79 6.21 0 4 0ZM4 5.5C3.17 5.5 2.5 4.83 2.5 4C2.5 3.17 3.17 2.5 4 2.5C4.83 2.5 5.5 3.17 5.5 4C5.5 4.83 4.83 5.5 4 5.5Z" fill="#43474E" />
-                  </svg>
+                  <MapPin size={12} color="#43474E" className="shrink-0" />
                   <span className="font-jakarta font-medium text-[11.65px] leading-[17px] text-[#43474E] block">
                     {land.location}
                   </span>

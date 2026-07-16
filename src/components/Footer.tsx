@@ -14,14 +14,14 @@ export default function Footer() {
   const dots = [
     { left: 241, top: 194, img: "/assets/stats/person1.1.svg" },
     { left: 581, top: 181, img: "/assets/stats/person1.2.svg" },
-    { left: 487, top: 76,  img: "/assets/stats/person1.3.svg" },
-    { left: 968, top: 75,  img: "/assets/stats/wheat1.4.svg"  },
+    { left: 487, top: 76, img: "/assets/stats/person1.3.svg" },
+    { left: 968, top: 75, img: "/assets/stats/wheat1.4.svg" },
     { left: 1202, top: 194, img: "/assets/stats/person1.1.svg" },
     { left: 1002, top: 374, img: "/assets/stats/person1.2.svg" },
     { left: 592, top: 374, img: "/assets/stats/person1.3.svg" },
-    { left: 290, top: 362, img: "/assets/stats/wheat1.4.svg"  },
+    { left: 290, top: 362, img: "/assets/stats/wheat1.4.svg" },
     { left: 931, top: 199, img: "/assets/stats/person1.1.svg" },
-    { left: 187, top: 63,  img: "/assets/stats/person1.2.svg" },
+    { left: 187, top: 63, img: "/assets/stats/person1.2.svg" },
   ];
 
   return (
@@ -37,9 +37,9 @@ export default function Footer() {
       <div className="relative flex lg:hidden flex-col px-8 pt-10 pb-8 overflow-hidden min-h-[720px]">
         <div className="relative w-full max-w-[360px] mx-auto h-[190px]">
           {[
-            { left: "6%",  top: "8%",  img: "/assets/stats/person1.1.svg" },
-            { left: "38%", top: "2%",  img: "/assets/stats/person1.2.svg" },
-            { left: "72%", top: "6%",  img: "/assets/stats/person1.3.svg" },
+            { left: "6%", top: "8%", img: "/assets/stats/person1.1.svg" },
+            { left: "38%", top: "2%", img: "/assets/stats/person1.2.svg" },
+            { left: "72%", top: "6%", img: "/assets/stats/person1.3.svg" },
             { left: "88%", top: "28%", img: "/assets/stats/wheat1.4.svg" },
             { left: "55%", top: "35%", img: "/assets/stats/person1.1.svg" },
             { left: "18%", top: "42%", img: "/assets/stats/wheat1.4.svg" },

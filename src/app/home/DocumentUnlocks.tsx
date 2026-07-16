@@ -11,7 +11,7 @@ export default function DocumentUnlocks() {
 
   return (
     <section id="document-unlocks-section" className="w-full bg-transparent py-12 lg:py-[70px] overflow-hidden">
-      <div className="w-full max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full px-4 md:px-[60px]">
         <div className="flex flex-col gap-6 lg:gap-[32px] w-full items-start">
 
           {/* Top Part: Document Unlocks Hero */}
@@ -20,7 +20,7 @@ export default function DocumentUnlocks() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="w-full lg:w-[1280px] lg:h-[400px] bg-white shadow-[0px_12px_40px_rgba(0,31,63,0.04)] rounded-[48px] flex flex-col lg:flex-row overflow-hidden box-border border border-[#EDEEEF]/50 shrink-0"
+            className="w-full lg:h-[400px] bg-white shadow-[0px_12px_40px_rgba(0,31,63,0.04)] rounded-[48px] flex flex-col lg:flex-row overflow-hidden box-border border border-[#EDEEEF]/50 shrink-0"
           >
             {/* Left: Dark Hero Area (Visual Hero) */}
             <div className="w-full lg:w-[464px] min-h-[400px] lg:h-[400px] bg-black p-8 lg:p-[48px] flex flex-col justify-between box-border relative shrink-0 overflow-hidden isolate">
@@ -53,8 +53,8 @@ export default function DocumentUnlocks() {
                   <div className="flex flex-col items-start p-3 lg:p-[12px] w-[46px] h-[45px] bg-[#194F81]/20 rounded-[48px] shrink-0 justify-center items-center">
                     {/* Jagged Seal Badge SVG Icon with Checkmark */}
                     <svg width="22" height="21" viewBox="0 0 22 21" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
-                      <path d="M11 0.5L13.4 2.8L16.8 2.3L17.7 5.6L20.8 7.1L19.7 10.3L21.3 13.4L18.4 15.1L18 18.5L14.7 18.2L12.7 20.8L9.7 19.3L6.9 20.8L5 18.2L1.7 18.5L1.3 15.1L0 13.4L1.7 10.3L0.5 7.1L3.6 5.6L4.5 2.3L7.9 2.8L11 0.5Z" fill="#1C5A90"/>
-                      <path d="M7 10.5L9.5 13L14.5 8" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M11 0.5L13.4 2.8L16.8 2.3L17.7 5.6L20.8 7.1L19.7 10.3L21.3 13.4L18.4 15.1L18 18.5L14.7 18.2L12.7 20.8L9.7 19.3L6.9 20.8L5 18.2L1.7 18.5L1.3 15.1L0 13.4L1.7 10.3L0.5 7.1L3.6 5.6L4.5 2.3L7.9 2.8L11 0.5Z" fill="#1C5A90" />
+                      <path d="M7 10.5L9.5 13L14.5 8" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </div>
                   <div className="flex flex-col items-start p-0 w-full lg:w-[114.5px] lg:h-[36px]">
@@ -145,7 +145,7 @@ export default function DocumentUnlocks() {
               whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
               transition={{ duration: 0.6, delay: 0.1 }}
               viewport={{ once: true }}
-              className="w-full lg:w-[842.67px] h-[256px] rounded-[48px] overflow-hidden relative shrink-0"
+              className="w-full lg:flex-[2.08] h-[256px] rounded-[48px] overflow-hidden relative shrink-0"
             >
               <Image
                 src="/assets/home/DocumentUnlocks/doucmentsunlock.svg"
@@ -179,7 +179,7 @@ export default function DocumentUnlocks() {
               whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
               transition={{ duration: 0.6, delay: 0.2 }}
               viewport={{ once: true }}
-              className="w-full lg:w-[405.33px] h-[256px] bg-white shadow-[0px_1px_2px_rgba(0,0,0,0.05)] rounded-[48px] p-8 lg:p-[82px_32px] flex flex-col justify-center border border-[#EDEEEF] box-border shrink-0"
+              className="w-full lg:flex-1 h-[256px] bg-white shadow-[0px_1px_2px_rgba(0,0,0,0.05)] rounded-[48px] p-8 lg:p-[82px_32px] flex flex-col justify-center border border-[#EDEEEF] box-border shrink-0"
             >
               {/* Heading 4:margin */}
               <div className="flex flex-col items-start p-0 pb-4 lg:pb-[16px] w-full lg:w-[341.33px] h-9">

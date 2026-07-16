@@ -29,23 +29,23 @@ export default function Testimonials() {
     {
       name: "Vikram Mehta",
       role: "Tech Entrepreneur",
-      text: "The process of fractional ownership is seamless. I'm already looking into my third pool.",
+      text: "Having a digital dashboard for a physical asset like farmland gives me peace of mind. Truly revolutionary.",
       image: "/assets/home/person2.svg",
-      stars: 4,
+      stars: 5,
     },
     {
       name: "Ananya Sharma",
       role: "Wealth Manager",
-      text: "GLC has completely changed my view on agricultural investment. The transparency is unlike anything I've seen in the sector.",
+      text: "I confidently recommend Green Land Capital to my clients looking for sustainable, high-growth alternative assets.",
       image: "/assets/home/person.svg",
-      stars: 5,
+      stars: 4,
     },
     {
       name: "Siddharth Rao",
       role: "Retiree",
-      text: "Solid yields and great professional management. The maintenance team really knows what they're doing.",
+      text: "The consistent bi-annual payouts and transparent updates make this the perfect passive income stream for my retirement.",
       image: "/assets/home/person2.svg",
-      stars: 4,
+      stars: 5,
     },
   ];
 

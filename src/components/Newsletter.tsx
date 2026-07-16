@@ -6,7 +6,7 @@ export default function Newsletter() {
   return (
     <section className="relative w-full bg-transparent py-16 md:py-24 lg:py-32 overflow-hidden">
 
-      <div className="container mx-auto max-w-[1216px] px-4 md:px-6">
+      <div className="w-full px-4 md:px-[60px]">
 
         <motion.div
           initial={{
@@ -68,14 +68,13 @@ export default function Newsletter() {
               delay: 0.6,
             }}
             viewport={{ once: true }}
-            className="mt-1 md:mt-2 text-[14px] md:text-[17px] lg:text-[16px] leading-[1.7] text-white/70 font-jakarta px-2 md:px-4 max-w-[520px]"
+            className="mt-1 md:mt-2 text-[14px] md:text-[17px] lg:text-[16px] leading-[1.7] text-white/70 font-jakarta px-2 md:px-4 w-full whitespace-nowrap"
           >
-            Join 5,000+ investors receiving curated
-            farmland opportunities weekly.
+            Join 5,000+ investors receiving curated farmland opportunities weekly.
           </motion.p>
 
-          {/* Form */}
-          <motion.form
+          {/* Action Container */}
+          <motion.div
             initial={{
               opacity: 0,
               y: 20,
@@ -89,29 +88,14 @@ export default function Newsletter() {
               delay: 0.8,
             }}
             viewport={{ once: true }}
-            className="mt-7 md:mt-8 flex flex-col md:flex-row items-stretch md:items-center gap-3 w-full max-w-[560px] mx-auto"
+            className="mt-6 flex flex-row justify-center items-start pt-6 gap-4 w-full"
           >
-
-            {/* Input */}
-            <div className="glass-search flex items-center h-[56px] md:h-[64px] w-full rounded-full px-5 md:px-6 border border-white/10 bg-white/5 backdrop-blur-xl overflow-hidden">
-
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="w-full bg-transparent text-[14px] md:text-[16px] font-medium text-white placeholder:text-white/40 focus:outline-none font-jakarta"
-              />
-
-            </div>
-
-            {/* Button */}
             <button
-              type="submit"
-              className="h-[56px] md:h-[64px] w-full md:w-auto md:px-8 rounded-full bg-[#2780C4] text-[15px] md:text-[16px] font-bold text-white transition-all hover:bg-[#1a66a3] active:scale-95 font-jakarta whitespace-nowrap cursor-pointer shadow-lg"
+              className="flex flex-col justify-center items-center py-[16px] px-[40px] h-[56px] bg-[#2780C4] rounded-full text-white font-jakarta font-bold text-[16px] leading-[24px] cursor-pointer hover:bg-[#1a66a3] transition-colors"
             >
               Subscribe
             </button>
-
-          </motion.form>
+          </motion.div>
 
         </motion.div>
 

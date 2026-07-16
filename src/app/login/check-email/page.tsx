@@ -24,7 +24,7 @@ function CheckEmailContent() {
         >
           <Link href="/" className="inline-block shrink-0 [-webkit-tap-highlight-color:transparent] hover:opacity-80 transition-opacity">
             <img
-              src="/assets/common/Logo green land 1.svg"
+              src="/assets/login/green land capital (1) 1.svg"
               alt="Green Land Capital"
               className="w-[120px] lg:w-[130px] h-auto object-contain"
             />

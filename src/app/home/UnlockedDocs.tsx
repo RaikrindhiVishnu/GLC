@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useGetUserUnlockedFarmlandsQuery } from "../../services/unlocked";
+import { BadgeCheck } from "lucide-react";
 
 export default function UnlockedDocs() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -12,12 +13,12 @@ export default function UnlockedDocs() {
   useEffect(() => setMounted(true), []);
 
   const userId = 5; // Hardcoded to 5 for unlocked documents
-  
+
   const { data: res, isLoading: isQueryLoading } = useGetUserUnlockedFarmlandsQuery(
     { userId },
     { skip: !mounted || !userId }
   );
-  
+
   const isLoading = !mounted || isQueryLoading;
   const documents = res?.data || [];
 
@@ -61,15 +62,11 @@ export default function UnlockedDocs() {
 
   return (
     <section
-      id="unlocked-docs"
-      className="w-full bg-transparent py-12 lg:py-[70px] px-4 sm:px-6 lg:px-8 overflow-hidden box-border"
+      className="w-full bg-transparent py-12 lg:py-[70px] overflow-hidden box-border"
     >
-      {/* Figma white container capsule (Fully Responsive) */}
-      <div
-        className="w-full max-w-7xl mx-auto bg-white border border-[#EDEEEF]/60 rounded-[32px] md:rounded-[48px] p-6 md:p-8 flex flex-col gap-6 md:gap-8 box-border"
-      >
+      <div className="w-full flex flex-col gap-6 md:gap-8 box-border">
         {/* Header */}
-        <div className="flex justify-between items-center w-full">
+        <div className="flex justify-between items-center w-full max-w-[1216px] px-4 md:px-[60px]">
           <h2 className="m-0 font-jakarta font-bold text-[20px] md:text-[24px] leading-[32px] text-[#0F2F4C] flex gap-x-[6px] items-center">
             {"Unlocked Docs".split(" ").map((word, i) => (
               <motion.span
@@ -97,7 +94,7 @@ export default function UnlockedDocs() {
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUpOrLeave}
           onMouseLeave={handleMouseUpOrLeave}
-          className={`flex gap-[24px] w-full overflow-x-auto pb-2 hide-scrollbar select-none ${isDragging ? "cursor-grabbing" : "cursor-grab"
+          className={`flex flex-nowrap gap-[24px] w-full overflow-x-auto pb-2 hide-scrollbar pl-4 md:pl-[60px] select-none ${isDragging ? "cursor-grabbing" : "cursor-grab"
             }`}
         >
           <style dangerouslySetInnerHTML={{
@@ -184,9 +181,7 @@ export default function UnlockedDocs() {
                       height: "auto"
                     }}
                   >
-                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
-                      <path d="M14 4L6 12L2 8L3.4 6.6L6 9.2L12.6 2.6L14 4Z" fill="#006D37" />
-                    </svg>
+                    <BadgeCheck size={14} color="#006D37" style={{ flexShrink: 0 }} />
                     <span
                       style={{
                         fontFamily: "'Plus Jakarta Sans', sans-serif",

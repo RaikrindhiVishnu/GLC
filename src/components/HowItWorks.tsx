@@ -2,8 +2,10 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { useState } from "react";
 
 export default function HowItWorks() {
+  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
   return (
     <section className="relative w-full bg-white py-16 lg:py-32 overflow-hidden">
       <div className="container mx-auto max-w-[1440px] px-6 lg:px-16">
@@ -116,23 +118,39 @@ export default function HowItWorks() {
             <div className="hidden lg:grid grid-cols-3 gap-6 items-end">
 
               {/* Card 1 */}
-              <div className="flex flex-col gap-4 w-full">
+              <div 
+                className="flex gap-4 w-full cursor-pointer"
+                style={{ flexDirection: hoveredCard === 1 ? 'column-reverse' : 'column' }}
+                onMouseEnter={() => setHoveredCard(1)}
+                onMouseLeave={() => setHoveredCard(null)}
+              >
                 <motion.div
+                  layout
                   initial={{ opacity: 0 }}
                   whileInView={{ opacity: 1 }}
-                  transition={{ duration: 0.6, delay: 0.7 }}
+                  transition={{ 
+                    opacity: { duration: 0.6, delay: 0.7 },
+                    layout: { duration: 0.2, ease: "easeInOut" }
+                  }}
                   viewport={{ once: true }}
                   className="w-full py-3 rounded-full border border-[#0F2F4C] text-[#0F2F4C] text-center text-[16px] font-jakarta"
                 >
                   Sign Up/ Log In
                 </motion.div>
 
-                <div className="relative h-[250px] w-full overflow-hidden rounded-[18.8px] shadow-sm group">
+                <motion.div 
+                  layout
+                  className="relative h-[250px] w-full overflow-hidden rounded-[18.8px] shadow-sm group"
+                >
 
                   <motion.div
                     initial={{ opacity: 0, filter: "blur(10px)" }}
                     whileInView={{ opacity: 1, filter: "blur(0px)" }}
-                    transition={{ duration: 1, delay: 0.8 }}
+                    transition={{ 
+                      opacity: { duration: 1, delay: 0.8 },
+                      filter: { duration: 1, delay: 0.8 },
+                      layout: { duration: 0.2, ease: "easeInOut" }
+                    }}
                     viewport={{ once: true }}
                     className="w-full h-full"
                   >
@@ -141,34 +159,50 @@ export default function HowItWorks() {
                       src="/assets/how-it-works/signin6.2.svg"
                       alt="Landscape"
                       fill
-                      className="object-cover"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
 
                   </motion.div>
 
-                </div>
+                </motion.div>
 
               </div>
 
               {/* Card 2 */}
-              <div className="flex flex-col gap-4 w-full">
+              <div 
+                className="flex gap-4 w-full cursor-pointer"
+                style={{ flexDirection: hoveredCard === 2 ? 'column-reverse' : 'column' }}
+                onMouseEnter={() => setHoveredCard(2)}
+                onMouseLeave={() => setHoveredCard(null)}
+              >
 
                 <motion.div
+                  layout
                   initial={{ opacity: 0 }}
                   whileInView={{ opacity: 1 }}
-                  transition={{ duration: 0.6, delay: 0.8 }}
+                  transition={{ 
+                    opacity: { duration: 0.6, delay: 0.8 },
+                    layout: { duration: 0.2, ease: "easeInOut" }
+                  }}
                   viewport={{ once: true }}
                   className="w-full py-3 rounded-full border border-[#0F2F4C] text-[#0F2F4C] text-center text-[16px] font-jakarta"
                 >
                   Invest in Farmlands
                 </motion.div>
 
-                <div className="relative h-[250px] w-full overflow-hidden rounded-[18.8px] shadow-sm group">
+                <motion.div 
+                  layout
+                  className="relative h-[250px] w-full overflow-hidden rounded-[18.8px] shadow-sm group"
+                >
 
                   <motion.div
                     initial={{ opacity: 0, filter: "blur(10px)" }}
                     whileInView={{ opacity: 1, filter: "blur(0px)" }}
-                    transition={{ duration: 1, delay: 0.9 }}
+                    transition={{ 
+                      opacity: { duration: 1, delay: 0.9 },
+                      filter: { duration: 1, delay: 0.9 },
+                      layout: { duration: 0.2, ease: "easeInOut" }
+                    }}
                     viewport={{ once: true }}
                     className="w-full h-full"
                   >
@@ -177,24 +211,36 @@ export default function HowItWorks() {
                       src="/assets/how-it-works/farmlands6.3.svg"
                       alt="Green Fields"
                       fill
-                      className="object-cover"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
 
                   </motion.div>
 
-                </div>
+                </motion.div>
 
               </div>
 
               {/* Card 3 */}
-              <div className="flex flex-col gap-4 w-full">
+              <div 
+                className="flex gap-4 w-full cursor-pointer"
+                style={{ flexDirection: hoveredCard === 3 ? 'column-reverse' : 'column' }}
+                onMouseEnter={() => setHoveredCard(3)}
+                onMouseLeave={() => setHoveredCard(null)}
+              >
 
-                <div className="relative h-[250px] w-full overflow-hidden rounded-[18.8px] shadow-sm group">
+                <motion.div 
+                  layout
+                  className="relative h-[250px] w-full overflow-hidden rounded-[18.8px] shadow-sm group"
+                >
 
                   <motion.div
                     initial={{ opacity: 0, filter: "blur(10px)" }}
                     whileInView={{ opacity: 1, filter: "blur(0px)" }}
-                    transition={{ duration: 1, delay: 1.0 }}
+                    transition={{ 
+                      opacity: { duration: 1, delay: 1.0 },
+                      filter: { duration: 1, delay: 1.0 },
+                      layout: { duration: 0.2, ease: "easeInOut" }
+                    }}
                     viewport={{ once: true }}
                     className="w-full h-full"
                   >
@@ -203,17 +249,21 @@ export default function HowItWorks() {
                       src="/assets/how-it-works/framland growth6.4.svg"
                       alt="Arial View"
                       fill
-                      className="object-cover"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
 
                   </motion.div>
 
-                </div>
+                </motion.div>
 
                 <motion.div
+                  layout
                   initial={{ opacity: 0 }}
                   whileInView={{ opacity: 1 }}
-                  transition={{ duration: 0.6, delay: 1.1 }}
+                  transition={{ 
+                    opacity: { duration: 0.6, delay: 1.1 },
+                    layout: { duration: 0.2, ease: "easeInOut" }
+                  }}
                   viewport={{ once: true }}
                   className="w-full py-3 rounded-full border border-[#0F2F4C] text-[#0F2F4C] text-center text-[16px] font-jakarta"
                 >

@@ -214,7 +214,7 @@ export default function Features() {
                     whileInView={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 0.6 }}
                     viewport={{ once: true }}
-                    className="flex-1 bg-white/90 backdrop-blur-md rounded-[18px] p-4 flex items-center justify-between overflow-hidden"
+                    className="flex-1 bg-white/90 backdrop-blur-md rounded-[18px] p-4 flex flex-row items-center justify-between overflow-hidden"
                   >
 
                     {/* Left */}
@@ -226,16 +226,12 @@ export default function Features() {
                       <span className="text-[24px] font-bold text-[#0F2F4C] leading-none mt-1">
                         Nov 2026
                       </span>
-
-                      <span className="text-[11px] font-medium text-[#5C5C5C] mt-1">
-                        Current Crop: Red Sandalwood
-                      </span>
                     </div>
 
                     {/* Animated Bars */}
                     <div className="flex items-end gap-[5px] h-[60px]">
 
-                      {[40, 66, 86, 100, 74, 82, 96, 70].map((h, i) => (
+                      {[40, 66, 86, 100, 74].map((h, i) => (
                         <motion.div
                           key={i}
                           initial={{ height: 0 }}
@@ -245,9 +241,9 @@ export default function Features() {
                             duration: 0.5,
                           }}
                           viewport={{ once: true }}
-                          className="w-[7px] bg-[#C5E5FF] rounded-full relative"
+                          className="w-[10px] bg-[#C5E5FF] rounded-t-[4px] relative overflow-hidden"
                         >
-                          <div className="absolute top-0 w-full h-[4px] bg-[#2780C4] rounded-full" />
+                          <div className="absolute top-0 w-full h-[6px] bg-[#2780C4]" />
                         </motion.div>
                       ))}
 
@@ -261,29 +257,37 @@ export default function Features() {
                     whileInView={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 0.6, delay: 0.1 }}
                     viewport={{ once: true }}
-                    className="flex-1 bg-white/90 backdrop-blur-md rounded-[18px] p-4 flex items-center justify-between overflow-hidden"
+                    className="flex-1 bg-white/90 backdrop-blur-md rounded-[18px] p-4 flex flex-row items-center justify-between overflow-hidden"
                   >
 
-                    {/* Left Bars */}
-                    <div className="flex items-end gap-[4px] h-[60px]">
-
-                      {[60, 40, 75, 55, 85, 45, 95, 65, 80, 50, 90, 60].map((h, i) => (
-                        <motion.div
-                          key={i}
-                          initial={{ height: 0 }}
-                          whileInView={{ height: `${h}%` }}
-                          transition={{
-                            delay: 0.5 + i * 0.04,
-                            duration: 0.45,
-                          }}
-                          viewport={{ once: true }}
-                          className={`w-[6px] rounded-full ${i % 2 === 0
-                            ? "bg-[#2780C4]"
-                            : "bg-[#C5E5FF]"
-                            }`}
+                    {/* Left Line Chart */}
+                    <div className="relative w-[80px] h-[40px]">
+                      <svg viewBox="0 0 100 50" className="w-full h-full preserve-3d">
+                        <motion.path
+                          initial={{ pathLength: 0 }}
+                          whileInView={{ pathLength: 1 }}
+                          transition={{ duration: 1.5, ease: "easeInOut" }}
+                          d="M0 40 L 20 20 L 40 30 L 60 10 L 80 25 L 100 5"
+                          fill="none"
+                          stroke="#2780C4"
+                          strokeWidth="3"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                         />
-                      ))}
-
+                        <motion.path
+                          initial={{ opacity: 0 }}
+                          whileInView={{ opacity: 1 }}
+                          transition={{ delay: 1, duration: 0.5 }}
+                          d="M0 40 L 20 20 L 40 30 L 60 10 L 80 25 L 100 5 V 50 H 0 Z"
+                          fill="url(#revGradMob)"
+                        />
+                        <defs>
+                          <linearGradient id="revGradMob" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stopColor="#C5E5FF" stopOpacity="0.8" />
+                            <stop offset="100%" stopColor="#C5E5FF" stopOpacity="0" />
+                          </linearGradient>
+                        </defs>
+                      </svg>
                     </div>
 
                     {/* Right Text */}
@@ -293,9 +297,9 @@ export default function Features() {
                         Last Payout:
                       </span>
 
-                      <span className="text-[28px] font-bold text-[#0F2F4C] leading-none my-1 tracking-tight">
+                      <span className="text-[24px] font-bold text-[#0F2F4C] leading-none my-1 tracking-tight">
                         <DynamicCounter
-                          value={380000}
+                          value={120000}
                           prefix="₹"
                         />
                       </span>
@@ -604,21 +608,20 @@ export default function Features() {
               className="absolute bg-gradient-to-br from-[#F6F6F6] to-white rounded-[30px] shadow-lg border border-white/20 p-8 flex items-center justify-between"
               style={{ width: '512px', height: '166px', left: '56px', top: '32px' }}
             >
-              <div className="flex flex-col">
+              <div className="flex flex-col justify-center h-full">
                 <span className="text-[20px] font-medium text-[#0F2F4C] font-jakarta">Est. Harvest:</span>
-                <span className="text-[44px] font-bold text-[#0F2F4C] font-jakarta leading-tight">Nov 2026</span>
-                <span className="text-[16px] font-medium text-[#5C5C5C] font-jakarta">Current Crop: Red Sandalwood</span>
+                <span className="text-[44px] font-bold text-[#0F2F4C] font-jakarta leading-tight mt-1">Nov 2026</span>
               </div>
-              <div className="flex items-end gap-[10px]">
-                {[40, 66, 86, 100, 74, 82, 96, 70].map((h, i) => (
+              <div className="flex items-end gap-[10px] h-[80px]">
+                {[40, 66, 86, 100, 74].map((h, i) => (
                   <motion.div
                     key={i}
                     initial={{ height: 0 }}
                     whileInView={{ height: `${h}px` }}
                     transition={{ delay: 0.6 + (i * 0.05), duration: 0.5 }}
-                    className="w-[10px] bg-[#C5E5FF] rounded-full relative"
+                    className="w-[14px] bg-[#C5E5FF] rounded-t-[4px] relative overflow-hidden"
                   >
-                    <div className="absolute top-0 w-full h-[5px] bg-[#2780C4] rounded-full" />
+                    <div className="absolute top-0 w-full h-[6px] bg-[#2780C4]" />
                   </motion.div>
                 ))}
               </div>
@@ -629,27 +632,44 @@ export default function Features() {
               initial={{ scale: 0.9, opacity: 0 }}
               whileInView={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.6 }}
-              className="absolute bg-white rounded-[30px] shadow-lg overflow-hidden flex items-center"
+              className="absolute bg-white rounded-[30px] shadow-lg overflow-hidden flex items-center px-8"
               style={{ width: '512px', height: '166px', left: '56px', top: '214px' }}
             >
-              {/* Bars on the Left */}
-              <div className="flex items-end gap-[8px] pl-8 h-[100px]">
-                {[60, 40, 75, 55, 85, 45, 95, 65, 80, 50, 90, 60].map((h, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ height: 0 }}
-                    whileInView={{ height: `${h}%` }}
-                    transition={{ delay: 0.8 + (i * 0.04), duration: 0.5 }}
-                    className={`w-[12px] rounded-full ${i % 2 === 0 ? 'bg-[#2780C4]' : 'bg-[#C5E5FF]'}`}
+              {/* Line Chart on the Left */}
+              <div className="relative w-[180px] h-[90px] mr-auto">
+                <svg viewBox="0 0 100 50" className="w-full h-full preserve-3d">
+                  <motion.path
+                    initial={{ pathLength: 0 }}
+                    whileInView={{ pathLength: 1 }}
+                    transition={{ duration: 1.5, ease: "easeInOut" }}
+                    d="M0 40 L 20 20 L 40 30 L 60 10 L 80 25 L 100 5"
+                    fill="none"
+                    stroke="#2780C4"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
-                ))}
+                  <motion.path
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    transition={{ delay: 1, duration: 0.5 }}
+                    d="M0 40 L 20 20 L 40 30 L 60 10 L 80 25 L 100 5 V 50 H 0 Z"
+                    fill="url(#revGrad)"
+                  />
+                  <defs>
+                    <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#C5E5FF" stopOpacity="0.8" />
+                      <stop offset="100%" stopColor="#C5E5FF" stopOpacity="0" />
+                    </linearGradient>
+                  </defs>
+                </svg>
               </div>
 
               {/* Text on the Right */}
-              <div className="flex-1 flex flex-col items-center justify-center pr-4">
+              <div className="flex flex-col items-end justify-center text-right">
                 <span className="text-[20px] text-[#0F2F4C] font-jakarta font-normal">Last Payout:</span>
                 <span className="text-[44px] font-bold text-[#0F2F4C] font-jakarta tracking-tight leading-none my-1">
-                  <DynamicCounter value={380000} prefix="₹" />
+                  <DynamicCounter value={120000} prefix="₹" />
                 </span>
                 <span className="text-[18px] text-[#5C5C5C] font-jakarta">Gross Revenue INR</span>
               </div>

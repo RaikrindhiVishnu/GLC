@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 const locations = [
   { id: "loc-tanuku", name: "Tanuku", img: "/assets/home/TrendingLocations/tanuku.svg" },
   { id: "loc-bhimavaram", name: "Bhimavaram", img: "/assets/home/TrendingLocations/bhimavaram.svg" },
-  { id: "loc-rajahmundry", name: "Rajahmundary", img: "/assets/home/TrendingLocations/rajamudry.svg" },
+  { id: "loc-rajahmundry", name: "Rajahmundry", img: "/assets/home/TrendingLocations/rajamudry.svg" },
   { id: "loc-vizag", name: "Vizag", img: "/assets/home/TrendingLocations/vizag.svg" },
 ];
 
@@ -19,8 +19,8 @@ export default function TrendingLocations() {
     <section id="trending-locations" className="w-full bg-transparent py-12 lg:py-[70px] overflow-hidden">
 
       {/* Header — constrained to page margin */}
-      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 lg:mb-8">
-        <div 
+      <div className="w-full px-4 md:px-[60px] mb-6 lg:mb-8">
+        <div
           className="flex justify-between items-center w-full cursor-pointer group"
           onClick={() => router.push("/topselling")}
         >
@@ -44,7 +44,7 @@ export default function TrendingLocations() {
       </div>
 
       {/* Cards — full-width scroll container matching PopularFarmlands layout */}
-      <div className="flex lg:grid lg:grid-cols-4 gap-6.5 lg:gap-6 w-full overflow-x-auto lg:overflow-x-visible pb-4 lg:pb-0 hide-scrollbar pl-4 sm:pl-6 lg:pl-8 xl:pl-[calc((100vw-1280px)/2+32px)] pr-4 sm:pr-6 lg:pr-8">
+      <div className="flex lg:grid lg:grid-cols-4 gap-6.5 lg:gap-6 w-full overflow-x-auto lg:overflow-x-visible pb-4 lg:pb-0 hide-scrollbar px-4 md:px-[60px]">
         <style dangerouslySetInnerHTML={{
           __html: `
           #trending-locations .hide-scrollbar::-webkit-scrollbar { display: none; }

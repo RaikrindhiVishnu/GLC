@@ -4,6 +4,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import DynamicCounter from "@/components/shared/DynamicCounter";
+import { ShieldCheck } from "lucide-react";
 
 export default function PoolInvestments() {
   const router = useRouter();
@@ -12,7 +13,7 @@ export default function PoolInvestments() {
 
   return (
     <section id="pool-investments" className="w-full bg-transparent py-12 lg:py-[70px] overflow-hidden">
-      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full px-4 md:px-[60px]">
         <div className="flex flex-col lg:flex-row gap-6 lg:gap-[32px] w-full">
           
           {/* Left Panel: Pool Investments */}
@@ -21,7 +22,7 @@ export default function PoolInvestments() {
             whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="flex-1 lg:flex-[0_0_733px] min-h-[500px] lg:h-[600px] bg-white shadow-[0px_1px_2px_rgba(0,0,0,0.05)] rounded-[32px] lg:rounded-[48px] p-6 sm:p-8 lg:p-[48px] flex flex-col justify-between border border-[#EDEEEF] box-border"
+            className="flex-1 lg:flex-[1.42] min-h-[500px] lg:h-[600px] bg-white shadow-[0px_1px_2px_rgba(0,0,0,0.05)] rounded-[32px] lg:rounded-[48px] p-6 sm:p-8 lg:p-[48px] flex flex-col justify-between border border-[#EDEEEF] box-border"
           >
             <div className="flex flex-col gap-2">
               <h2 className="m-0 font-jakarta font-extrabold text-[28px] md:text-[36px] leading-[40px] text-[#131600] flex flex-wrap gap-x-[6px]">
@@ -47,6 +48,12 @@ export default function PoolInvestments() {
               {/* Donut Chart */}
               <div className="relative w-[200px] h-[200px] sm:w-[256px] sm:h-[256px] shrink-0">
                 <svg width="100%" height="100%" viewBox="0 0 256 256" className="-rotate-90">
+                  <defs>
+                    <linearGradient id="progress-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#BDD327" />
+                      <stop offset="100%" stopColor="#2780C4" />
+                    </linearGradient>
+                  </defs>
                   {/* Background Circle */}
                   <circle
                     cx="128"
@@ -62,7 +69,7 @@ export default function PoolInvestments() {
                     cy="128"
                     r="100"
                     fill="transparent"
-                    stroke="#2780C4"
+                    stroke="url(#progress-gradient)"
                     strokeWidth="25"
                     strokeDasharray={dashArray}
                     initial={{ strokeDashoffset: dashArray }}
@@ -138,8 +145,10 @@ export default function PoolInvestments() {
                   <h3 className="m-0 font-jakarta font-bold text-[18px] lg:text-[20px] text-[#131600]">My Assets</h3>
                   <p className="m-0 mt-1 font-jakarta font-normal text-[13px] lg:text-[14px] text-[#45474C]">Portfolio Valuation</p>
                 </div>
-                {/* Shield Icon Placeholder */}
-                <div className="w-[24px] h-[24px] bg-[#2780C4] rounded-full flex justify-center items-center text-white text-[12px] shrink-0">✓</div>
+                {/* Shield Icon */}
+                <div className="w-[24px] h-[24px] rounded-full flex justify-center items-center text-[#2780C4] shrink-0">
+                  <ShieldCheck size={24} />
+                </div>
               </div>
 
               <div className="flex justify-between items-end">

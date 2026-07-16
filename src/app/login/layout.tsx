@@ -114,28 +114,27 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         {/* Heading and Bottom glass card container */}
         <div className="absolute bottom-6 left-6 right-6 z-10">
 
-          <div className="bg-white/10 backdrop-blur-xl rounded-[26px] p-6 border border-white/15">
+          <div className="bg-[#C4C4C4]/20 backdrop-blur-xl rounded-[34px] p-6 lg:p-7 border border-white/15">
             <div className="flex items-center justify-between mb-4">
 
               {/* Fully Transparent badge */}
-              <div className="flex items-center gap-2 bg-white/20 rounded-full px-4 py-2 border border-white/20">
-                <div className="flex -space-x-2.5">
-                  <div className="w-6 h-6 rounded-full border-[2.5px] border-white/80" />
-                  <div className="w-6 h-6 rounded-full border-[2.5px] border-white/80" />
+              <div className="flex items-center -space-x-3">
+                <div className="w-[42px] h-[42px] rounded-full border-[2px] border-white shrink-0 z-0" />
+                <div className="h-[42px] px-5 border-[2px] border-white rounded-full flex items-center justify-center bg-transparent z-10 backdrop-blur-sm">
+                  <span className="text-white text-[14px] font-medium font-jakarta pl-1">Fully Transparent</span>
                 </div>
-                <span className="text-white text-[13px] font-medium font-jakarta ml-1">Fully Transparent</span>
               </div>
 
               {/* Nav arrows */}
               <div className="flex gap-3">
-                <button onClick={prev} className="w-[48px] h-[48px] rounded-full border-[2.5px] border-white flex items-center justify-center hover:bg-white/10 transition-all [-webkit-tap-highlight-color:transparent]">
+                <button onClick={prev} className="w-[48px] h-[48px] rounded-full border-[2px] border-white flex items-center justify-center hover:bg-white/10 transition-all [-webkit-tap-highlight-color:transparent]">
                   <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 5L5 19M5 19h10M5 19V9" />
                   </svg>
                 </button>
-                <button onClick={next} className="w-[48px] h-[48px] rounded-full border-[2.5px] border-white flex items-center justify-center hover:bg-white/10 transition-all [-webkit-tap-highlight-color:transparent]">
+                <button onClick={next} className="w-[48px] h-[48px] rounded-full border-[2px] border-white flex items-center justify-center hover:bg-white/10 transition-all [-webkit-tap-highlight-color:transparent]">
                   <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 19L19 5M19 5H9M19 5v10" />
                   </svg>
                 </button>
               </div>

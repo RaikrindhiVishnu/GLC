@@ -55,8 +55,8 @@ export default function FiltersScreen() {
 
   return (
     <section id="filters-section" className="w-full bg-transparent py-12 lg:py-[70px] overflow-hidden">
-      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 xl:gap-6">
+      <div className="w-full px-4 md:px-[60px]">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 lg:gap-[16px]">
           {filterButtons.map((btn, i) => (
             <motion.button
               key={btn.id}
@@ -79,7 +79,7 @@ export default function FiltersScreen() {
                   router.push("/home/sellyourland");
                 }
               }}
-              className="flex flex-col justify-center items-center p-4 xl:p-6 gap-4 xl:gap-6 w-full aspect-square lg:aspect-auto lg:h-[180px] bg-white rounded-[24px] lg:rounded-[32px] border border-[#E5E7EB] shadow-[0px_4px_6px_rgba(0,0,0,0.02)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0px_10px_15px_rgba(0,0,0,0.05)] cursor-pointer [-webkit-tap-highlight-color:transparent]"
+              className="flex flex-col justify-center items-center p-3 xl:p-[24px_40px] gap-4 xl:gap-[25px] w-full aspect-square lg:aspect-auto lg:h-[180px] bg-white rounded-[24px] lg:rounded-[32px] shadow-[0px_4px_6px_rgba(0,0,0,0.02)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0px_10px_15px_rgba(0,0,0,0.05)] cursor-pointer [-webkit-tap-highlight-color:transparent]"
             >
               <div
                 style={{ width: `${btn.width}px`, height: `${btn.height}px` }}
@@ -87,7 +87,7 @@ export default function FiltersScreen() {
               >
                 <Image src={btn.icon} alt={btn.label} fill className="object-contain" priority />
               </div>
-              <div className="w-full font-jakarta font-bold text-[13px] xl:text-[14px] leading-[18px] lg:leading-[20px] text-center tracking-[0.5px] xl:tracking-[1px] capitalize text-[#45474C]">
+              <div className="w-full font-jakarta font-bold text-[13px] xl:text-[14px] leading-[18px] lg:leading-[20px] text-center tracking-[0.5px] xl:tracking-[1.4px] capitalize text-[#45474C]">
                 {btn.label}
               </div>
             </motion.button>

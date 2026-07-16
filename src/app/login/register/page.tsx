@@ -81,7 +81,7 @@ export default function RegisterPage() {
       >
         <Link href="/" className="inline-block shrink-0 [-webkit-tap-highlight-color:transparent] hover:opacity-80 transition-opacity">
           <img
-            src="/assets/common/Logo green land 1.svg"
+            src="/assets/login/green land capital (1) 1.svg"
             alt="Green Land Capital"
             className="w-[120px] lg:w-[130px] h-auto object-contain"
           />
@@ -118,9 +118,7 @@ export default function RegisterPage() {
         className="flex flex-col sm:flex-row gap-2 mb-2 lg:mb-3"
       >
         <div className="flex-1 bg-white border border-[#F0F0F0] rounded-full h-[46px] lg:h-[50px] flex items-center px-4 gap-2 focus-within:border-[#2780C4] focus-within:ring-1 focus-within:ring-[#2780C4]/20 transition-all cursor-text shadow-sm">
-          <svg className="w-4 h-4 text-[#A1999B] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
-          </svg>
+          <Image src="/assets/login/hugeicons_profile.svg" alt="First Name" width={20} height={20} className="shrink-0" />
           <div className="w-px h-4 bg-[#F0F0F0]" />
           <input 
             type="text" 
@@ -131,9 +129,7 @@ export default function RegisterPage() {
           />
         </div>
         <div className="flex-1 bg-white border border-[#F0F0F0] rounded-full h-[46px] lg:h-[50px] flex items-center px-4 gap-2 focus-within:border-[#2780C4] focus-within:ring-1 focus-within:ring-[#2780C4]/20 transition-all cursor-text shadow-sm">
-          <svg className="w-4 h-4 text-[#A1999B] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
-          </svg>
+          <Image src="/assets/login/hugeicons_profile.svg" alt="Last Name" width={20} height={20} className="shrink-0" />
           <div className="w-px h-4 bg-[#F0F0F0]" />
           <input 
             type="text" 
@@ -152,9 +148,7 @@ export default function RegisterPage() {
         transition={{ duration: 0.6, delay: 0.5 }}
         className="mb-2 lg:mb-3 bg-white border border-[#F0F0F0] rounded-full h-[46px] lg:h-[50px] flex items-center px-4 gap-2 focus-within:border-[#2780C4] focus-within:ring-1 focus-within:ring-[#2780C4]/20 transition-all cursor-text shadow-sm"
       >
-        <svg className="w-4 h-4 text-[#A1999B] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2-2v10a2 2 0 002 2z" />
-        </svg>
+        <Image src="/assets/login/hugeicons_mail-02.svg" alt="Email" width={20} height={20} className="shrink-0" />
         <div className="w-px h-4 bg-[#F0F0F0]" />
         <input 
           type="email" 

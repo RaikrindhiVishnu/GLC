@@ -1,3 +1,5 @@
+"use client";
+
 import HeroScreen from "./HeroScreen";
 import FiltersScreen from "./FiltersScreen";
 import TrendingLocations from "./TrendingLocations";
@@ -14,7 +16,6 @@ import Testimonials from "@/components/Testimonials";
 import Newsletter from "@/components/Newsletter";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
-
 
 
 export default function UserHomePage() {

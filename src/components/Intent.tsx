@@ -30,12 +30,20 @@ export default function Intent() {
       {/* ================= MOBILE ================= */}
       <div className="relative z-10 flex md:hidden w-full min-h-[620px] flex-col items-center justify-center px-6 py-14">
         {/* Glass Card */}
-        <div className="relative w-full max-w-[340px] h-[220px] rounded-[28px] p-[5px] bg-gradient-to-br from-[#FFFFFF] to-white/10 shadow-2xl">
-          <div className="w-full h-full rounded-[23px] bg-white/10 backdrop-blur-sm overflow-hidden relative">
-            {/* Gradient */}
-            <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-40" />
-
-            {/* Play Button */}
+        <div className="relative w-full max-w-[340px] h-[220px] rounded-[32px] shadow-2xl p-[6px]">
+          {/* Gradient Border Mask Layer */}
+          <div 
+            className="absolute inset-0 rounded-[32px] pointer-events-none"
+            style={{
+              padding: "6px",
+              background: "linear-gradient(131.41deg, rgba(255,255,255,0.4) 0%, #FFFFFF 40.12%, #BDD327 43.73%, #2780C4 47.34%, #FFFFFF 54.57%, rgba(255,255,255,0.4) 100%)",
+              WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+              WebkitMaskComposite: "xor",
+              maskComposite: "exclude"
+            }}
+          />
+          <div className="w-full h-full rounded-[26px] overflow-hidden relative backdrop-blur-sm">
+            {/* Play Button & Overlay */}
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="relative w-[68px] h-[68px] rounded-full bg-white shadow-lg flex items-center justify-center">
                 <div className="relative w-[30px] h-[30px]">
@@ -72,11 +80,20 @@ export default function Intent() {
       <div className="hidden md:flex lg:hidden relative z-10 w-full min-h-[820px] flex-col items-center justify-center px-10 py-20">
 
         {/* Glass Card */}
-        <div className="relative w-full max-w-[620px] h-[340px] rounded-[32px] p-[6px] bg-gradient-to-br from-[#FFFFFF] to-white/10 shadow-2xl">
-          <div className="w-full h-full rounded-[26px] bg-white/10 backdrop-blur-sm overflow-hidden relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-40" />
-
-            {/* Play Button */}
+        <div className="relative w-full max-w-[620px] h-[340px] rounded-[32px] shadow-2xl p-[6px]">
+          {/* Gradient Border Mask Layer */}
+          <div 
+            className="absolute inset-0 rounded-[32px] pointer-events-none"
+            style={{
+              padding: "6px",
+              background: "linear-gradient(131.41deg, rgba(255,255,255,0.4) 0%, #FFFFFF 40.12%, #BDD327 43.73%, #2780C4 47.34%, #FFFFFF 54.57%, rgba(255,255,255,0.4) 100%)",
+              WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+              WebkitMaskComposite: "xor",
+              maskComposite: "exclude"
+            }}
+          />
+          <div className="w-full h-full rounded-[26px] overflow-hidden relative backdrop-blur-sm">
+            {/* Play Button & Overlay */}
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="relative w-[78px] h-[78px] rounded-full bg-white shadow-lg flex items-center justify-center">
                 <div className="relative w-[34px] h-[34px]">
@@ -114,7 +131,7 @@ export default function Intent() {
 
         {/* Glass Container */}
         <div
-          className="absolute rounded-[32px] p-[6px] bg-gradient-to-br from-[#FFFFFF] to-white/10 shadow-2xl"
+          className="absolute rounded-[32px] shadow-2xl p-[6px]"
           style={{
             width: "664px",
             height: "386px",
@@ -122,8 +139,18 @@ export default function Intent() {
             top: "267px",
           }}
         >
-          <div className="w-full h-full rounded-[26px] bg-white/10 backdrop-blur-sm overflow-hidden relative">
-            <div className="absolute inset-0 opacity-40 bg-gradient-to-br from-white/20 to-transparent pointer-events-none" />
+          {/* Gradient Border Mask Layer */}
+          <div 
+            className="absolute inset-0 rounded-[32px] pointer-events-none"
+            style={{
+              padding: "6px",
+              background: "linear-gradient(131.41deg, rgba(255,255,255,0.4) 0%, #FFFFFF 40.12%, #BDD327 43.73%, #2780C4 47.34%, #FFFFFF 54.57%, rgba(255,255,255,0.4) 100%)",
+              WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+              WebkitMaskComposite: "xor",
+              maskComposite: "exclude"
+            }}
+          />
+          <div className="w-full h-full rounded-[26px] overflow-hidden relative backdrop-blur-sm">
           </div>
         </div>
 
