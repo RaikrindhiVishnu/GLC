@@ -55,7 +55,14 @@ export const homeApi = createApi({
         body: payload,
       }),
     }),
+    getAllTopSellingLocations: builder.query<GetAllDistrictByStateIdResponse, GetAllDistrictByStateIdRequest>({
+      query: (payload) => ({
+        url: '/home/get_all_top_selling_locations',
+        method: 'POST',
+        body: payload,
+      }),
+    }),
   }),
 });
 
-export const { useGetAllDistrictByStateIdQuery, useGetFarmlandByTagAndStateQuery } = homeApi;
+export const { useGetAllDistrictByStateIdQuery, useGetFarmlandByTagAndStateQuery, useGetAllTopSellingLocationsQuery } = homeApi;

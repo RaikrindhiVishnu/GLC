@@ -101,6 +101,7 @@ export default function CenterPane() {
             justifyContent: "center",
             height: "fit-content",
             alignSelf: "flex-start",
+            flexShrink: 0,
           }}
         >
           <span
@@ -111,6 +112,7 @@ export default function CenterPane() {
               letterSpacing: "0.6px",
               textTransform: "uppercase",
               color: "#0F2F4C",
+              whiteSpace: "nowrap",
             }}
           >
             Institutional Grade

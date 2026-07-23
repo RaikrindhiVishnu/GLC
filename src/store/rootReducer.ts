@@ -6,6 +6,7 @@ import { unlockedApi } from '../services/unlocked';
 import { uploadApi } from '../services/upload';
 import { farmlandApi } from '../services/farmland';
 import { masterApi } from '../services/master';
+import { siteVisitsApi } from '../services/siteVisits';
 
 const rootReducer = combineReducers({
   [homeApi.reducerPath]: homeApi.reducer,
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   [uploadApi.reducerPath]: uploadApi.reducer,
   [farmlandApi.reducerPath]: farmlandApi.reducer,
   [masterApi.reducerPath]: masterApi.reducer,
+  [siteVisitsApi.reducerPath]: siteVisitsApi.reducer,
 });
 
 export default rootReducer;

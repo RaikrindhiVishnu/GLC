@@ -3,14 +3,18 @@
 import React from "react";
 import { motion } from "framer-motion";
 
+import { GetFacilitiesByFarmlandIdResponse } from "@/services/farmland";
+
 interface FacilitiesCultivationProps {
   currentCrop?: string;
   potentialCrop?: string;
+  facilitiesData?: GetFacilitiesByFarmlandIdResponse;
 }
 
 export default function FacilitiesCultivation({
   currentCrop = "Mango Grove",
   potentialCrop = "Superfood Berry Clusters",
+  facilitiesData,
 }: FacilitiesCultivationProps) {
   return (
     <div className="flex flex-col sm:flex-row gap-4 lg:gap-6 w-full">
@@ -34,9 +38,9 @@ export default function FacilitiesCultivation({
 
         <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
           {[
-            { label: "Railway Station", value: "12km" },
-            { label: "Domestic Airport", value: "45km" },
-            { label: "Highway Access", value: "2.5km" },
+            { label: "Railway Station", value: facilitiesData?.railway?.distance_id ? `${facilitiesData.railway.distance_id}km` : "12km" },
+            { label: "Domestic Airport", value: facilitiesData?.airport?.distance_id ? `${facilitiesData.airport.distance_id}km` : "45km" },
+            { label: "Highway Access", value: facilitiesData?.road_appoarch?.road_width ? `${facilitiesData.road_appoarch.road_width}m` : "2.5km" },
           ].map((item, i) => (
             <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingBottom: i < 2 ? "14px" : 0, borderBottom: i < 2 ? "1px solid #E1E3E4" : "none" }}>
               <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "15px", color: "#45474C" }}>{item.label}</span>

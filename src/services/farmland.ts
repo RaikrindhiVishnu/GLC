@@ -5,6 +5,108 @@ export interface GetFarmlandByIdRequest {
   farmland_id: number;
 }
 
+export interface GetFacilitiesByFarmlandIdRequest {
+  farmland_id: number;
+}
+
+export interface RemoveFarmLandFromUserSavedListRequest {
+  user_id: number;
+  farm_land_id: number;
+}
+
+export interface RemoveFarmLandFromUserSavedListResponse {
+  message: string;
+}
+
+export interface AddLandToUserSavedListRequest {
+  user_id: number;
+  farmland_id: number;
+}
+
+export interface AddLandToUserSavedListResponse {
+  message: string;
+}
+
+export interface GetAllSavedFarmlandsByUserIdRequest {
+  user_id: number;
+  offset: number;
+}
+
+export interface SavedFarmlandItem {
+  farm_land_id: number;
+  farm_code: string;
+  farm_id: string;
+  total_valuation: string;
+  milestone_stage_id: number;
+  milestone_stage_status_id: number;
+  location_details: {
+    state_id: number;
+    country_id: number | null;
+    mandal_id: number;
+    district_id: number | null;
+  };
+  tags: number[];
+}
+
+export type GetAllSavedFarmlandsByUserIdResponse = SavedFarmlandItem[];
+
+export interface GetAllLegalDocumentsByFarmlandIdRequest {
+  farmlandId: number;
+}
+
+export interface LegalDocumentFile {
+  id: number;
+  document_url: string;
+}
+
+export interface LegalDocumentVersion {
+  version: string;
+  remarks: string;
+  land_coordinates: string;
+  files: LegalDocumentFile[];
+}
+
+export interface LegalDocumentItem {
+  code: string;
+  description: string;
+  uploaded: boolean;
+  versions: LegalDocumentVersion[];
+}
+
+export interface GetAllLegalDocumentsByFarmlandIdResponse {
+  success: boolean;
+  data: Record<string, LegalDocumentItem>;
+}
+
+export interface GetFacilitiesByFarmlandIdResponse {
+  id: number;
+  farm_code: string;
+  price: number;
+  acers: number;
+  water: {
+    is_bore: number;
+    is_ground_water: number;
+  };
+  road_appoarch: {
+    road_width: number;
+  };
+  electricity: {
+    is_2phase: number;
+    is_3phase: number;
+  };
+  railway: {
+    distance_id: number;
+  };
+  airport: {
+    distance_id: number;
+  };
+  soil: {
+    type_id: number;
+  };
+  current_cultivation: number;
+  crops_that_can_be_grown: number[];
+}
+
 export interface FarmlandDetailResponse {
   farmland_id: number;
   farmland_code: string;
@@ -89,7 +191,42 @@ export const farmlandApi = createApi({
     }),
     getAllFarmlandsByStateId: builder.query<GetAllFarmlandsResponse, GetAllFarmlandsRequest>({
       query: (payload) => ({
-        url: '/farmland/get_all_farmlands_by_state_id',
+        url: '/farmland/get_all_farmlands',
+        method: 'POST',
+        body: payload,
+      }),
+    }),
+    getFacilitiesByFarmlandId: builder.query<GetFacilitiesByFarmlandIdResponse, GetFacilitiesByFarmlandIdRequest>({
+      query: (payload) => ({
+        url: '/farmland/get_facilities_by_farmland_id',
+        method: 'POST',
+        body: payload,
+      }),
+    }),
+    getAllLegalDocumentsByFarmlandId: builder.query<GetAllLegalDocumentsByFarmlandIdResponse, GetAllLegalDocumentsByFarmlandIdRequest>({
+      query: (payload) => ({
+        url: '/farmland/get_all_legal_documents_by_farmland_id',
+        method: 'POST',
+        body: payload,
+      }),
+    }),
+    removeFarmLandFromUserSavedList: builder.mutation<RemoveFarmLandFromUserSavedListResponse, RemoveFarmLandFromUserSavedListRequest>({
+      query: (payload) => ({
+        url: '/farmland/remove_farm_land_from_user_saved_list',
+        method: 'POST',
+        body: payload,
+      }),
+    }),
+    getAllSavedFarmlandsByUserId: builder.query<GetAllSavedFarmlandsByUserIdResponse, GetAllSavedFarmlandsByUserIdRequest>({
+      query: (payload) => ({
+        url: '/farmland/get_all_saved_farmlands_by_user_id',
+        method: 'POST',
+        body: payload,
+      }),
+    }),
+    addLandToUserSavedList: builder.mutation<AddLandToUserSavedListResponse, AddLandToUserSavedListRequest>({
+      query: (payload) => ({
+        url: '/farmland/add_land_to_user_saved_list',
         method: 'POST',
         body: payload,
       }),
@@ -97,4 +234,12 @@ export const farmlandApi = createApi({
   }),
 });
 
-export const { useGetFarmlandByIdQuery, useGetAllFarmlandsByStateIdQuery } = farmlandApi;
+export const { 
+  useGetFarmlandByIdQuery, 
+  useGetAllFarmlandsByStateIdQuery, 
+  useGetFacilitiesByFarmlandIdQuery, 
+  useGetAllLegalDocumentsByFarmlandIdQuery,
+  useRemoveFarmLandFromUserSavedListMutation,
+  useGetAllSavedFarmlandsByUserIdQuery,
+  useAddLandToUserSavedListMutation
+} = farmlandApi;

@@ -4,7 +4,12 @@ import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { useSearchContext } from "./SearchContext";
-import { useGetAllFarmlandsByStateIdQuery } from "../../services/farmland";
+import { 
+  useGetAllFarmlandsByStateIdQuery,
+  useAddLandToUserSavedListMutation,
+  useRemoveFarmLandFromUserSavedListMutation,
+  useGetAllSavedFarmlandsByUserIdQuery
+} from "../../services/farmland";
 
 // Absolute data parity mapping precisely to the 6 newly uploaded search assets
 const gridMatches = [
@@ -80,6 +85,31 @@ export default function MainListingsGrid() {
   const router = useRouter();
   const { filters, masterData } = useSearchContext();
   const [bookmarks, setBookmarks] = useState<Record<string, boolean>>({});
+  const [userId, setUserId] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedUserId = localStorage.getItem("userId");
+      if (storedUserId) {
+        setUserId(parseInt(storedUserId, 10));
+      }
+    }
+  }, []);
+
+  const { data: savedFarmlandsData } = useGetAllSavedFarmlandsByUserIdQuery(
+    { user_id: userId || 0, offset: 0 },
+    { skip: !userId }
+  );
+
+  useEffect(() => {
+    if (savedFarmlandsData && Array.isArray(savedFarmlandsData)) {
+      const initialBookmarks: Record<string, boolean> = {};
+      savedFarmlandsData.forEach((item: any) => {
+        initialBookmarks[item.farm_land_id] = true;
+      });
+      setBookmarks(prev => ({ ...prev, ...initialBookmarks }));
+    }
+  }, [savedFarmlandsData]);
 
   const activeFilters = Object.keys(filters).length > 0 
     ? { ...filters, offset: 0 } 
@@ -96,21 +126,61 @@ export default function MainListingsGrid() {
       const vw = window.innerWidth;
       const targetWidth = 1260;
       const currentScale = vw < targetWidth ? vw / targetWidth : 1;
+      
+      const rowCount = Math.ceil(farmlands.length / 3);
+      // Header is ~40px, each row is max 636px, gap is 32px
+      const baseHeight = rowCount === 0 ? 100 : 40 + 32 + (rowCount * 636) + ((rowCount - 1) * 32) + 50;
+      
       if (scalerRef.current) {
         scalerRef.current.style.transform = `scale(${currentScale})`;
+        scalerRef.current.style.height = `${baseHeight}px`;
       }
       if (shellRef.current) {
-        shellRef.current.style.height = `${1368 * currentScale}px`;
+        shellRef.current.style.height = `${baseHeight * currentScale}px`;
       }
     }
     update();
     window.addEventListener("resize", update);
     return () => window.removeEventListener("resize", update);
-  }, []);
+  }, [farmlands.length]);
 
-  const toggleBookmark = (id: string, e: React.MouseEvent) => {
+  const [addFarmland] = useAddLandToUserSavedListMutation();
+  const [removeFarmland] = useRemoveFarmLandFromUserSavedListMutation();
+
+  const toggleBookmark = async (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
+    
+    if (!userId) {
+      alert("Please log in to save farmlands.");
+      return;
+    }
+
+    const numericId = parseInt(id);
+    const isCurrentlySaved = !!bookmarks[id];
+
+    // Optimistic UI update
     setBookmarks((prev) => ({ ...prev, [id]: !prev[id] }));
+
+    try {
+      if (isCurrentlySaved) {
+        await removeFarmland({ user_id: userId, farm_land_id: numericId }).unwrap();
+      } else {
+        await addFarmland({ user_id: userId, farmland_id: numericId }).unwrap();
+      }
+    } catch (error: any) {
+      const errorMsg = typeof error === 'string' ? error : JSON.stringify(error);
+      
+      if (error?.data?.message === "Farmland is already in saved list" || errorMsg.includes("already in saved list")) {
+        console.warn("Farmland was already saved.");
+      } else if (error?.data?.message === "Farmland is not in saved list" || errorMsg.includes("not in saved list")) {
+        console.warn("Farmland was not in saved list.");
+      } else {
+        console.error("Failed to toggle save status", error);
+        alert(`API Error: ${error?.data?.message || "Something went wrong"}`);
+        // Revert optimistic update on failure
+        setBookmarks((prev) => ({ ...prev, [id]: isCurrentlySaved }));
+      }
+    }
   };
 
   return (
@@ -125,7 +195,7 @@ export default function MainListingsGrid() {
       <div className="block lg:hidden w-full py-10">
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 mb-6">
           <div className="flex justify-between items-center">
-            <h2 className="font-jakarta font-bold text-[20px] text-[#131600] m-0">Andhra Pradesh (18 Matches)</h2>
+            <h2 className="font-jakarta font-bold text-[20px] text-[#131600] m-0">Andhra Pradesh ({totalCount} Matches)</h2>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-[#0F2F4C]" />
               <div className="w-2 h-2 rounded-full bg-[#E1E3E4]" />
@@ -219,7 +289,7 @@ export default function MainListingsGrid() {
             left: "50%",
             marginLeft: "-592px",
             width: "1184px",
-            height: "1368px",
+            height: "1368px", // will be overridden by JS
             transformOrigin: "top center",
             willChange: "transform",
             display: "flex",
@@ -435,7 +505,7 @@ export default function MainListingsGrid() {
                       overflow: "hidden",
                       display: "flex",
                       flexDirection: "column",
-                      height: item.cardHeight,
+                      height: (item as any).cardHeight,
                       boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)",
                       border: "1px solid #F1F5F9",
                       transition: "transform 0.2s ease, boxShadow 0.2s ease",

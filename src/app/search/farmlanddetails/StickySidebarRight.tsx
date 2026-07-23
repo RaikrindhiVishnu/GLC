@@ -12,12 +12,14 @@ interface StickySidebarRightProps {
   title?: string;
   price?: string;
   locationSubtitle?: string;
+  farmlandId?: number;
 }
 
 export default function StickySidebarRight({
   title = "GLC SOS 01",
   price = "₹5.2 Cr",
   locationSubtitle = "Tanuku, Andhra Pradesh",
+  farmlandId,
 }: StickySidebarRightProps) {
   const router = useRouter();
   const [isCompareModalOpen, setIsCompareModalOpen] = useState(false);
@@ -106,7 +108,7 @@ export default function StickySidebarRight({
       </motion.button>
 
       <FilterPropertiesModal isOpen={isCompareModalOpen} onClose={() => setIsCompareModalOpen(false)} />
-      <VerifiedDocsModal isOpen={isDocsModalOpen} onClose={() => setIsDocsModalOpen(false)} />
+      <VerifiedDocsModal isOpen={isDocsModalOpen} onClose={() => setIsDocsModalOpen(false)} farmlandId={farmlandId} />
       <UnlockPremiumReportsModal 
         isOpen={isPremiumModalOpen} 
         onClose={() => setIsPremiumModalOpen(false)}

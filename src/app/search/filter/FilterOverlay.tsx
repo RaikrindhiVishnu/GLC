@@ -16,6 +16,14 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
   const [citySearch, setCitySearch] = useState<number | "">("");
   const [mandalSearch, setMandalSearch] = useState<number | "">("");
   
+  const [openDropdown, setOpenDropdown] = useState<"state" | "city" | "mandal" | null>(null);
+
+  useEffect(() => {
+    const handleClickOutside = () => setOpenDropdown(null);
+    window.addEventListener("click", handleClickOutside);
+    return () => window.removeEventListener("click", handleClickOutside);
+  }, []);
+
   const [selectedLeft, setSelectedLeft] = useState<string[]>([]);
   const [selectedRight, setSelectedRight] = useState<string[]>([]);
 
@@ -24,6 +32,32 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
 
   const [isViewAllOpen, setIsViewAllOpen] = useState(false);
   const [viewAllSearch, setViewAllSearch] = useState("");
+
+  const [priceRange, setPriceRange] = useState([10000000, 150000000]);
+  const [sizeRange, setSizeRange] = useState([10, 45]);
+
+  const handlePriceMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Math.min(Number(e.target.value), priceRange[1] - 1000000);
+    setPriceRange([value, priceRange[1]]);
+  };
+  const handlePriceMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Math.max(Number(e.target.value), priceRange[0] + 1000000);
+    setPriceRange([priceRange[0], value]);
+  };
+
+  const handleSizeMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Math.min(Number(e.target.value), sizeRange[1] - 1);
+    setSizeRange([value, sizeRange[1]]);
+  };
+  const handleSizeMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Math.max(Number(e.target.value), sizeRange[0] + 1);
+    setSizeRange([sizeRange[0], value]);
+  };
+
+  const formatPrice = (val: number) => {
+    if (val >= 10000000) return `₹${(val / 10000000).toFixed(1)}Cr`;
+    return `₹${(val / 100000).toFixed(0)}L`;
+  };
 
   useEffect(() => {
     if (isOpen) {
@@ -47,7 +81,7 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
   // Extract arrays from geoData (skipping header row)
   const states = geoData?.states?.slice(1) || [];
   const allDistricts = geoData?.districts?.slice(1) || [];
-  const districts = allDistricts.filter(d => stateSearch ? d[1] === stateSearch : true);
+  const districts = allDistricts.filter(d => stateSearch ? Number(d[1]) === Number(stateSearch) : true);
 
   // Extract master data
   const tags = masterData?.data?.tagResult || [];
@@ -123,6 +157,65 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
       default:
         return null;
     }
+  };
+
+  const CustomDropdown = ({ 
+    value, onChange, options, placeholder, disabled, icon, isOpen, onToggle 
+  }: { 
+    value: any, onChange: (v: any) => void, options: {value: any, label: string}[], placeholder: string, disabled?: boolean, icon: React.ReactNode, isOpen: boolean, onToggle: () => void 
+  }) => {
+    const selectedOption = options.find(o => o.value === value);
+    const displayLabel = selectedOption ? selectedOption.label : placeholder;
+
+    return (
+      <div 
+        style={{ height: "57px", background: "#FFFFFF", border: "1px solid rgba(197, 198, 205, 0.3)", borderRadius: "9999px", boxSizing: "border-box", opacity: disabled ? 0.5 : 1 }}
+        className={`flex-1 flex items-center relative pl-12 pr-4 ${disabled ? "cursor-not-allowed" : "cursor-pointer"}`}
+        onClick={(e) => {
+          e.stopPropagation();
+          if (!disabled) onToggle();
+        }}
+      >
+        <div className="absolute left-4 flex items-center justify-center">
+          {icon}
+        </div>
+        <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, color: value ? "#0F2F4C" : "#75777D" }} className="w-full text-sm md:text-base pr-8 truncate">
+          {displayLabel}
+        </div>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#75777D" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute right-4 pointer-events-none">
+          <polyline points={isOpen ? "18 15 12 9 6 15" : "6 9 12 15 18 9"}></polyline>
+        </svg>
+
+        {isOpen && !disabled && (
+          <div 
+            className="absolute left-0 right-0 bg-white shadow-xl z-50 overflow-y-auto"
+            style={{ 
+              top: "64px", 
+              borderRadius: "24px", 
+              maxHeight: "260px", 
+              padding: "8px",
+              border: "1px solid rgba(197, 198, 205, 0.4)",
+              boxShadow: "0px 20px 40px -10px rgba(9, 20, 38, 0.15)"
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {options.map((opt) => (
+              <div 
+                key={opt.value}
+                onClick={() => {
+                  onChange(opt.value);
+                  onToggle(); // close after selection
+                }}
+                style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                className={`px-4 py-3 cursor-pointer text-sm transition-colors duration-150 rounded-xl ${opt.value === value ? 'bg-[#EEF6FF] text-[#2780C4] font-semibold' : 'text-[#45474C] hover:bg-[#EEF6FF] hover:text-[#2780C4] font-medium'}`}
+              >
+                {opt.label}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -264,130 +357,60 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
             </span>
 
             {/* Responsive side-by-side inputs row stackable on mobile */}
-            <div className="w-full flex flex-col md:flex-row gap-4 box-border justify-between">
-              {/* State Search Input Container */}
-              <div 
-                style={{
-                  height: "57px",
-                  background: "#FFFFFF",
-                  border: "1px solid rgba(197, 198, 205, 0.3)",
-                  borderRadius: "9999px",
-                  boxSizing: "border-box",
-                }}
-                className="flex-1 flex items-center relative pl-12 pr-4"
-              >
-                {/* Embedded absolute SVG marker */}
-                <svg width="16" height="20" viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="absolute left-4">
-                  <path d="M8 10C8.55 10 9.02083 9.80417 9.4125 9.4125C9.80417 9.02083 10 8.55 10 8C10 7.45 9.80417 6.97917 9.4125 6.5875C9.02083 6.19583 8.55 6 8 6C7.45 6 6.97917 6.19583 6.5875 6.5875C6.19583 6.97917 6 7.45 6 8C6 8.55 6.19583 9.02083 6.5875 9.4125C6.97917 9.80417 7.45 10 8 10ZM8 17.35C10.0333 15.4833 11.5417 13.7875 12.525 12.2625C13.5083 10.7375 14 9.38333 14 8.2C14 6.38333 13.4208 4.89583 12.2625 3.7375C11.1042 2.57917 9.68333 2 8 2C6.31667 2 4.89583 2.57917 3.7375 3.7375C2.57917 4.89583 2 6.38333 2 8.2C2 9.38333 2.49167 10.7375 3.475 12.2625C4.45833 13.7875 5.96667 15.4833 8 17.35ZM8 20C5.31667 17.7167 3.3125 15.5958 1.9875 13.6375C0.6625 11.6792 0 9.86667 0 8.2C0 5.7 0.804167 3.70833 2.4125 2.225C4.02083 0.741667 5.88333 0 8 0C10.1167 0 11.9792 0.741667 13.5875 2.225C15.1958 3.70833 16 5.7 16 8.2C16 9.86667 15.3375 11.6792 14.0125 13.6375C12.6875 15.5958 10.6833 17.7167 8 20Z" fill="#75777D"/>
-                </svg>
-                <select 
-                  value={stateSearch}
-                  onChange={(e) => {
-                    setStateSearch(Number(e.target.value));
-                    setCitySearch(""); // Reset district when state changes
-                  }}
-                  style={{
-                    background: "transparent",
-                    border: "none",
-                    outline: "none",
-                    fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    fontWeight: 400,
-                    color: "#0F2F4C",
-                    appearance: "none"
-                  }}
-                  className="w-full text-sm md:text-base pr-8"
-                >
-                  <option value="" disabled hidden>Select State</option>
-                  <option value="">All States</option>
-                  {states.map(s => (
-                    <option key={s[0]} value={s[0]}>{s[3]}</option>
-                  ))}
-                </select>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#75777D" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute right-4 pointer-events-none">
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-              </div>
-
-              {/* City / District Search Input Container */}
-              <div 
-                style={{
-                  height: "57px",
-                  background: "#FFFFFF",
-                  border: "1px solid rgba(197, 198, 205, 0.3)",
-                  borderRadius: "9999px",
-                  boxSizing: "border-box",
-                }}
-                className="flex-1 flex items-center relative pl-12 pr-4"
-              >
-                {/* Embedded absolute SVG marker */}
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" className="absolute left-4">
-                  <path d="M12 18L6 15.9L1.35 17.7C1.01667 17.8333 0.708333 17.7958 0.425 17.5875C0.141667 17.3792 0 17.1 0 16.75V2.75C0 2.53333 0.0625 2.34167 0.1875 2.175C0.3125 2.00833 0.483333 1.88333 0.7 1.8L6 0L12 2.1L16.65 0.3C16.9833 0.166667 17.2917 0.204167 17.575 0.4125C17.8583 0.620833 18 0.9 18 1.25V15.25C18 15.4667 17.9375 15.6583 17.8125 15.825C17.6875 15.9917 17.5167 16.1167 17.3 16.2L12 18ZM11 15.55V3.85L7 2.45V14.15L11 15.55ZM13 15.55L16 14.55V2.7L13 3.85V15.55ZM2 15.3L5 14.15V2.45L2 3.45V15.3ZM13 3.85V15.55V3.85ZM5 2.45V14.15V2.45Z" fill="#75777D"/>
-                </svg>
-                <select 
-                  value={citySearch}
-                  onChange={(e) => setCitySearch(Number(e.target.value))}
-                  style={{
-                    background: "transparent",
-                    border: "none",
-                    outline: "none",
-                    fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    fontWeight: 400,
-                    color: "#0F2F4C",
-                    appearance: "none"
-                  }}
-                  className="w-full text-sm md:text-base pr-8"
-                  disabled={!stateSearch && states.length > 0}
-                >
-                  <option value="" disabled hidden>Select District</option>
-                  <option value="">All Districts</option>
-                  {districts.map(d => (
-                    <option key={d[0]} value={d[0]}>{d[3]}</option>
-                  ))}
-                </select>
-                {/* Custom dropdown caret */}
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#75777D" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute right-4 pointer-events-none">
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-              </div>
+            <div className="w-full flex flex-col md:flex-row gap-4 box-border justify-between relative z-40">
               
-              {/* Mandal Search Input Container */}
-              <div 
-                style={{
-                  height: "57px",
-                  background: "#FFFFFF",
-                  border: "1px solid rgba(197, 198, 205, 0.3)",
-                  borderRadius: "9999px",
-                  boxSizing: "border-box",
-                }}
-                className="flex-1 flex items-center relative pl-12 pr-4"
-              >
-                {/* Embedded absolute SVG marker */}
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" className="absolute left-4">
-                  <path d="M12 18L6 15.9L1.35 17.7C1.01667 17.8333 0.708333 17.7958 0.425 17.5875C0.141667 17.3792 0 17.1 0 16.75V2.75C0 2.53333 0.0625 2.34167 0.1875 2.175C0.3125 2.00833 0.483333 1.88333 0.7 1.8L6 0L12 2.1L16.65 0.3C16.9833 0.166667 17.2917 0.204167 17.575 0.4125C17.8583 0.620833 18 0.9 18 1.25V15.25C18 15.4667 17.9375 15.6583 17.8125 15.825C17.6875 15.9917 17.5167 16.1167 17.3 16.2L12 18ZM11 15.55V3.85L7 2.45V14.15L11 15.55ZM13 15.55L16 14.55V2.7L13 3.85V15.55ZM2 15.3L5 14.15V2.45L2 3.45V15.3ZM13 3.85V15.55V3.85ZM5 2.45V14.15V2.45Z" fill="#75777D"/>
-                </svg>
-                <select 
-                  value={mandalSearch}
-                  onChange={(e) => setMandalSearch(Number(e.target.value))}
-                  style={{
-                    background: "transparent",
-                    border: "none",
-                    outline: "none",
-                    fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    fontWeight: 400,
-                    color: "#0F2F4C",
-                    appearance: "none"
-                  }}
-                  className="w-full text-sm md:text-base pr-8"
-                  disabled={!citySearch && districts.length > 0}
-                >
-                  <option value="" disabled hidden>Select Mandal</option>
-                  <option value="">All Mandals</option>
-                </select>
-                {/* Custom dropdown caret */}
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#75777D" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute right-4 pointer-events-none">
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-              </div>
+              <CustomDropdown 
+                value={stateSearch}
+                onChange={(v) => { setStateSearch(v); setCitySearch(""); }}
+                options={[
+                  { value: "", label: "All States" },
+                  ...states.map(s => ({ value: s[0], label: s[3] }))
+                ]}
+                placeholder="Select State"
+                isOpen={openDropdown === "state"}
+                onToggle={() => setOpenDropdown(openDropdown === "state" ? null : "state")}
+                icon={
+                  <svg width="16" height="20" viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8 10C8.55 10 9.02083 9.80417 9.4125 9.4125C9.80417 9.02083 10 8.55 10 8C10 7.45 9.80417 6.97917 9.4125 6.5875C9.02083 6.19583 8.55 6 8 6C7.45 6 6.97917 6.19583 6.5875 6.5875C6.19583 6.97917 6 7.45 6 8C6 8.55 6.19583 9.02083 6.5875 9.4125C6.97917 9.80417 7.45 10 8 10ZM8 17.35C10.0333 15.4833 11.5417 13.7875 12.525 12.2625C13.5083 10.7375 14 9.38333 14 8.2C14 6.38333 13.4208 4.89583 12.2625 3.7375C11.1042 2.57917 9.68333 2 8 2C6.31667 2 4.89583 2.57917 3.7375 3.7375C2.57917 4.89583 2 6.38333 2 8.2C2 9.38333 2.49167 10.7375 3.475 12.2625C4.45833 13.7875 5.96667 15.4833 8 17.35ZM8 20C5.31667 17.7167 3.3125 15.5958 1.9875 13.6375C0.6625 11.6792 0 9.86667 0 8.2C0 5.7 0.804167 3.70833 2.4125 2.225C4.02083 0.741667 5.88333 0 8 0C10.1167 0 11.9792 0.741667 13.5875 2.225C15.1958 3.70833 16 5.7 16 8.2C16 9.86667 15.3375 11.6792 14.0125 13.6375C12.6875 15.5958 10.6833 17.7167 8 20Z" fill="#75777D"/>
+                  </svg>
+                }
+              />
+
+              <CustomDropdown 
+                value={citySearch}
+                onChange={(v) => setCitySearch(v)}
+                options={[
+                  { value: "", label: "All Districts" },
+                  ...districts.map(d => ({ value: d[0], label: d[3] }))
+                ]}
+                placeholder="Select District"
+                disabled={!stateSearch && states.length > 0}
+                isOpen={openDropdown === "city"}
+                onToggle={() => setOpenDropdown(openDropdown === "city" ? null : "city")}
+                icon={
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 18L6 15.9L1.35 17.7C1.01667 17.8333 0.708333 17.7958 0.425 17.5875C0.141667 17.3792 0 17.1 0 16.75V2.75C0 2.53333 0.0625 2.34167 0.1875 2.175C0.3125 2.00833 0.483333 1.88333 0.7 1.8L6 0L12 2.1L16.65 0.3C16.9833 0.166667 17.2917 0.204167 17.575 0.4125C17.8583 0.620833 18 0.9 18 1.25V15.25C18 15.4667 17.9375 15.6583 17.8125 15.825C17.6875 15.9917 17.5167 16.1167 17.3 16.2L12 18ZM11 15.55V3.85L7 2.45V14.15L11 15.55ZM13 15.55L16 14.55V2.7L13 3.85V15.55ZM2 15.3L5 14.15V2.45L2 3.45V15.3ZM13 3.85V15.55V3.85ZM5 2.45V14.15V2.45Z" fill="#75777D"/>
+                  </svg>
+                }
+              />
+
+              <CustomDropdown 
+                value={mandalSearch}
+                onChange={(v) => setMandalSearch(v)}
+                options={[
+                  { value: "", label: "All Mandals" }
+                ]}
+                placeholder="Select Mandal"
+                disabled={!citySearch && districts.length > 0}
+                isOpen={openDropdown === "mandal"}
+                onToggle={() => setOpenDropdown(openDropdown === "mandal" ? null : "mandal")}
+                icon={
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 18L6 15.9L1.35 17.7C1.01667 17.8333 0.708333 17.7958 0.425 17.5875C0.141667 17.3792 0 17.1 0 16.75V2.75C0 2.53333 0.0625 2.34167 0.1875 2.175C0.3125 2.00833 0.483333 1.88333 0.7 1.8L6 0L12 2.1L16.65 0.3C16.9833 0.166667 17.2917 0.204167 17.575 0.4125C17.8583 0.620833 18 0.9 18 1.25V15.25C18 15.4667 17.9375 15.6583 17.8125 15.825C17.6875 15.9917 17.5167 16.1167 17.3 16.2L12 18ZM11 15.55V3.85L7 2.45V14.15L11 15.55ZM13 15.55L16 14.55V2.7L13 3.85V15.55ZM2 15.3L5 14.15V2.45L2 3.45V15.3ZM13 3.85V15.55V3.85ZM5 2.45V14.15V2.45Z" fill="#75777D"/>
+                  </svg>
+                }
+              />
+
             </div>
           </div>
 
@@ -422,19 +445,33 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
                     Price Range (₹)
                   </span>
                   <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, color: "#0F2F4C" }} className="text-xs md:text-sm">
-                    ₹50L – ₹2.5Cr
+                    {formatPrice(priceRange[0])} – {formatPrice(priceRange[1])}
                   </span>
                 </div>
 
                 {/* Track visual block */}
-                <div className="relative w-full h-6 flex items-center mb-4 mt-2">
+                <div className="relative w-full h-8 flex items-center mb-4 mt-2">
                   <div style={{ height: "6px", background: "#E7E8E9", borderRadius: "9999px" }} className="absolute inset-x-0" />
-                  <div style={{ height: "6px", background: "#2780C4", borderRadius: "9999px" }} className="absolute left-[20%] right-[30%]" />
+                  <div style={{ height: "6px", background: "#2780C4", borderRadius: "9999px", 
+                    left: `${((priceRange[0] - 5000000) / 245000000) * 100}%`,
+                    right: `${100 - ((priceRange[1] - 5000000) / 245000000) * 100}%`
+                  }} className="absolute" />
                   
-                  {/* Left Node */}
-                  <div style={{ width: "20px", height: "20px", background: "#2780C4", border: "4px solid #FFFFFF", borderRadius: "9999px", boxShadow: "0px 4px 6px -4px rgba(0,0,0,0.1)" }} className="absolute left-[17%] -mt-[2px]" />
-                  {/* Right Node */}
-                  <div style={{ width: "20px", height: "20px", background: "#2780C4", border: "4px solid #FFFFFF", borderRadius: "9999px", boxShadow: "0px 4px 6px -4px rgba(0,0,0,0.1)" }} className="absolute left-[67%] -mt-[2px]" />
+                  <input type="range" min="5000000" max="250000000" step="1000000" value={priceRange[0]} onChange={handlePriceMinChange} className="absolute w-full appearance-none bg-transparent pointer-events-none" style={{ zIndex: 3, outline: 'none' }} />
+                  <input type="range" min="5000000" max="250000000" step="1000000" value={priceRange[1]} onChange={handlePriceMaxChange} className="absolute w-full appearance-none bg-transparent pointer-events-none" style={{ zIndex: 4, outline: 'none' }} />
+                  <style>{`
+                    input[type=range]::-webkit-slider-thumb {
+                      pointer-events: all;
+                      width: 20px;
+                      height: 20px;
+                      -webkit-appearance: none;
+                      background: #2780C4;
+                      border: 4px solid #FFFFFF;
+                      border-radius: 9999px;
+                      box-shadow: 0px 4px 6px -4px rgba(0,0,0,0.1);
+                      cursor: pointer;
+                    }
+                  `}</style>
                 </div>
 
                 {/* Min/Max Value Pills */}
@@ -445,7 +482,7 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
                     </span>
                     <div style={{ background: "#F2F4F6", border: "0.63px solid #C2C6D2", borderRadius: "31px", height: "33px", width: "69px" }} className="flex items-center justify-center">
                       <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, color: "#191C1E" }} className="text-[10.15px] flex items-center">
-                        <span className="mr-0.5">₹</span>1.0Cr
+                        {formatPrice(priceRange[0])}
                       </span>
                     </div>
                   </div>
@@ -456,7 +493,7 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
                     </span>
                     <div style={{ background: "#F2F4F6", border: "0.63px solid #C2C6D2", borderRadius: "31px", height: "33px", width: "69px" }} className="flex items-center justify-center">
                       <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, color: "#191C1E" }} className="text-[10.15px] flex items-center">
-                        <span className="mr-0.5">₹</span>15Cr
+                        {formatPrice(priceRange[1])}
                       </span>
                     </div>
                   </div>
@@ -470,19 +507,20 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
                     Property Size (Acres)
                   </span>
                   <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, color: "#0F2F4C" }} className="text-xs md:text-sm">
-                    10 – 45 Acres
+                    {sizeRange[0]} – {sizeRange[1]} Acres
                   </span>
                 </div>
 
                 {/* Track visual block */}
-                <div className="relative w-full h-6 flex items-center mb-4 mt-2">
+                <div className="relative w-full h-8 flex items-center mb-4 mt-2">
                   <div style={{ height: "6px", background: "#E7E8E9", borderRadius: "9999px" }} className="absolute inset-x-0" />
-                  <div style={{ height: "6px", background: "#2780C4", borderRadius: "9999px" }} className="absolute left-[15%] right-[40%]" />
+                  <div style={{ height: "6px", background: "#2780C4", borderRadius: "9999px", 
+                    left: `${((sizeRange[0] - 1) / 99) * 100}%`,
+                    right: `${100 - ((sizeRange[1] - 1) / 99) * 100}%`
+                  }} className="absolute" />
                   
-                  {/* Left Node */}
-                  <div style={{ width: "20px", height: "20px", background: "#2780C4", border: "4px solid #FFFFFF", borderRadius: "9999px", boxShadow: "0px 4px 6px -4px rgba(0,0,0,0.1)" }} className="absolute left-[12%] -mt-[2px]" />
-                  {/* Right Node */}
-                  <div style={{ width: "20px", height: "20px", background: "#2780C4", border: "4px solid #FFFFFF", borderRadius: "9999px", boxShadow: "0px 4px 6px -4px rgba(0,0,0,0.1)" }} className="absolute left-[57%] -mt-[2px]" />
+                  <input type="range" min="1" max="100" step="1" value={sizeRange[0]} onChange={handleSizeMinChange} className="absolute w-full appearance-none bg-transparent pointer-events-none" style={{ zIndex: 3, outline: 'none' }} />
+                  <input type="range" min="1" max="100" step="1" value={sizeRange[1]} onChange={handleSizeMaxChange} className="absolute w-full appearance-none bg-transparent pointer-events-none" style={{ zIndex: 4, outline: 'none' }} />
                 </div>
 
                 {/* Min/Max Value Pills */}
@@ -493,7 +531,7 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
                     </span>
                     <div style={{ background: "#F2F4F6", border: "0.63px solid #C2C6D2", borderRadius: "31px", height: "33px", width: "69px" }} className="flex items-center justify-center">
                       <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, color: "#191C1E" }} className="text-[10.15px]">
-                        10 Acres
+                        {sizeRange[0]} Acres
                       </span>
                     </div>
                   </div>
@@ -504,7 +542,7 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
                     </span>
                     <div style={{ background: "#F2F4F6", border: "0.63px solid #C2C6D2", borderRadius: "31px", height: "33px", width: "69px" }} className="flex items-center justify-center">
                       <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, color: "#191C1E" }} className="text-[10.15px]">
-                        45 Acres
+                        {sizeRange[1]} Acres
                       </span>
                     </div>
                   </div>
@@ -683,7 +721,6 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
                 tag_ids: selectedLeft
               });
               onClose();
-              window.location.href = '/search/farmlanddetails/compare_premium';
             }}
             style={{
               background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)",

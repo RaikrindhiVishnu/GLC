@@ -32,7 +32,7 @@ export default function UnlockedDocsGrid() {
     return () => window.removeEventListener("resize", update);
   }, []);
 
-  const filterTabs = ["All Unlocks", "Legal Dossiers", "Risk Reports"];
+  const filterTabs = ["All Unlocks"];
 
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
@@ -88,21 +88,7 @@ export default function UnlockedDocsGrid() {
             viewport={{ once: true }}
             className="flex flex-col gap-3"
           >
-            {/* Search */}
-            <div style={{ position: "relative", width: "100%" }}>
-              <div style={{ position: "absolute", left: "16px", top: "50%", transform: "translateY(-50%)", zIndex: 1 }}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#75777D" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
-                </svg>
-              </div>
-              <input
-                type="text"
-                placeholder="Search by asset ID, location, or land size..."
-                value={searchVal}
-                onChange={(e) => setSearchVal(e.target.value)}
-                style={{ width: "100%", boxSizing: "border-box", height: "52px", background: "#F3F4F5", border: "none", outline: "none", borderRadius: "9999px", paddingLeft: "48px", paddingRight: "20px", fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "14px", color: "#0F2F4C" }}
-              />
-            </div>
+
 
             {/* Filter tabs */}
             <div style={{ display: "flex", flexDirection: "row", gap: "8px", overflowX: "auto", paddingBottom: "4px", WebkitOverflowScrolling: "touch" as any, scrollbarWidth: "none" as any }}>
@@ -288,17 +274,7 @@ export default function UnlockedDocsGrid() {
                 </div>
 
                 {/* Search & Filters */}
-                <div style={{ boxSizing: "border-box", display: "flex", flexDirection: "row", alignItems: "center", padding: "16px", gap: "24px", width: "1216px", height: "84px", background: "#FFFFFF", boxShadow: "0px 1px 2px rgba(0,0,0,0.05)", borderRadius: "32px" }}>
-                  <div style={{ boxSizing: "border-box", position: "relative", width: "683.25px", height: "52px", flexGrow: 1 }}>
-                    <div style={{ boxSizing: "border-box", display: "flex", flexDirection: "row", alignItems: "flex-start", padding: "17px 24px 17px 48px", width: "683.25px", height: "52px", background: "#F3F4F5", borderRadius: "26px" }}>
-                      <input type="text" placeholder="Search by asset ID, location, or land size..." value={searchVal} onChange={(e) => setSearchVal(e.target.value)} style={{ width: "100%", background: "transparent", border: "none", outline: "none", fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "14px", color: "#0F2F4C" }} />
-                    </div>
-                    <div style={{ position: "absolute", left: "16px", top: "26.92%", bottom: "26.92%", display: "flex", alignItems: "center" }}>
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#75777D" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
-                      </svg>
-                    </div>
-                  </div>
+                <div style={{ boxSizing: "border-box", display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-end", padding: "16px", gap: "24px", width: "1216px", height: "84px", background: "#FFFFFF", boxShadow: "0px 1px 2px rgba(0,0,0,0.05)", borderRadius: "32px" }}>
                   <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "12px", height: "44px" }}>
                     {filterTabs.map((tab) => {
                       const isActive = activeFilter === tab;
@@ -436,7 +412,7 @@ export default function UnlockedDocsGrid() {
             {/* Left pane */}
             <div style={{ boxSizing: "border-box", width: "clamp(220px, 20vw, 272px)", height: "100%", background: "#FFFFFF", boxShadow: "0px 8px 30px rgba(0,0,0,0.04)", borderRadius: "32px", display: "flex", flexDirection: "column", overflow: "hidden", flexShrink: 0 }}>
               <div style={{ width: "100%", height: "clamp(140px, 25vh, 256px)", position: "relative", background: "#161B22" }}>
-                <img src="/assets/search/image2.1.png" alt={`${selectedDossier.id} Plot Satellite`} style={{ width: "100%", height: "100%", objectFit: "cover" }} onError={(e) => { e.currentTarget.src = "/assets/compareassets/farm1.jpg"; }} />
+                <img src="/assets/search/image2.1.png" alt={`${selectedDossier.farm_code || selectedDossier.id || 'Asset'} Plot Satellite`} style={{ width: "100%", height: "100%", objectFit: "cover" }} onError={(e) => { e.currentTarget.src = "/assets/compareassets/farm1.jpg"; }} />
               </div>
               <div style={{ boxSizing: "border-box", padding: "clamp(16px, 2.5vh, 32px)", display: "flex", flexDirection: "column", gap: "clamp(16px, 2.5vh, 24px)", flexGrow: 1 }}>
                 <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
@@ -444,11 +420,11 @@ export default function UnlockedDocsGrid() {
                     <div style={{ width: "16px", height: "16px", borderRadius: "9999px", background: "#BCD225", display: "flex", alignItems: "center", justifyContent: "center" }}>
                       <span style={{ fontSize: "10px", color: "#0F2F4C", fontWeight: "bold" }}>✓</span>
                     </div>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1px", color: "#45474C", textTransform: "uppercase" }}>ASSET ID: {selectedDossier.id.replace("GLC ", "")}</span>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1px", color: "#45474C", textTransform: "uppercase" }}>ASSET ID: {(selectedDossier.farm_code || selectedDossier.id || "").replace("GLC ", "")}</span>
                   </div>
-                  <h3 style={{ margin: 0, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "clamp(22px, 3vh, 30px)", color: "#0F2F4C", letterSpacing: "-0.75px", lineHeight: "1.1" }}>{selectedDossier.id}</h3>
+                  <h3 style={{ margin: 0, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "clamp(22px, 3vh, 30px)", color: "#0F2F4C", letterSpacing: "-0.75px", lineHeight: "1.1" }}>{selectedDossier.farm_code || selectedDossier.id}</h3>
                   <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "clamp(13px, 1.8vh, 16px)", color: "#45474C", lineHeight: "1.4" }}>
-                    {selectedDossier.acres} Acres • <span style={{ color: "#2780C4", fontWeight: 700 }}>{selectedDossier.val} Total Valuation</span>
+                    {selectedDossier.acres || selectedDossier.size || "N/A"} Acres • <span style={{ color: "#2780C4", fontWeight: 700 }}>{selectedDossier.val || selectedDossier.price || "N/A"} Total Valuation</span>
                   </span>
                 </div>
                 <div style={{ boxSizing: "border-box", padding: "clamp(12px, 2vh, 20px)", background: "#EEF6FF", border: "1px solid rgba(39,128,196,0.15)", borderRadius: "16px", display: "flex", alignItems: "flex-start", gap: "10px" }}>

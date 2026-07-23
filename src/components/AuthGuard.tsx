@@ -12,18 +12,21 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     const token = localStorage.getItem("token");
     const isAuthenticated = token && token !== "null" && token !== "undefined" && token.trim() !== "";
     
-    // Define paths that are accessible BEFORE login
-    const publicPaths = ["/", "/login", "/login/register", "/login/forgot-password"];
+    // Paths that should redirect to /home if the user is already logged in
+    const authPages = ["/login", "/login/register", "/login/forgot-password"];
     
-    // Check if the current path is exactly a public path
+    // Paths that can be viewed without logging in
+    const publicPaths = ["/", "/landing", ...authPages];
+    
     const isPublicPath = publicPaths.includes(pathname);
+    const isAuthPage = authPages.includes(pathname);
 
     if (isPublicPath) {
-      if (isAuthenticated) {
-        console.log("AuthGuard: Authenticated user on public route, redirecting to /home...");
+      if (isAuthenticated && isAuthPage) {
+        console.log("AuthGuard: Authenticated user on auth page, redirecting to /home...");
         router.replace("/home");
       } else {
-        console.log("AuthGuard: Unauthenticated user on public route, allowing access.");
+        console.log("AuthGuard: User allowed on public/auth route.");
         setMounted(true);
       }
     } else {

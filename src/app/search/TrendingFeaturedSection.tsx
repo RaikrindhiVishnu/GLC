@@ -291,7 +291,7 @@ export default function TrendingFeaturedSection() {
       {/* ══════════════════════════════════════════════════════ */}
       <div
         className="hidden lg:flex flex-col items-center"
-        style={{ margin: "60px 0 100px 0", gap: "60px", overflow: "hidden" }}
+        style={{ margin: "clamp(30px, 5vw, 60px) 0 clamp(50px, 8vw, 100px) 0", gap: "clamp(30px, 5vw, 60px)", overflow: "hidden" }}
       >
       {/* ─── HEADER TYPOGRAPHY ROW ─── */}
       <motion.div

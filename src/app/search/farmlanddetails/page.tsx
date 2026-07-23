@@ -13,6 +13,7 @@ import FacilitiesCultivation from "./FacilitiesCultivation";
 import StickySidebarRight from "./StickySidebarRight";
 import DiscoveryGridSection from "./DiscoveryGridSection";
 import FilterPropertiesModal from "./compare/FilterPropertiesModal";
+import { useGetFacilitiesByFarmlandIdQuery } from "@/services/farmland";
 
 // Comprehensive metadata mapping to deliver premium custom parameters per selected farmland listing
 const farmlandRegistry: Record<
@@ -172,6 +173,9 @@ function InnerFarmlandDetailsView() {
 
   // Safely resolve active farmland dataset with default fallbacks
   const activeLand = farmlandRegistry[rawId] || farmlandRegistry["match-1"];
+  
+  const numericId = parseInt(rawId.replace(/\D/g, "")) || 101;
+  const { data: facilitiesData, isLoading: isFacilitiesLoading } = useGetFacilitiesByFarmlandIdQuery({ farmland_id: numericId });
 
   return (
     <div style={{ width: "100%", display: "flex", flexDirection: "column" }}>
@@ -198,6 +202,7 @@ function InnerFarmlandDetailsView() {
             <FacilitiesCultivation
               currentCrop={activeLand.currentVegetation}
               potentialCrop={activeLand.potentialVegetation}
+              facilitiesData={facilitiesData}
             />
           </div>
           {/* Right Sidebar */}
@@ -206,6 +211,7 @@ function InnerFarmlandDetailsView() {
               title={activeLand.title}
               price={activeLand.price}
               locationSubtitle={activeLand.locationSubtitle}
+              farmlandId={numericId}
             />
           </div>
         </div>

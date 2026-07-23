@@ -6,6 +6,10 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import SavedFarmlandsHero from "./SavedFarmlandsHero";
 import TrendingFeaturedSection from "@/app/search/TrendingFeaturedSection";
+import { 
+  useGetAllSavedFarmlandsByUserIdQuery, 
+  useRemoveFarmLandFromUserSavedListMutation 
+} from "@/services/farmland";
 
 import Footer from "@/components/Footer";
 
@@ -77,15 +81,50 @@ export default function SavedFarmlandsPage() {
   const router = useRouter();
   const [properties, setProperties] = useState(initialSavedProperties);
 
-  // Toggle bookmark icon state locally to create a rich responsive micro-interaction
-  const toggleBookmark = (id: string, e: React.MouseEvent) => {
+  const [userId, setUserId] = useState<number | null>(null);
+
+  React.useEffect(() => {
+    const storedUserId = localStorage.getItem("userId");
+    if (storedUserId) {
+      setUserId(parseInt(storedUserId, 10));
+    }
+  }, []);
+
+  const { data: savedFarmlandsData, refetch } = useGetAllSavedFarmlandsByUserIdQuery(
+    { user_id: userId || 0, offset: 0 },
+    { skip: !userId }
+  );
+  const [removeFarmland] = useRemoveFarmLandFromUserSavedListMutation();
+
+  React.useEffect(() => {
+    if (savedFarmlandsData && savedFarmlandsData.length > 0) {
+      const apiProperties = savedFarmlandsData.map((item, idx) => ({
+        id: item.farm_land_id.toString(),
+        mapId: item.farm_land_id.toString(),
+        title: item.farm_code,
+        price: `₹${(parseFloat(item.total_valuation) / 10000000).toFixed(1)}Cr`,
+        tags: ["SAVED"],
+        description: "Farmland details available on the main page.",
+        img: initialSavedProperties[idx % initialSavedProperties.length].img,
+        bookmarked: true,
+      }));
+      setProperties(apiProperties);
+    }
+  }, [savedFarmlandsData]);
+
+  const toggleBookmark = async (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    setProperties(prev => prev.map(item => {
-      if (item.id === id) {
-        return { ...item, bookmarked: !item.bookmarked };
-      }
-      return item;
-    }));
+    
+    // Optimistic UI update
+    setProperties(prev => prev.filter(item => item.id !== id));
+    
+    try {
+      await removeFarmland({ user_id: userId, farm_land_id: parseInt(id) }).unwrap();
+      refetch();
+    } catch (error) {
+      console.error("Failed to unsave farmland", error);
+      // Revert if API fails? For now just log
+    }
   };
 
   return (

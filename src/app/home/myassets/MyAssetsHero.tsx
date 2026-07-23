@@ -39,14 +39,7 @@ export default function MyAssetsHero() {
           <Navbar variant="app" active="search" />
         </div>
         <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "calc(80vh - 72px)", padding: "32px 20px 48px", textAlign: "center" }}>
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: "9999px", padding: "4px 16px", marginBottom: "24px", backdropFilter: "blur(20px)" }}
-          >
-            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", letterSpacing: "2px", color: "#FFFFFF", textTransform: "uppercase" }}>TIER: DIGITAL CURATOR</span>
-          </motion.div>
+
           <motion.h1
             initial={{ opacity: 0, filter: "blur(8px)", y: 15 }}
             animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
@@ -134,17 +127,7 @@ export default function MyAssetsHero() {
                 >
                   Manage your premium agricultural assets, track performance, and access your secure legal vault.
                 </motion.p>
-                <motion.button
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.55 }}
-                  onClick={(e) => { e.stopPropagation(); router.push("/home/myassets/details"); }}
-                  style={{ boxSizing: "border-box", display: "inline-flex", alignItems: "center", justifyContent: "center", padding: "12px 32px", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: "100px", backdropFilter: "blur(20px)", cursor: "pointer", whiteSpace: "nowrap", transition: "background 0.2s ease" }}
-                  onMouseEnter={(e) => ((e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.18)")}
-                  onMouseLeave={(e) => ((e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.1)")}
-                >
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", lineHeight: "20px", letterSpacing: "2px", color: "#FFFFFF" }}>TIER: DIGITAL CURATOR</span>
-                </motion.button>
+
               </div>
             </div>
           </section>

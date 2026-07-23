@@ -1,18 +1,51 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { useGetUserDetailsByIdQuery, useUpdateUserDetailsMutation } from "../../services/user";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import SiteVisitCompletedModal from "@/components/SiteVisitCompletedModal";
 import SiteVisitQueueModal from "@/components/SiteVisitQueueModal";
 import LandPurchaseTrackingModal from "@/components/LandPurchaseTrackingModal";
+import EditProfileModal from "@/components/EditProfileModal";
+import WalletHistoryModal from "@/components/WalletHistoryModal";
+import { s3Service } from "../../services/s3";
 
 export default function ProfileScreen() {
   const router = useRouter();
+
+  const [userId, setUserId] = useState<number | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const storedUserId = localStorage.getItem("userId");
+    if (storedUserId) {
+      setUserId(parseInt(storedUserId, 10));
+    }
+  }, []);
+
+  const { data: userDetailsResponse, isLoading, refetch } = useGetUserDetailsByIdQuery(
+    { user_id: userId || 0 },
+    { skip: !mounted || !userId }
+  );
+
+  const [updateUserDetails] = useUpdateUserDetailsMutation();
+
+  const userDetails = userDetailsResponse?.data;
+  const fullName = userDetails ? `${userDetails.frist_name} ${userDetails.last_name}` : "";
+  const email = userDetails?.email || "";
+  const phone = userDetails ? `${userDetails.contry_code} ${userDetails.ph_number}` : "";
+  const boughtFarmlands = userDetails?.user_bought_farmlnad_details || [];
+
+  const handleSignOut = () => {
+    localStorage.removeItem("token");
+    window.location.replace("/landing");
+  };
 
   const [isPhoneVerified, setIsPhoneVerified] = useState(false);
   const [isAadhaarVerified, setIsAadhaarVerified] = useState(false);
@@ -23,16 +56,69 @@ export default function ProfileScreen() {
   const [isSiteVisitModalOpen, setIsSiteVisitModalOpen] = useState(false);
   const [isSiteVisitQueueModalOpen, setIsSiteVisitQueueModalOpen] = useState(false);
   const [isTrackingModalOpen, setIsTrackingModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isWalletHistoryModalOpen, setIsWalletHistoryModalOpen] = useState(false);
+
+  const [profileImage, setProfileImage] = useState("/assets/account/account-profile.svg");
+  const [lastUploadedUrl, setLastUploadedUrl] = useState<string | null>(null);
+  const profileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleProfileImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      // Optimistic update
+      const imageUrl = URL.createObjectURL(file);
+      setProfileImage(imageUrl);
+      
+      try {
+        const response = await s3Service.uploadFile(file);
+        if (response.url) {
+          setProfileImage(response.url);
+          setLastUploadedUrl(response.url);
+          if (userId && userDetails) {
+            await updateUserDetails({
+              id: userId,
+              frist_name: userDetails.frist_name || "",
+              last_name: userDetails.last_name || "",
+              profile_url: response.url,
+              state_id: (userDetails as any).state_id || 1
+            }).unwrap();
+            // Cache invalidation via tags will trigger an automatic refetch
+          }
+        }
+      } catch (error: any) {
+        console.error("Profile image upload failed", error);
+        alert(`Profile update failed: ${JSON.stringify(error?.data || error)}`);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (userDetails?.profile_url) {
+      if (lastUploadedUrl && userDetails.profile_url !== lastUploadedUrl) {
+        // Backend hasn't caught up yet (stale data), keep our optimistic uploaded image
+        return;
+      }
+      setProfileImage(userDetails.profile_url);
+    }
+  }, [userDetails?.profile_url, lastUploadedUrl]);
 
   const triggerUpload = (target: "aadhaar-front" | "aadhaar-back" | "pan") => {
     setUploadTarget(target);
     fileInputRef.current?.click();
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      if (uploadTarget === "aadhaar-front" || uploadTarget === "aadhaar-back") setIsAadhaarVerified(true);
-      if (uploadTarget === "pan") setIsPanVerified(true);
+      const file = e.target.files[0];
+      try {
+        await s3Service.uploadFile(file);
+        
+        if (uploadTarget === "aadhaar-front" || uploadTarget === "aadhaar-back") setIsAadhaarVerified(true);
+        if (uploadTarget === "pan") setIsPanVerified(true);
+      } catch (error) {
+        console.error("Document upload failed", error);
+      }
     }
     // reset input
     if (fileInputRef.current) {
@@ -59,6 +145,8 @@ export default function ProfileScreen() {
         style={{ display: "none" }}
         accept="image/*,.pdf"
       />
+      <input type="file" accept="image/*" ref={profileInputRef} style={{ display: 'none' }} onChange={handleProfileImageChange} />
+      
       {/* ─── HERO BACKGROUND (desktop only) ─── */}
       <div
         className="hidden lg:block"
@@ -98,8 +186,17 @@ export default function ProfileScreen() {
             style={{ position: "relative", marginTop: "55px" }}
           >
             {/* Avatar floating above card */}
-            <div style={{ position: "absolute", top: "-55px", left: "50%", transform: "translateX(-50%)", width: "108px", height: "108px", borderRadius: "32px", overflow: "hidden", boxShadow: "0px 0px 0px 4px #F0F1F2, 0px 16px 32px -8px rgba(0,0,0,0.4)", background: "#D9D9D9", zIndex: 2 }}>
-              <Image src="/assets/account/account-profile.svg" alt="Profile" fill style={{ objectFit: "cover" }} />
+            <div onClick={() => profileInputRef.current?.click()} style={{ position: "absolute", top: "-55px", left: "50%", transform: "translateX(-50%)", width: "108px", height: "108px", borderRadius: "32px", overflow: "visible", zIndex: 2, cursor: "pointer" }}>
+              <div style={{ width: "100%", height: "100%", borderRadius: "32px", overflow: "hidden", boxShadow: "0px 0px 0px 4px #F0F1F2, 0px 16px 32px -8px rgba(0,0,0,0.4)", background: "#D9D9D9", position: "relative" }}>
+                <img src={profileImage} alt="Profile" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.3)", display: "flex", alignItems: "center", justifyContent: "center", opacity: 0, transition: "opacity 0.2s ease" }} onMouseEnter={(e) => e.currentTarget.style.opacity = "1"} onMouseLeave={(e) => e.currentTarget.style.opacity = "0"}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                </div>
+              </div>
+              {/* Permanent edit icon badge */}
+              <div onClick={() => profileInputRef.current?.click()} style={{ position: "absolute", bottom: "-12px", right: "-12px", width: "32px", height: "32px", background: "transparent", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 3, cursor: "pointer" }}>
+                <img src="/assets/profile/savedfarmland/Requested Feature_ Camera Upload Button.svg" alt="Upload Camera" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+              </div>
             </div>
 
             {/* Dark card */}
@@ -108,16 +205,18 @@ export default function ProfileScreen() {
               <div style={{ position: "absolute", width: "220px", height: "220px", right: "-60px", bottom: "-90px", border: "20px solid rgba(0,98,158,0.25)", filter: "blur(24px)", borderRadius: "9999px", pointerEvents: "none" }} />
 
               {/* Name + verify badge */}
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", marginBottom: "18px" }}>
-                <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "22px", letterSpacing: "-0.04em", color: "#FFFFFF" }}>Arjun Vardhan</span>
-                <div style={{ width: "20px", height: "20px", borderRadius: "50%", background: "#2780C4", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="#FFFFFF"><path d="M2 19h20v2H2v-2zm1.5-3l1.5-10 5.5 4 3-5 3 5 5.5-4 1.5 10H3.5z" /></svg>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", marginBottom: "18px", maxWidth: "100%" }}>
+                <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "22px", letterSpacing: "-0.04em", color: "#FFFFFF", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{fullName}</span>
+                <div style={{ width: "20px", height: "20px", borderRadius: "50%", background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 5px 8px -1.5px rgba(0, 0, 0, 0.1), 0px 2px 3px -2px rgba(0, 0, 0, 0.1)", flexShrink: 0 }}>
+                  <svg width="10" height="8" viewBox="22 13 19 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M24.5586 24.4258L22.5586 14.1133L28.0586 18.8008L31.5586 13.1758L35.0586 18.8008L40.5586 14.1133L38.5586 24.4258H24.5586ZM38.5586 27.2383C38.5586 27.8008 38.1586 28.1758 37.5586 28.1758H25.5586C24.9586 28.1758 24.5586 27.8008 24.5586 27.2383V26.3008H38.5586V27.2383Z" fill="white"/>
+                  </svg>
                 </div>
               </div>
 
               {/* Edit Profile + Share row */}
               <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
-                <button onClick={() => router.push("/profile")} style={{ flex: 1, height: "46px", background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)", border: "none", borderRadius: "14px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}>
+                <button onClick={() => setIsEditModalOpen(true)} style={{ flex: 1, height: "46px", background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)", border: "none", borderRadius: "14px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="#FFFFFF"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" /></svg>
                   <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "14px", color: "#FFFFFF", letterSpacing: "0.5px", textTransform: "uppercase" }}>Edit Profile</span>
                 </button>
@@ -151,7 +250,7 @@ export default function ProfileScreen() {
               <p style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 400, fontSize: "13px", color: "rgba(255,255,255,0.55)", margin: "0 0 20px" }}>Direct access to premium agricultural yields</p>
 
               {/* View Wallet History */}
-              <button onClick={() => router.push("/profile/managesubscriptions")} style={{ width: "100%", height: "50px", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "14px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <button onClick={() => setIsWalletHistoryModalOpen(true)} style={{ width: "100%", height: "50px", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "14px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "15px", color: "#FFFFFF" }}>View Wallet History</span>
               </button>
             </div>
@@ -169,9 +268,9 @@ export default function ProfileScreen() {
             <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "13px", color: "#0F2F4C", textTransform: "uppercase" }}>Identity & Contact</span>
           </div>
           {[
-            { label: "Full Name", value: "Arjun Vardhan", type: "name" },
-            { label: "Mobile Number", value: "+91 98765 43210", type: "phone" },
-            { label: "Email Address", value: "arjun.w@gmail.com", type: "email" },
+            { label: "Full Name", value: fullName, type: "name" },
+            { label: "Mobile Number", value: phone, type: "phone" },
+            { label: "Email Address", value: email, type: "email" },
           ].map((row, i) => (
             <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "13px 4px", borderTop: i > 0 ? "1px solid #F5F5F5" : "none" }}>
               <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 500, fontSize: "13px", color: "#71717A" }}>{row.label}</span>
@@ -319,22 +418,24 @@ export default function ProfileScreen() {
             <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Active Investments</span>
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-            {[
-              { title: "GLC SOS 01", subtitle: "Medchal • ‹12.5L • 0.5 Ac", color: "#059669" },
-              { title: "GLC SOS 02", subtitle: "Vikarabad • ‹5.0L • 0.2 Ac", color: "#D97706" }
-            ].map((item, idx) => (
-              <div key={idx} onClick={() => router.push(`/profile/active-investment/${idx + 1}`)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", borderRadius: "24px", padding: "16px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0px 4px 15px rgba(0,0,0,0.02)" }}>
+            {boughtFarmlands.length > 0 ? boughtFarmlands.map((item, idx) => {
+              const colors = ["#059669", "#D97706", "#2563EB", "#7C3AED"];
+              const color = colors[idx % colors.length];
+              return (
+              <div key={idx} onClick={() => router.push(`/profile/active-investment/${item.farmland_is}`)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", borderRadius: "24px", padding: "16px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0px 4px 15px rgba(0,0,0,0.02)" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
                   <div style={{ width: "42px", height: "42px", background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.04)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 2px 5px rgba(0,0,0,0.02)" }}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={item.color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
                   </div>
                   <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.title}</span>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>{item.subtitle}</span>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.farmland_code}</span>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>{item.total_acers} Ac • ₹{item.price}</span>
                   </div>
                 </div>
               </div>
-            ))}
+            )}) : (
+              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "13px", color: "#71717A", padding: "16px" }}>No active investments found.</span>
+            )}
           </div>
         </motion.div>
 
@@ -452,6 +553,7 @@ export default function ProfileScreen() {
         {/* Mobile Sign Out — standalone centered at bottom */}
         <div style={{ display: "flex", justifyContent: "center", padding: "28px 16px 40px" }}>
           <button
+            onClick={handleSignOut}
             style={{ background: "transparent", border: "none", display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", padding: 0 }}
             onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.7")}
             onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
@@ -482,15 +584,23 @@ export default function ProfileScreen() {
         >
           {/* Avatar */}
           <div
+            onClick={() => profileInputRef.current?.click()}
             style={{
               position: "absolute", width: "241.24px", height: "241.24px",
               left: "calc(50% - 241.24px/2)", top: "39px",
-              borderRadius: "72.37px",
-              boxShadow: "0px 0px 0px 6px #FFFFFF, 0px 37px 75px -18px rgba(0,0,0,0.35)",
-              overflow: "hidden", zIndex: 20, background: "#F8F9FA",
+              zIndex: 20, cursor: "pointer"
             }}
           >
-            <Image src="/assets/account/account-profile.svg" alt="Arjun Profile Frame Portrait" fill style={{ objectFit: "cover", objectPosition: "center" }} />
+            <div style={{ width: "100%", height: "100%", borderRadius: "72.37px", boxShadow: "0px 0px 0px 6px #FFFFFF, 0px 37px 75px -18px rgba(0,0,0,0.35)", overflow: "hidden", background: "#F8F9FA", position: "relative" }}>
+              <img src={profileImage} alt="Profile Frame Portrait" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center" }} />
+              <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.3)", display: "flex", alignItems: "center", justifyContent: "center", opacity: 0, transition: "opacity 0.2s ease" }} onMouseEnter={(e) => e.currentTarget.style.opacity = "1"} onMouseLeave={(e) => e.currentTarget.style.opacity = "0"}>
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              </div>
+            </div>
+            {/* Permanent edit icon badge */}
+            <div onClick={() => profileInputRef.current?.click()} style={{ position: "absolute", bottom: "-14px", right: "-14px", width: "64px", height: "64px", background: "transparent", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 21, cursor: "pointer" }}>
+              <img src="/assets/profile/savedfarmland/Requested Feature_ Camera Upload Button.svg" alt="Upload Camera" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+            </div>
           </div>
 
           {/* Dark card */}
@@ -505,10 +615,12 @@ export default function ProfileScreen() {
             <div style={{ boxSizing: "border-box", position: "absolute", width: "256px", height: "256px", right: "-35px", bottom: "-95px", border: "1px solid rgba(0,98,158,0.5)", borderRadius: "9999px", pointerEvents: "none", zIndex: 0 }} />
             <div style={{ position: "absolute", width: "128px", height: "128px", right: "45px", bottom: "-15px", background: "rgba(0,98,158,0.2)", filter: "blur(32px)", borderRadius: "9999px", pointerEvents: "none", zIndex: 0 }} />
 
-            <div style={{ position: "absolute", top: "186px", left: "0px", right: "0px", display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center", gap: "12px", zIndex: 10 }}>
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "45px", lineHeight: "57px", letterSpacing: "-0.04em", color: "#FFFFFF" }}>Arjun Vardhan</span>
-              <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: "#2780C4", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 2px 8px rgba(39,128,196,0.4)" }}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="#FFFFFF"><path d="M2 19h20v2H2v-2zm1.5-3l1.5-10 5.5 4 3-5 3 5 5.5-4 1.5 10H3.5z" /></svg>
+            <div style={{ position: "absolute", top: "186px", left: "0px", right: "0px", display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center", gap: "12px", zIndex: 10, padding: "0 20px" }}>
+              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "45px", lineHeight: "57px", letterSpacing: "-0.04em", color: "#FFFFFF", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{fullName}</span>
+              <div style={{ width: "37px", height: "37px", borderRadius: "50%", background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 10.8824px 16.3235px -3.26471px rgba(0, 0, 0, 0.1), 0px 4.35294px 6.52941px -4.35294px rgba(0, 0, 0, 0.1)", flexShrink: 0 }}>
+                <svg width="18" height="15" viewBox="22 13 19 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M24.5586 24.4258L22.5586 14.1133L28.0586 18.8008L31.5586 13.1758L35.0586 18.8008L40.5586 14.1133L38.5586 24.4258H24.5586ZM38.5586 27.2383C38.5586 27.8008 38.1586 28.1758 37.5586 28.1758H25.5586C24.9586 28.1758 24.5586 27.8008 24.5586 27.2383V26.3008H38.5586V27.2383Z" fill="white"/>
+                </svg>
               </div>
             </div>
 
@@ -516,7 +628,7 @@ export default function ProfileScreen() {
               <div style={{ height: "50px", background: "#2780C4", borderRadius: "20px", display: "flex", alignItems: "center", padding: "0 20px", boxShadow: "0px 4px 12px rgba(0,0,0,0.1)" }}>
                 <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "17.6px", color: "#FFFFFF", letterSpacing: "-0.02em" }}>Silver Tier • 4 Unlocks Available</span>
               </div>
-              <button onClick={() => router.push("/profile")} style={{ height: "50px", background: "#F8F9FA", borderRadius: "20px", border: "none", display: "flex", alignItems: "center", gap: "8px", padding: "0 18px", cursor: "pointer", transition: "opacity 0.2s ease" }} onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.85")} onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}>
+              <button onClick={() => setIsEditModalOpen(true)} style={{ height: "50px", background: "#F8F9FA", borderRadius: "20px", border: "none", display: "flex", alignItems: "center", gap: "8px", padding: "0 18px", cursor: "pointer", transition: "opacity 0.2s ease" }} onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.85")} onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="#0F2F4C"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" /></svg>
                 <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "17.6px", color: "#0F2F4C", letterSpacing: "-0.04em" }}>Edit Profile</span>
               </button>
@@ -537,7 +649,7 @@ export default function ProfileScreen() {
             </div>
 
             <div style={{ position: "absolute", top: "574px", left: "48px", display: "flex", flexDirection: "row", gap: "16px", zIndex: 10 }}>
-              <button onClick={() => router.push("/profile/managesubscriptions")} style={{ height: "46px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: "32px", padding: "0 24px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", transition: "background 0.2s ease" }} onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.15)")} onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.05)")}>
+              <button onClick={() => setIsWalletHistoryModalOpen(true)} style={{ height: "46px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: "32px", padding: "0 24px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", transition: "background 0.2s ease" }} onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.15)")} onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.05)")}>
                 <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", color: "#FFFFFF" }}>Wallet History</span>
               </button>
               <button onClick={() => router.push("/profile/managesubscriptions")} style={{ height: "46px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: "32px", padding: "0 24px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", transition: "background 0.2s ease" }} onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.15)")} onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.05)")}>
@@ -611,91 +723,92 @@ export default function ProfileScreen() {
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.7, delay: 0.35 }}
-          style={{ position: "absolute", width: "391px", left: "23px", top: "502px", background: "#FFFFFF", borderRadius: "32px", boxShadow: "0px 10px 25px -5px rgba(0,0,0,0.03)", boxSizing: "border-box", padding: "32px 16px", display: "flex", flexDirection: "column", gap: "24px", zIndex: 10 }}
+          style={{ position: "absolute", width: "391px", left: "23px", top: "502px", background: "#FFFFFF", borderRadius: "32px", boxShadow: "0px 10px 25px -5px rgba(0,0,0,0.03)", boxSizing: "border-box", padding: "32px 24px", display: "flex", flexDirection: "column", gap: "24px", zIndex: 10 }}
         >
           {/* Identity & Contact */}
           <div style={{ display: "flex", flexDirection: "column", gap: "12px", width: "100%" }}>
-            <div style={{ padding: "0 16px" }}>
+            <div style={{ padding: "0" }}>
               <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C", textTransform: "uppercase" }}>Identity & Contact</span>
             </div>
-            <div style={{ background: "#FFFFFF", borderRadius: "32px", boxShadow: "0px 1px 2px rgba(0,0,0,0.05)", width: "100%", display: "flex", flexDirection: "column" }}>
-              <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: "16px 20px" }}>
+            <div style={{ background: "#FFFFFF", borderRadius: "32px", boxShadow: "0px 1px 2px rgba(0,0,0,0.05)", border: "1px solid #FAFAFA", width: "100%", display: "flex", flexDirection: "column" }}>
+              <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: "20px 24px" }}>
                 <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "14px", color: "#71717A", whiteSpace: "nowrap" }}>Full Name</span>
-                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C" }}>Arjun Vardhan</span>
+                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C" }}>{fullName}</span>
               </div>
-              <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: "16px 20px", borderTop: "1px solid #FAFAFA" }}>
-                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "14px", color: "#71717A", whiteSpace: "nowrap" }}>Mobile Number</span>
+              <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: "20px 24px", borderTop: "1px solid #FAFAFA" }}>
+                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "14px", color: "#71717A", width: "54px" }}>Mobile Number</span>
                 <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "8px" }}>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C", whiteSpace: "nowrap" }}>+91 98765 43210</span>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C", whiteSpace: "nowrap" }}>{phone}</span>
                   {isPhoneVerified ? (
-                    <span style={{ background: "#EFF6FF", color: "#2563EB", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", padding: "2px 8px", borderRadius: "9999px", whiteSpace: "nowrap" }}>OTP VERIFIED</span>
+                    <span style={{ background: "#EFF6FF", color: "#2563EB", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", padding: "4px 16px", borderRadius: "9999px", whiteSpace: "nowrap" }}>OTP VERIFIED</span>
                   ) : (
-                    <button onClick={() => setIsPhoneVerified(true)} style={{ background: "#EFF6FF", color: "#2563EB", border: "none", cursor: "pointer", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", padding: "4px 10px", borderRadius: "9999px", whiteSpace: "nowrap" }}>SEND OTP</button>
+                    <button onClick={() => setIsPhoneVerified(true)} style={{ background: "#EFF6FF", color: "#2563EB", border: "none", cursor: "pointer", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", padding: "4px 16px", borderRadius: "9999px", whiteSpace: "nowrap" }}>SEND OTP</button>
                   )}
                 </div>
               </div>
-              <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: "16px 20px", borderTop: "1px solid #FAFAFA" }}>
+              <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: "20px 24px", borderTop: "1px solid #FAFAFA" }}>
                 <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "14px", color: "#71717A", whiteSpace: "nowrap" }}>Email Address</span>
-                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C" }}>arjun.w@gmail.com</span>
+                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C" }}>{email}</span>
               </div>
             </div>
           </div>
 
           {/* Regulatory Compliance */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "12px", width: "100%", marginTop: "8px" }}>
-            <div style={{ padding: "0 16px" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px", width: "100%", marginTop: "12px" }}>
+            <div style={{ padding: "0" }}>
               <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Regulatory Compliance</span>
             </div>
-            <div style={{ background: "#FFFFFF", borderRadius: "32px", boxShadow: "0px 1px 2px rgba(0,0,0,0.05)", width: "100%", display: "flex", flexDirection: "column" }}>
-
-              {/* Aadhaar Row */}
-              <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: "16px 20px" }}>
-                {isAadhaarVerified ? (
-                  <>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "14px", color: "#71717A" }}>Primary ID / Aadhaar</span>
-                    <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-                      <img src="/assets/profile account/Container (16).svg" alt="Verified" />
-                    </div>
-                  </>
-                ) : (
-                  <div style={{ display: "flex", width: "100%", gap: "8px", alignItems: "center" }}>
-                    <div style={{ flex: 1, minWidth: 0, height: "46px", background: "#FEFEFE", border: "1.4px solid #F8F8F8", borderRadius: "21px", display: "flex", alignItems: "center", padding: "0 14px", gap: "8px" }}>
-                      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#A1999B" strokeWidth="1" style={{ flexShrink: 0 }}><rect x="3" y="4" width="18" height="16" rx="2" ry="2" /><line x1="7" y1="8" x2="11" y2="8" /><line x1="7" y1="12" x2="17" y2="12" /><line x1="7" y1="16" x2="17" y2="16" /></svg>
-                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#BDBDBD", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Enter & Upload Aadhar Card</span>
-                    </div>
-                    <button onClick={() => triggerUpload("aadhaar-front")} style={{ width: "78px", height: "46px", background: "#F3F3F5", border: "1.4px dashed rgba(0,0,0,0.3)", borderRadius: "23px", display: "flex", alignItems: "center", justifyContent: "center", gap: "4px", cursor: "pointer", flexShrink: 0 }}>
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="1.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>
-                    </button>
-                    <button onClick={() => triggerUpload("aadhaar-back")} style={{ width: "78px", height: "46px", background: "#F3F3F5", border: "1.4px dashed rgba(188,201,201,0.3)", borderRadius: "23px", display: "flex", alignItems: "center", justifyContent: "center", gap: "4px", cursor: "pointer", flexShrink: 0 }}>
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A49999" strokeWidth="1.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>
-                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "9px", color: "#BDBDBD" }}>Back</span>
-                    </button>
+            
+            {/* Aadhaar Row */}
+            <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+              {isAadhaarVerified ? (
+                <>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "14px", color: "#71717A" }}>Primary ID / Aadhaar</span>
+                  <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+                    <img src="/assets/profile account/Container (16).svg" alt="Verified" />
                   </div>
-                )}
-              </div>
-
-              {/* PAN Row */}
-              <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: "16px 20px", borderTop: "1px solid #FAFAFA" }}>
-                {isPanVerified ? (
-                  <>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "14px", color: "#71717A" }}>PAN Card Number</span>
-                    <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-                      <img src="/assets/profile account/Container (16).svg" alt="Verified" />
-                    </div>
-                  </>
-                ) : (
-                  <div style={{ display: "flex", width: "100%", gap: "8px", alignItems: "center" }}>
-                    <div style={{ flex: 1, height: "46px", background: "#FEFEFE", border: "1.4px solid #F8F8F8", borderRadius: "21px", display: "flex", alignItems: "center", padding: "0 14px", gap: "8px" }}>
-                      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#A1999B" strokeWidth="1"><rect x="3" y="4" width="18" height="16" rx="2" ry="2" /><line x1="7" y1="8" x2="11" y2="8" /><line x1="7" y1="12" x2="17" y2="12" /><line x1="7" y1="16" x2="17" y2="16" /></svg>
-                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#BDBDBD", whiteSpace: "nowrap" }}>Enter and Upload PAN Card</span>
-                    </div>
-                    <button onClick={() => triggerUpload("pan")} style={{ width: "78px", height: "46px", background: "#F3F3F5", border: "1.4px dashed rgba(188,201,201,0.3)", borderRadius: "23px", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", flexShrink: 0 }}>Upload</button>
+                </>
+              ) : (
+                <div style={{ display: "flex", width: "100%", gap: "8px", alignItems: "center" }}>
+                  <div style={{ flex: 1, minWidth: 0, height: "46px", background: "#FEFEFE", border: "1.4px solid #F8F8F8", borderRadius: "21px", display: "flex", alignItems: "center", padding: "0 14px", gap: "8px" }}>
+                    <img src="/assets/profile/savedfarmland/hugeicons_identity-card.svg" alt="ID" style={{ flexShrink: 0 }} />
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "10px", color: "#BDBDBD", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Enter & Upload Aadhar Card</span>
                   </div>
-                )}
-              </div>
-
+                  <button onClick={() => triggerUpload("aadhaar-front")} style={{ width: "78px", height: "46px", background: "#F3F3F5", border: "1.4px dashed rgba(0,0,0,0.3)", borderRadius: "23px", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", flexShrink: 0 }}>
+                    <img src="/assets/profile/savedfarmland/grommet-icons_document-upload.svg" alt="Upload" />
+                  </button>
+                  <button onClick={() => triggerUpload("aadhaar-back")} style={{ width: "78px", height: "46px", background: "#F3F3F5", border: "1.4px dashed rgba(188,201,201,0.9)", borderRadius: "23px", display: "flex", alignItems: "center", justifyContent: "center", gap: "4px", cursor: "pointer", flexShrink: 0 }}>
+                    <img src="/assets/profile/savedfarmland/grommet-icons_document-upload.svg" alt="Upload" style={{ opacity: 0.5 }} />
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "9px", color: "#BDBDBD" }}>Back</span>
+                  </button>
+                </div>
+              )}
             </div>
-            <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "8px", padding: "4px 16px", opacity: 0.6 }}>
+
+            {/* PAN Row */}
+            <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginTop: "4px" }}>
+              {isPanVerified ? (
+                <>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "14px", color: "#71717A" }}>PAN Card Number</span>
+                  <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+                    <img src="/assets/profile account/Container (16).svg" alt="Verified" />
+                  </div>
+                </>
+              ) : (
+                <div style={{ display: "flex", width: "100%", gap: "8px", alignItems: "center" }}>
+                  <div style={{ flex: 1, height: "46px", background: "#FEFEFE", border: "1.4px solid #F8F8F8", borderRadius: "21px", display: "flex", alignItems: "center", padding: "0 14px", gap: "8px" }}>
+                    <img src="/assets/profile/savedfarmland/solar_card-linear.png" alt="Card" width="17" height="17" style={{ flexShrink: 0 }} />
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "10px", color: "#BDBDBD", whiteSpace: "nowrap" }}>Enter and Upload PAN Card</span>
+                  </div>
+                  <button onClick={() => triggerUpload("pan")} style={{ width: "78px", height: "46px", background: "#F3F3F5", border: "1.4px dashed rgba(188,201,201,0.9)", borderRadius: "23px", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px", cursor: "pointer", flexShrink: 0 }}>
+                    <img src="/assets/profile/savedfarmland/grommet-icons_document-upload.svg" alt="Upload" style={{ opacity: 0.5 }} />
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "9px", color: "#BDBDBD" }}>Upload</span>
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "8px", padding: "4px 0", opacity: 0.6 }}>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="#0F2F4C" style={{ flexShrink: 0 }}><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z" /></svg>
               <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "11px", color: "#71717A", lineHeight: "16px", width: "235.45px" }}>Your data is encrypted and stored as per SEBI<br />guidelines.</span>
             </div>
@@ -735,6 +848,7 @@ export default function ProfileScreen() {
           {/* Desktop Sign Out */}
           <div style={{ padding: "0 16px" }}>
             <button
+              onClick={handleSignOut}
               style={{ background: "transparent", border: "none", display: "flex", alignItems: "center", gap: "12px", cursor: "pointer", padding: 0 }}
               onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.7")}
               onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
@@ -761,22 +875,24 @@ export default function ProfileScreen() {
             </div>
 
             <div style={{ display: "flex", flexDirection: "column", gap: "16px", width: "100%" }}>
-              {[
-                { title: "GLC SOS 01", subtitle: "Medchal • ‹12.5L • 0.5 Ac", color: "#059669" },
-                { title: "GLC SOS 02", subtitle: "Vikarabad • ‹5.0L • 0.2 Ac", color: "#D97706" }
-              ].map((item, idx) => (
-                <div key={idx} onClick={() => router.push(`/profile/active-investment/${idx + 1}`)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", borderRadius: "32px", padding: "20px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0px 4px 15px rgba(0,0,0,0.02)" }}>
+              {boughtFarmlands.length > 0 ? boughtFarmlands.map((item, idx) => {
+                const colors = ["#059669", "#D97706", "#2563EB", "#7C3AED"];
+                const color = colors[idx % colors.length];
+                return (
+                <div key={idx} onClick={() => router.push(`/profile/active-investment/${item.farmland_is}`)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", borderRadius: "32px", padding: "20px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0px 4px 15px rgba(0,0,0,0.02)" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
                     <div style={{ width: "42px", height: "42px", background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.04)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 2px 5px rgba(0,0,0,0.02)" }}>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={item.color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
                     </div>
                     <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.title}</span>
-                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>{item.subtitle}</span>
+                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.farmland_code}</span>
+                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>{item.total_acers} Ac • ₹{item.price}</span>
                     </div>
                   </div>
                 </div>
-              ))}
+              )}) : (
+                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "13px", color: "#71717A", padding: "16px" }}>No active investments found.</span>
+              )}
             </div>
           </div>
 
@@ -889,6 +1005,20 @@ export default function ProfileScreen() {
         isOpen={isTrackingModalOpen}
         onClose={() => setIsTrackingModalOpen(false)}
       />
+      <EditProfileModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        userId={userId || 0}
+        initialFirstName={userDetails?.frist_name || ""}
+        initialLastName={userDetails?.last_name || ""}
+        initialProfileUrl={profileImage !== "/assets/account/account-profile.svg" ? profileImage : userDetails?.profile_url || ""}
+      />
+      <WalletHistoryModal 
+        isOpen={isWalletHistoryModalOpen} 
+        onClose={() => setIsWalletHistoryModalOpen(false)} 
+      />
+      <input type="file" accept="image/*,application/pdf" style={{ display: "none" }} ref={fileInputRef} onChange={handleFileChange} />
+      <input type="file" accept="image/*" style={{ display: "none" }} ref={profileInputRef} onChange={handleProfileImageChange} />
     </main>
   );
 }

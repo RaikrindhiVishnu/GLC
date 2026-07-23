@@ -12,10 +12,18 @@ export default function UnlockedDocs() {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
-  const userId = 5; // Hardcoded to 5 for unlocked documents
+  const [userId, setUserId] = useState<number | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+    const storedUserId = localStorage.getItem("userId");
+    if (storedUserId) {
+      setUserId(parseInt(storedUserId, 10));
+    }
+  }, []);
 
   const { data: res, isLoading: isQueryLoading } = useGetUserUnlockedFarmlandsQuery(
-    { userId },
+    { userId: userId || 0 },
     { skip: !mounted || !userId }
   );
 

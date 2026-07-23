@@ -559,7 +559,7 @@ function LandingNavbar({ className }: { className?: string }) {
       ].join(" ")}
     >
       <div className="flex items-center">
-        <Link href="/" className="[-webkit-tap-highlight-color:transparent]">
+        <Link href="/landing" className="[-webkit-tap-highlight-color:transparent]">
           <Image
             src="/assets/common/Logo green land 1.svg"
             alt="Green Land Capital Logo"
@@ -574,6 +574,10 @@ function LandingNavbar({ className }: { className?: string }) {
       <div className="flex items-center gap-4">
         <Link
           href="/login"
+          onClick={() => {
+            // Force log out so the user always sees the login screen when clicking this button
+            localStorage.removeItem("token");
+          }}
           className="flex h-[42px] w-[140px] md:h-[51px] md:w-[184px] items-center justify-center rounded-[125px] text-sm md:text-base font-extrabold transition-all outline-none focus:outline-none [-webkit-tap-highlight-color:transparent] glass text-white hover:bg-white/20"
         >
           Login / Register

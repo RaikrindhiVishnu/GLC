@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import CTA from "@/components/CTA";
 import Link from "next/link";
 import VisitConfirmedModal from "./VisitConfirmedModal";
+import { useCreateSiteVisitMutation } from "@/services/siteVisits";
 
 export default function BookSiteVisit() {
   const dates = [
@@ -22,8 +23,53 @@ export default function BookSiteVisit() {
   ];
 
   const [selectedDate, setSelectedDate] = useState("17");
-  const [selectedTime, setSelectedTime] = useState("10:00 AM");
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [selectedHour, setSelectedHour] = useState(10);
+  const [selectedMinute, setSelectedMinute] = useState(30);
+  const [selectedAmPm, setSelectedAmPm] = useState("AM");
+
+  const formatNumber = (num: number) => num.toString().padStart(2, '0');
+  
+  const handleHourUp = () => setSelectedHour(prev => prev === 1 ? 12 : prev - 1);
+  const handleHourDown = () => setSelectedHour(prev => prev === 12 ? 1 : prev + 1);
+  
+  const handleMinuteUp = () => setSelectedMinute(prev => prev === 0 ? 45 : prev - 15);
+  const handleMinuteDown = () => setSelectedMinute(prev => prev === 45 ? 0 : prev + 15);
+
+  const getPrevHour = () => selectedHour === 1 ? 12 : selectedHour - 1;
+  const getNextHour = () => selectedHour === 12 ? 1 : selectedHour + 1;
+  
+  const getPrevMinute = () => selectedMinute === 0 ? 45 : selectedMinute - 15;
+  const getNextMinute = () => selectedMinute === 45 ? 0 : selectedMinute + 15;
+
+  const [remarks, setRemarks] = useState("");
+  const [createSiteVisit, { isLoading }] = useCreateSiteVisitMutation();
+  const userId = typeof window !== 'undefined' ? Number(localStorage.getItem('userId')) : 1;
+
+  const handleConfirmVisit = async () => {
+    try {
+      let hour24 = selectedHour;
+      if (selectedAmPm === "PM" && selectedHour !== 12) hour24 += 12;
+      if (selectedAmPm === "AM" && selectedHour === 12) hour24 = 0;
+      
+      const visits_time = `${formatNumber(hour24)}:${formatNumber(selectedMinute)}:00`;
+      const visits_date = `2026-10-${formatNumber(Number(selectedDate))}`; 
+      
+      await createSiteVisit({
+        user_id: userId || 1, 
+        farmland_id: 69, 
+        visits_date,
+        visits_time,
+        remarks: remarks || "Looking forward to seeing the boundaries."
+      }).unwrap();
+      
+      setIsModalOpen(true);
+    } catch (error) {
+      console.error("Failed to book site visit:", error);
+      alert("Failed to book site visit. Please try again.");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#F8F9FA] flex flex-col relative w-full overflow-hidden">
@@ -283,35 +329,281 @@ export default function BookSiteVisit() {
                   textTransform: "uppercase"
                 }}>AVAILABLE TIMES</span>
                 
-                <div className="flex flex-wrap gap-[16px]">
-                  {times.map((t, i) => {
-                    const isActive = selectedTime === t;
-                    return (
-                      <button
-                        key={i}
-                        onClick={() => setSelectedTime(t)}
+                {/* Custom Time Picker */}
+                <div style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "flex-end",
+                  padding: "0px",
+                  gap: "32px",
+                  width: "383.13px",
+                  height: "235px",
+                  margin: "0 auto", // Center in container
+                }}>
+                  {/* Hour */}
+                  <div style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    padding: "0px",
+                    gap: "12px",
+                    width: "96px",
+                    height: "235px",
+                    flex: "none",
+                    order: 0,
+                    flexGrow: 0,
+                  }}>
+                    <div style={{
+                      fontFamily: "'Plus Jakarta Sans', sans-serif",
+                      fontWeight: 700,
+                      fontSize: "10px",
+                      lineHeight: "15px",
+                      display: "flex",
+                      alignItems: "center",
+                      letterSpacing: "1px",
+                      textTransform: "uppercase",
+                      color: "rgba(0, 0, 0, 0.3)",
+                      marginBottom: "4px" // slight adjustment for visual spacing
+                    }}>HOUR</div>
+                    
+                    <div 
+                      onClick={handleHourUp}
+                      style={{
+                      fontFamily: "'Plus Jakarta Sans', sans-serif",
+                      fontWeight: 700,
+                      fontSize: "24px",
+                      lineHeight: "36px",
+                      display: "flex",
+                      alignItems: "center",
+                      color: "rgba(0, 0, 0, 0.1)",
+                      cursor: "pointer"
+                    }}>{formatNumber(getPrevHour())}</div>
+                    
+                    <div style={{
+                      boxSizing: "border-box",
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      width: "96px",
+                      height: "112px",
+                      background: "#FFFFFF",
+                      border: "1px solid rgba(255, 255, 255, 0.5)",
+                      boxShadow: "0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 8px 10px -6px rgba(0, 0, 0, 0.1)",
+                      borderRadius: "24px",
+                      position: "relative"
+                    }}>
+                      <div style={{
+                        fontFamily: "'Plus Jakarta Sans', sans-serif",
+                        fontWeight: 800,
+                        fontSize: "48px",
+                        lineHeight: "72px",
+                        display: "flex",
+                        alignItems: "center",
+                        textAlign: "center",
+                        color: "#2F6FB3"
+                      }}>{formatNumber(selectedHour)}</div>
+                    </div>
+                    
+                    <div 
+                      onClick={handleHourDown}
+                      style={{
+                      fontFamily: "'Plus Jakarta Sans', sans-serif",
+                      fontWeight: 700,
+                      fontSize: "24px",
+                      lineHeight: "36px",
+                      display: "flex",
+                      alignItems: "center",
+                      color: "rgba(0, 0, 0, 0.1)",
+                      cursor: "pointer"
+                    }}>{formatNumber(getNextHour())}</div>
+                  </div>
+
+                  {/* Colon */}
+                  <div style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                    padding: "0px 0px 48px",
+                    width: "15.13px",
+                    height: "88px",
+                    flex: "none",
+                    order: 1,
+                    flexGrow: 0,
+                  }}>
+                    <div style={{
+                      fontFamily: "'Plus Jakarta Sans', sans-serif",
+                      fontWeight: 700,
+                      fontSize: "40px",
+                      lineHeight: "40px",
+                      display: "flex",
+                      alignItems: "center",
+                      color: "rgba(0, 0, 0, 0.1)"
+                    }}>:</div>
+                  </div>
+
+                  {/* Minute */}
+                  <div style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    padding: "0px",
+                    gap: "12px",
+                    width: "96px",
+                    height: "235px",
+                    flex: "none",
+                    order: 2,
+                    flexGrow: 0,
+                  }}>
+                    <div style={{
+                      fontFamily: "'Plus Jakarta Sans', sans-serif",
+                      fontWeight: 700,
+                      fontSize: "10px",
+                      lineHeight: "15px",
+                      display: "flex",
+                      alignItems: "center",
+                      letterSpacing: "1px",
+                      textTransform: "uppercase",
+                      color: "rgba(0, 0, 0, 0.3)",
+                      marginBottom: "4px"
+                    }}>MIN</div>
+                    
+                    <div 
+                      onClick={handleMinuteUp}
+                      style={{
+                      fontFamily: "'Plus Jakarta Sans', sans-serif",
+                      fontWeight: 700,
+                      fontSize: "24px",
+                      lineHeight: "36px",
+                      display: "flex",
+                      alignItems: "center",
+                      color: "rgba(0, 0, 0, 0.1)",
+                      cursor: "pointer"
+                    }}>{formatNumber(getPrevMinute())}</div>
+                    
+                    <div style={{
+                      boxSizing: "border-box",
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      width: "96px",
+                      height: "112px",
+                      background: "#FFFFFF",
+                      border: "1px solid rgba(255, 255, 255, 0.5)",
+                      boxShadow: "0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 8px 10px -6px rgba(0, 0, 0, 0.1)",
+                      borderRadius: "24px",
+                      position: "relative"
+                    }}>
+                      <div style={{
+                        fontFamily: "'Plus Jakarta Sans', sans-serif",
+                        fontWeight: 800,
+                        fontSize: "48px",
+                        lineHeight: "72px",
+                        display: "flex",
+                        alignItems: "center",
+                        textAlign: "center",
+                        color: "#2F6FB3"
+                      }}>{formatNumber(selectedMinute)}</div>
+                    </div>
+                    
+                    <div 
+                      onClick={handleMinuteDown}
+                      style={{
+                      fontFamily: "'Plus Jakarta Sans', sans-serif",
+                      fontWeight: 700,
+                      fontSize: "24px",
+                      lineHeight: "36px",
+                      display: "flex",
+                      alignItems: "center",
+                      color: "rgba(0, 0, 0, 0.1)",
+                      cursor: "pointer"
+                    }}>{formatNumber(getNextMinute())}</div>
+                  </div>
+
+                  {/* AM/PM Toggle */}
+                  <div style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                    padding: "0px 0px 0px 16px",
+                    width: "80px",
+                    height: "140px",
+                    flex: "none",
+                    order: 3,
+                    flexGrow: 0,
+                    marginBottom: "38px" // Adjust to align visually with the center row
+                  }}>
+                    <div style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "flex-start",
+                      padding: "0px 0px 32px",
+                      gap: "12px",
+                      width: "64px",
+                      height: "140px",
+                    }}>
+                      <button 
+                        onClick={() => setSelectedAmPm("AM")}
                         style={{
-                          width: "calc(33.333% - 11px)",
-                          height: "52px",
-                          background: "transparent",
-                          border: isActive ? "2px solid #2780C4" : "1px solid #C4C6CF",
-                          borderRadius: "9999px",
+                        boxSizing: "border-box",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        padding: "12px 0px 13px",
+                        width: "64px",
+                        height: "48px",
+                        background: selectedAmPm === "AM" ? "#2F6FB3" : "#FFFFFF",
+                        border: selectedAmPm === "AM" ? "none" : "1px solid rgba(0, 0, 0, 0.05)",
+                        boxShadow: selectedAmPm === "AM" ? "0px 10px 15px -3px rgba(47, 111, 179, 0.3), 0px 4px 6px -4px rgba(47, 111, 179, 0.3)" : "none",
+                        borderRadius: "20px",
+                        cursor: "pointer",
+                        transition: "all 0.2s ease"
+                      }}>
+                        <div style={{
+                          fontFamily: "'Plus Jakarta Sans', sans-serif",
+                          fontWeight: 700,
+                          fontSize: "14px",
+                          lineHeight: "21px",
                           display: "flex",
                           alignItems: "center",
-                          justifyContent: "center",
-                          cursor: "pointer",
-                          transition: "all 0.2s ease"
-                        }}
-                      >
-                        <span style={{
-                          fontFamily: "'Plus Jakarta Sans', sans-serif",
-                          fontWeight: isActive ? 600 : 400,
-                          fontSize: "16px",
-                          color: isActive ? "#2780C4" : "#43474E"
-                        }}>{t}</span>
+                          textAlign: "center",
+                          color: selectedAmPm === "AM" ? "#FFFFFF" : "rgba(0, 0, 0, 0.4)"
+                        }}>AM</div>
                       </button>
-                    )
-                  })}
+                      
+                      <button 
+                        onClick={() => setSelectedAmPm("PM")}
+                        style={{
+                        boxSizing: "border-box",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        padding: "12px 0px 13px",
+                        width: "64px",
+                        height: "48px",
+                        background: selectedAmPm === "PM" ? "#2F6FB3" : "#FFFFFF",
+                        border: selectedAmPm === "PM" ? "none" : "1px solid rgba(0, 0, 0, 0.05)",
+                        boxShadow: selectedAmPm === "PM" ? "0px 10px 15px -3px rgba(47, 111, 179, 0.3), 0px 4px 6px -4px rgba(47, 111, 179, 0.3)" : "none",
+                        borderRadius: "20px",
+                        cursor: "pointer",
+                        transition: "all 0.2s ease"
+                      }}>
+                        <div style={{
+                          fontFamily: "'Plus Jakarta Sans', sans-serif",
+                          fontWeight: 700,
+                          fontSize: "14px",
+                          lineHeight: "21px",
+                          display: "flex",
+                          alignItems: "center",
+                          textAlign: "center",
+                          color: selectedAmPm === "PM" ? "#FFFFFF" : "rgba(0, 0, 0, 0.4)"
+                        }}>PM</div>
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -326,6 +618,8 @@ export default function BookSiteVisit() {
                   textTransform: "uppercase"
                 }}>SPECIAL REQUESTS</span>
                 <textarea 
+                  value={remarks}
+                  onChange={(e) => setRemarks(e.target.value)}
                   placeholder="Any dietary restrictions, specific viewing interests, or additional guests?"
                   style={{
                     width: "100%",
@@ -344,7 +638,8 @@ export default function BookSiteVisit() {
               </div>
 
               <button 
-                onClick={() => setIsModalOpen(true)}
+                onClick={handleConfirmVisit}
+                disabled={isLoading}
                 style={{
                   width: "100%",
                   height: "56px",
@@ -358,14 +653,15 @@ export default function BookSiteVisit() {
                   fontWeight: 600,
                   fontSize: "16px",
                   border: "none",
-                  cursor: "pointer",
+                  cursor: isLoading ? "not-allowed" : "pointer",
                   marginTop: "10px",
-                  transition: "opacity 0.2s ease"
+                  transition: "opacity 0.2s ease",
+                  opacity: isLoading ? 0.7 : 1
                 }}
-                onMouseOver={(e) => e.currentTarget.style.opacity = "0.9"}
-                onMouseOut={(e) => e.currentTarget.style.opacity = "1"}
+                onMouseOver={(e) => { if(!isLoading) e.currentTarget.style.opacity = "0.9" }}
+                onMouseOut={(e) => { if(!isLoading) e.currentTarget.style.opacity = "1" }}
               >
-                Confirm Visit
+                {isLoading ? "Confirming..." : "Confirm Visit"}
               </button>
 
             </div>

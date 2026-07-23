@@ -48,8 +48,8 @@ export default function MainWealthFeed() {
           style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "12px", flexWrap: "wrap" }}
         >
           {[
-            { icon: <div style={{ width: "10.5px", height: "11.67px", background: "#45474C", borderRadius: "2px" }} />, label: "Total Holdings: 12.5 Acres" },
-            { icon: <div style={{ width: "12.83px", height: "10.5px", background: "#45474C", borderRadius: "2px" }} />, label: "Active Vault: 3 Properties" },
+            { icon: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#45474C" strokeWidth="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>, label: "Total Holdings: 12.5 Acres" },
+            { icon: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#45474C" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>, label: "Active Yields: 2 Properties" },
           ].map((badge) => (
             <div key={badge.label} style={{ display: "flex", flexDirection: "row", alignItems: "center", padding: "8px 20px", gap: "8px", background: "#E7E8E9", borderRadius: "9999px" }}>
               {badge.icon}
@@ -115,15 +115,15 @@ export default function MainWealthFeed() {
                       </h3>
                       <div style={{ background: card.is_active ? "#93C5FD" : "#E7E8E9", borderRadius: "9999px", padding: "4px 12px", display: "flex", alignItems: "center" }}>
                         <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", lineHeight: "15px", letterSpacing: "1px", textTransform: "uppercase", color: card.is_active ? "#0F2F4C" : "#45474C" }}>
-                          {card.is_active ? "ACTIVE HOLDING" : "INACTIVE"}
+                          {card.is_active ? "ACTIVE: 50/50 ORGANIC YIELD" : "UNMANAGED"}
                         </span>
                       </div>
                     </div>
                     <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "16px", lineHeight: "24px", color: "#45474C" }}>
-                      Registered on {new Date(card.created_on).toLocaleDateString()}
+                      {card.land_specifications?.total_acers || "2.5"} Acres • Registered {new Date(card.created_on).toLocaleDateString('en-US', {month: 'short', year: 'numeric'})}
                     </span>
                     <span style={{ marginTop: "4px", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "20px", lineHeight: "28px", color: "#0F2F4C" }}>
-                      Value: ₹{(card.price / 100000).toFixed(2)} Lakhs
+                      {card.price >= 10000000 ? `Estimated Value: ₹${(card.price / 10000000).toFixed(2)} Cr` : `Value: ₹${(card.price / 100000).toFixed(2)} L`}
                     </span>
                   </div>
 
@@ -143,7 +143,7 @@ export default function MainWealthFeed() {
                         onMouseLeave={() => setHoveredBtn1(false)}
                         style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center", padding: "10px 24px", height: "40px", background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)", borderRadius: "20px", border: "none", cursor: "pointer", transition: "opacity 0.2s ease", opacity: hoveredBtn1 ? 0.9 : 1 }}
                       >
-                        <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", textTransform: "uppercase", color: "#FFFFFF" }}>Track Yield Payouts</span>
+                        <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", textTransform: "uppercase", color: "#FFFFFF" }}>TRACK YIELD PAYOUTS</span>
                       </button>
                     </div>
                   ) : (
@@ -161,26 +161,30 @@ export default function MainWealthFeed() {
         </div>
 
         {/* ─── ASIDE SIDEBAR WIDGETS ─── */}
-        <div className="w-full lg:w-106.25 lg:shrink-0 flex flex-col gap-8">
+        <div className="w-full lg:w-[425px] lg:shrink-0 flex flex-col gap-8">
           {/* Widget 1: Active Pool Investments */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            style={{ boxSizing: "border-box", display: "flex", flexDirection: "column", alignItems: "flex-start", padding: "32px", gap: "24px", width: "100%", background: "#FFFFFF", border: "1px solid rgba(197, 198, 205, 0.1)", boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)", borderRadius: "32px" }}
+            style={{ boxSizing: "border-box", display: "flex", flexDirection: "column", alignItems: "flex-start", padding: "32px", gap: "24px", width: "100%", background: "#FFFFFF", border: "1px solid rgba(197, 198, 205, 0.4)", boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)", borderRadius: "16px" }}
           >
             <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", lineHeight: "16px", letterSpacing: "1.2px", textTransform: "uppercase", color: "#0F2F4C" }}>ACTIVE POOL INVESTMENTS</span>
-              <div style={{ width: "20px", height: "20px", borderRadius: "10px", background: "#00629E", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <div style={{ width: "6px", height: "6px", background: "#FFFFFF", borderRadius: "3px" }} />
+              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "14px", lineHeight: "16px", letterSpacing: "1px", textTransform: "uppercase", color: "#0F2F4C" }}>ACTIVE POOL INVESTMENTS</span>
+              <div style={{ width: "24px", height: "24px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00629E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="2" x2="12" y2="22"></line>
+                  <line x1="12" y1="12" x2="22" y2="12"></line>
+                </svg>
               </div>
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: "4px", width: "100%" }}>
-              <h3 style={{ margin: 0, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "20px", lineHeight: "28px", color: "#0F2F4C" }}>Premium Timber Estate</h3>
+            <div style={{ display: "flex", flexDirection: "column", gap: "12px", width: "100%" }}>
+              <h3 style={{ margin: 0, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "24px", lineHeight: "32px", color: "#0F2F4C" }}>Premium Timber Estate</h3>
               <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "baseline", width: "100%" }}>
-                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "16px", color: "#45474C" }}>2.1 Acres / ₹50,00,000</span>
-                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", color: "#0F2F4C" }}>100% Funded</span>
+                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "18px", color: "#45474C" }}>2 Shares (₹50,00,000)</span>
+                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C" }}>100% Funded</span>
               </div>
             </div>
             <div style={{ width: "100%", height: "8px", background: "#EDEEEF", borderRadius: "9999px", overflow: "hidden" }}>
@@ -190,55 +194,10 @@ export default function MainWealthFeed() {
               onClick={() => router.push("/pool-buying/pooldetails")}
               onMouseEnter={() => setHoveredCertBtn(true)}
               onMouseLeave={() => setHoveredCertBtn(false)}
-              style={{ boxSizing: "border-box", display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", width: "100%", height: "46px", background: hoveredCertBtn ? "#F8F9FA" : "transparent", border: "1px solid #75777D", borderRadius: "6px", cursor: "pointer", transition: "background 0.2s ease" }}
+              style={{ boxSizing: "border-box", display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", width: "100%", height: "48px", background: hoveredCertBtn ? "#F8F9FA" : "transparent", border: "1px solid #75777D", borderRadius: "8px", cursor: "pointer", transition: "background 0.2s ease" }}
             >
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", color: "#0F2F4C", letterSpacing: "0.5px" }}>VIEW POOL DETAILS</span>
+              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C" }}>View Co-Ownership Certificate</span>
             </button>
-          </motion.div>
-
-          {/* Widget 2: Digital Vault */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            style={{ boxSizing: "border-box", display: "flex", flexDirection: "column", alignItems: "flex-start", padding: "32px", width: "100%", background: "#CFE5FF", borderRadius: "32px", position: "relative", overflow: "hidden" }}
-          >
-            <div style={{ position: "absolute", width: "192px", height: "192px", right: "-48px", bottom: "-47px", background: "rgba(105, 182, 254, 0.2)", filter: "blur(32px)", borderRadius: "9999px", zIndex: 0 }} />
-            <div style={{ display: "flex", flexDirection: "column", gap: "12px", position: "relative", zIndex: 1, width: "100%" }}>
-              <div style={{ width: "48px", height: "48px", background: "#0F2F4C", borderRadius: "48px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <svg width="16" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                </svg>
-              </div>
-              <h4 style={{ margin: 0, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "18px", color: "#001D34" }}>Secured in Digital Vault</h4>
-              <p style={{ margin: 0, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "14px", lineHeight: "23px", color: "#004A78" }}>
-                All your property documents and certificates are encrypted and stored in our ISO-certified digital vault.
-              </p>
-              <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "8px", marginTop: "4px", cursor: "pointer" }}>
-                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "14px", color: "#0F2F4C" }}>Contact Wealth Manager</span>
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                  <path d="M2 6H10M10 6L6 2M10 6L6 10" stroke="#0F2F4C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Widget 3: Return Micro-Card */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            style={{ boxSizing: "border-box", display: "flex", flexDirection: "row", alignItems: "center", padding: "24px", gap: "16px", width: "100%", background: "#F2F2F2", borderRadius: "32px" }}
-          >
-            <div style={{ width: "48px", height: "48px", background: "#FFFFFF", borderRadius: "9999px", boxShadow: "0px 1px 2px rgba(0,0,0,0.05)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 900, fontSize: "16px", color: "#0F2F4C" }}>%</span>
-            </div>
-            <div style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", letterSpacing: "0.6px", color: "#45474C" }}>TOTAL RETURN REALIZED</span>
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "18px", color: "#0F2F4C" }}>+12.4% avg</span>
-            </div>
           </motion.div>
         </div>
       </div>

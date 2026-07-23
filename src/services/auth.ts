@@ -1,5 +1,6 @@
 import { API_BASE_URL } from './mail';
 
+
 export interface LoginRequest {
   login_id: string;
   password?: string;

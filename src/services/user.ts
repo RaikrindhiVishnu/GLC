@@ -80,9 +80,54 @@ export interface CreateUserResponse {
   error?: string;
 }
 
+export interface GetUserDetailsByIdRequest {
+  user_id: number;
+}
+
+export interface UserBoughtFarmlandDetail {
+  farmland_is: number;
+  farmland_code: string;
+  price: number;
+  total_acers: number;
+  location_details: {
+    country_id: number;
+    state_id: number;
+    district_id: number;
+    mandal_id: number;
+  };
+}
+
+export interface GetUserDetailsByIdResponse {
+  success: boolean;
+  data?: {
+    frist_name: string;
+    last_name: string;
+    contry_code: string;
+    ph_number: string;
+    email: string;
+    profile_url: string;
+    is_verifed: number;
+    user_bought_farmlnad_details: UserBoughtFarmlandDetail[];
+  };
+}
+
+export interface UpdateUserDetailsRequest {
+  id: number;
+  frist_name: string;
+  last_name: string;
+  profile_url: string;
+  state_id: number;
+}
+
+export interface UpdateUserDetailsResponse {
+  success: boolean;
+  message: string;
+}
+
 export const userApi = createApi({
   reducerPath: 'userApi',
   baseQuery,
+  tagTypes: ['User'],
   endpoints: (builder) => ({
     createUser: builder.mutation<CreateUserResponse, CreateUserRequest>({
       query: (payload) => ({
@@ -112,6 +157,22 @@ export const userApi = createApi({
         body: payload,
       }),
     }),
+    getUserDetailsById: builder.query<GetUserDetailsByIdResponse, GetUserDetailsByIdRequest>({
+      query: (payload) => ({
+        url: '/user/get_user_details_by_id',
+        method: 'POST',
+        body: payload,
+      }),
+      providesTags: ['User'],
+    }),
+    updateUserDetails: builder.mutation<UpdateUserDetailsResponse, UpdateUserDetailsRequest>({
+      query: (payload) => ({
+        url: '/user/update_user_details',
+        method: 'POST',
+        body: payload,
+      }),
+      invalidatesTags: ['User'],
+    }),
   }),
 });
 
@@ -120,4 +181,6 @@ export const {
   useCreateAgentMutation,
   useCreateRoleManagerMutation,
   useGetUserBoughtFarmlandsQuery,
+  useGetUserDetailsByIdQuery,
+  useUpdateUserDetailsMutation,
 } = userApi;

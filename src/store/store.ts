@@ -8,6 +8,7 @@ import { unlockedApi } from '../services/unlocked';
 import { uploadApi } from '../services/upload';
 import { farmlandApi } from '../services/farmland';
 import { masterApi } from '../services/master';
+import { siteVisitsApi } from '../services/siteVisits';
 
 export const store = configureStore({
   reducer: rootReducer,
@@ -21,7 +22,8 @@ export const store = configureStore({
       unlockedApi.middleware,
       uploadApi.middleware,
       farmlandApi.middleware,
-      masterApi.middleware
+      masterApi.middleware,
+      siteVisitsApi.middleware
     ),
   devTools: process.env.NODE_ENV !== 'production',
 });

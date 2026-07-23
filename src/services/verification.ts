@@ -30,6 +30,34 @@ export interface GetVerificationLandsResponse {
   error?: string;
 }
 
+export interface SubmitFarmlandVerificationRequest {
+  drop_pin: {
+    lat: string;
+    long: string;
+  };
+  seller_information: {
+    frist_name: string;
+    last_name: string;
+    dob: string;
+    price: number;
+    country_code: string;
+    phone_number: string;
+  };
+  farmland_image: string;
+  country_id: number;
+  state_id: number;
+  district_id: number;
+  mandal_id: number;
+  milstone_stage_id: number;
+  milestone_status_id: number;
+}
+
+export interface SubmitFarmlandVerificationResponse {
+  success?: boolean;
+  message?: string;
+  error?: string;
+}
+
 export const verificationApi = createApi({
   reducerPath: 'verificationApi',
   baseQuery,
@@ -41,7 +69,17 @@ export const verificationApi = createApi({
         body: payload,
       }),
     }),
+    submitFarmlandToVerification: builder.mutation<SubmitFarmlandVerificationResponse, SubmitFarmlandVerificationRequest>({
+      query: (payload) => ({
+        url: '/verification/submit_farmland_to_verification',
+        method: 'POST',
+        body: payload,
+      }),
+    }),
   }),
 });
 
-export const { useGetVerificationLandsByUserIdQuery } = verificationApi;
+export const {
+  useGetVerificationLandsByUserIdQuery,
+  useSubmitFarmlandToVerificationMutation,
+} = verificationApi;

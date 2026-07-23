@@ -4,13 +4,25 @@ import React, { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import Link from "next/link";
+import { useGetAllLegalDocumentsByFarmlandIdQuery } from "@/services/farmland";
 
 interface VerifiedDocsModalProps {
   isOpen: boolean;
   onClose: () => void;
+  farmlandId?: number;
 }
 
-export default function VerifiedDocsModal({ isOpen, onClose }: VerifiedDocsModalProps) {
+export default function VerifiedDocsModal({ isOpen, onClose, farmlandId }: VerifiedDocsModalProps) {
+  const [activeCategory, setActiveCategory] = React.useState<string | null>(null);
+
+  const { data: legalDocsRes } = useGetAllLegalDocumentsByFarmlandIdQuery(
+    { farmlandId: farmlandId || 101 },
+    { skip: !isOpen || !farmlandId }
+  );
+
+  // Use the fetched documents if available, otherwise fallback to an empty array (or keep a mock list if you want)
+  const documents = legalDocsRes?.data ? Object.values(legalDocsRes.data) : null;
+
   // Prevent scrolling when modal is open without causing page jumps
   useEffect(() => {
     if (isOpen) {
@@ -26,6 +38,7 @@ export default function VerifiedDocsModal({ isOpen, onClose }: VerifiedDocsModal
       if (scrollY) {
         window.scrollTo(0, parseInt(scrollY || '0') * -1);
       }
+      setActiveCategory(null);
     }
     return () => {
       document.body.style.position = '';
@@ -194,48 +207,133 @@ export default function VerifiedDocsModal({ isOpen, onClose }: VerifiedDocsModal
               gap: "14px"
             }}>
               {/* Header */}
-              <div style={{ width: "496px", display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
+              <div style={{ width: "496px", display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexShrink: 0 }}>
                 <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                  <h2 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "30px", lineHeight: "36px", letterSpacing: "-0.75px", color: "#0F2F4C", margin: 0, width: "221px" }}>
-                    Verified Documentation
-                  </h2>
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                    {activeCategory && (
+                      <button 
+                        onClick={() => setActiveCategory(null)} 
+                        style={{ background: "transparent", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", padding: 0 }}
+                      >
+                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0F2F4C" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                      </button>
+                    )}
+                    <h2 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "30px", lineHeight: "36px", letterSpacing: "-0.75px", color: "#0F2F4C", margin: 0, width: activeCategory ? "auto" : "221px" }}>
+                      {activeCategory ? activeCategory : "Verified Documentation"}
+                    </h2>
+                  </div>
                   <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "16px", lineHeight: "24px", color: "#45474C", margin: 0 }}>
                     Official regulatory and institutional clearances
                   </p>
                 </div>
 
-                <div style={{ background: "#A5CCF2", borderRadius: "9999px", padding: "4px 16px", display: "flex", alignItems: "center" }}>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", lineHeight: "16px", letterSpacing: "0.6px", color: "#0F2F4C", textTransform: "uppercase" }}>
+                <div style={{ background: "#A5CCF2", borderRadius: "9999px", padding: "4px 16px", display: "flex", alignItems: "center", flexShrink: 0 }}>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", lineHeight: "16px", letterSpacing: "0.6px", color: "#0F2F4C", textTransform: "uppercase", whiteSpace: "nowrap" }}>
                     Institutional Grade
                   </span>
                 </div>
               </div>
 
               {/* List Background Container */}
-              <div style={{ background: "#F3F4F5", borderRadius: "24px", width: "496px", padding: "8px", display: "flex", flexDirection: "column", gap: "8px", boxSizing: "border-box" }}>
+              <div className="hide-scroll" style={{ background: "#F3F4F5", borderRadius: "24px", width: "496px", padding: "8px", display: "flex", flexDirection: "column", gap: "8px", boxSizing: "border-box", overflowY: "auto", flexShrink: 1, minHeight: 0 }}>
 
-                {[
-                  { label: "Legal Documents", btnText: "View PDF" },
-                  { label: "Agriculture Report", btnText: "View PDF" },
-                  { label: "Land & Boundaries", btnText: "View PDF" },
-                  { label: "Local Intelligence", btnText: "View PDF" }, // Typo matched from screenshot "Local Inlligence" fixed to Intelligence
-                  { label: "Valuation", btnText: "View PDF" }
-                ].map((doc, idx) => (
-                  <div key={idx} style={{ width: "480px", height: "96px", background: "#FFFFFF", borderRadius: "16px", display: "flex", alignItems: "center", padding: "0 24px", boxSizing: "border-box", position: "relative" }}>
-                    <div style={{ width: "38px", height: "38px", background: "#EEF6FF", borderRadius: "48px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                      <svg width="16" height="20" viewBox="0 0 24 24" fill="none" stroke="#2780C4" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                {(() => {
+                  const renderSubItem = (doc: { label: string, size: string }, idx: number) => (
+                    <div key={idx} style={{ width: "480px", minHeight: "96px", background: "#FFFFFF", borderRadius: "16px", display: "flex", alignItems: "center", padding: "16px 24px", boxSizing: "border-box", position: "relative" }}>
+                      <div style={{ width: "38px", height: "38px", background: "#FFF0EE", borderRadius: "8px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#BA1A1A" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                      </div>
+                      <div style={{ display: "flex", flexDirection: "column", marginLeft: "16px", flex: 1, paddingRight: "120px" }}>
+                        <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0B1C30", lineHeight: "24px" }}>
+                          {doc.label}
+                        </span>
+                        <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "16px", color: "#727782", lineHeight: "24px" }}>
+                          {doc.size}
+                        </span>
+                      </div>
+
+                      <button 
+                        style={{ position: "absolute", right: "24px", width: "99px", height: "42px", background: "transparent", border: "1px solid rgba(39, 128, 196, 0.2)", borderRadius: "9999px", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}
+                      >
+                        <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", color: "#2780C4" }}>
+                          View
+                        </span>
+                      </button>
                     </div>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C", marginLeft: "16px" }}>
-                      {doc.label}
-                    </span>
+                  );
 
-                    <button style={{ position: "absolute", right: "24px", width: "139px", height: "42px", background: "transparent", border: "1px solid rgba(39, 128, 196, 0.2)", borderRadius: "9999px", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
-                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", color: "#2780C4" }}>
-                        {doc.btnText}
-                      </span>
-                    </button>
-                  </div>
-                ))}
+                  if (activeCategory === "Legal Documents") {
+                    return [
+                      { label: "Land Document", size: "2.4 MB" },
+                      { label: "Pattadhar Passbook", size: "1.8 MB" },
+                      { label: "Link Document", size: "1.6 MB" },
+                      { label: "Kasara Pahani & Proceeding Copies", size: "2.1 MB" },
+                      { label: "Revenue Record", size: "1.7 MB" },
+                      { label: "Lease Agreement", size: "2.0 MB" }
+                    ].map(renderSubItem);
+                  } else if (activeCategory === "Land & Boundaries") {
+                    return [
+                      { label: "Land Images", size: "2.4 MB" },
+                      { label: "Landscape View of Farmlands", size: "1.6 MB" },
+                      { label: "Master Plan", size: "1.8 MB" },
+                      { label: "Survey Report", size: "1.7 MB" }
+                    ].map(renderSubItem);
+                  } else if (activeCategory === "Agriculture Report") {
+                    return [
+                      { label: "Local Agriculture Officer Report", size: "2.4 MB" },
+                      { label: "Last 5 years Crop Yielding Report", size: "2.4 MB" }
+                    ].map(renderSubItem);
+                  } else if (activeCategory === "Valuation") {
+                    return [
+                      { label: "Village Map or Naksha", size: "2.4 MB" },
+                      { label: "Sub-Register Value", size: "1.6 MB" },
+                      { label: "Valuator Report", size: "1.8 MB" },
+                      { label: "Legal Opinion Report", size: "1.7 MB" }
+                    ].map(renderSubItem);
+                  }
+
+                  // Default categories
+                  const items = [
+                    { label: "Legal Documents", btnText: "View Documents", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2780C4" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg> },
+                    { label: "Agriculture Report", btnText: "View Documents", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2780C4" strokeWidth="2"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg> },
+                    { label: "Land & Boundaries", btnText: "View Documents", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2780C4" strokeWidth="2"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"></polygon><line x1="9" y1="3" x2="9" y2="18"></line><line x1="15" y1="6" x2="15" y2="21"></line></svg> },
+                    { label: "Valuation", btnText: "View Documents", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2780C4" strokeWidth="2"><rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2"></circle><path d="M6 12h.01M18 12h.01"></path></svg> }
+                  ];
+
+                  return items.map((item, idx) => {
+                    const doc = documents?.[idx];
+                    const label = (doc && doc.description) ? doc.description : item.label;
+                    const isUploaded = doc ? doc.uploaded : true;
+                    const docUrl = doc?.versions?.[0]?.files?.[0]?.document_url;
+                    
+                    return (
+                      <div key={idx} style={{ width: "480px", height: "96px", background: "#FFFFFF", borderRadius: "16px", display: "flex", alignItems: "center", padding: "0 24px", boxSizing: "border-box", position: "relative" }}>
+                        <div style={{ width: "38px", height: "38px", background: "#EEF6FF", borderRadius: "48px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                          {item.icon}
+                        </div>
+                        <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C", marginLeft: "16px" }}>
+                          {label}
+                        </span>
+
+                        <button 
+                          onClick={() => {
+                            if (["Legal Documents", "Agriculture Report", "Land & Boundaries", "Valuation"].includes(item.label)) {
+                              setActiveCategory(item.label);
+                            } else if (docUrl) {
+                              window.open(docUrl, "_blank");
+                            }
+                          }}
+                          style={{ position: "absolute", right: "24px", width: "139px", height: "42px", background: "transparent", border: "1px solid rgba(39, 128, 196, 0.2)", borderRadius: "9999px", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", opacity: (documents && !isUploaded) ? 0.5 : 1 }}
+                          disabled={documents ? !isUploaded : false}
+                        >
+                          <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", color: "#2780C4" }}>
+                            {item.btnText}
+                          </span>
+                        </button>
+                      </div>
+                    );
+                  });
+                })()}
 
               </div>
 

@@ -3,7 +3,6 @@
 import React from "react";
 import MyAssetsHero from "./MyAssetsHero";
 import MainWealthFeed from "./MainWealthFeed";
-import GamificationBanner from "./GamificationBanner";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 
@@ -25,10 +24,6 @@ export default function MyAssetsPage() {
 
       <section className="w-full max-w-7xl px-4 lg:px-8 pt-16 lg:pt-24 pb-12 box-border" style={{ zIndex: 10 }}>
         <MainWealthFeed />
-      </section>
-
-      <section className="w-full max-w-7xl px-4 lg:px-8 pb-16 lg:pb-24 box-border" style={{ zIndex: 15 }}>
-        <GamificationBanner />
       </section>
 
       {/* ─── LEVEL 4: LANDSCAPE CTA SECTION ─── */}

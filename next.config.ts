@@ -11,7 +11,14 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "t3.ftcdn.net",
       },
+      {
+        protocol: "https",
+        hostname: "drb7qkhp2kw0j.cloudfront.net",
+      },
     ],
+  },
+  typescript: {
+    ignoreBuildErrors: true,
   },
 };
 

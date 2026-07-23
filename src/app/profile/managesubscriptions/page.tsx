@@ -123,30 +123,25 @@ export default function ManageSubscriptionsPage() {
               {/* Tier Cards Stacking View */}
               <div className="flex flex-col gap-4.5">
 
-                {/* Tier Card 1: Starter */}
+                {/* Tier Card 1: Sliver (Current Active Plan) */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0 }}
                   viewport={{ once: true }}
-                  onClick={() => setSelectedTier("starter")}
-                  className={`w-full bg-white/80 backdrop-blur-md border rounded-[32px] p-5 sm:p-6 flex items-center justify-between box-border cursor-pointer transition-all ${
-                    selectedTier === "starter"
-                      ? "border-[#2780C4] shadow-md ring-1 ring-[#2780C4]"
-                      : "border-slate-200/60 shadow-2xs hover:border-slate-300"
-                  }`}
+                  className="w-full bg-[#F8F9FA]/80 backdrop-blur-md border border-slate-200/50 rounded-[32px] p-5 sm:p-6 flex items-center justify-between box-border"
                 >
                   {/* Left block holding node icon & context string stack */}
                   <div className="flex items-center gap-4">
-                    {/* Square Dark Rounded Icon Anchor */}
-                    <div className="w-14 h-14 sm:w-16 sm:h-16 bg-[#0F2F4C] rounded-2xl flex items-center justify-center shrink-0 shadow-inner text-white">
+                    {/* Square Light Rounded Icon Anchor */}
+                    <div className="w-14 h-14 sm:w-16 sm:h-16 bg-[#F3F4F5] rounded-2xl flex items-center justify-center shrink-0 shadow-inner text-slate-400">
                       🚀
                     </div>
                     <div className="flex flex-col gap-0.5">
-                      <span className="font-bold text-base sm:text-lg text-[#0F2F4C]">
-                        Starter
+                      <span className="font-bold text-base sm:text-lg text-[#0F2F4C]/50">
+                        Sliver
                       </span>
-                      <span className="font-normal text-xs sm:text-sm text-[#45474C]">
+                      <span className="font-normal text-xs sm:text-sm text-[#45474C]/50">
                         Ideal for solo investigators
                       </span>
                     </div>
@@ -154,10 +149,10 @@ export default function ManageSubscriptionsPage() {
 
                   {/* Right Cost Column */}
                   <div className="flex flex-col items-end shrink-0">
-                    <span className="font-black text-xl sm:text-2xl text-[#0F2F4C] tracking-[-0.5px]">
+                    <span className="font-black text-xl sm:text-2xl text-[#0F2F4C]/40 tracking-[-0.5px]">
                       ₹9,999
                     </span>
-                    <span className="font-bold text-[9px] sm:text-[10px] tracking-[1px] text-[#75777D] uppercase mt-0.5">
+                    <span className="font-bold text-[9px] sm:text-[10px] tracking-[1px] text-[#75777D]/50 uppercase mt-0.5">
                       PER ANNUM
                     </span>
                   </div>
