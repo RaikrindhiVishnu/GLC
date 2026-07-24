@@ -122,12 +122,20 @@ export const s3Service = {
    * Generate a CloudFront signed URL for viewing/downloading a file
    */
   async generateUrl(payload: GenerateUrlRequest): Promise<GenerateUrlResponse> {
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      'accept': '*/*'
+    };
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('token');
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+    }
+
     const response = await fetch(`${API_BASE_URL}/s3/generateUrl`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'accept': '*/*'
-      },
+      headers,
       body: JSON.stringify(payload),
     });
     if (!response.ok) throw new Error('Failed to generate URL');

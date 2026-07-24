@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface AccessGrantedModalProps {
@@ -74,10 +75,8 @@ export default function AccessGrantedModal({ isOpen, onClose, onViewDocuments }:
           <div style={{ flex: "0 0 406px", padding: "56px", display: "flex", flexDirection: "column", boxSizing: "border-box" }}>
             
             {/* Blue Unlock Icon */}
-            <div style={{ width: "98px", height: "96px", background: "#2780C4", boxShadow: "inset 0px 2px 4px rgba(0, 0, 0, 0.05)", borderRadius: "65px", display: "flex", justifyContent: "center", alignItems: "center", marginBottom: "40px" }}>
-              <svg width="49" height="48" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path>
-              </svg>
+            <div style={{ marginBottom: "40px", display: "flex", justifyContent: "flex-start", alignItems: "center" }}>
+              <Image src="/assets/unlock/Refined Icon_margin.svg" alt="Access Granted" width={98} height={96} />
             </div>
 
             {/* Headings */}
@@ -138,9 +137,7 @@ export default function AccessGrantedModal({ isOpen, onClose, onViewDocuments }:
               {/* Featured Large Card */}
               <div style={{ background: "#F9F9F9", borderRadius: "24px", padding: "20px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-                  <div style={{ width: "55px", height: "55px", background: "#E8F1F8", borderRadius: "12px", display: "flex", justifyContent: "center", alignItems: "center" }}>
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2780C4" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                  </div>
+                  <Image src="/assets/unlock/Overlay (3).svg" alt="Legal Documents" width={55} height={55} />
                   <div>
                     <h4 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "17px", lineHeight: "26px", letterSpacing: "-0.17px", color: "#1D1D1F", margin: "0 0 4px 0" }}>Legal Documents</h4>
                     <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "13px", lineHeight: "20px", color: "#86868B" }}>PDF • 4.2 MB</span>
@@ -157,7 +154,7 @@ export default function AccessGrantedModal({ isOpen, onClose, onViewDocuments }:
                 {/* Item 1 */}
                 <div style={{ background: "#F9F9F9", borderRadius: "24px", padding: "20px", display: "flex", flexDirection: "column", gap: "16px" }}>
                   <div style={{ width: "40px", height: "40px", background: "#E8F1F8", borderRadius: "12px", display: "flex", justifyContent: "center", alignItems: "center" }}>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2780C4" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path><path d="M2 12h20"></path></svg>
+                    <Image src="/assets/unlock/public.svg" alt="Agriculture report" width={20} height={19} />
                   </div>
                   <div>
                     <h4 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "14px", lineHeight: "21px", color: "#1D1D1F", margin: "0 0 4px 0" }}>Agriculture report</h4>
@@ -167,9 +164,7 @@ export default function AccessGrantedModal({ isOpen, onClose, onViewDocuments }:
 
                 {/* Item 2 */}
                 <div style={{ background: "#F9F9F9", borderRadius: "24px", padding: "20px", display: "flex", flexDirection: "column", gap: "16px" }}>
-                  <div style={{ width: "40px", height: "40px", background: "#E8F1F8", borderRadius: "12px", display: "flex", justifyContent: "center", alignItems: "center" }}>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2780C4" strokeWidth="2"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"></polygon><line x1="9" y1="3" x2="9" y2="18"></line><line x1="15" y1="6" x2="15" y2="21"></line></svg>
-                  </div>
+                  <Image src="/assets/unlock/Overlay (4).svg" alt="Land & Boundaries" width={40} height={40} />
                   <div>
                     <h4 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "14px", lineHeight: "21px", color: "#1D1D1F", margin: "0 0 4px 0" }}>Land & Boundaries</h4>
                     <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "12px", lineHeight: "18px", color: "#86868B" }}>PDF • 4.2 MB</span>
@@ -178,9 +173,7 @@ export default function AccessGrantedModal({ isOpen, onClose, onViewDocuments }:
 
                 {/* Item 3 */}
                 <div style={{ background: "#F9F9F9", borderRadius: "24px", padding: "20px", display: "flex", flexDirection: "column", gap: "16px" }}>
-                  <div style={{ width: "40px", height: "40px", background: "#E8F1F8", borderRadius: "12px", display: "flex", justifyContent: "center", alignItems: "center" }}>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2780C4" strokeWidth="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-                  </div>
+                  <Image src="/assets/unlock/Overlay (5).svg" alt="Valuation" width={40} height={40} />
                   <div>
                     <h4 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "14px", lineHeight: "21px", color: "#1D1D1F", margin: "0 0 4px 0" }}>Valuation</h4>
                     <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "12px", lineHeight: "18px", color: "#86868B" }}>PDF • 4.2 MB</span>
@@ -189,9 +182,7 @@ export default function AccessGrantedModal({ isOpen, onClose, onViewDocuments }:
 
                 {/* Item 4 */}
                 <div style={{ background: "#F9F9F9", borderRadius: "24px", padding: "20px", display: "flex", flexDirection: "column", gap: "16px" }}>
-                  <div style={{ width: "40px", height: "40px", background: "#E8F1F8", borderRadius: "12px", display: "flex", justifyContent: "center", alignItems: "center" }}>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2780C4" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
-                  </div>
+                  <Image src="/assets/unlock/Overlay (6).svg" alt="Local intelligence" width={40} height={40} />
                   <div>
                     <h4 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "14px", lineHeight: "21px", color: "#1D1D1F", margin: "0 0 4px 0" }}>Local intelligence</h4>
                     <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "12px", lineHeight: "18px", color: "#86868B" }}>PDF • 4.2 MB</span>

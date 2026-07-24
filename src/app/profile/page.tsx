@@ -74,13 +74,14 @@ export default function ProfileScreen() {
         const response = await s3Service.uploadFile(file);
         if (response.url) {
           setProfileImage(response.url);
-          setLastUploadedUrl(response.url);
+          const urlOrKeyToSave = response.key || response.url;
+          setLastUploadedUrl(urlOrKeyToSave);
           if (userId && userDetails) {
             await updateUserDetails({
               id: userId,
               frist_name: userDetails.frist_name || "",
               last_name: userDetails.last_name || "",
-              profile_url: response.url,
+              profile_url: urlOrKeyToSave,
               state_id: (userDetails as any).state_id || 1
             }).unwrap();
             // Cache invalidation via tags will trigger an automatic refetch
@@ -94,13 +95,37 @@ export default function ProfileScreen() {
   };
 
   useEffect(() => {
-    if (userDetails?.profile_url) {
-      if (lastUploadedUrl && userDetails.profile_url !== lastUploadedUrl) {
-        // Backend hasn't caught up yet (stale data), keep our optimistic uploaded image
-        return;
+    const fetchFreshUrl = async () => {
+      if (userDetails?.profile_url) {
+        if (lastUploadedUrl && userDetails.profile_url !== lastUploadedUrl) {
+          // Backend hasn't caught up yet (stale data), keep our optimistic uploaded image
+          return;
+        }
+        
+        let key = userDetails.profile_url;
+        if (key.startsWith("http")) {
+           try {
+              key = new URL(key).pathname.substring(1);
+           } catch (e) {}
+        }
+        
+        if (key && !key.includes('/assets/')) {
+            try {
+               const res = await s3Service.generateUrl({ key, filename: key, folderPath: '' });
+               if (res.url) {
+                  setProfileImage(res.url);
+                  return;
+               }
+            } catch (e) {
+               console.error("Failed to generate fresh profile URL", e);
+            }
+        }
+        
+        setProfileImage(userDetails.profile_url);
       }
-      setProfileImage(userDetails.profile_url);
-    }
+    };
+    
+    fetchFreshUrl();
   }, [userDetails?.profile_url, lastUploadedUrl]);
 
   const triggerUpload = (target: "aadhaar-front" | "aadhaar-back" | "pan") => {

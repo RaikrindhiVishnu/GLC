@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import ActionRequiredModal from "./ActionRequiredModal";
 import DeleteListingModal from "./DeleteListingModal";
+import { useGetUserListedFarmlandImagesQuery, useUpdateFarmlandImagesMutation } from "@/services/home";
 
 interface PromoteListingModalProps {
   isOpen: boolean;
@@ -15,6 +16,14 @@ export default function PromoteListingModal({ isOpen, onClose }: PromoteListingM
   const [isActionOpen, setIsActionOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
+  const { data: imagesResponse, refetch } = useGetUserListedFarmlandImagesQuery({ farmland_id: 101 }, { skip: !isOpen });
+  const [updateImages] = useUpdateFarmlandImagesMutation();
+
+  const [deleteList, setDeleteList] = useState<number[]>([]);
+  const [addList, setAddList] = useState<{ id: string, url: string, localUrl: string }[]>([]);
+  
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   // Toggle this to test the "booked" scenario for deleting a listing
   const isBooked = false;
 
@@ -23,6 +32,10 @@ export default function PromoteListingModal({ isOpen, onClose }: PromoteListingM
     if (isOpen) {
       document.body.style.overflow = 'hidden';
       document.documentElement.style.overflow = 'hidden';
+      // Reset state on open
+      setDeleteList([]);
+      setAddList([]);
+      refetch();
     } else {
       document.body.style.overflow = '';
       document.documentElement.style.overflow = '';
@@ -31,9 +44,52 @@ export default function PromoteListingModal({ isOpen, onClose }: PromoteListingM
       document.body.style.overflow = '';
       document.documentElement.style.overflow = '';
     };
-  }, [isOpen]);
+  }, [isOpen, refetch]);
 
-  // Remove early return so AnimatePresence can handle exit animations
+  const existingImages = imagesResponse?.data || [];
+  const activeExistingImages = existingImages.filter(img => !deleteList.includes(img.farmland_image_id));
+  
+  const totalActiveSlots = activeExistingImages.length + addList.length;
+  const emptySlotsCount = Math.max(0, 5 - totalActiveSlots);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      const localUrl = URL.createObjectURL(file);
+      const simulatedUrl = `/images/farms/new_${Date.now()}.jpg`;
+      
+      setAddList(prev => [...prev, { id: Date.now().toString(), url: simulatedUrl, localUrl }]);
+    }
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const handleRemoveExisting = (id: number) => {
+    setDeleteList(prev => [...prev, id]);
+  };
+  
+  const handleRemoveNew = (id: string) => {
+    setAddList(prev => prev.filter(item => item.id !== id));
+  };
+
+  const handleSubmit = async () => {
+    if (deleteList.length === 0 && addList.length === 0) {
+      onClose();
+      return;
+    }
+    try {
+      await updateImages({
+        farmland_id: 101,
+        user_id: 45,
+        add_list: addList.map(a => a.url),
+        delete_list: deleteList
+      }).unwrap();
+      onClose();
+    } catch (err) {
+      console.error("Failed to update images", err);
+    }
+  };
 
   return (
     <>
@@ -82,88 +138,67 @@ export default function PromoteListingModal({ isOpen, onClose }: PromoteListingM
                   {/* 5 Slot Grid */}
                   <div className="flex flex-wrap gap-[16px] w-full mt-4">
                     
-                    {/* Slot 1: Image */}
-                    <div className="relative w-[269px] h-[170px] rounded-[13px] overflow-hidden shadow-sm">
-                      <Image src="/assets/search/image2.1.svg" alt="Asset Media 1" fill className="object-cover" />
-                    </div>
-                    
-                    {/* Slot 2: Image */}
-                    <div className="relative w-[269px] h-[170px] rounded-[13px] overflow-hidden shadow-sm">
-                      <Image src="/assets/search/image2.2.svg" alt="Asset Media 2" fill className="object-cover" />
-                    </div>
-                    
-                    {/* Slot 3: Image */}
-                    <div className="relative w-[269px] h-[170px] rounded-[13px] overflow-hidden shadow-sm">
-                      <Image src="/assets/search/image2.3.svg" alt="Asset Media 3" fill className="object-cover" />
-                    </div>
-
-                    {/* Slot 4: Add Photo */}
-                    <label 
-                      className="flex flex-col justify-center items-center w-[269px] h-[166px] rounded-[13px] cursor-pointer hover:bg-[#E2E8F0] transition-colors"
-                      style={{
-                        background: "#F1F5F9",
-                        border: "2px dashed #C3C6CE",
-                      }}
-                    >
-                      <input type="file" className="hidden" accept="image/*" />
-                      <div className="flex flex-col items-center gap-2">
-                        {/* Add Photo Icon */}
-                        <div className="w-[18px] h-[18px] flex justify-center items-center">
-                           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#73777E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                             <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                             <circle cx="8.5" cy="8.5" r="1.5" />
-                             <polyline points="21 15 16 10 5 21" />
-                             <line x1="12" y1="9" x2="12" y2="15" />
-                             <line x1="9" y1="12" x2="15" y2="12" />
-                           </svg>
-                        </div>
-                        <span 
-                          style={{
-                            fontFamily: "'Inter', sans-serif",
-                            fontWeight: 500,
-                            fontSize: "12px",
-                            lineHeight: "16px",
-                            color: "#43474D",
-                          }}
+                    {/* Existing active images */}
+                    {activeExistingImages.map((img) => (
+                      <div key={img.farmland_image_id} className="relative w-[269px] h-[170px] rounded-[13px] overflow-hidden shadow-sm group">
+                        <Image src={img.image_url} alt="Asset Media" fill className="object-cover" />
+                        <div 
+                          className="absolute inset-0 bg-black/50 hidden group-hover:flex justify-center items-center cursor-pointer transition-all"
+                          onClick={() => handleRemoveExisting(img.farmland_image_id)}
                         >
-                          Add Photo
-                        </span>
-                      </div>
-                    </label>
-
-                    {/* Slot 5: Add Photo */}
-                    <label 
-                      className="flex flex-col justify-center items-center w-[269px] h-[166px] rounded-[13px] cursor-pointer hover:bg-[#E2E8F0] transition-colors"
-                      style={{
-                        background: "#F1F5F9",
-                        border: "2px dashed #C3C6CE",
-                      }}
-                    >
-                       <input type="file" className="hidden" accept="image/*" />
-                       <div className="flex flex-col items-center gap-2">
-                        {/* Add Photo Icon */}
-                        <div className="w-[18px] h-[18px] flex justify-center items-center">
-                           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#73777E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                             <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                             <circle cx="8.5" cy="8.5" r="1.5" />
-                             <polyline points="21 15 16 10 5 21" />
-                             <line x1="12" y1="9" x2="12" y2="15" />
-                             <line x1="9" y1="12" x2="15" y2="12" />
-                           </svg>
+                          <span className="text-white font-bold text-sm">Remove</span>
                         </div>
-                        <span 
-                          style={{
-                            fontFamily: "'Inter', sans-serif",
-                            fontWeight: 500,
-                            fontSize: "12px",
-                            lineHeight: "16px",
-                            color: "#43474D",
-                          }}
-                        >
-                          Add Photo
-                        </span>
                       </div>
-                    </label>
+                    ))}
+                    
+                    {/* Newly added images */}
+                    {addList.map((item) => (
+                      <div key={item.id} className="relative w-[269px] h-[170px] rounded-[13px] overflow-hidden shadow-sm group">
+                        <Image src={item.localUrl} alt="New Asset Media" fill className="object-cover" />
+                        <div 
+                          className="absolute inset-0 bg-black/50 hidden group-hover:flex justify-center items-center cursor-pointer transition-all"
+                          onClick={() => handleRemoveNew(item.id)}
+                        >
+                          <span className="text-white font-bold text-sm">Remove</span>
+                        </div>
+                      </div>
+                    ))}
+
+                    {/* Add Photo empty slots */}
+                    {Array.from({ length: emptySlotsCount }).map((_, index) => (
+                      <label 
+                        key={`empty-${index}`}
+                        className="flex flex-col justify-center items-center w-[269px] h-[166px] rounded-[13px] cursor-pointer hover:bg-[#E2E8F0] transition-colors"
+                        style={{
+                          background: "#F1F5F9",
+                          border: "2px dashed #C3C6CE",
+                        }}
+                      >
+                        <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} ref={index === 0 ? fileInputRef : null} />
+                        <div className="flex flex-col items-center gap-2">
+                          <div className="w-[18px] h-[18px] flex justify-center items-center">
+                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#73777E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                               <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                               <circle cx="8.5" cy="8.5" r="1.5" />
+                               <polyline points="21 15 16 10 5 21" />
+                               <line x1="12" y1="9" x2="12" y2="15" />
+                               <line x1="9" y1="12" x2="15" y2="12" />
+                             </svg>
+                          </div>
+                          <span 
+                            style={{
+                              fontFamily: "'Inter', sans-serif",
+                              fontWeight: 500,
+                              fontSize: "12px",
+                              lineHeight: "16px",
+                              color: "#43474D",
+                            }}
+                          >
+                            Add Photo
+                          </span>
+                        </div>
+                      </label>
+                    ))}
                   </div>
                 </div>
 
@@ -195,7 +230,7 @@ export default function PromoteListingModal({ isOpen, onClose }: PromoteListingM
 
                     {/* SUBMIT REVIEW Button */}
                     <button 
-                      onClick={onClose}
+                      onClick={handleSubmit}
                       className="flex justify-center items-center w-[400px] h-[66px] rounded-full cursor-pointer hover:opacity-90 transition-opacity"
                       style={{
                         background: "radial-gradient(49.97% 160.36% at 50% 50%, #2780C4 0%, #164573 100%)",

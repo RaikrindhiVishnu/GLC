@@ -7,6 +7,7 @@ import PopularFarmlands from "./PopularFarmlands";
 import UnlockedDocs from "./UnlockedDocs";
 import YourListings from "./YourListings";
 import TrendingFarmlands from "./TrendingFarmlands";
+import Recommended from "./Recommended";
 import SustainableYieldsBanner from "./SustainableYieldsBanner";
 import PlatformStats from "./PlatformStats";
 import PoolInvestments from "./PoolInvestments";
@@ -28,6 +29,7 @@ export default function UserHomePage() {
       <UnlockedDocs />
       <YourListings />
       <TrendingFarmlands />
+      <Recommended />
       <SustainableYieldsBanner />
       <PlatformStats />
       <PoolInvestments />

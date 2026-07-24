@@ -71,7 +71,7 @@ export default function TrendingFarmlands() {
               </motion.span>
             ))}
           </h2>
-          <button onClick={() => router.push("/home/trendingfarmlands")} className="bg-transparent border-none font-jakarta font-extrabold text-[14px] md:text-[18px] leading-[40px] text-[#0F2F4C] cursor-pointer [-webkit-tap-highlight-color:transparent] hover:opacity-70 transition-opacity">
+          <button onClick={() => router.push("/topselling")} className="bg-transparent border-none font-jakarta font-extrabold text-[14px] md:text-[18px] leading-[40px] text-[#0F2F4C] cursor-pointer [-webkit-tap-highlight-color:transparent] hover:opacity-70 transition-opacity">
             View all
           </button>
         </div>
@@ -115,7 +115,11 @@ export default function TrendingFarmlands() {
               {/* Left Side: Image */}
               <div className="relative w-full h-[180px] sm:w-[180px] lg:w-[204px] sm:h-[260px] shrink-0 pointer-events-none">
                 <Image
-                  src={item.farmland_img || `/assets/home/TrendingFarmlands/glcsos0${(i % 3) + 1}.svg`}
+                  src={
+                    (item.farmland_img && !item.farmland_img.toLowerCase().endsWith('.pdf'))
+                      ? item.farmland_img
+                      : `/assets/home/TrendingFarmlands/glcsos0${(i % 3) + 1}.svg`
+                  }
                   alt={item.farmland_code}
                   fill
                   className="object-cover transition-transform duration-500 group-hover:scale-105"

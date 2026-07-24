@@ -129,9 +129,7 @@ export default function DetailsHero({ farmland }: { farmland: FarmlandDetailResp
                   <Image src="/assets/home/HeroScreen/notification.svg" alt="Notifications" width={26} height={26} />
                   <span style={{ position: "absolute", width: "6px", height: "6px", left: "27px", top: "13px", background: "#E53935", border: "0.9px solid rgba(255,255,255,0.9)", borderRadius: "50%" }} />
                 </button>
-                <div onClick={() => router.push("/profile")} style={{ position: "absolute", width: "52px", height: "52px", left: "1328px", top: "35px", borderRadius: "50%", border: "0.45px solid rgba(255,255,255,0.82)", overflow: "hidden", cursor: "pointer", pointerEvents: "auto" }}>
-                  <img src="/assets/home/HeroScreen/person.svg" alt="Profile" style={{ width: "100%", height: "100%", objectFit: "cover", transform: "scale(1.5)" }} />
-                </div>
+
               </div>
             </div>
 
@@ -153,27 +151,7 @@ export default function DetailsHero({ farmland }: { farmland: FarmlandDetailResp
                 <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "22px", color: "rgba(255,255,255,0.9)" }}>Sandalwood &amp; Organic Estate - Zaheerabad</span>
               </div>
 
-              {/* Wealth Snapshot Card */}
-              <div style={{ boxSizing: "border-box", display: "flex", flexDirection: "column", alignItems: "flex-start", padding: "40px", position: "absolute", width: "500px", height: "204px", right: "48px", bottom: "132px", background: "rgba(255,255,255,0.75)", border: "1px solid rgba(255,255,255,0.4)", backdropFilter: "blur(12px)", borderRadius: "48px", zIndex: 15, pointerEvents: "auto", boxShadow: "0px 20px 25px -5px rgba(9,20,38,0.05)" }}>
-                <div style={{ boxSizing: "border-box", width: "418px", height: "122px", position: "relative" }}>
-                  <div style={{ position: "absolute", height: "51px", left: "0px", right: "225px", top: "0px", display: "flex", flexDirection: "column", gap: "4px" }}>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1px", textTransform: "uppercase", color: "#45474C" }}>YOUR HOLDING</span>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "24px", lineHeight: "32px", color: "#131600" }}>{farmland.land_specifications?.total_acers || 0} Acres</span>
-                  </div>
-                  <div style={{ position: "absolute", height: "51px", left: "225px", right: "0px", top: "0px", display: "flex", flexDirection: "column", gap: "4px" }}>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1px", textTransform: "uppercase", color: "#45474C" }}>CURRENT ESTIMATED VALUE</span>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "24px", lineHeight: "32px", color: "#091426" }}>₹{(farmland.price / 10000000).toFixed(2)} Cr</span>
-                  </div>
-                  <div style={{ position: "absolute", height: "39px", left: "0px", right: "225px", top: "83px", display: "flex", flexDirection: "column" }}>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1px", textTransform: "uppercase", color: "#45474C" }}>MANAGEMENT PLAN</span>
-                    <span style={{ marginTop: "2px", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "14px", color: "#091426" }}>50/50 Intercropping System</span>
-                  </div>
-                  <div style={{ position: "absolute", height: "39px", left: "225px", right: "0px", top: "83px", display: "flex", flexDirection: "column" }}>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1px", textTransform: "uppercase", color: "#45474C" }}>NEXT TARGET PAYOUT</span>
-                    <span style={{ marginTop: "2px", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "14px", color: "#00629E" }}>May 2026 (Estimated)</span>
-                  </div>
-                </div>
-              </div>
+
             </div>
           </section>
         </div>

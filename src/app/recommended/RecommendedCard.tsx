@@ -4,7 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-interface TrendingCardProps {
+interface RecommendedCardProps {
   title: string;
   description: string;
   price: string;
@@ -16,7 +16,7 @@ interface TrendingCardProps {
   reverseLayout?: boolean;
 }
 
-export default function TrendingCard({
+export default function RecommendedCard({
   title,
   description,
   price,
@@ -26,7 +26,7 @@ export default function TrendingCard({
   id = "1",
   linkDestination,
   reverseLayout = false,
-}: TrendingCardProps) {
+}: RecommendedCardProps) {
   const router = useRouter();
   const [isLiked, setIsLiked] = React.useState(false);
 
@@ -48,7 +48,7 @@ export default function TrendingCard({
         />
 
         {/* Tag on Image */}
-        <div className={`absolute left-8 ${reverseLayout ? 'bottom-8' : 'top-8'} bg-[#E7E8E9] rounded-full px-4 py-1.5 w-fit z-10`}>
+        <div className={`absolute left-6 ${reverseLayout ? 'bottom-6' : 'top-6'} bg-[#E7E8E9] rounded-full px-4 py-1.5 w-fit z-10`}>
           <span className="font-jakarta font-bold text-[10px] leading-[15px] uppercase text-[#45474C]">
             {tagText}
           </span>

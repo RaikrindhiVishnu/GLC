@@ -29,13 +29,13 @@ export default function SparkleButton() {
   useEffect(() => {
     const handleScroll = () => {
       // Dynamically locate the hero/cover element on any page
-      const heroEl = 
-        document.getElementById("hero-section") || 
+      const heroEl =
+        document.getElementById("hero-section") ||
         document.getElementById("hero-screen") ||
         document.getElementById("search-hero-screen") ||
-        document.querySelector('[id*="hero"]') || 
+        document.querySelector('[id*="hero"]') ||
         document.querySelector('[id*="Hero"]') ||
-        document.querySelector('[class*="hero"]') || 
+        document.querySelector('[class*="hero"]') ||
         document.querySelector('[class*="Hero"]') ||
         document.querySelector("section") ||
         (() => {
@@ -49,10 +49,10 @@ export default function SparkleButton() {
 
       const heroBottom = heroEl ? (heroEl.getBoundingClientRect().bottom + window.scrollY) : window.innerHeight;
       const ctaSection = document.getElementById("cta-section");
-      
+
       // Calculate based on the physical position of the button (approx. 80px from viewport bottom)
       const buttonPhysicalPos = window.scrollY + window.innerHeight - 80;
-      
+
       let pastHero = buttonPhysicalPos >= heroBottom;
       let beforeCta = true;
 
@@ -94,14 +94,14 @@ export default function SparkleButton() {
         title="A.I. Suggested Farmlands"
       >
         <svg width="24" height="24" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path 
-            d="M14 3L15.8 10.2L23 12L15.8 13.8L14 21L12.2 13.8L5 12L12.2 10.2L14 3Z" 
-            fill={getSparkleColor(true)} 
+          <path
+            d="M14 3L15.8 10.2L23 12L15.8 13.8L14 21L12.2 13.8L5 12L12.2 10.2L14 3Z"
+            fill={getSparkleColor(true)}
             className="transition-colors duration-300"
           />
-          <path 
-            d="M22 18L22.9 21.1L26 22L22.9 22.9L22 26L21.1 22.9L18 22L21.1 21.1L22 18Z" 
-            fill={getSparkleColor(false)} 
+          <path
+            d="M22 18L22.9 21.1L26 22L22.9 22.9L22 26L21.1 22.9L18 22L21.1 21.1L22 18Z"
+            fill={getSparkleColor(false)}
             opacity={isGlass ? "0.7" : "0.5"}
             className="transition-colors duration-300"
           />

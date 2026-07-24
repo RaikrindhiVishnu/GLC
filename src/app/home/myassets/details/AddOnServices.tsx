@@ -647,7 +647,13 @@ export default function AddOnServices() {
             </p>
 
             <button
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => {
+                if (requestedServices.length === 1 && requestedServices[0] === "organic-farm-setup") {
+                  router.push("/home/organicfarmingsetup");
+                } else {
+                  setIsModalOpen(true);
+                }
+              }}
               style={{
                 boxSizing: "border-box",
                 display: "flex",

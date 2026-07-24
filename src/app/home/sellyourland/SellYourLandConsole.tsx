@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useGetAllGeoMasterDataQuery } from "../../../services/master";
@@ -561,13 +562,13 @@ export default function SellYourLandConsole() {
         <div style={{ position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", background: "rgba(9, 20, 38, 0.2)", backdropFilter: "blur(16.5px)", zIndex: 100, display: "flex", justifyContent: "center", alignItems: "center", padding: "24px", boxSizing: "border-box" }}>
           
           <div style={{ width: "100%", maxWidth: "1178.88px", height: "100%", maxHeight: "950px", background: "#FFFFFF", borderRadius: "48px", position: "relative", overflow: "hidden", display: "flex", flexDirection: "column", alignItems: "center", padding: "24px 8px 24px 24px", boxSizing: "border-box" }}>
-            <div style={{ width: "100%", height: "100%", overflowY: "auto", paddingRight: "16px", display: "flex", flexDirection: "column", alignItems: "center", boxSizing: "border-box" }}>
+            <div data-lenis-prevent style={{ width: "100%", height: "100%", overflowY: "auto", paddingRight: "16px", display: "flex", flexDirection: "column", alignItems: "center", boxSizing: "border-box", scrollbarWidth: "none", msOverflowStyle: "none" }}>
 
             
             {/* Hero Section */}
             <div style={{ width: "100%", maxWidth: "619px", marginTop: "40px", display: "flex", flexDirection: "column", alignItems: "center", gap: "24px", padding: "0 24px", boxSizing: "border-box" }}>
-              <div style={{ width: "96px", height: "96px", background: "radial-gradient(59.38% 41.98% at 50% 50%, #2780C4 0%, #164573 100%)", border: "5px solid #AED6EF", borderRadius: "9999px", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 10px 15px -3px rgba(39, 128, 196, 0.2)" }}>
-                <svg width="36" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <Image src="/assets/sellyourland/Margin (4).svg" alt="Success Icon" width={120} height={123} />
               </div>
               <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px", textAlign: "center", width: "100%" }}>
                 <h1 style={{ margin: 0, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "clamp(32px, 5vw, 55px)", letterSpacing: "-1.38px", color: "#131600", whiteSpace: "nowrap" }}>

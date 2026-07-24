@@ -9,31 +9,25 @@ import FeaturedCard from "./FeaturedCard";
 import StandardCard from "./StandardCard";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
+import { useGetFarmlandsForComparisonQuery } from "@/services/farmland";
+import { useGetAllMasterDataQuery } from "@/services/master";
 
 export default function CompareFarmlandPremium() {
-  const standardCardsData = [
-    {
-      title: "GLC SOS 02",
-      description: "High-altitude tea plantation with stable annual yield history and organic export license.",
-      acreage: "12.5 Acres",
-      imageUrl: "/assets/search/image2.2.svg",
-      overlayText: "Satellite view"
-    },
-    {
-      title: "GLC SOS 03",
-      description: "Flood-resistant alluvial soil perfect for sustainable rice farming and seasonal pulses.",
-      acreage: "45.0 Acres",
-      imageUrl: "/assets/search/image2.3.svg",
-      overlayText: "Soil view"
-    },
-    {
-      title: "GLC SOS 04",
-      description: "Established orchard with mature fruit-bearing trees and cold storage proximity.",
-      acreage: "83.2 Acres",
-      imageUrl: "/assets/search/image2.4.svg",
-      overlayText: "Orchard view"
-    }
-  ];
+  const { data: comparisonResponse, isLoading } = useGetFarmlandsForComparisonQuery({ state_id: 12 });
+  const { data: masterData } = useGetAllMasterDataQuery();
+
+  const soilTypes = masterData?.data?.soilTypeResult || [];
+
+  const dynamicCardsData = comparisonResponse?.data?.map(farm => {
+    const soil = soilTypes.find(s => s.id === farm.soil_type_id);
+    return {
+      title: farm.farmland_code,
+      description: `₹${farm.price?.toLocaleString()} - Premium farmland location.`,
+      acreage: `${farm.acers} Acres`,
+      imageUrl: farm.farmland_img || "/assets/search/image2.2.svg",
+      overlayText: soil?.name || "View"
+    };
+  }) || [];
 
   return (
     <div className="relative w-full min-h-screen bg-[#F8F9FA] flex flex-col items-center overflow-x-hidden">
@@ -68,17 +62,23 @@ export default function CompareFarmlandPremium() {
 
           {/* Standard Cards Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
-            {standardCardsData.map((card, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                viewport={{ once: true }}
-              >
-                <StandardCard {...card} />
-              </motion.div>
-            ))}
+            {isLoading ? (
+              <div className="col-span-full text-center py-10 font-bold text-[#0F2F4C]">Loading comparisons...</div>
+            ) : dynamicCardsData.length === 0 ? (
+              <div className="col-span-full text-center py-10 text-[#45474C]">No farmlands found for comparison in this state.</div>
+            ) : (
+              dynamicCardsData.map((card, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                >
+                  <StandardCard {...card} />
+                </motion.div>
+              ))
+            )}
           </div>
         </div>
       </div>

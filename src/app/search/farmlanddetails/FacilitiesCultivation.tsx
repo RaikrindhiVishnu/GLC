@@ -4,6 +4,7 @@ import React from "react";
 import { motion } from "framer-motion";
 
 import { GetFacilitiesByFarmlandIdResponse } from "@/services/farmland";
+import { useGetAllMasterDataQuery } from "@/services/master";
 
 interface FacilitiesCultivationProps {
   currentCrop?: string;
@@ -16,6 +17,24 @@ export default function FacilitiesCultivation({
   potentialCrop = "Superfood Berry Clusters",
   facilitiesData,
 }: FacilitiesCultivationProps) {
+  const { data: masterDataRes } = useGetAllMasterDataQuery();
+  const masterData = masterDataRes?.data;
+
+  const getDistanceDesc = (id?: number) => {
+    if (!id || !masterData?.distancesResult) return null;
+    const distance = masterData.distancesResult.find((d: any) => d.id === id);
+    return distance ? `${distance.description}km` : null;
+  };
+
+  const getCropDesc = (id?: number) => {
+    if (!id || !masterData?.cropsResult) return "Unknown";
+    const crop = masterData.cropsResult.find((c: any) => c.id === id);
+    return crop ? crop.description : "Unknown";
+  };
+
+  const cropsThatCanBeGrown = facilitiesData?.crops_that_can_be_grown?.map(id => getCropDesc(id)).join(", ") || potentialCrop;
+  const currentCultivationDesc = getCropDesc(facilitiesData?.current_cultivation) || currentCrop;
+
   return (
     <div className="flex flex-col sm:flex-row gap-4 lg:gap-6 w-full">
       {/* Left Card: Connectivity Hub */}
@@ -38,8 +57,8 @@ export default function FacilitiesCultivation({
 
         <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
           {[
-            { label: "Railway Station", value: facilitiesData?.railway?.distance_id ? `${facilitiesData.railway.distance_id}km` : "12km" },
-            { label: "Domestic Airport", value: facilitiesData?.airport?.distance_id ? `${facilitiesData.airport.distance_id}km` : "45km" },
+            { label: "Railway Station", value: getDistanceDesc(facilitiesData?.railway?.distance_id) || "12km" },
+            { label: "Domestic Airport", value: getDistanceDesc(facilitiesData?.airport?.distance_id) || "45km" },
             { label: "Highway Access", value: facilitiesData?.road_appoarch?.road_width ? `${facilitiesData.road_appoarch.road_width}m` : "2.5km" },
           ].map((item, i) => (
             <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingBottom: i < 2 ? "14px" : 0, borderBottom: i < 2 ? "1px solid #E1E3E4" : "none" }}>
@@ -70,8 +89,8 @@ export default function FacilitiesCultivation({
 
         <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
           {[
-            { title: "Mango Orchard", sub: "CURRENT STATUS", badge: "PRODUCING", badgeBg: "rgba(188,210,37,0.2)", badgeColor: "#424B00" },
-            { title: "Teak, Papaya", sub: "POTENTIAL YIELD", badge: "READY", badgeBg: "#EDEEEF", badgeColor: "#45474C" },
+            { title: currentCultivationDesc, sub: "CURRENT STATUS", badge: "PRODUCING", badgeBg: "rgba(188,210,37,0.2)", badgeColor: "#424B00" },
+            { title: cropsThatCanBeGrown, sub: "POTENTIAL YIELD", badge: "READY", badgeBg: "#EDEEEF", badgeColor: "#45474C" },
             { title: "High-density Dragon Fruit", sub: "FUTURE EXPANSION", badge: "PLANNED", badgeBg: "rgba(105,182,254,0.2)", badgeColor: "#004673" },
           ].map((item, i) => (
             <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>

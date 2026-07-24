@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface UnlockPremiumReportsModalProps {
@@ -86,15 +87,12 @@ export default function UnlockPremiumReportsModal({ isOpen, onClose, onConfirm }
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "14px", marginBottom: "44px" }}>
             
             {/* Background Circle with Icon */}
-            <div style={{ width: "96px", height: "96px", borderRadius: "9999px", background: "radial-gradient(59.38% 41.98% at 50% 50%, #2780C4 0%, #164573 100%)", border: "5px solid #AED6EF", display: "flex", justifyContent: "center", alignItems: "center", position: "relative", marginBottom: "32px" }}>
-              <div style={{ position: "absolute", inset: 0, background: "rgba(255, 255, 255, 0.002)", boxShadow: "0px 10px 15px -3px rgba(39, 128, 196, 0.2), 0px 4px 6px -4px rgba(39, 128, 196, 0.2)", borderRadius: "9999px" }} />
-              <svg width="36" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" style={{ zIndex: 1 }}>
-                <polyline points="20 6 9 17 4 12"></polyline>
-              </svg>
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginBottom: "32px" }}>
+              <Image src="/assets/unlock/Margin (3).svg" alt="Unlock Icon" width={120} height={123} />
             </div>
 
             <h1 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "55px", lineHeight: "55px", letterSpacing: "-1.38px", color: "#131600", textAlign: "center", margin: 0, paddingBottom: "22px" }}>
-              Unlock Permium Reports
+              Unlock Premium Reports
             </h1>
           </div>
 

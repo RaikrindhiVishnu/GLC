@@ -8,6 +8,65 @@ export interface District {
   district_img?: string;
 }
 
+export interface GetUserListedFarmlandByIdRequest {
+  farmland_id: number;
+}
+
+export interface GetUserListedFarmlandByIdData {
+  farmland_id: number;
+  farmland_code: string;
+  farmland_image: string;
+  acers: number;
+  price: number;
+  total_views: number;
+  total_saves: number;
+  is_active: number;
+}
+
+export interface GetUserListedFarmlandByIdResponse {
+  success: boolean;
+  data?: GetUserListedFarmlandByIdData;
+  error?: string;
+}
+
+export interface GetUserListedFarmlandImagesRequest {
+  farmland_id: number;
+}
+
+export interface FarmlandImage {
+  farmland_image_id: number;
+  image_url: string;
+}
+
+export interface GetUserListedFarmlandImagesResponse {
+  success: boolean;
+  data?: FarmlandImage[];
+  error?: string;
+}
+
+export interface UpdateFarmlandImagesRequest {
+  farmland_id: number;
+  user_id: number;
+  add_list: string[];
+  delete_list: number[];
+}
+
+export interface UpdateFarmlandImagesResponse {
+  success: boolean;
+  message: string;
+  error?: string;
+}
+
+export interface UpdateViewsForFarmlandByIdRequest {
+  farmland_id: number;
+}
+
+export interface UpdateViewsForFarmlandByIdResponse {
+  success: boolean;
+  message: string;
+  error?: string;
+}
+
 export interface GetAllDistrictByStateIdRequest {
   state_id: number;
 }
@@ -62,7 +121,43 @@ export const homeApi = createApi({
         body: payload,
       }),
     }),
+    getUserListedFarmlandById: builder.query<GetUserListedFarmlandByIdResponse, GetUserListedFarmlandByIdRequest>({
+      query: (payload) => ({
+        url: '/home/get_user_listed_farmlands_by_id',
+        method: 'POST',
+        body: payload,
+      }),
+    }),
+    getUserListedFarmlandImages: builder.query<GetUserListedFarmlandImagesResponse, GetUserListedFarmlandImagesRequest>({
+      query: (payload) => ({
+        url: '/home/get_user_listed_farmland_images',
+        method: 'POST',
+        body: payload,
+      }),
+    }),
+    updateFarmlandImages: builder.mutation<UpdateFarmlandImagesResponse, UpdateFarmlandImagesRequest>({
+      query: (payload) => ({
+        url: '/home/update_farmland_images',
+        method: 'POST',
+        body: payload,
+      }),
+    }),
+    updateViewsForFarmlandById: builder.mutation<UpdateViewsForFarmlandByIdResponse, UpdateViewsForFarmlandByIdRequest>({
+      query: (payload) => ({
+        url: '/home/update_views_for_farmland_by_id',
+        method: 'POST',
+        body: payload,
+      }),
+    }),
   }),
 });
 
-export const { useGetAllDistrictByStateIdQuery, useGetFarmlandByTagAndStateQuery, useGetAllTopSellingLocationsQuery } = homeApi;
+export const { 
+  useGetAllDistrictByStateIdQuery, 
+  useGetFarmlandByTagAndStateQuery, 
+  useGetAllTopSellingLocationsQuery,
+  useGetUserListedFarmlandByIdQuery,
+  useGetUserListedFarmlandImagesQuery,
+  useUpdateFarmlandImagesMutation,
+  useUpdateViewsForFarmlandByIdMutation
+} = homeApi;

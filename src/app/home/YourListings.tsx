@@ -126,7 +126,11 @@ export default function YourListings() {
               {/* Image */}
               <div className="relative w-full aspect-[1.25] rounded-[15px] overflow-hidden mb-4 shrink-0 pointer-events-none">
                 <Image
-                  src={item.farmland_img || `/assets/home/YourListings/glcsos${(i % 4) + 1}.svg`}
+                  src={
+                    (item.farmland_img && !item.farmland_img.toLowerCase().endsWith('.pdf'))
+                      ? item.farmland_img
+                      : `/assets/home/YourListings/glcsos${(i % 4) + 1}.svg`
+                  }
                   alt={item.farm_code}
                   fill
                   className="object-cover transition-transform duration-500 group-hover:scale-105"

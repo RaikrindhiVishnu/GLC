@@ -7,6 +7,7 @@ import { uploadApi } from '../services/upload';
 import { farmlandApi } from '../services/farmland';
 import { masterApi } from '../services/master';
 import { siteVisitsApi } from '../services/siteVisits';
+import { notificationApi } from '../services/notification';
 
 const rootReducer = combineReducers({
   [homeApi.reducerPath]: homeApi.reducer,
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   [farmlandApi.reducerPath]: farmlandApi.reducer,
   [masterApi.reducerPath]: masterApi.reducer,
   [siteVisitsApi.reducerPath]: siteVisitsApi.reducer,
+  [notificationApi.reducerPath]: notificationApi.reducer,
 });
 
 export default rootReducer;

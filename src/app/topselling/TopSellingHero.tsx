@@ -26,7 +26,7 @@ export default function TopSellingHero() {
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="/assets/topselling/Rectangle 4166 (24).svg"
+          src="/assets/topselling/topselling-bg.jpg"
           alt="Top Selling Locations Background"
           fill
           priority
@@ -40,7 +40,7 @@ export default function TopSellingHero() {
       >
         <div className="w-full max-w-[1200px] flex flex-col items-center pointer-events-auto text-center mt-12 md:mt-0">
           <h1 className="text-shadow-premium font-jakarta font-extrabold tracking-[-1.8px] text-white text-[50px] md:text-[100px] leading-[1.1] mb-6">
-            {"Recommended".split(" ").map((word, i) => (
+            {"Top Selling Locations".split(" ").map((word, i) => (
               <motion.span
                 key={i}
                 initial={{ opacity: 0, filter: "blur(8px)", y: 15 }}

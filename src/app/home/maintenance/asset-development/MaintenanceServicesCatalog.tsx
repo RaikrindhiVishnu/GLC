@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, Suspense } from "react";
+import { useLenis } from 'lenis/react';
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -82,19 +83,24 @@ function MaintenanceServicesCatalogInner() {
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [showModal, setShowModal] = useState(false);
 
+  const lenis = useLenis();
+
   useEffect(() => {
     if (showModal) {
-      document.body.style.overflow = "hidden";
-      document.documentElement.style.overflow = "hidden";
+      if (lenis) lenis.stop();
+      document.documentElement.classList.add('modal-open');
+      document.body.classList.add('modal-open');
     } else {
-      document.body.style.overflow = "unset";
-      document.documentElement.style.overflow = "unset";
+      if (lenis) lenis.start();
+      document.documentElement.classList.remove('modal-open');
+      document.body.classList.remove('modal-open');
     }
     return () => {
-      document.body.style.overflow = "unset";
-      document.documentElement.style.overflow = "unset";
+      if (lenis) lenis.start();
+      document.documentElement.classList.remove('modal-open');
+      document.body.classList.remove('modal-open');
     };
-  }, [showModal]);
+  }, [showModal, lenis]);
 
   const toggleService = (name: string) => {
     setSelectedServices((prev) => prev.includes(name) ? prev.filter((s) => s !== name) : [...prev, name]);
@@ -102,7 +108,11 @@ function MaintenanceServicesCatalogInner() {
 
   const handleTrackProgress = () => {
     if (selectedServices.length === 1) {
-      router.push(`/home/maintenance/track-progress/${selectedServices[0]}`);
+      if (selectedServices[0] === "organic-farm-setup") {
+        router.push("/home/organicfarmingsetup");
+      } else {
+        router.push(`/home/maintenance/track-progress/${selectedServices[0]}`);
+      }
     } else if (selectedServices.length > 1) {
       router.push(`/home/maintenance/select-service?services=${selectedServices.join(",")}`);
     }
@@ -293,7 +303,13 @@ function MaintenanceServicesCatalogInner() {
 
               <button
                 disabled={selectedServices.length === 0}
-                onClick={() => setShowModal(true)}
+                onClick={() => {
+                  if (selectedServices.length === 1 && selectedServices[0] === "organic-farm-setup") {
+                    router.push("/home/organicfarmingsetup");
+                  } else {
+                    setShowModal(true);
+                  }
+                }}
                 style={{ boxSizing: "border-box", display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", padding: "20px 0", width: "100%", height: "56px", background: selectedServices.length > 0 ? "radial-gradient(50% 130.51% at 50% 50%, #2780C4 0%, #164573 100%)" : "#C5C6CD", borderRadius: "32px", border: "none", boxShadow: selectedServices.length > 0 ? "0px 10px 15px -3px rgba(0,0,0,0.1)" : "none", cursor: selectedServices.length > 0 ? "pointer" : "not-allowed" }}
               >
                 <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#FFFFFF", textTransform: "uppercase", letterSpacing: "0.5px" }}>GENERATE WORK ORDER</span>
@@ -354,7 +370,7 @@ function MaintenanceServicesCatalogInner() {
                 boxShadow: "0px 40px 80px -20px rgba(9, 20, 38, 0.15)",
               }}
             >
-              <div className="w-full h-full overflow-y-auto overflow-x-hidden custom-scrollbar flex flex-col items-center" style={{ padding: "50px 22px", gap: "29px" }}>
+              <div data-lenis-prevent className="w-full h-full overflow-y-auto overflow-x-hidden custom-scrollbar flex flex-col items-center" style={{ padding: "50px 22px", gap: "29px" }}>
               
                 {/* Header Icon */}
                 <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: "15px" }}>

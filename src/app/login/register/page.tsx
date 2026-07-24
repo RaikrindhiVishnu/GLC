@@ -20,6 +20,7 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [preferredState, setPreferredState] = useState("");
   const [selectedCountry, setSelectedCountry] = useState({
     name: "India",
     countryCallingCode: "+91",
@@ -215,6 +216,33 @@ export default function RegisterPage() {
             </div>
           </>
         )}
+      </motion.div>
+
+      {/* Preferred Investment State */}
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.65 }}
+        className="mb-5 lg:mb-6 relative"
+      >
+        <div className="w-full bg-[#FEFEFE] border-[2px] border-[#F8F8F8] rounded-[30px] h-[64px] flex items-center px-6 gap-2 focus-within:border-[#2780C4] focus-within:ring-1 focus-within:ring-[#2780C4]/20 transition-all shadow-sm">
+          <select
+            value={preferredState}
+            onChange={(e) => setPreferredState(e.target.value)}
+            className={`flex-1 bg-transparent focus:outline-none font-jakarta text-[13px] appearance-none cursor-pointer ${preferredState ? "text-[#353535]" : "text-[#BDBDBD]"}`}
+          >
+            <option value="" disabled className="text-[#BDBDBD]">Select Preferred Investment State</option>
+            <option value="Karnataka" className="text-[#353535]">Karnataka</option>
+            <option value="Maharashtra" className="text-[#353535]">Maharashtra</option>
+            <option value="Tamil Nadu" className="text-[#353535]">Tamil Nadu</option>
+            <option value="Telangana" className="text-[#353535]">Telangana</option>
+            <option value="Andhra Pradesh" className="text-[#353535]">Andhra Pradesh</option>
+            <option value="Kerala" className="text-[#353535]">Kerala</option>
+          </select>
+          <div className="pointer-events-none absolute right-6 top-1/2 -translate-y-1/2">
+            <svg width="14" height="8" viewBox="0 0 14 8" fill="none" stroke="#6C7A8A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1 1 7 7 13 1"></polyline></svg>
+          </div>
+        </div>
       </motion.div>
 
       {error && (

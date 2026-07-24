@@ -1,11 +1,9 @@
 "use client";
 
 import React from "react";
-import TrendingCard from "../home/trendingfarmlands/TrendingCard";
+import RecommendedCard from "./RecommendedCard";
 
-export default function TopSellingGrid() {
-  const [activeTab, setActiveTab] = React.useState("Tanuku");
-  const tabs = ["ALL", "Tanuku", "Bhimavaram", "Rajamundry", "Eluru", "Hyderabad", "Pune", "Chennai"];
+export default function RecommendedGrid() {
   const cardsData = [
     {
       id: "1",
@@ -13,7 +11,7 @@ export default function TopSellingGrid() {
       description: "High-yield mango grove with established irrigation systems and road access.",
       price: "₹5.2Cr",
       location: "Vizag, A.P.",
-      tagText: "Trending Listing",
+      tagText: "Recommended Listing",
       imageUrl: "/assets/search/image2.1.svg",
     },
     {
@@ -40,7 +38,7 @@ export default function TopSellingGrid() {
       description: "Flood-resistant alluvial soil perfect for sustainable rice farming.",
       price: "₹4.4Cr",
       location: "Vizag, A.P.",
-      tagText: "Trending Listing",
+      tagText: "Recommended Listing",
       imageUrl: "/assets/search/image2.4.svg",
     },
     {
@@ -58,35 +56,17 @@ export default function TopSellingGrid() {
       description: "Modernized agricultural estate ready for immediate integration and yields.",
       price: "₹2.9Cr",
       location: "Eluru, A.P.",
-      tagText: "Trending Listing",
+      tagText: "Recommended Listing",
       imageUrl: "/assets/home/PopularFarmlands/glc2.svg",
     }
   ];
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 sm:px-8 mt-12 mb-24 z-20">
-      
-      {/* Location Tabs */}
-      <div className="flex flex-row gap-3 overflow-x-auto hide-scrollbar mb-8 pb-2">
-        {tabs.map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`whitespace-nowrap px-6 py-2.5 rounded-[40px] font-jakarta font-semibold text-[14px] md:text-[16px] leading-[24px] transition-colors cursor-pointer border ${
-              activeTab === tab
-                ? "bg-[#0F2F4C] text-white border-[#0F2F4C]"
-                : "bg-white text-[#45474C] border-[#E1E3E4] hover:bg-gray-50"
-            }`}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
-
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-8 mt-12 mb-24">
       {/* Header section */}
       <div className="flex flex-row justify-between items-center mb-8">
         <h2 className="font-jakarta font-bold text-[24px] leading-[32px] text-[#131600]">
-          Location: {activeTab === "ALL" ? "All Locations" : activeTab}
+          Recommended
         </h2>
         {/* Pagination Dots */}
         <div className="flex items-center gap-2">
@@ -100,20 +80,20 @@ export default function TopSellingGrid() {
       <div className="flex flex-col md:flex-row gap-8 items-start w-full">
         {/* Column 1 */}
         <div className="flex-1 flex flex-col w-full gap-8">
-          <TrendingCard {...cardsData[0]} />
-          <TrendingCard {...cardsData[3]} />
+          <RecommendedCard {...cardsData[0]} />
+          <RecommendedCard {...cardsData[3]} />
         </div>
 
         {/* Column 2 */}
         <div className="flex-1 flex flex-col w-full gap-8">
-          <TrendingCard {...cardsData[1]} reverseLayout={true} />
-          <TrendingCard {...cardsData[4]} reverseLayout={true} />
+          <RecommendedCard {...cardsData[1]} reverseLayout={true} />
+          <RecommendedCard {...cardsData[4]} reverseLayout={true} />
         </div>
 
         {/* Column 3 */}
         <div className="flex-1 flex flex-col w-full gap-8">
-          <TrendingCard {...cardsData[2]} />
-          <TrendingCard {...cardsData[5]} />
+          <RecommendedCard {...cardsData[2]} />
+          <RecommendedCard {...cardsData[5]} />
         </div>
       </div>
     </div>

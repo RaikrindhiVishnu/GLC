@@ -9,6 +9,7 @@ import { uploadApi } from '../services/upload';
 import { farmlandApi } from '../services/farmland';
 import { masterApi } from '../services/master';
 import { siteVisitsApi } from '../services/siteVisits';
+import { notificationApi } from '../services/notification';
 
 export const store = configureStore({
   reducer: rootReducer,
@@ -23,7 +24,8 @@ export const store = configureStore({
       uploadApi.middleware,
       farmlandApi.middleware,
       masterApi.middleware,
-      siteVisitsApi.middleware
+      siteVisitsApi.middleware,
+      notificationApi.middleware
     ),
   devTools: process.env.NODE_ENV !== 'production',
 });

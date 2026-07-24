@@ -14,6 +14,8 @@ import StickySidebarRight from "./StickySidebarRight";
 import DiscoveryGridSection from "./DiscoveryGridSection";
 import FilterPropertiesModal from "./compare/FilterPropertiesModal";
 import { useGetFacilitiesByFarmlandIdQuery } from "@/services/farmland";
+import { useGetAllMasterDataQuery } from "@/services/master";
+import { useUpdateViewsForFarmlandByIdMutation } from "@/services/home";
 
 // Comprehensive metadata mapping to deliver premium custom parameters per selected farmland listing
 const farmlandRegistry: Record<
@@ -176,6 +178,23 @@ function InnerFarmlandDetailsView() {
   
   const numericId = parseInt(rawId.replace(/\D/g, "")) || 101;
   const { data: facilitiesData, isLoading: isFacilitiesLoading } = useGetFacilitiesByFarmlandIdQuery({ farmland_id: numericId });
+  const { data: masterDataRes } = useGetAllMasterDataQuery();
+  const [updateViews] = useUpdateViewsForFarmlandByIdMutation();
+  const masterData = masterDataRes?.data;
+
+  React.useEffect(() => {
+    // Increment view count when this details view mounts
+    if (numericId) {
+      updateViews({ farmland_id: numericId }).catch(err => {
+        console.error("Failed to update views:", err);
+      });
+    }
+  }, [numericId, updateViews]);
+
+  const soilId = facilitiesData?.soil?.type_id;
+  const soilDesc = soilId && masterData?.soilTypeResult
+    ? masterData.soilTypeResult.find((s: any) => s.id === soilId)?.description
+    : activeLand.soilComposition.title;
 
   return (
     <div style={{ width: "100%", display: "flex", flexDirection: "column" }}>
@@ -194,10 +213,10 @@ function InnerFarmlandDetailsView() {
           <div className="w-full flex flex-col gap-8">
             <MediaHub primaryImage={activeLand.heroBg} title={activeLand.title} />
             <LandSpecificationsBento
-              areaProp={activeLand.acreage}
-              boreDepthProp={activeLand.hydraulicDepth.left}
-              efficiencyProp="High Yield"
-              soilQualityProp={activeLand.soilComposition.title}
+              areaProp={facilitiesData?.acers ? `${facilitiesData.acers} Acres` : activeLand.acreage}
+              boreDepthProp={facilitiesData?.water?.is_bore ? `${facilitiesData.water.is_bore} Borewells` : activeLand.hydraulicDepth.left}
+              efficiencyProp={facilitiesData?.water?.is_ground_water ? "Ground Water Available" : "High Yield"}
+              soilQualityProp={soilDesc || activeLand.soilComposition.title}
             />
             <FacilitiesCultivation
               currentCrop={activeLand.currentVegetation}

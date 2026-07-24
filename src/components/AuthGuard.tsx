@@ -4,13 +4,35 @@ import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
-  const [mounted, setMounted] = useState(false);
+  const [authorizedPath, setAuthorizedPath] = useState<string | null>(null);
   const pathname = usePathname();
   const router = useRouter();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    const isAuthenticated = token && token !== "null" && token !== "undefined" && token.trim() !== "";
+    
+    // Check if token exists and is a valid JWT that hasn't expired
+    let isValidToken = false;
+    if (token && token !== "null" && token !== "undefined" && token.trim() !== "") {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        // Check if token has an expiration and if it's in the future
+        if (!payload.exp || payload.exp * 1000 > Date.now()) {
+          isValidToken = true;
+        } else {
+          console.log("AuthGuard: Token is expired");
+          localStorage.removeItem("token");
+          localStorage.removeItem("refreshToken");
+        }
+      } catch (e) {
+        // If it's not a valid JWT format, assume it's invalid
+        console.log("AuthGuard: Token is not a valid JWT");
+        localStorage.removeItem("token");
+        localStorage.removeItem("refreshToken");
+      }
+    }
+    
+    const isAuthenticated = isValidToken;
     
     // Paths that should redirect to /home if the user is already logged in
     const authPages = ["/login", "/login/register", "/login/forgot-password"];
@@ -27,20 +49,20 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
         router.replace("/home");
       } else {
         console.log("AuthGuard: User allowed on public/auth route.");
-        setMounted(true);
+        setAuthorizedPath(pathname);
       }
     } else {
       if (!isAuthenticated) {
         console.log("AuthGuard: Unauthenticated user on private route, redirecting to /login...");
-        window.location.replace("/login");
+        router.replace("/login");
       } else {
         console.log("AuthGuard: Authenticated user on private route, allowing access.");
-        setMounted(true);
+        setAuthorizedPath(pathname);
       }
     }
   }, [pathname, router]);
 
-  if (!mounted) {
+  if (authorizedPath !== pathname) {
     return (
       <div className="fixed inset-0 z-[9999] bg-[#F8F9FA] flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#2780C4]"></div>

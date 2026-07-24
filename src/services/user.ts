@@ -52,6 +52,8 @@ export interface BoughtFarmland {
 
 export interface GetUserBoughtFarmlandsRequest {
   user_id: number;
+  offset: number;
+  limit: number;
 }
 
 export interface GetUserBoughtFarmlandsResponse {

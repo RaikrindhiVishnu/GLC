@@ -45,7 +45,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <div className="flex-1 flex flex-col gap-2 min-h-0">
 
         {/* Form card */}
-        <div className="relative z-10 flex-1 bg-[#F5F5F5] border-[3px] border-white rounded-[28px] flex flex-col p-4 lg:px-8 lg:py-2">
+        <div className="relative z-10 flex-1 bg-[#F5F5F5] border-[3px] border-white rounded-[30px] flex flex-col p-4 lg:px-8 lg:py-2">
           <div className="flex-1 flex flex-col justify-center items-center min-h-0">
             {children}
           </div>

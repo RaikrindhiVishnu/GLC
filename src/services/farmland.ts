@@ -5,6 +5,25 @@ export interface GetFarmlandByIdRequest {
   farmland_id: number;
 }
 
+export interface GetFarmlandsForComparisonRequest {
+  state_id: number;
+}
+
+export interface FarmlandComparisonData {
+  farmland_id: number;
+  farmland_code: string;
+  farmland_img: string;
+  acers: number;
+  soil_type_id: number;
+  price: number;
+}
+
+export interface GetFarmlandsForComparisonResponse {
+  success: boolean;
+  data: FarmlandComparisonData[];
+  error?: string;
+}
+
 export interface GetFacilitiesByFarmlandIdRequest {
   farmland_id: number;
 }
@@ -231,6 +250,13 @@ export const farmlandApi = createApi({
         body: payload,
       }),
     }),
+    getFarmlandsForComparison: builder.query<GetFarmlandsForComparisonResponse, GetFarmlandsForComparisonRequest>({
+      query: (payload) => ({
+        url: '/farmland/get_farmlands_for_comparission',
+        method: 'POST',
+        body: payload,
+      }),
+    }),
   }),
 });
 
@@ -241,5 +267,6 @@ export const {
   useGetAllLegalDocumentsByFarmlandIdQuery,
   useRemoveFarmLandFromUserSavedListMutation,
   useGetAllSavedFarmlandsByUserIdQuery,
-  useAddLandToUserSavedListMutation
+  useAddLandToUserSavedListMutation,
+  useGetFarmlandsForComparisonQuery
 } = farmlandApi;

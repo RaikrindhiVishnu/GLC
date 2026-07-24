@@ -64,7 +64,11 @@ export default function RequestSubmittedModal({ isOpen, onClose, selectedService
 
   const handleTrackProgress = () => {
     if (selectedServices.length === 1) {
-      router.push(`/maintenance/REQ-GLC-7729/${selectedServices[0]}`);
+      if (selectedServices[0] === "organic-farm-setup") {
+        router.push("/home/organicfarmingsetup");
+      } else {
+        router.push(`/maintenance/REQ-GLC-7729/${selectedServices[0]}`);
+      }
     } else if (selectedServices.length > 1) {
       router.push(`/maintenance/REQ-GLC-7729/select-service?services=${selectedServices.join(",")}`);
     }

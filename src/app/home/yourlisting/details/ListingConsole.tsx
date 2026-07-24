@@ -4,9 +4,14 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import PromoteListingModal from "./PromoteListingModal";
+import { useGetUserListedFarmlandByIdQuery } from "@/services/home";
 
 export default function ListingConsole() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { data: farmlandResponse, isLoading } = useGetUserListedFarmlandByIdQuery({ farmland_id: 101 });
+  
+  const farmlandData = farmlandResponse?.data;
+  const isUnlisted = farmlandData ? farmlandData.is_active === 0 : false;
 
   return (
     <>
@@ -76,7 +81,7 @@ export default function ListingConsole() {
                     color: "#2780C4",
                   }}
                 >
-                  245
+                  {isLoading ? "..." : farmlandData?.total_views || 0}
                 </span>
               </div>
             </div>
@@ -111,7 +116,7 @@ export default function ListingConsole() {
                     color: "#2780C4",
                   }}
                 >
-                  12
+                  {isLoading ? "..." : farmlandData?.total_saves || 0}
                 </span>
               </div>
             </div>
@@ -203,14 +208,14 @@ export default function ListingConsole() {
                     Hide listing from search results.
                   </span>
                 </div>
-                {/* Toggle Switch */}
                 <div 
                   className="relative w-[68.5px] h-[39px] rounded-full flex items-center cursor-pointer transition-colors"
-                  style={{ background: "#E1E3E4" }}
+                  style={{ background: isUnlisted ? "#2780C4" : "#E1E3E4" }}
                 >
                   <div 
-                    className="absolute w-[29px] h-[29px] rounded-full bg-white ml-[5px] transition-transform"
+                    className="absolute w-[29px] h-[29px] rounded-full bg-white transition-transform"
                     style={{
+                      left: isUnlisted ? "34px" : "5px",
                       boxShadow: "0px 4.9px 7.3px -1.2px rgba(0, 0, 0, 0.1), 0px 2.4px 4.9px -2.4px rgba(0, 0, 0, 0.1)",
                     }}
                   />

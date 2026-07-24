@@ -169,7 +169,7 @@ export default function TrackingPage() {
         <div style={{ position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", background: "rgba(9, 20, 38, 0.2)", backdropFilter: "blur(16px)", zIndex: 9999, display: "flex", justifyContent: "center", alignItems: "center", padding: "24px", boxSizing: "border-box" }}>
           
           <div style={{ width: "100%", maxWidth: "932px", maxHeight: "100%", background: "#FFFFFF", borderRadius: "48px", position: "relative", overflow: "hidden", display: "flex", flexDirection: "column", padding: "24px 8px 24px 24px", boxSizing: "border-box" }}>
-            <div style={{ width: "100%", height: "100%", overflowY: "auto", paddingRight: "16px", display: "flex", flexDirection: "column", alignItems: "center", boxSizing: "border-box", paddingTop: "26px" }}>
+            <div data-lenis-prevent style={{ width: "100%", height: "100%", overflowY: "auto", paddingRight: "16px", display: "flex", flexDirection: "column", alignItems: "center", boxSizing: "border-box", paddingTop: "26px", scrollbarWidth: "none", msOverflowStyle: "none" }}>
             
             {withdrawStep === 1 ? (
               <>

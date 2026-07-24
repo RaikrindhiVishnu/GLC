@@ -15,6 +15,18 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "drb7qkhp2kw0j.cloudfront.net",
       },
+      {
+        protocol: "https",
+        hostname: "example.com",
+      },
+      {
+        protocol: "https",
+        hostname: "pdfobject.com",
+      },
+      {
+        protocol: "https",
+        hostname: "hasirufarms.com",
+      },
     ],
   },
   typescript: {
