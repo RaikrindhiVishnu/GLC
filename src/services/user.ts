@@ -133,20 +133,23 @@ export interface GetUserProfileDetailsByIdRequest {
 export interface PurchasedLandTracking {
   farm_id: number;
   farm_code: string;
-  state_id: number;
-  district_id: number;
-  mandal_id: number;
-  percentag_completed: number;
+  state_id: number | null;
+  district_id: number | null;
+  mandal_id: number | null;
 }
 
 export interface SiteVisitData {
   farm_id: number;
+  date?: string;
+  time?: string;
+  lat?: string;
+  long?: string;
   farm_code: string;
-  state_id: number;
-  district_id: number;
-  mandal_id: number;
-  price: number;
-  acers: number;
+  state_id: number | null;
+  district_id: number | null;
+  mandal_id: number | null;
+  price: string;
+  acers: string;
 }
 
 export interface GetUserProfileDetailsByIdResponse {
@@ -155,6 +158,14 @@ export interface GetUserProfileDetailsByIdResponse {
   country_code: string;
   mobile_number: string;
   email_address: string;
+  dob?: string;
+  state_id?: number;
+  aadhar_number?: string;
+  aadhar_front_url?: string;
+  aadhar_back_url?: string;
+  pan_number?: string;
+  pan_card_url?: string;
+  is_verified?: number;
   user_purchased_lands_tracking: PurchasedLandTracking[];
   upcoming_site_visits: SiteVisitData[];
   completed_site_vists: SiteVisitData[];

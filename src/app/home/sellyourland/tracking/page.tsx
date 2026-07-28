@@ -3,12 +3,15 @@
 import React, { useState, useEffect } from "react";
 import Footer from "@/components/Footer";
 import CTA from "@/components/CTA";
+import { useDeleteFarmlandListingMutation } from "@/services/farmland";
 
 export default function TrackingPage() {
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
   const [withdrawStep, setWithdrawStep] = useState(1);
   const [showReasonSelect, setShowReasonSelect] = useState(false);
   const [selectedReason, setSelectedReason] = useState("");
+  const [remarks, setRemarks] = useState("");
+  const [deleteFarmlandListing, { isLoading: isDeleting }] = useDeleteFarmlandListingMutation();
 
   useEffect(() => {
     if (showWithdrawModal) {
@@ -208,7 +211,12 @@ export default function TrackingPage() {
                 </div>
 
                 <div style={{ width: "100%", height: "128px", background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.05)", borderRadius: "32px", display: "flex", alignItems: "flex-start", padding: "20px 24px", boxShadow: "0px 4px 40px rgba(26, 28, 28, 0.06)", boxSizing: "border-box" }}>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "16px", color: "rgba(112, 120, 129, 0.6)" }}>Add any additional comments for our compliance team...</span>
+                  <textarea 
+                    placeholder="Add any additional comments for our compliance team..."
+                    value={remarks}
+                    onChange={(e) => setRemarks(e.target.value)}
+                    style={{ width: "100%", height: "100%", border: "none", outline: "none", background: "transparent", resize: "none", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "16px", color: "#181C20" }}
+                  />
                 </div>
               </div>
 
@@ -257,10 +265,35 @@ export default function TrackingPage() {
             {/* Action Deck */}
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px", width: "100%" }}>
               <button 
-                onClick={() => setWithdrawStep(2)}
-                style={{ width: "100%", maxWidth: "400px", height: "62.84px", background: "#BA1A1A", borderRadius: "9999px", border: "none", cursor: "pointer", boxShadow: "0px 9.2px 13.8px -2.76px rgba(0, 0, 0, 0.1), 0px 3.68px 5.52px -3.68px rgba(0, 0, 0, 0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}
+                disabled={isDeleting}
+                onClick={async () => {
+                  try {
+                    const reasonOptions = [
+                      "Decided to keep the property",
+                      "Found a private buyer / Sold offline",
+                      "Missing required legal documents",
+                      "Need to correct submitted property details",
+                      "Concerns about the valuation process",
+                      "Other (Please specify below)"
+                    ];
+                    let reason_id = reasonOptions.indexOf(selectedReason) + 1;
+                    if (reason_id === 0) reason_id = 6;
+                    
+                    const res = await deleteFarmlandListing({
+                      farmland_id: 0,
+                      reason_id,
+                      remarks: remarks || selectedReason
+                    }).unwrap();
+                    
+                    setWithdrawStep(2);
+                  } catch (error) {
+                    console.error("Failed to delete listing", error);
+                    alert("Failed to delete listing.");
+                  }
+                }}
+                style={{ width: "100%", maxWidth: "400px", height: "62.84px", background: "#BA1A1A", borderRadius: "9999px", border: "none", cursor: isDeleting ? "not-allowed" : "pointer", opacity: isDeleting ? 0.7 : 1, boxShadow: "0px 9.2px 13.8px -2.76px rgba(0, 0, 0, 0.1), 0px 3.68px 5.52px -3.68px rgba(0, 0, 0, 0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}
               >
-                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16.58px", color: "#FFFFFF" }}>Confirm Withdrawal</span>
+                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16.58px", color: "#FFFFFF" }}>{isDeleting ? "Withdrawing..." : "Confirm Withdrawal"}</span>
               </button>
               
               <button 

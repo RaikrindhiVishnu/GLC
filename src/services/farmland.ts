@@ -137,6 +137,8 @@ export interface FarmlandDetailResponse {
     state_id: number;
     district_id: number;
     mandal_id: number;
+    lat?: string;
+    long?: string;
   };
   land_specifications?: {
     total_acers: number;
@@ -229,11 +231,22 @@ export interface SellFarmlandResponse {
   };
 }
 
+export interface DeleteFarmlandListingRequest {
+  farmland_id: number;
+  reason_id: number;
+  remarks: string;
+}
+
+export interface DeleteFarmlandListingResponse {
+  message?: string;
+  success?: boolean;
+}
+
 export const farmlandApi = createApi({
   reducerPath: 'farmlandApi',
   baseQuery,
   endpoints: (builder) => ({
-    getFarmlandById: builder.query<FarmlandDetailResponse, GetFarmlandByIdRequest>({
+    getFarmlandById: builder.query<FarmlandDetailResponse[], GetFarmlandByIdRequest>({
       query: (payload) => ({
         url: '/farmland/get_farmland_by_id',
         method: 'POST',
@@ -296,6 +309,13 @@ export const farmlandApi = createApi({
         body: payload,
       }),
     }),
+    deleteFarmlandListing: builder.mutation<DeleteFarmlandListingResponse, DeleteFarmlandListingRequest>({
+      query: (payload) => ({
+        url: '/farmland/delete_farmland_listing',
+        method: 'POST',
+        body: payload,
+      }),
+    }),
   }),
 });
 
@@ -308,5 +328,6 @@ export const {
   useGetAllSavedFarmlandsByUserIdQuery,
   useAddLandToUserSavedListMutation,
   useGetFarmlandsForComparisonQuery,
-  useSellFarmlandMutation
+  useSellFarmlandMutation,
+  useDeleteFarmlandListingMutation
 } = farmlandApi;

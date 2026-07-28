@@ -13,7 +13,7 @@ import FacilitiesCultivation from "./FacilitiesCultivation";
 import StickySidebarRight from "./StickySidebarRight";
 import DiscoveryGridSection from "./DiscoveryGridSection";
 import FilterPropertiesModal from "./compare/FilterPropertiesModal";
-import { useGetFacilitiesByFarmlandIdQuery } from "@/services/farmland";
+import { useGetFacilitiesByFarmlandIdQuery, useGetFarmlandByIdQuery } from "@/services/farmland";
 import { useGetAllMasterDataQuery } from "@/services/master";
 import { useUpdateViewsForFarmlandByIdMutation } from "@/services/home";
 
@@ -178,6 +178,8 @@ function InnerFarmlandDetailsView() {
   
   const numericId = parseInt(rawId.replace(/\D/g, "")) || 101;
   const { data: facilitiesData, isLoading: isFacilitiesLoading } = useGetFacilitiesByFarmlandIdQuery({ farmland_id: numericId });
+  const { data: farmlandDetailDataArray } = useGetFarmlandByIdQuery({ farmland_id: numericId });
+  const farmlandDetailData = farmlandDetailDataArray?.[0];
   const { data: masterDataRes } = useGetAllMasterDataQuery();
   const [updateViews] = useUpdateViewsForFarmlandByIdMutation();
   const masterData = masterDataRes?.data;
@@ -196,14 +198,39 @@ function InnerFarmlandDetailsView() {
     ? masterData.soilTypeResult.find((s: any) => s.id === soilId)?.description
     : activeLand.soilComposition.title;
 
+  // Resolve Real Data
+  const title = farmlandDetailData?.farmland_code || activeLand.title;
+  
+  let priceStr = activeLand.price;
+  if (farmlandDetailData?.price) {
+    priceStr = `₹${(farmlandDetailData.price / 10000000).toFixed(2)} Cr`;
+  }
+
+  let locationSubtitle = activeLand.locationSubtitle;
+  if (farmlandDetailData?.location_details && masterData) {
+    const loc = farmlandDetailData.location_details;
+    const district = masterData.districtResult?.find((d: any) => d.id === loc.district_id)?.district_name;
+    const state = masterData.stateResult?.find((s: any) => s.id === loc.state_id)?.state_name;
+    if (district && state) {
+      locationSubtitle = `${district}, ${state}`;
+    }
+  }
+
+  const heroBg = farmlandDetailData?.farmland_img || activeLand.heroBg;
+  const acreage = farmlandDetailData?.land_specifications?.total_acers 
+    ? `${farmlandDetailData.land_specifications.total_acers} Acres` 
+    : (facilitiesData?.acers ? `${facilitiesData.acers} Acres` : activeLand.acreage);
+    
+  const tags = activeLand.tags; // Fallback since API doesn't provide tags directly in detail response yet
+
   return (
     <div style={{ width: "100%", display: "flex", flexDirection: "column" }}>
       {/* ─── 1. CINEMATIC HERO SCREEN BLOCK (Height 960px precisely mapped) ─── */}
       <FarmlandDetailsHero
-        title={activeLand.title}
-        locationSubtitle={activeLand.locationSubtitle}
-        tags={activeLand.tags}
-        heroBg={activeLand.heroBg}
+        title={title}
+        locationSubtitle={locationSubtitle}
+        tags={tags}
+        heroBg={heroBg}
       />
 
       {/* ─── 2. MASTER BODY LAYOUT ─── */}
@@ -211,12 +238,18 @@ function InnerFarmlandDetailsView() {
         <div className="flex flex-col lg:flex-row items-start gap-8 lg:gap-10">
           {/* Left Column */}
           <div className="w-full flex flex-col gap-8">
-            <MediaHub primaryImage={activeLand.heroBg} title={activeLand.title} />
+            <MediaHub 
+              primaryImage={heroBg} 
+              title={title} 
+              lat={farmlandDetailData?.location_details?.lat}
+              long={farmlandDetailData?.location_details?.long}
+              polygon={farmlandDetailData?.polygon}
+            />
             <LandSpecificationsBento
-              areaProp={facilitiesData?.acers ? `${facilitiesData.acers} Acres` : activeLand.acreage}
-              boreDepthProp={facilitiesData?.water?.is_bore ? `${facilitiesData.water.is_bore} Borewells` : activeLand.hydraulicDepth.left}
+              areaProp={acreage}
+              boreDepthProp={facilitiesData?.water?.is_bore ? `${facilitiesData.water.is_bore} Borewells` : (farmlandDetailData?.land_specifications?.borewell ? `${farmlandDetailData.land_specifications.borewell} Borewells` : activeLand.hydraulicDepth.left)}
               efficiencyProp={facilitiesData?.water?.is_ground_water ? "Ground Water Available" : "High Yield"}
-              soilQualityProp={soilDesc || activeLand.soilComposition.title}
+              soilQualityProp={soilDesc || farmlandDetailData?.land_specifications?.soil_type || activeLand.soilComposition.title}
             />
             <FacilitiesCultivation
               currentCrop={activeLand.currentVegetation}
@@ -227,9 +260,9 @@ function InnerFarmlandDetailsView() {
           {/* Right Sidebar */}
           <div className="w-full lg:w-[411px] lg:flex-shrink-0">
             <StickySidebarRight
-              title={activeLand.title}
-              price={activeLand.price}
-              locationSubtitle={activeLand.locationSubtitle}
+              title={title}
+              price={priceStr}
+              locationSubtitle={locationSubtitle}
               farmlandId={numericId}
             />
           </div>

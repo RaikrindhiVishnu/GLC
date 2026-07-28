@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { useGetUserDetailsByIdQuery, useUpdateUserDetailsMutation } from "../../services/user";
+import { useGetUserDetailsByIdQuery, useUpdateUserDetailsMutation, useGetUserProfileDetailsByIdQuery } from "../../services/user";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
@@ -33,6 +33,12 @@ export default function ProfileScreen() {
     { user_id: userId || 0 },
     { skip: !mounted || !userId }
   );
+  
+  const { data: profileDetailsResponse } = useGetUserProfileDetailsByIdQuery(
+    { user_id: userId || 0 },
+    { skip: !mounted || !userId }
+  );
+  const profileDetails = profileDetailsResponse;
 
   const [updateUserDetails] = useUpdateUserDetailsMutation();
 
@@ -478,17 +484,15 @@ export default function ProfileScreen() {
           <div style={{ padding: "0 16px 12px" }}>
             <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Site Vists in queue</span>
           </div>
-          {[
-            { title: "GLC SOS 01", subtitle: "Medchal • ‹12.5L • 0.5 Ac", color: "#059669" }
-          ].map((item, idx) => (
+          {(profileDetails?.upcoming_site_visits || []).map((item: any, idx: number) => (
             <div key={idx} onClick={() => setIsSiteVisitQueueModalOpen(true)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", borderRadius: "24px", padding: "16px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0px 4px 15px rgba(0,0,0,0.02)" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
                 <div style={{ width: "42px", height: "42px", background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.04)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 2px 5px rgba(0,0,0,0.02)" }}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={item.color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={["#059669", "#D97706", "#2563EB", "#7C3AED"][idx % 4]} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.title}</span>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>{item.subtitle}</span>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.farm_code}</span>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>{item.mandal_id ? "Mandal " + item.mandal_id : "Location pending"}{item.price ? " • ₹" + (Number(item.price)/100000).toFixed(1) + "L" : ""}{item.acers ? " • " + item.acers + " Ac" : ""}</span>
                 </div>
               </div>
             </div>
@@ -505,17 +509,15 @@ export default function ProfileScreen() {
           <div style={{ padding: "0 16px 12px" }}>
             <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Site Vists Completed</span>
           </div>
-          {[
-            { title: "GLC SOS 02", subtitle: "Vikarabad • ‹5.0L • 0.2 Ac", color: "#D97706" }
-          ].map((item, idx) => (
+          {(profileDetails?.completed_site_vists || []).map((item: any, idx: number) => (
             <div key={idx} onClick={() => setIsSiteVisitModalOpen(true)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", borderRadius: "24px", padding: "16px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0px 4px 15px rgba(0,0,0,0.02)" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
                 <div style={{ width: "42px", height: "42px", background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.04)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 2px 5px rgba(0,0,0,0.02)" }}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={item.color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={["#059669", "#D97706", "#2563EB", "#7C3AED"][idx % 4]} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.title}</span>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>{item.subtitle}</span>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.farm_code}</span>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>{item.mandal_id ? "Mandal " + item.mandal_id : "Location pending"}{item.price ? " • ₹" + (Number(item.price)/100000).toFixed(1) + "L" : ""}{item.acers ? " • " + item.acers + " Ac" : ""}</span>
                 </div>
               </div>
             </div>
@@ -532,17 +534,15 @@ export default function ProfileScreen() {
           <div style={{ padding: "0 16px 12px" }}>
             <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Active Listing</span>
           </div>
-          {[
-            { title: "GLC SOS 02", subtitle: "Vikarabad • ‹5.0L • 0.2 Ac", color: "#D97706" }
-          ].map((item, idx) => (
+          {(profileDetails?.user_listed_farmlands || []).map((item: any, idx: number) => (
             <div key={idx} style={{ width: "100%", background: "#FFFFFF", borderRadius: "24px", padding: "16px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0px 4px 15px rgba(0,0,0,0.02)" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
                 <div style={{ width: "42px", height: "42px", background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.04)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 2px 5px rgba(0,0,0,0.02)" }}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={item.color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={["#059669", "#D97706", "#2563EB", "#7C3AED"][idx % 4]} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.title}</span>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>{item.subtitle}</span>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.farm_code}</span>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>{item.mandal_id ? "Mandal " + item.mandal_id : "Location pending"}{item.price ? " • ₹" + (Number(item.price)/100000).toFixed(1) + "L" : ""}{item.acers ? " • " + item.acers + " Ac" : ""}</span>
                 </div>
               </div>
             </div>
@@ -560,18 +560,15 @@ export default function ProfileScreen() {
             <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Active Deals In Queue</span>
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-            {[
-              { title: "GLC SOS 01", subtitle: "Medchal • ‹12.5L • 0.5 Ac", color: "#059669" },
-              { title: "GLC SOS 02", subtitle: "Vikarabad • ‹5.0L • 0.2 Ac", color: "#D97706" }
-            ].map((item, idx) => (
+            {(profileDetails?.user_purchased_lands_tracking || []).map((item: any, idx: number) => (
               <div key={idx} style={{ width: "100%", background: "#FFFFFF", borderRadius: "24px", padding: "16px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0px 4px 15px rgba(0,0,0,0.02)" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
                   <div style={{ width: "42px", height: "42px", background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.04)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 2px 5px rgba(0,0,0,0.02)" }}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={item.color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={["#059669", "#D97706", "#2563EB", "#7C3AED"][idx % 4]} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
                   </div>
                   <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.title}</span>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>{item.subtitle}</span>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.farm_code}</span>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>{item.mandal_id ? "Mandal " + item.mandal_id : "Location pending"}{item.price ? " • ₹" + (Number(item.price)/100000).toFixed(1) + "L" : ""}{item.acers ? " • " + item.acers + " Ac" : ""}</span>
                   </div>
                 </div>
               </div>
@@ -621,7 +618,7 @@ export default function ProfileScreen() {
             }}
           >
             <div style={{ width: "100%", height: "100%", borderRadius: "72.37px", boxShadow: "0px 0px 0px 6px #FFFFFF, 0px 37px 75px -18px rgba(0,0,0,0.35)", overflow: "hidden", background: "#F8F9FA", position: "relative" }}>
-              <img src={profileImage} alt="Profile Frame Portrait" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center" }} />
+              <img src={profileImage || ""} alt="Profile Frame Portrait" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center" }} />
               <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.3)", display: "flex", alignItems: "center", justifyContent: "center", opacity: 0, transition: "opacity 0.2s ease" }} onMouseEnter={(e) => e.currentTarget.style.opacity = "1"} onMouseLeave={(e) => e.currentTarget.style.opacity = "0"}>
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
               </div>
@@ -930,17 +927,15 @@ export default function ProfileScreen() {
             <div style={{ padding: "0 8px" }}>
               <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Site Vists in queue</span>
             </div>
-            {[
-              { title: "GLC SOS 01", subtitle: "Medchal • ‹12.5L • 0.5 Ac", color: "#059669" }
-            ].map((item, idx) => (
+            {(profileDetails?.upcoming_site_visits || []).map((item: any, idx: number) => (
               <div key={idx} onClick={() => setIsSiteVisitQueueModalOpen(true)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", borderRadius: "32px", padding: "20px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0px 4px 15px rgba(0,0,0,0.02)" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
                   <div style={{ width: "42px", height: "42px", background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.04)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 2px 5px rgba(0,0,0,0.02)" }}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={item.color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={["#059669", "#D97706", "#2563EB", "#7C3AED"][idx % 4]} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
                   </div>
                   <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.title}</span>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>{item.subtitle}</span>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.farm_code}</span>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>{item.mandal_id ? "Mandal " + item.mandal_id : "Location pending"}{item.price ? " • ₹" + (Number(item.price)/100000).toFixed(1) + "L" : ""}{item.acers ? " • " + item.acers + " Ac" : ""}</span>
                   </div>
                 </div>
               </div>
@@ -952,17 +947,15 @@ export default function ProfileScreen() {
             <div style={{ padding: "0 8px" }}>
               <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Site Vists Completed</span>
             </div>
-            {[
-              { title: "GLC SOS 02", subtitle: "Vikarabad • ‹5.0L • 0.2 Ac", color: "#D97706" }
-            ].map((item, idx) => (
+            {(profileDetails?.completed_site_vists || []).map((item: any, idx: number) => (
               <div key={idx} onClick={() => setIsSiteVisitModalOpen(true)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", borderRadius: "32px", padding: "20px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0px 4px 15px rgba(0,0,0,0.02)" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
                   <div style={{ width: "42px", height: "42px", background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.04)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 2px 5px rgba(0,0,0,0.02)" }}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={item.color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={["#059669", "#D97706", "#2563EB", "#7C3AED"][idx % 4]} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
                   </div>
                   <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.title}</span>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>{item.subtitle}</span>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.farm_code}</span>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>{item.mandal_id ? "Mandal " + item.mandal_id : "Location pending"}{item.price ? " • ₹" + (Number(item.price)/100000).toFixed(1) + "L" : ""}{item.acers ? " • " + item.acers + " Ac" : ""}</span>
                   </div>
                 </div>
               </div>
@@ -974,17 +967,15 @@ export default function ProfileScreen() {
             <div style={{ padding: "0 8px" }}>
               <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Active Listing</span>
             </div>
-            {[
-              { title: "GLC SOS 02", subtitle: "Vikarabad • ‹5.0L • 0.2 Ac", color: "#D97706" }
-            ].map((item, idx) => (
+            {(profileDetails?.user_listed_farmlands || []).map((item: any, idx: number) => (
               <div key={idx} onClick={() => router.push(`/profile/active-listing/${idx + 1}`)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", borderRadius: "32px", padding: "20px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0px 4px 15px rgba(0,0,0,0.02)" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
                   <div style={{ width: "42px", height: "42px", background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.04)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 2px 5px rgba(0,0,0,0.02)" }}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={item.color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={["#059669", "#D97706", "#2563EB", "#7C3AED"][idx % 4]} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
                   </div>
                   <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.title}</span>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>{item.subtitle}</span>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.farm_code}</span>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>{item.mandal_id ? "Mandal " + item.mandal_id : "Location pending"}{item.price ? " • ₹" + (Number(item.price)/100000).toFixed(1) + "L" : ""}{item.acers ? " • " + item.acers + " Ac" : ""}</span>
                   </div>
                 </div>
               </div>
@@ -996,18 +987,15 @@ export default function ProfileScreen() {
             <div style={{ padding: "0 8px" }}>
               <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Active Deals In Queue</span>
             </div>
-            {[
-              { title: "GLC SOS 01", subtitle: "Medchal • ‹12.5L • 0.5 Ac", color: "#059669" },
-              { title: "GLC SOS 02", subtitle: "Vikarabad • ‹5.0L • 0.2 Ac", color: "#D97706" }
-            ].map((item, idx) => (
+            {(profileDetails?.user_purchased_lands_tracking || []).map((item: any, idx: number) => (
               <div key={idx} onClick={() => router.push(`/profile/active-deals/${idx + 1}`)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", borderRadius: "32px", padding: "20px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0px 4px 15px rgba(0,0,0,0.02)" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
                   <div style={{ width: "42px", height: "42px", background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.04)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 2px 5px rgba(0,0,0,0.02)" }}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={item.color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={["#059669", "#D97706", "#2563EB", "#7C3AED"][idx % 4]} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
                   </div>
                   <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.title}</span>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>{item.subtitle}</span>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.farm_code}</span>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>{item.mandal_id ? "Mandal " + item.mandal_id : "Location pending"}{item.price ? " • ₹" + (Number(item.price)/100000).toFixed(1) + "L" : ""}{item.acers ? " • " + item.acers + " Ac" : ""}</span>
                   </div>
                 </div>
               </div>
@@ -1040,7 +1028,7 @@ export default function ProfileScreen() {
         userId={userId || 0}
         initialFirstName={userDetails?.frist_name || ""}
         initialLastName={userDetails?.last_name || ""}
-        initialProfileUrl={profileImage !== "/assets/account/account-profile.svg" ? profileImage : userDetails?.profile_url || ""}
+        initialProfileUrl={profileImage !== "/assets/account/account-profile.svg" ? (profileImage || "") : userDetails?.profile_url || ""}
       />
       <WalletHistoryModal 
         isOpen={isWalletHistoryModalOpen} 

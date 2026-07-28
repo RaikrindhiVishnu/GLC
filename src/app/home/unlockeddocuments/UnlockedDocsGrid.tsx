@@ -204,7 +204,7 @@ export default function UnlockedDocsGrid() {
                     View Documents
                   </button>
                   <button
-                    onClick={() => router.push("/search/farmlanddetails?id=match-1")}
+                    onClick={() => router.push("/book-site-visit")}
                     style={{ width: "100%", height: "48px", border: "2px solid rgba(197,198,205,0.3)", borderRadius: "9999px", background: "transparent", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", cursor: "pointer" }}
                   >
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0F2F4C" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -444,7 +444,7 @@ export default function UnlockedDocsGrid() {
                         <button onClick={() => setSelectedDossier(card)} style={{ position: "relative", boxSizing: "border-box", display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", padding: "16px 0px", width: "320px", height: "57px", background: "radial-gradient(50% 155.86% at 50% 50%, #2780C4 0%, #164573 100%)", borderRadius: "32px", border: "none", cursor: "pointer", boxShadow: "0px 4px 6px -1px rgba(9,20,38,0.2), 0px 2px 4px -2px rgba(9,20,38,0.2)" }}>
                           <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", lineHeight: "20px", textAlign: "center", color: "#FFFFFF", zIndex: 1 }}>Download Documents</span>
                         </button>
-                        <button onClick={() => router.push("/search/farmlanddetails?id=match-1")} style={{ boxSizing: "border-box", display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", padding: "16px 0px", gap: "8px", width: "320px", height: "56px", border: "2px solid rgba(197, 198, 205, 0.3)", borderRadius: "32px", background: "transparent", cursor: "pointer" }}>
+                        <button onClick={() => router.push("/book-site-visit")} style={{ boxSizing: "border-box", display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", padding: "16px 0px", gap: "8px", width: "320px", height: "56px", border: "2px solid rgba(197, 198, 205, 0.3)", borderRadius: "32px", background: "transparent", cursor: "pointer" }}>
                           <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", lineHeight: "20px", textAlign: "center", color: "#0F2F4C" }}>Book Site Visit</span>
                         </button>
                       </div>
