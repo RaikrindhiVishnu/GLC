@@ -47,6 +47,8 @@ export default function ProfileScreen() {
   const email = userDetails?.email || "";
   const phone = userDetails ? `${userDetails.contry_code} ${userDetails.ph_number}` : "";
   const boughtFarmlands = userDetails?.user_bought_farmlnad_details || [];
+  const totalEstimatedAssets = boughtFarmlands.reduce((acc: number, curr: any) => acc + (Number(curr.price) || 0), 0);
+  const formattedAssets = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 2 }).format(totalEstimatedAssets);
 
   const handleSignOut = () => {
     localStorage.removeItem("token");
@@ -61,7 +63,7 @@ export default function ProfileScreen() {
   const [uploadTarget, setUploadTarget] = useState<"aadhaar-front" | "aadhaar-back" | "pan" | null>(null);
   const [isSiteVisitModalOpen, setIsSiteVisitModalOpen] = useState(false);
   const [isSiteVisitQueueModalOpen, setIsSiteVisitQueueModalOpen] = useState(false);
-  const [isTrackingModalOpen, setIsTrackingModalOpen] = useState(false);
+  const [trackingModalFarmId, setTrackingModalFarmId] = useState<number | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isWalletHistoryModalOpen, setIsWalletHistoryModalOpen] = useState(false);
 
@@ -397,48 +399,30 @@ export default function ProfileScreen() {
             <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Land Purchase Tracking</span>
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-            {/* Card 5 */}
-            <div onClick={() => setIsTrackingModalOpen(true)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", boxShadow: "0px 4px 12px rgba(0,0,0,0.04)", borderRadius: "20px", padding: "16px", position: "relative", display: "flex", flexDirection: "column" }}>
-              <div style={{ display: "flex", gap: "12px", width: "100%" }}>
-                <div style={{ width: "80px", height: "80px", borderRadius: "10px", overflow: "hidden", position: "relative", flexShrink: 0 }}>
-                  <Image src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&q=80" alt="Property" fill style={{ objectFit: "cover" }} />
-                </div>
-                <div style={{ display: "flex", flexDirection: "column", flexGrow: 1, justifyContent: "center" }}>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "14px", color: "#001F3F" }}>GLC SOS 01</span>
-                  <div style={{ display: "flex", alignItems: "center", gap: "4px", marginTop: "2px" }}>
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#64748B" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#64748B", textTransform: "capitalize" }}>Shadnagar</span>
+            {profileDetails?.user_purchased_lands_tracking?.length ? profileDetails.user_purchased_lands_tracking.map((item, idx) => (
+              <div key={idx} onClick={() => setTrackingModalFarmId(item.farm_id)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", boxShadow: "0px 4px 12px rgba(0,0,0,0.04)", borderRadius: "20px", padding: "16px", position: "relative", display: "flex", flexDirection: "column" }}>
+                <div style={{ display: "flex", gap: "12px", width: "100%" }}>
+                  <div style={{ width: "80px", height: "80px", borderRadius: "10px", overflow: "hidden", position: "relative", flexShrink: 0 }}>
+                    <Image src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&q=80" alt="Property" fill style={{ objectFit: "cover" }} />
                   </div>
-                  <div style={{ marginTop: "12px", display: "flex", flexDirection: "column", gap: "6px" }}>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "9px", color: "#0A1B3D" }}>75% Purchase Process Complete</span>
-                    <div style={{ width: "100%", height: "6px", background: "#F3F4F6", borderRadius: "9999px", overflow: "hidden" }}>
-                      <div style={{ width: "75%", height: "100%", background: "#2780C4" }} />
+                  <div style={{ display: "flex", flexDirection: "column", flexGrow: 1, justifyContent: "center" }}>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "14px", color: "#001F3F" }}>{item.farm_code}</span>
+                    <div style={{ display: "flex", alignItems: "center", gap: "4px", marginTop: "2px" }}>
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#64748B" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
+                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#64748B", textTransform: "capitalize" }}>{item.mandal_id ? "Mandal " + item.mandal_id : "Location pending"}</span>
+                    </div>
+                    <div style={{ marginTop: "12px", display: "flex", flexDirection: "column", gap: "6px" }}>
+                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "9px", color: "#0A1B3D" }}>Tracking initialized</span>
+                      <div style={{ width: "100%", height: "6px", background: "#F3F4F6", borderRadius: "9999px", overflow: "hidden" }}>
+                        <div style={{ width: "20%", height: "100%", background: "#2780C4" }} />
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            {/* Card 6 */}
-            <div onClick={() => setIsTrackingModalOpen(true)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", boxShadow: "0px 4px 12px rgba(0,0,0,0.04)", borderRadius: "20px", padding: "16px", position: "relative", display: "flex", flexDirection: "column" }}>
-              <div style={{ display: "flex", gap: "12px", width: "100%" }}>
-                <div style={{ width: "80px", height: "80px", borderRadius: "10px", overflow: "hidden", position: "relative", flexShrink: 0 }}>
-                  <Image src="https://images.unsplash.com/photo-1592595896616-c3716229b43c?w=400&q=80" alt="Property" fill style={{ objectFit: "cover" }} />
-                </div>
-                <div style={{ display: "flex", flexDirection: "column", flexGrow: 1, justifyContent: "center" }}>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "14px", color: "#001F3F" }}>GLC SOS 02</span>
-                  <div style={{ display: "flex", alignItems: "center", gap: "4px", marginTop: "2px" }}>
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#64748B" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#64748B", textTransform: "capitalize" }}>Shadnagar</span>
-                  </div>
-                  <div style={{ marginTop: "12px", display: "flex", flexDirection: "column", gap: "6px" }}>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "9px", color: "#0A1B3D" }}>42% Purchase Process Complete</span>
-                    <div style={{ width: "100%", height: "6px", background: "#F3F4F6", borderRadius: "9999px", overflow: "hidden" }}>
-                      <div style={{ width: "42%", height: "100%", background: "#2780C4" }} />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            )) : (
+              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "13px", color: "#71717A", padding: "16px" }}>No land tracking found.</span>
+            )}
           </div>
         </motion.div>
 
@@ -618,7 +602,7 @@ export default function ProfileScreen() {
             }}
           >
             <div style={{ width: "100%", height: "100%", borderRadius: "72.37px", boxShadow: "0px 0px 0px 6px #FFFFFF, 0px 37px 75px -18px rgba(0,0,0,0.35)", overflow: "hidden", background: "#F8F9FA", position: "relative" }}>
-              <img src={profileImage || ""} alt="Profile Frame Portrait" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center" }} />
+              <img src={profileImage || undefined} alt="Profile Frame Portrait" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center" }} />
               <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.3)", display: "flex", alignItems: "center", justifyContent: "center", opacity: 0, transition: "opacity 0.2s ease" }} onMouseEnter={(e) => e.currentTarget.style.opacity = "1"} onMouseLeave={(e) => e.currentTarget.style.opacity = "0"}>
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
               </div>
@@ -671,7 +655,7 @@ export default function ProfileScreen() {
             </div>
             <div style={{ position: "absolute", top: "433px", left: "48px", width: "430px", height: "1px", background: "#CCCCCC", zIndex: 10 }} />
             <div style={{ position: "absolute", top: "448px", left: "48px", zIndex: 10 }}>
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "60px", lineHeight: "60px", letterSpacing: "-3px", color: "#FFFFFF" }}>₹1,248,500.00</span>
+              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "60px", lineHeight: "60px", letterSpacing: "-3px", color: "#FFFFFF" }}>{formattedAssets}</span>
             </div>
 
             <div style={{ position: "absolute", top: "574px", left: "48px", display: "flex", flexDirection: "row", gap: "16px", zIndex: 10 }}>
@@ -696,51 +680,31 @@ export default function ProfileScreen() {
             <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Land Purchase Tracking</span>
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: "16px", width: "100%" }}>
-            {/* Card 5 */}
-            <div onClick={() => setIsTrackingModalOpen(true)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", boxShadow: "0px 7.6px 25.33px rgba(0, 31, 63, 0.04)", borderRadius: "20px", padding: "16px", position: "relative", display: "flex", flexDirection: "column" }}>
-              <div style={{ display: "flex", gap: "14px", width: "100%" }}>
-                <div style={{ width: "90px", height: "90px", borderRadius: "10px", overflow: "hidden", position: "relative", flexShrink: 0 }}>
-                  <Image src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&q=80" alt="Property" fill style={{ objectFit: "cover" }} />
-                </div>
-                <div style={{ display: "flex", flexDirection: "column", flexGrow: 1, justifyContent: "center" }}>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "16px", color: "#001F3F", lineHeight: "17px" }}>GLC SOS 01</span>
-                  <div style={{ display: "flex", alignItems: "center", gap: "4px", marginTop: "4px" }}>
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#64748B" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", letterSpacing: "0.19px", color: "#64748B", textTransform: "capitalize" }}>Shadnagar, Hyderabad</span>
+            {profileDetails?.user_purchased_lands_tracking?.length ? profileDetails.user_purchased_lands_tracking.map((item, idx) => (
+              <div key={idx} onClick={() => setTrackingModalFarmId(item.farm_id)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", boxShadow: "0px 7.6px 25.33px rgba(0, 31, 63, 0.04)", borderRadius: "20px", padding: "16px", position: "relative", display: "flex", flexDirection: "column" }}>
+                <div style={{ display: "flex", gap: "14px", width: "100%" }}>
+                  <div style={{ width: "90px", height: "90px", borderRadius: "10px", overflow: "hidden", position: "relative", flexShrink: 0 }}>
+                    <Image src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&q=80" alt="Property" fill style={{ objectFit: "cover" }} />
                   </div>
+                  <div style={{ display: "flex", flexDirection: "column", flexGrow: 1, justifyContent: "center" }}>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "16px", color: "#001F3F", lineHeight: "17px" }}>{item.farm_code}</span>
+                    <div style={{ display: "flex", alignItems: "center", gap: "4px", marginTop: "4px" }}>
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#64748B" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
+                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", letterSpacing: "0.19px", color: "#64748B", textTransform: "capitalize" }}>{item.mandal_id ? "Mandal " + item.mandal_id : "Location pending"}</span>
+                    </div>
 
-                  <div style={{ marginTop: "14px", display: "flex", flexDirection: "column", gap: "6px" }}>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "10px", color: "#0A1B3D" }}>75% Purchase Process Complete</span>
-                    <div style={{ width: "100%", height: "6px", background: "#F3F4F6", borderRadius: "9999px", overflow: "hidden" }}>
-                      <div style={{ width: "75%", height: "100%", background: "#2780C4", borderRadius: "9999px" }} />
+                    <div style={{ marginTop: "14px", display: "flex", flexDirection: "column", gap: "6px" }}>
+                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "10px", color: "#0A1B3D" }}>Tracking initialized</span>
+                      <div style={{ width: "100%", height: "6px", background: "#F3F4F6", borderRadius: "9999px", overflow: "hidden" }}>
+                        <div style={{ width: "20%", height: "100%", background: "#2780C4", borderRadius: "9999px" }} />
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-
-            {/* Card 6 */}
-            <div onClick={() => setIsTrackingModalOpen(true)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", boxShadow: "0px 7.6px 25.33px rgba(0, 31, 63, 0.04)", borderRadius: "20px", padding: "16px", position: "relative", display: "flex", flexDirection: "column" }}>
-              <div style={{ display: "flex", gap: "14px", width: "100%" }}>
-                <div style={{ width: "90px", height: "90px", borderRadius: "10px", overflow: "hidden", position: "relative", flexShrink: 0 }}>
-                  <Image src="https://images.unsplash.com/photo-1592595896616-c3716229b43c?w=400&q=80" alt="Property" fill style={{ objectFit: "cover" }} />
-                </div>
-                <div style={{ display: "flex", flexDirection: "column", flexGrow: 1, justifyContent: "center" }}>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "16px", color: "#001F3F", lineHeight: "17px" }}>GLC SOS 02</span>
-                  <div style={{ display: "flex", alignItems: "center", gap: "4px", marginTop: "4px" }}>
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#64748B" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", letterSpacing: "0.19px", color: "#64748B", textTransform: "capitalize" }}>Shadnagar, Hyderabad</span>
-                  </div>
-
-                  <div style={{ marginTop: "14px", display: "flex", flexDirection: "column", gap: "6px" }}>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "10px", color: "#0A1B3D" }}>42% Purchase Process Complete</span>
-                    <div style={{ width: "100%", height: "6px", background: "#F3F4F6", borderRadius: "9999px", overflow: "hidden" }}>
-                      <div style={{ width: "42%", height: "100%", background: "#2780C4", borderRadius: "9999px" }} />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            )) : (
+              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "13px", color: "#71717A", padding: "16px" }}>No land tracking found.</span>
+            )}
           </div>
         </motion.div>
 
@@ -1019,8 +983,9 @@ export default function ProfileScreen() {
         onClose={() => setIsSiteVisitQueueModalOpen(false)}
       />
       <LandPurchaseTrackingModal
-        isOpen={isTrackingModalOpen}
-        onClose={() => setIsTrackingModalOpen(false)}
+        isOpen={!!trackingModalFarmId}
+        onClose={() => setTrackingModalFarmId(null)}
+        farmlandId={trackingModalFarmId}
       />
       <EditProfileModal
         isOpen={isEditModalOpen}

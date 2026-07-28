@@ -229,6 +229,13 @@ export const userApi = createApi({
       }),
       invalidatesTags: ['User'],
     }),
+    getTrackingForUserUploadedFarmland: builder.query<any, { farmland_id: number }>({
+      query: (payload) => ({
+        url: '/user/get_tracking_for_user_uploaded_farmland',
+        method: 'POST',
+        body: payload,
+      }),
+    }),
   }),
 });
 
@@ -240,4 +247,5 @@ export const {
   useGetUserDetailsByIdQuery,
   useGetUserProfileDetailsByIdQuery,
   useUpdateUserDetailsMutation,
+  useGetTrackingForUserUploadedFarmlandQuery,
 } = userApi;

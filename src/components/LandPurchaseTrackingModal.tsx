@@ -1,14 +1,20 @@
 import React, { useEffect } from 'react';
 import Image from 'next/image';
 import { useLenis } from 'lenis/react';
+import { useGetTrackingForUserUploadedFarmlandQuery } from '@/services/user';
 
 interface LandPurchaseTrackingModalProps {
   isOpen: boolean;
   onClose: () => void;
+  farmlandId?: number | null;
 }
 
-export default function LandPurchaseTrackingModal({ isOpen, onClose }: LandPurchaseTrackingModalProps) {
+export default function LandPurchaseTrackingModal({ isOpen, onClose, farmlandId }: LandPurchaseTrackingModalProps) {
   const lenis = useLenis();
+  const { data: trackingData, isLoading, error } = useGetTrackingForUserUploadedFarmlandQuery(
+    { farmland_id: farmlandId! },
+    { skip: !farmlandId || !isOpen }
+  );
 
   useEffect(() => {
     if (!isOpen) return;
@@ -22,6 +28,18 @@ export default function LandPurchaseTrackingModal({ isOpen, onClose }: LandPurch
       document.body.classList.remove('modal-open');
     };
   }, [lenis, isOpen]);
+
+  useEffect(() => {
+    if (trackingData) {
+      console.log("Land Purchase Tracking API Response:", trackingData);
+    }
+  }, [trackingData]);
+
+  useEffect(() => {
+    if (error) {
+      console.error("Land Purchase Tracking API Error:", error);
+    }
+  }, [error]);
 
   if (!isOpen) return null;
 

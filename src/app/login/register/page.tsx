@@ -58,8 +58,12 @@ export default function RegisterPage() {
         dob: "1990-01-01"
       }).unwrap();
       
-      // Step 2: Send OTP to their email (Removed because backend sends it automatically on create_user)
-      // await authService.sendOtp({ emailAddress: email });
+      // Step 2: Send OTP to their email for verification (allow gracefully failing so it doesn't block routing if DB replication is slow)
+      try {
+        await authService.sendOtp({ emailAddress: email });
+      } catch (otpErr: any) {
+        console.warn("Initial OTP send failed (may need to use Resend Code):", otpErr);
+      }
 
       // Step 3: Redirect to verify-code screen
       router.push(`/login/verify-code?email=${encodeURIComponent(email)}`);
@@ -231,13 +235,13 @@ export default function RegisterPage() {
             onChange={(e) => setPreferredState(e.target.value)}
             className={`flex-1 bg-transparent focus:outline-none font-jakarta text-[13px] appearance-none cursor-pointer ${preferredState ? "text-[#353535]" : "text-[#BDBDBD]"}`}
           >
-            <option value="" disabled className="text-[#BDBDBD]">Select Preferred Investment State</option>
-            <option value="Karnataka" className="text-[#353535]">Karnataka</option>
-            <option value="Maharashtra" className="text-[#353535]">Maharashtra</option>
-            <option value="Tamil Nadu" className="text-[#353535]">Tamil Nadu</option>
-            <option value="Telangana" className="text-[#353535]">Telangana</option>
-            <option value="Andhra Pradesh" className="text-[#353535]">Andhra Pradesh</option>
-            <option value="Kerala" className="text-[#353535]">Kerala</option>
+            <option value="" disabled className="text-[#BDBDBD] py-2">Select Preferred Investment State</option>
+            <option value="Karnataka" className="text-[#353535] py-2">Karnataka</option>
+            <option value="Maharashtra" className="text-[#353535] py-2">Maharashtra</option>
+            <option value="Tamil Nadu" className="text-[#353535] py-2">Tamil Nadu</option>
+            <option value="Telangana" className="text-[#353535] py-2">Telangana</option>
+            <option value="Andhra Pradesh" className="text-[#353535] py-2">Andhra Pradesh</option>
+            <option value="Kerala" className="text-[#353535] py-2">Kerala</option>
           </select>
           <div className="pointer-events-none absolute right-6 top-1/2 -translate-y-1/2">
             <svg width="14" height="8" viewBox="0 0 14 8" fill="none" stroke="#6C7A8A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1 1 7 7 13 1"></polyline></svg>
