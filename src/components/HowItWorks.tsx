@@ -228,6 +228,20 @@ export default function HowItWorks() {
                 onMouseLeave={() => setHoveredCard(null)}
               >
 
+                <motion.div
+                  layout
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  transition={{ 
+                    opacity: { duration: 0.6, delay: 1.1 },
+                    layout: { duration: 0.2, ease: "easeInOut" }
+                  }}
+                  viewport={{ once: true }}
+                  className="w-full py-3 rounded-full border border-[#0F2F4C] text-[#0F2F4C] text-center text-[16px] font-jakarta"
+                >
+                  Track Farmland's Growth
+                </motion.div>
+
                 <motion.div 
                   layout
                   className="relative h-[250px] w-full overflow-hidden rounded-[18.8px] shadow-sm group"
@@ -254,20 +268,6 @@ export default function HowItWorks() {
 
                   </motion.div>
 
-                </motion.div>
-
-                <motion.div
-                  layout
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  transition={{ 
-                    opacity: { duration: 0.6, delay: 1.1 },
-                    layout: { duration: 0.2, ease: "easeInOut" }
-                  }}
-                  viewport={{ once: true }}
-                  className="w-full py-3 rounded-full border border-[#0F2F4C] text-[#0F2F4C] text-center text-[16px] font-jakarta"
-                >
-                  Track Farmland's Growth
                 </motion.div>
 
               </div>

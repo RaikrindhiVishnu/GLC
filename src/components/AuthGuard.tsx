@@ -35,7 +35,15 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     const isAuthenticated = isValidToken;
     
     // Paths that should redirect to /home if the user is already logged in
-    const authPages = ["/login", "/login/register", "/login/forgot-password"];
+    const authPages = [
+      "/login", 
+      "/login/register", 
+      "/login/forgot-password",
+      "/login/verify-code",
+      "/login/reset-password",
+      "/login/verify-mail",
+      "/login/registration-success"
+    ];
     
     // Paths that can be viewed without logging in
     const publicPaths = ["/", "/landing", ...authPages];

@@ -58,8 +58,8 @@ export default function RegisterPage() {
         dob: "1990-01-01"
       }).unwrap();
       
-      // Step 2: Send OTP to their email
-      await authService.sendOtp({ emailAddress: email });
+      // Step 2: Send OTP to their email (Removed because backend sends it automatically on create_user)
+      // await authService.sendOtp({ emailAddress: email });
 
       // Step 3: Redirect to verify-code screen
       router.push(`/login/verify-code?email=${encodeURIComponent(email)}`);
