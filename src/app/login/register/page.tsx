@@ -59,15 +59,8 @@ export default function RegisterPage() {
         dob: "1990-01-01"
       }).unwrap();
       
-      // Step 2: Send OTP to their email for verification (allow gracefully failing so it doesn't block routing if DB replication is slow)
-      try {
-        await authService.sendOtp({ emailAddress: email });
-      } catch (otpErr: any) {
-        console.warn("Initial OTP send failed (may need to use Resend Code):", otpErr);
-      }
-
-      // Step 3: Redirect to verify-code screen
-      router.push(`/login/verify-code?email=${encodeURIComponent(email)}`);
+      // Step 2: Redirect to registration-success screen (backend handles sending credentials)
+      router.push(`/login/registration-success?email=${encodeURIComponent(email)}`);
     } catch (err: any) {
       setError(err.message || "Failed to create account. Please try again.");
     } finally {
