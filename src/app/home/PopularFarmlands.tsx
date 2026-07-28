@@ -1,12 +1,16 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { MapPin } from "lucide-react";
 
-const farmlands = [
+import { useGetFarmlandByTagAndStateQuery } from "../../services/home";
+import { useGetAllMasterDataQuery } from "../../services/master";
+import { useGetUserDetailsByIdQuery } from "../../services/user";
+
+const defaultFarmlands = [
   {
     id: "glc-sos-01",
     title: "GLC SOS 01",
@@ -47,6 +51,47 @@ const farmlands = [
 export default function PopularFarmlands() {
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const [userId, setUserId] = useState<number | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const storedUserId = localStorage.getItem("userId");
+    if (storedUserId) {
+      setUserId(parseInt(storedUserId, 10));
+    }
+  }, []);
+
+  const { data: userDetailsResponse } = useGetUserDetailsByIdQuery(
+    { user_id: userId || 0 },
+    { skip: !mounted || !userId }
+  );
+
+  const { data: masterDataResponse } = useGetAllMasterDataQuery();
+
+  const stateId = (userDetailsResponse?.data as any)?.state_id || 1;
+  const tagResult = masterDataResponse?.data?.tagResult || [];
+  const popularTag = tagResult.find((tag: any) => tag.code === "MOSPOP");
+  const tagId = popularTag ? popularTag.id : 2;
+
+  const { data: res, isLoading } = useGetFarmlandByTagAndStateQuery(
+    { tag_ids: [tagId], state_id: stateId },
+    { skip: !mounted }
+  );
+
+  const apiFarmlands = res?.data && res.data.length > 0 
+    ? res.data.map((item: any, idx: number) => {
+        const hasValidImg = item.farmland_img && (item.farmland_img.startsWith('/') || item.farmland_img.startsWith('http')) && !item.farmland_img.toLowerCase().endsWith('.pdf');
+        return {
+          id: item.farmland_id.toString(),
+          title: item.farmland_code,
+          location: item.farmland_district_id ? `District ${item.farmland_district_id}` : "Vizag, A.P.",
+          description: "Prime editorial land parcel featuring rich soil biodiversity and vintage irrigation architecture.",
+          img: hasValidImg ? item.farmland_img : `/assets/home/PopularFarmlands/glc${(idx % 2) + 1}.svg`
+        };
+      })
+    : defaultFarmlands;
 
   // Drag scroll states
   const [isDragging, setIsDragging] = useState(false);
@@ -90,7 +135,7 @@ export default function PopularFarmlands() {
     <section id="popular-farmlands" className="w-full bg-transparent py-12 lg:py-[70px] overflow-hidden">
 
       {/* Section Header Wrapper (Constrained to Page Margin) */}
-      <div className="w-full px-4 md:px-[60px] mb-6 lg:mb-8">
+      <div className="w-full max-w-[1440px] mx-auto px-4 md:px-[60px] mb-6 lg:mb-8">
         <div className="flex justify-between items-center w-full">
           <h2 className="font-jakarta font-extrabold text-[20px] md:text-[24px] leading-[36px] text-[#0F2F4C] m-0 flex gap-x-[6px]">
             {"Most Popular Farmlands".split(" ").map((word, i) => (
@@ -112,22 +157,27 @@ export default function PopularFarmlands() {
       </div>
 
       {/* Cards Scrollable Container (Free Drag-to-Scroll + Asymmetric Offset Layout) */}
-      <div
-        ref={containerRef}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUpOrLeave}
-        onMouseLeave={handleMouseUpOrLeave}
-        className={`flex gap-[26.62px] w-full overflow-x-auto pb-4 hide-scrollbar px-4 md:px-[60px] select-none ${isDragging ? "cursor-grabbing" : "cursor-grab"
-          }`}
-      >
+      <div className="w-full max-w-[1440px] mx-auto px-4 md:px-[60px]">
+        <div
+          ref={containerRef}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUpOrLeave}
+          onMouseLeave={handleMouseUpOrLeave}
+          className={`flex gap-[26.62px] w-full overflow-x-auto pb-4 hide-scrollbar select-none ${isDragging ? "cursor-grabbing" : "cursor-grab"
+            }`}
+        >
         <style dangerouslySetInnerHTML={{
           __html: `
           #popular-farmlands .hide-scrollbar::-webkit-scrollbar { display: none; }
           #popular-farmlands .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         `}} />
 
-        {farmlands.map((land, i) => (
+        {isLoading ? (
+          <div className="flex justify-center items-center w-full h-[260px]">
+            <span className="font-jakarta text-[#0F2F4C]">Loading popular properties...</span>
+          </div>
+        ) : apiFarmlands.map((land, i) => (
           <motion.div
             key={land.id}
             initial={{ opacity: 0, filter: "blur(8px)", x: 20 }}
@@ -183,6 +233,7 @@ export default function PopularFarmlands() {
 
           </motion.div>
         ))}
+        </div>
       </div>
 
     </section>

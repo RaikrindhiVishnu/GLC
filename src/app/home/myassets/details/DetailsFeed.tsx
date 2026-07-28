@@ -4,12 +4,20 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { FarmlandDetailResponse } from "../../../../services/farmland";
+import { FarmlandDetailResponse, useGetAllLegalDocumentsByFarmlandIdQuery } from "../../../../services/farmland";
 
 export default function DetailsFeed({ farmland }: { farmland: FarmlandDetailResponse }) {
   const router = useRouter();
   const [selectedTab, setSelectedTab] = useState<"operations" | "legal" | "tracking">("operations");
   const [hoveredResale, setHoveredResale] = useState(false);
+
+  // Fetch Legal Documents
+  const { data: legalDocsRes, isLoading: legalLoading } = useGetAllLegalDocumentsByFarmlandIdQuery(
+    { farmlandId: farmland?.id || 101 },
+    { skip: selectedTab !== "legal" }
+  );
+
+  const documents = legalDocsRes?.data ? Object.values(legalDocsRes.data) : null;
 
   return (
     <section className="flex flex-col lg:flex-row items-start gap-10 w-full">
@@ -151,6 +159,8 @@ export default function DetailsFeed({ farmland }: { farmland: FarmlandDetailResp
           </button>
         </div>
 
+        {selectedTab === "operations" && (
+          <>
         {/* Content Card: Current Crop Cycle */}
         <div
           style={{
@@ -415,6 +425,88 @@ export default function DetailsFeed({ farmland }: { farmland: FarmlandDetailResp
             </div>
           </div>
         </div>
+          </>
+        )}
+
+        {selectedTab === "legal" && (
+          <div
+            style={{
+              boxSizing: "border-box",
+              display: "flex",
+              flexDirection: "column",
+              padding: "32px",
+              gap: "24px",
+              width: "100%",
+              background: "#FFFFFF",
+              boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)",
+              borderRadius: "32px",
+            }}
+            className="lg:p-10"
+          >
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "24px", color: "#131600" }}>
+                Verified Documentation
+              </span>
+              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "16px", color: "#45474C" }}>
+                Official regulatory and institutional clearances
+              </span>
+            </div>
+
+            {legalLoading && (
+              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "14px", color: "#45474C" }}>
+                Loading documents...
+              </span>
+            )}
+
+            {!legalLoading && documents && documents.length > 0 && (
+              <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+                {documents.map((doc, idx) => (
+                  <div key={idx} style={{ padding: "20px", background: "#F3F4F5", borderRadius: "16px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: "16px", flexWrap: "wrap" }}>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C" }}>
+                        {doc.description || doc.code}
+                      </span>
+                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "14px", color: doc.uploaded ? "#2780C4" : "#45474C" }}>
+                        {doc.uploaded ? "Verified Document" : "Pending Verification"}
+                      </span>
+                    </div>
+
+                    <button
+                      onClick={() => {
+                        const url = doc.versions?.[0]?.files?.[0]?.document_url;
+                        if (url) window.open(url, "_blank");
+                      }}
+                      disabled={!doc.uploaded || !doc.versions?.[0]?.files?.[0]?.document_url}
+                      style={{
+                        padding: "12px 24px",
+                        background: (doc.uploaded && doc.versions?.[0]?.files?.[0]?.document_url) ? "transparent" : "#E7E8E9",
+                        border: (doc.uploaded && doc.versions?.[0]?.files?.[0]?.document_url) ? "1px solid rgba(39, 128, 196, 0.4)" : "none",
+                        color: (doc.uploaded && doc.versions?.[0]?.files?.[0]?.document_url) ? "#2780C4" : "#A5CCF2",
+                        borderRadius: "9999px",
+                        fontFamily: "'Plus Jakarta Sans', sans-serif",
+                        fontWeight: 700,
+                        fontSize: "14px",
+                        cursor: (doc.uploaded && doc.versions?.[0]?.files?.[0]?.document_url) ? "pointer" : "not-allowed",
+                        transition: "all 0.2s"
+                      }}
+                    >
+                      View Document
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {!legalLoading && (!documents || documents.length === 0) && (
+              <div style={{ padding: "32px", background: "#F3F4F5", borderRadius: "16px", textAlign: "center" }}>
+                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "14px", color: "#45474C" }}>
+                  No legal documents available for this asset.
+                </span>
+              </div>
+            )}
+          </div>
+        )}
+
       </motion.div>
 
       {/* ─── RIGHT COLUMN (30% WIDTH) ─── */}

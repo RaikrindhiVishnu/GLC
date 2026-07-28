@@ -63,12 +63,9 @@ export default function TransformingLegacyGallery() {
             whileInView={{ opacity: 1, filter: "blur(0px)", x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0 }}
-            style={{ width: "140px", height: "160px", flexShrink: 0, borderRadius: "20px", background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #001F3F 100%)", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", gap: "10px" }}
+            style={{ width: "160px", height: "138px", flexShrink: 0 }}
           >
-            <div style={{ width: "28px", height: "28px", borderRadius: "50%", border: "2px solid #FFFFFF", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-            </div>
-            <span style={{ fontFamily: "'Outfit',sans-serif", fontWeight: 600, fontSize: "15px", color: "#FFFFFF" }}>Involve</span>
+            <img src="/assets/premium/Frame 1000011653.svg" alt="Involve" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
           </motion.div>
 
           {/* Photo 2 */}
@@ -77,9 +74,14 @@ export default function TransformingLegacyGallery() {
             whileInView={{ opacity: 1, filter: "blur(0px)", x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.08 }}
-            style={{ width: "200px", height: "160px", flexShrink: 0, borderRadius: "20px", overflow: "hidden" }}
+            style={{ position: "relative", width: "200px", height: "160px", flexShrink: 0 }}
           >
-            <img src="/assets/search/image2.4.svg" alt="Farmland high angle view" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+            <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "81px", borderRadius: "20px", overflow: "hidden" }}>
+              <img src="/assets/search/image2.4.svg" alt="Farmland high angle view" style={{ position: "absolute", top: 0, left: 0, width: "200px", height: "160px", objectFit: "cover", display: "block" }} />
+            </div>
+            <div style={{ position: "absolute", bottom: 0, left: 0, width: "100%", height: "81px", borderRadius: "20px", overflow: "hidden" }}>
+              <img src="/assets/search/image2.4.svg" alt="Farmland high angle view" style={{ position: "absolute", top: "-80px", left: 0, width: "200px", height: "160px", objectFit: "cover", display: "block" }} />
+            </div>
           </motion.div>
 
           {/* Tall tower photo */}
@@ -88,9 +90,14 @@ export default function TransformingLegacyGallery() {
             whileInView={{ opacity: 1, filter: "blur(0px)", x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.16 }}
-            style={{ width: "160px", height: "260px", flexShrink: 0, borderRadius: "32px", overflow: "hidden", border: "3px solid #FFFFFF" }}
+            style={{ position: "relative", width: "160px", height: "260px", flexShrink: 0 }}
           >
-            <img src="/assets/search/image3.3.svg" alt="Golden premium yielding view" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+            <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "131px", borderRadius: "40px", overflow: "hidden" }}>
+              <img src="/assets/search/image3.3.svg" alt="Golden premium yielding view" style={{ position: "absolute", top: 0, left: 0, width: "160px", height: "260px", objectFit: "cover", display: "block" }} />
+            </div>
+            <div style={{ position: "absolute", bottom: 0, left: 0, width: "100%", height: "131px", borderRadius: "40px", overflow: "hidden" }}>
+              <img src="/assets/search/image3.3.svg" alt="Golden premium yielding view" style={{ position: "absolute", top: "-130px", left: 0, width: "160px", height: "260px", objectFit: "cover", display: "block" }} />
+            </div>
           </motion.div>
 
           {/* Photo 4 */}
@@ -99,9 +106,14 @@ export default function TransformingLegacyGallery() {
             whileInView={{ opacity: 1, filter: "blur(0px)", x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.24 }}
-            style={{ width: "200px", height: "160px", flexShrink: 0, borderRadius: "20px", overflow: "hidden" }}
+            style={{ position: "relative", width: "200px", height: "160px", flexShrink: 0 }}
           >
-            <img src="/assets/search/image2.6.svg" alt="Agronomy ongoing working harvest" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+            <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "81px", borderRadius: "20px", overflow: "hidden" }}>
+              <img src="/assets/search/image2.6.svg" alt="Agronomy ongoing working harvest" style={{ position: "absolute", top: 0, left: 0, width: "200px", height: "160px", objectFit: "cover", display: "block" }} />
+            </div>
+            <div style={{ position: "absolute", bottom: 0, left: 0, width: "100%", height: "81px", borderRadius: "20px", overflow: "hidden" }}>
+              <img src="/assets/search/image2.6.svg" alt="Agronomy ongoing working harvest" style={{ position: "absolute", top: "-80px", left: 0, width: "200px", height: "160px", objectFit: "cover", display: "block" }} />
+            </div>
           </motion.div>
 
           {/* Action tile: Impact */}
@@ -110,12 +122,9 @@ export default function TransformingLegacyGallery() {
             whileInView={{ opacity: 1, filter: "blur(0px)", x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.32 }}
-            style={{ width: "140px", height: "160px", flexShrink: 0, borderRadius: "20px", background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #001F3F 100%)", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", gap: "10px" }}
+            style={{ width: "160px", height: "138px", flexShrink: 0 }}
           >
-            <div style={{ width: "28px", height: "28px", borderRadius: "50%", border: "2px solid #FFFFFF", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-            </div>
-            <span style={{ fontFamily: "'Outfit',sans-serif", fontWeight: 600, fontSize: "15px", color: "#FFFFFF" }}>Impact</span>
+            <img src="/assets/premium/Frame 1000011385.svg" alt="Impact" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
           </motion.div>
         </div>
       </div>
@@ -157,8 +166,8 @@ export default function TransformingLegacyGallery() {
             position: "absolute",
             top: 0,
             left: "50%",
-            marginLeft: "-582px",
-            width: "1164px",
+            marginLeft: "-545px", // width is ~1090px, so margin -545
+            width: "1090px",
             height: "318px",
             transformOrigin: "top center",
             willChange: "transform",
@@ -166,7 +175,7 @@ export default function TransformingLegacyGallery() {
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "center",
-            gap: "24px",
+            gap: "18px", // Accurate Figma gap
             boxSizing: "border-box",
           }}
         >
@@ -175,99 +184,44 @@ export default function TransformingLegacyGallery() {
             style={{
               width: "170px",
               height: "138px",
-              borderRadius: "20px",
-              background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #001F3F 100%)",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: "12px",
-              boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.15)",
               cursor: "pointer",
               transition: "transform 0.2s ease",
-              boxSizing: "border-box",
+              flexShrink: 0,
             }}
             onMouseEnter={(e) => (e.currentTarget.style.transform = "translateY(-4px)")}
             onMouseLeave={(e) => (e.currentTarget.style.transform = "translateY(0)")}
           >
-            <div
-              style={{
-                width: "32px",
-                height: "32px",
-                borderRadius: "50%",
-                border: "2px solid #FFFFFF",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-                <polyline points="12 5 19 12 12 19"></polyline>
-              </svg>
-            </div>
-            <span style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 600, fontSize: "16px", color: "#FFFFFF", letterSpacing: "0.5px" }}>
-              Involve
-            </span>
+            <img src="/assets/premium/Frame 1000011653.svg" alt="Involve" style={{ width: "100%", height: "100%", display: "block" }} />
           </div>
 
-          {/* Photo Block 2 */}
-          <div
-            style={{
-              width: "256px",
-              height: "193px",
-              borderRadius: "28px",
-              overflow: "hidden",
-              boxShadow: "0px 12px 24px rgba(0, 0, 0, 0.08)",
-              background: "#FFFFFF",
-              flexShrink: 0,
-            }}
-          >
-            <img
-              src="/assets/search/image2.4.svg"
-              alt="Farmland high angle view"
-              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-            />
+          {/* Photo Block 2: Left Image */}
+          <div style={{ position: "relative", width: "256px", height: "193px", flexShrink: 0 }}>
+            <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "97px", borderRadius: "28px", overflow: "hidden" }}>
+              <img src="/assets/search/image2.4.svg" alt="Farmland high angle view" style={{ position: "absolute", top: 0, left: 0, width: "256px", height: "193px", objectFit: "cover", display: "block" }} />
+            </div>
+            <div style={{ position: "absolute", bottom: 0, left: 0, width: "100%", height: "97px", borderRadius: "28px", overflow: "hidden" }}>
+              <img src="/assets/search/image2.4.svg" alt="Farmland high angle view" style={{ position: "absolute", top: "-96.5px", left: 0, width: "256px", height: "193px", objectFit: "cover", display: "block" }} />
+            </div>
           </div>
 
           {/* Focal Vertical Tower Photo Block 3 */}
-          <div
-            style={{
-              width: "220px",
-              height: "318px",
-              borderRadius: "52px",
-              overflow: "hidden",
-              boxShadow: "0px 20px 40px rgba(0, 0, 0, 0.18)",
-              border: "4px solid #FFFFFF",
-              background: "#FFFFFF",
-              boxSizing: "border-box",
-              flexShrink: 0,
-            }}
-          >
-            <img
-              src="/assets/search/image3.3.svg"
-              alt="Golden premium yielding view"
-              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-            />
+          <div style={{ position: "relative", width: "220px", height: "318px", flexShrink: 0 }}>
+            <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "160px", borderRadius: "52px", overflow: "hidden" }}>
+              <img src="/assets/search/image3.3.svg" alt="Golden premium yielding view" style={{ position: "absolute", top: 0, left: 0, width: "220px", height: "318px", objectFit: "cover", display: "block" }} />
+            </div>
+            <div style={{ position: "absolute", bottom: 0, left: 0, width: "100%", height: "160px", borderRadius: "52px", overflow: "hidden" }}>
+              <img src="/assets/search/image3.3.svg" alt="Golden premium yielding view" style={{ position: "absolute", top: "-159px", left: 0, width: "220px", height: "318px", objectFit: "cover", display: "block" }} />
+            </div>
           </div>
 
-          {/* Photo Block 4 */}
-          <div
-            style={{
-              width: "252px",
-              height: "193px",
-              borderRadius: "28px",
-              overflow: "hidden",
-              boxShadow: "0px 12px 24px rgba(0, 0, 0, 0.08)",
-              background: "#FFFFFF",
-              flexShrink: 0,
-            }}
-          >
-            <img
-              src="/assets/search/image2.6.svg"
-              alt="Agronomy ongoing working harvest"
-              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-            />
+          {/* Photo Block 4: Right Image */}
+          <div style={{ position: "relative", width: "252px", height: "193px", flexShrink: 0 }}>
+            <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "97px", borderRadius: "28px", overflow: "hidden" }}>
+              <img src="/assets/search/image2.6.svg" alt="Agronomy ongoing working harvest" style={{ position: "absolute", top: 0, left: 0, width: "252px", height: "193px", objectFit: "cover", display: "block" }} />
+            </div>
+            <div style={{ position: "absolute", bottom: 0, left: 0, width: "100%", height: "97px", borderRadius: "28px", overflow: "hidden" }}>
+              <img src="/assets/search/image2.6.svg" alt="Agronomy ongoing working harvest" style={{ position: "absolute", top: "-96.5px", left: 0, width: "252px", height: "193px", objectFit: "cover", display: "block" }} />
+            </div>
           </div>
 
           {/* Card 5: Action Trigger "Impact" */}
@@ -275,40 +229,14 @@ export default function TransformingLegacyGallery() {
             style={{
               width: "170px",
               height: "138px",
-              borderRadius: "20px",
-              background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #001F3F 100%)",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: "12px",
-              boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.15)",
               cursor: "pointer",
               transition: "transform 0.2s ease",
-              boxSizing: "border-box",
+              flexShrink: 0,
             }}
             onMouseEnter={(e) => (e.currentTarget.style.transform = "translateY(-4px)")}
             onMouseLeave={(e) => (e.currentTarget.style.transform = "translateY(0)")}
           >
-            <div
-              style={{
-                width: "32px",
-                height: "32px",
-                borderRadius: "50%",
-                border: "2px solid #FFFFFF",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-                <polyline points="12 5 19 12 12 19"></polyline>
-              </svg>
-            </div>
-            <span style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 600, fontSize: "16px", color: "#FFFFFF", letterSpacing: "0.5px" }}>
-              Impact
-            </span>
+            <img src="/assets/premium/Frame 1000011385.svg" alt="Impact" style={{ width: "100%", height: "100%", display: "block" }} />
           </div>
         </div>
       </div>

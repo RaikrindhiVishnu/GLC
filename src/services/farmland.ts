@@ -197,6 +197,38 @@ export interface GetAllFarmlandsResponse {
   error?: string;
 }
 
+export interface SellFarmlandRequest {
+  location_details: {
+    country_id: number;
+    state_id: number;
+    district_id: number;
+    mandal_id: number;
+    lat: string;
+    long: string;
+    pin_label: string;
+  };
+  owner_details: {
+    first_name: string;
+    last_name: string;
+    country_code: string;
+    phone_number: string;
+    email_address: string;
+  };
+  cover_image: string;
+  total_acers: number;
+  price: string;
+  land_description: string;
+  polygon?: { lat: number; lng: number }[];
+}
+
+export interface SellFarmlandResponse {
+  success: boolean;
+  message: string;
+  data: {
+    farmland_id: number;
+  };
+}
+
 export const farmlandApi = createApi({
   reducerPath: 'farmlandApi',
   baseQuery,
@@ -257,6 +289,13 @@ export const farmlandApi = createApi({
         body: payload,
       }),
     }),
+    sellFarmland: builder.mutation<SellFarmlandResponse, SellFarmlandRequest>({
+      query: (payload) => ({
+        url: '/farmland/sell_farmland',
+        method: 'POST',
+        body: payload,
+      }),
+    }),
   }),
 });
 
@@ -268,5 +307,6 @@ export const {
   useRemoveFarmLandFromUserSavedListMutation,
   useGetAllSavedFarmlandsByUserIdQuery,
   useAddLandToUserSavedListMutation,
-  useGetFarmlandsForComparisonQuery
+  useGetFarmlandsForComparisonQuery,
+  useSellFarmlandMutation
 } = farmlandApi;

@@ -11,13 +11,19 @@ export default function YourListings() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const [userId, setUserId] = useState<number>(0);
 
-  const userId = 2; // Hardcoded to 2 as per backend request
+  useEffect(() => {
+    setMounted(true);
+    const storedUserId = typeof window !== "undefined" ? localStorage.getItem("userId") : null;
+    if (storedUserId) {
+      setUserId(parseInt(storedUserId, 10));
+    }
+  }, []);
 
   const { data: res, isLoading: isQueryLoading } = useGetUserUploadedFarmlandsQuery(
     { userId },
-    { skip: !mounted || !userId }
+    { skip: !mounted || userId === 0 }
   );
 
   const isLoading = !mounted || isQueryLoading;
@@ -54,20 +60,20 @@ export default function YourListings() {
     setIsDragging(false);
   };
 
-  const handleCardClick = (e: React.MouseEvent) => {
+  const handleCardClick = (e: React.MouseEvent, id: number) => {
     if (dragged) {
       e.preventDefault();
       e.stopPropagation();
       return;
     }
-    router.push("/home/myassets/details");
+    router.push(`/home/yourlisting/details?id=${id}`);
   };
 
   return (
     <section id="your-listings" className="w-full bg-transparent py-12 lg:py-[70px] overflow-hidden">
 
       {/* Section Header Wrapper (Constrained to Page Margin) */}
-      <div className="w-full px-4 md:px-[60px] mb-6 lg:mb-8">
+      <div className="w-full max-w-[1440px] mx-auto px-4 md:px-[60px] mb-6 lg:mb-8">
         <div className="flex justify-between items-center w-full">
           <h2 className="font-jakarta font-extrabold text-[20px] md:text-[24px] leading-[1.2] text-[#0F2F4C] m-0 flex gap-x-[6px]">
             {"Your Listings".split(" ").map((word, i) => (
@@ -89,15 +95,16 @@ export default function YourListings() {
       </div>
 
       {/* Cards Scrollable Container (Free Drag-to-Scroll + Asymmetric Offset Layout) */}
-      <div
-        ref={containerRef}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUpOrLeave}
-        onMouseLeave={handleMouseUpOrLeave}
-        className={`flex gap-4 md:gap-6 lg:gap-[32px] w-full overflow-x-auto pb-4 hide-scrollbar px-4 md:px-[60px] select-none ${isDragging ? "cursor-grabbing" : "cursor-grab"
-          }`}
-      >
+      <div className="w-full max-w-[1440px] mx-auto px-4 md:px-[60px]">
+        <div
+          ref={containerRef}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUpOrLeave}
+          onMouseLeave={handleMouseUpOrLeave}
+          className={`flex gap-4 md:gap-6 lg:gap-[32px] w-full overflow-x-auto pb-4 hide-scrollbar select-none ${isDragging ? "cursor-grabbing" : "cursor-grab"
+            }`}
+        >
         <style dangerouslySetInnerHTML={{
           __html: `
           #your-listings .hide-scrollbar::-webkit-scrollbar { display: none; }
@@ -120,7 +127,7 @@ export default function YourListings() {
               whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
               transition={{ duration: 0.6, delay: i * 0.1 }}
               viewport={{ once: true }}
-              onClick={handleCardClick}
+              onClick={(e) => handleCardClick(e, item.farmland_id)}
               className="flex flex-col items-center p-5 lg:p-[28px] w-[260px] lg:w-[296px] shrink-0 bg-white shadow-[0px_8px_6px_rgba(0,0,0,0.05),inset_3px_4px_2px_-3px_rgba(255,255,255,0.55)] rounded-[24px] lg:rounded-[30px] cursor-pointer box-border group pointer-events-auto"
             >
               {/* Image */}
@@ -148,12 +155,13 @@ export default function YourListings() {
               </p>
 
               {/* Button */}
-              <button onClick={() => router.push("/home/myassets/details")} className="w-full h-[48px] lg:h-[52px] bg-[radial-gradient(50%_50%_at_50%_50%,#2780C4_0%,#164573_100%)] rounded-full border-none font-jakarta font-semibold text-[14px] lg:text-[16px] text-white uppercase cursor-pointer shrink-0 hover:opacity-90 transition-opacity">
+              <button onClick={(e) => { e.stopPropagation(); router.push(`/home/yourlisting/details?id=${item.farmland_id}`); }} className="w-full h-[48px] lg:h-[52px] bg-[radial-gradient(50%_50%_at_50%_50%,#2780C4_0%,#164573_100%)] rounded-full border-none font-jakarta font-semibold text-[14px] lg:text-[16px] text-white uppercase cursor-pointer shrink-0 hover:opacity-90 transition-opacity">
                 View Details
               </button>
             </motion.div>
           ))
         )}
+        </div>
       </div>
 
     </section>

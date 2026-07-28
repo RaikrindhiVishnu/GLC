@@ -257,21 +257,7 @@ export default function MaintenanceServicesHero() {
               pointerEvents: "auto",
             }}
           >
-            <Image src="/assets/home/HeroScreen/notification.svg" alt="Notifications context status" width={26.32} height={26.32} />
-            {/* Red Alert Point slot */}
-            <span
-              style={{
-                boxSizing: "border-box",
-                position: "absolute",
-                width: "6.3px",
-                height: "6.3px",
-                left: "27.39px",
-                top: "13.53px",
-                background: "#E53935",
-                border: "0.904652px solid rgba(255, 255, 255, 0.9)",
-                borderRadius: "899.968px",
-              }}
-            />
+            <Image src="/assets/home/HeroScreen/notification-v2.svg" alt="Notifications context status" width={26.32} height={26.32} />
           </button>
 
           {/* Right Action Shell Item 3: Avatar Shell Link */}

@@ -82,7 +82,7 @@ export default function CompareNavigation({ hideProfileImage = false }: { hidePr
             borderRadius: "125px",
           }}
         >
-           <Image src="/assets/home/HeroScreen/notification.svg" alt="Notifications" width={22} height={22} />
+           <Image src="/assets/home/HeroScreen/notification-v2.svg" alt="Notifications" width={22} height={22} />
         </button>
         
         {/* User Avatar */}

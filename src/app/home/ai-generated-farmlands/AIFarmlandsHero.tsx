@@ -98,8 +98,8 @@ export default function AIFarmlandsHero() {
             className="w-11 h-11 sm:w-[52px] sm:h-[52px] rounded-full bg-white/10 backdrop-blur-md border border-white/20 shadow-xs flex items-center justify-center cursor-pointer relative hover:bg-white/20 transition-all shrink-0"
             title="Notifications"
           >
-            <Image src="/assets/home/HeroScreen/notification.svg" alt="Notifications" width={22} height={22} />
-            <span className="absolute top-[25%] right-[22%] w-[6.3px] h-[6.3px] rounded-full bg-[#E53935] border border-white block shadow-xs" />
+            <Image src="/assets/home/HeroScreen/notification-v2.svg" alt="Notifications" width={22} height={22} />
+            
           </button>
 
           {/* User Account Avatar Disk exactly reusing HeroScreen.tsx layout container properties */}

@@ -120,8 +120,10 @@ export default function TrendingFeaturedSection() {
     if (isAnimating) return;
     setIsAnimating(true);
 
-    const wrappingItemIndex = carouselItems.findIndex((item) => getSlotIndex(item.id, activeIndex) === 0);
-    setWrapId(wrappingItemIndex);
+    // Prev moves cards right. The card in Far Right (Slot 6) wraps to Far Left (Slot 0).
+    // So we hide the card currently in Slot 6.
+    const wrappingItemIndex = carouselItems.findIndex((item) => getSlotIndex(item.id, activeIndex) === 6);
+    setWrapId(wrappingItemIndex !== -1 ? carouselItems[wrappingItemIndex].id : null);
 
     setActiveIndex((prev) => (prev > 0 ? prev - 1 : carouselItems.length - 1));
 
@@ -135,8 +137,10 @@ export default function TrendingFeaturedSection() {
     if (isAnimating) return;
     setIsAnimating(true);
 
-    const wrappingItemIndex = carouselItems.findIndex((item) => getSlotIndex(item.id, activeIndex) === 6);
-    setWrapId(wrappingItemIndex);
+    // Next moves cards left. The card in Far Left (Slot 0) wraps to Far Right (Slot 6).
+    // So we hide the card currently in Slot 0.
+    const wrappingItemIndex = carouselItems.findIndex((item) => getSlotIndex(item.id, activeIndex) === 0);
+    setWrapId(wrappingItemIndex !== -1 ? carouselItems[wrappingItemIndex].id : null);
 
     setActiveIndex((prev) => (prev < carouselItems.length - 1 ? prev + 1 : 0));
 

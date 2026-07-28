@@ -10,7 +10,7 @@ export default function SustainableYieldsBanner() {
 
   return (
     <section id="sustainable-yields" className="w-full bg-transparent py-12 lg:py-[70px] overflow-hidden">
-      <div className="w-full px-4 md:px-[60px]">
+      <div className="w-full max-w-[1440px] mx-auto px-4 md:px-[60px]">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

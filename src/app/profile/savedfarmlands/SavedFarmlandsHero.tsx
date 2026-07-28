@@ -110,8 +110,8 @@ export default function SavedFarmlandsHero() {
             }}
             title="Real-time Platform Notifications"
           >
-            <Image src="/assets/home/HeroScreen/notification.svg" alt="Notifications context" width={26.32} height={26.32} className="w-5 h-5 md:w-[26.32px] md:h-[26.32px]" />
-            <span className="absolute top-2 right-2 md:top-[13.53px] md:right-[13px] w-2 h-2 md:w-[6.3px] md:h-[6.3px] bg-[#E53935] border border-white/90 rounded-full" />
+            <Image src="/assets/home/HeroScreen/notification-v2.svg" alt="Notifications context" width={26.32} height={26.32} className="w-5 h-5 md:w-[26.32px] md:h-[26.32px]" />
+            
           </button>
 
           {/* Custom session account circular container */}

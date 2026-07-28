@@ -65,7 +65,8 @@ export const baseQuery: BaseQueryFn<
             }
           } else {
             localStorage.removeItem('token');
-            window.location.href = '/login';
+            // Avoid forced redirect to /login here for guests, 
+            // so public pages can gracefully handle 401s and show fallback data.
           }
         }
       } finally {

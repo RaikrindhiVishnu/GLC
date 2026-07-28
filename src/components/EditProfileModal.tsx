@@ -99,7 +99,7 @@ export default function EditProfileModal({
                 <label className="font-jakarta font-bold text-[11px] tracking-wider text-[#45474C] uppercase ml-1">First Name</label>
                 <input 
                   type="text" 
-                  value={firstName} 
+                  value={firstName || ""} 
                   onChange={(e) => setFirstName(e.target.value)} 
                   required
                   className="bg-[#F3F4F5] rounded-[16px] px-6 py-4 font-jakarta font-normal text-[15px] text-[#191C1D] outline-none border border-transparent focus:border-[#2780C4] transition-colors w-full box-border" 
@@ -110,7 +110,7 @@ export default function EditProfileModal({
                 <label className="font-jakarta font-bold text-[11px] tracking-wider text-[#45474C] uppercase ml-1">Last Name</label>
                 <input 
                   type="text" 
-                  value={lastName} 
+                  value={lastName || ""} 
                   onChange={(e) => setLastName(e.target.value)}
                   required 
                   className="bg-[#F3F4F5] rounded-[16px] px-6 py-4 font-jakarta font-normal text-[15px] text-[#191C1D] outline-none border border-transparent focus:border-[#2780C4] transition-colors w-full box-border" 
@@ -121,7 +121,7 @@ export default function EditProfileModal({
                 <label className="font-jakarta font-bold text-[11px] tracking-wider text-[#45474C] uppercase ml-1">Profile URL (Optional)</label>
                 <input 
                   type="url" 
-                  value={profileUrl} 
+                  value={profileUrl || ""} 
                   onChange={(e) => setProfileUrl(e.target.value)} 
                   placeholder="https://"
                   className="bg-[#F3F4F5] rounded-[16px] px-6 py-4 font-jakarta font-normal text-[15px] text-[#191C1D] outline-none border border-transparent focus:border-[#2780C4] transition-colors w-full box-border" 

@@ -6,21 +6,24 @@ import Image from "next/image";
 import ActionRequiredModal from "./ActionRequiredModal";
 import DeleteListingModal from "./DeleteListingModal";
 import { useGetUserListedFarmlandImagesQuery, useUpdateFarmlandImagesMutation } from "@/services/home";
+import { s3Service } from "@/services/s3";
 
 interface PromoteListingModalProps {
   isOpen: boolean;
   onClose: () => void;
+  farmlandId: number;
 }
 
-export default function PromoteListingModal({ isOpen, onClose }: PromoteListingModalProps) {
+export default function PromoteListingModal({ isOpen, onClose, farmlandId }: PromoteListingModalProps) {
   const [isActionOpen, setIsActionOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
-  const { data: imagesResponse, refetch } = useGetUserListedFarmlandImagesQuery({ farmland_id: 101 }, { skip: !isOpen });
+  const { data: imagesResponse, refetch } = useGetUserListedFarmlandImagesQuery({ farmland_id: farmlandId }, { skip: !isOpen });
   const [updateImages] = useUpdateFarmlandImagesMutation();
 
   const [deleteList, setDeleteList] = useState<number[]>([]);
-  const [addList, setAddList] = useState<{ id: string, url: string, localUrl: string }[]>([]);
+  const [addList, setAddList] = useState<{ id: string, url: string, localUrl: string, file: File }[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -58,7 +61,7 @@ export default function PromoteListingModal({ isOpen, onClose }: PromoteListingM
       const localUrl = URL.createObjectURL(file);
       const simulatedUrl = `/images/farms/new_${Date.now()}.jpg`;
       
-      setAddList(prev => [...prev, { id: Date.now().toString(), url: simulatedUrl, localUrl }]);
+      setAddList(prev => [...prev, { id: Date.now().toString(), url: simulatedUrl, localUrl, file }]);
     }
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
@@ -78,16 +81,34 @@ export default function PromoteListingModal({ isOpen, onClose }: PromoteListingM
       onClose();
       return;
     }
+    const storedUserId = typeof window !== "undefined" ? localStorage.getItem("userId") : null;
+    const numericUserId = storedUserId ? parseInt(storedUserId, 10) : 45;
+
+    setIsSubmitting(true);
     try {
+      const uploadedUrls = await Promise.all(
+        addList.map(async (item) => {
+          try {
+            const response = await s3Service.uploadFile(item.file);
+            return response.url || response.key || item.url;
+          } catch (e) {
+            console.error("Upload failed for file", item.file.name, e);
+            throw e;
+          }
+        })
+      );
+
       await updateImages({
-        farmland_id: 101,
-        user_id: 45,
-        add_list: addList.map(a => a.url),
+        farmland_id: farmlandId,
+        user_id: numericUserId,
+        add_list: uploadedUrls,
         delete_list: deleteList
       }).unwrap();
       onClose();
     } catch (err) {
       console.error("Failed to update images", err);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -139,9 +160,25 @@ export default function PromoteListingModal({ isOpen, onClose }: PromoteListingM
                   <div className="flex flex-wrap gap-[16px] w-full mt-4">
                     
                     {/* Existing active images */}
-                    {activeExistingImages.map((img) => (
-                      <div key={img.farmland_image_id} className="relative w-[269px] h-[170px] rounded-[13px] overflow-hidden shadow-sm group">
-                        <Image src={img.image_url} alt="Asset Media" fill className="object-cover" />
+                    {activeExistingImages.map((img) => {
+                      let displayUrl = img.image_url || "/assets/search/image2.1.svg";
+                      try {
+                        if (displayUrl.includes("youtube.com") || displayUrl.includes("youtu.be")) {
+                          let videoId = "";
+                          if (displayUrl.includes("v=")) {
+                            videoId = displayUrl.split("v=")[1].split("&")[0];
+                          } else if (displayUrl.includes("youtu.be/")) {
+                            videoId = displayUrl.split("youtu.be/")[1].split("?")[0];
+                          }
+                          if (videoId) {
+                            displayUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+                          }
+                        }
+                      } catch (e) {}
+
+                      return (
+                        <div key={img.farmland_image_id} className="relative w-[269px] h-[170px] rounded-[13px] overflow-hidden shadow-sm group">
+                          <Image src={displayUrl} alt="Asset Media" fill className="object-cover" />
                         <div 
                           className="absolute inset-0 bg-black/50 hidden group-hover:flex justify-center items-center cursor-pointer transition-all"
                           onClick={() => handleRemoveExisting(img.farmland_image_id)}
@@ -149,7 +186,8 @@ export default function PromoteListingModal({ isOpen, onClose }: PromoteListingM
                           <span className="text-white font-bold text-sm">Remove</span>
                         </div>
                       </div>
-                    ))}
+                      );
+                    })}
                     
                     {/* Newly added images */}
                     {addList.map((item) => (

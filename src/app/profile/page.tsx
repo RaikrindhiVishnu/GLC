@@ -59,7 +59,7 @@ export default function ProfileScreen() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isWalletHistoryModalOpen, setIsWalletHistoryModalOpen] = useState(false);
 
-  const [profileImage, setProfileImage] = useState("/assets/account/account-profile.svg");
+  const [profileImage, setProfileImage] = useState<string | null>(null);
   const [lastUploadedUrl, setLastUploadedUrl] = useState<string | null>(null);
   const profileInputRef = useRef<HTMLInputElement>(null);
 
@@ -96,7 +96,9 @@ export default function ProfileScreen() {
 
   useEffect(() => {
     const fetchFreshUrl = async () => {
-      if (userDetails?.profile_url) {
+      if (!userDetails) return;
+
+      if (userDetails.profile_url) {
         if (lastUploadedUrl && userDetails.profile_url !== lastUploadedUrl) {
           // Backend hasn't caught up yet (stale data), keep our optimistic uploaded image
           return;
@@ -122,11 +124,13 @@ export default function ProfileScreen() {
         }
         
         setProfileImage(userDetails.profile_url);
+      } else {
+        setProfileImage("/assets/account/account-profile.svg");
       }
     };
     
     fetchFreshUrl();
-  }, [userDetails?.profile_url, lastUploadedUrl]);
+  }, [userDetails, lastUploadedUrl]);
 
   const triggerUpload = (target: "aadhaar-front" | "aadhaar-back" | "pan") => {
     setUploadTarget(target);
@@ -212,8 +216,8 @@ export default function ProfileScreen() {
           >
             {/* Avatar floating above card */}
             <div onClick={() => profileInputRef.current?.click()} style={{ position: "absolute", top: "-55px", left: "50%", transform: "translateX(-50%)", width: "108px", height: "108px", borderRadius: "32px", overflow: "visible", zIndex: 2, cursor: "pointer" }}>
-              <div style={{ width: "100%", height: "100%", borderRadius: "32px", overflow: "hidden", boxShadow: "0px 0px 0px 4px #F0F1F2, 0px 16px 32px -8px rgba(0,0,0,0.4)", background: "#D9D9D9", position: "relative" }}>
-                <img src={profileImage} alt="Profile" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              <div style={{ width: "100%", height: "100%", borderRadius: "32px", overflow: "hidden", boxShadow: "0px 0px 0px 4px #F0F1F2, 0px 16px 32px -8px rgba(0,0,0,0.4)", background: "#D9D9D9", position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                {profileImage && <img src={profileImage} alt="Profile" style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
                 <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.3)", display: "flex", alignItems: "center", justifyContent: "center", opacity: 0, transition: "opacity 0.2s ease" }} onMouseEnter={(e) => e.currentTarget.style.opacity = "1"} onMouseLeave={(e) => e.currentTarget.style.opacity = "0"}>
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
                 </div>

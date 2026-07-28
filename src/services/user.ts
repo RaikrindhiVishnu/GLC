@@ -126,6 +126,41 @@ export interface UpdateUserDetailsResponse {
   message: string;
 }
 
+export interface GetUserProfileDetailsByIdRequest {
+  user_id: number;
+}
+
+export interface PurchasedLandTracking {
+  farm_id: number;
+  farm_code: string;
+  state_id: number;
+  district_id: number;
+  mandal_id: number;
+  percentag_completed: number;
+}
+
+export interface SiteVisitData {
+  farm_id: number;
+  farm_code: string;
+  state_id: number;
+  district_id: number;
+  mandal_id: number;
+  price: number;
+  acers: number;
+}
+
+export interface GetUserProfileDetailsByIdResponse {
+  first_name: string;
+  last_name: string;
+  country_code: string;
+  mobile_number: string;
+  email_address: string;
+  user_purchased_lands_tracking: PurchasedLandTracking[];
+  upcoming_site_visits: SiteVisitData[];
+  completed_site_vists: SiteVisitData[];
+  user_listed_farmlands: SiteVisitData[];
+}
+
 export const userApi = createApi({
   reducerPath: 'userApi',
   baseQuery,
@@ -167,6 +202,14 @@ export const userApi = createApi({
       }),
       providesTags: ['User'],
     }),
+    getUserProfileDetailsById: builder.query<GetUserProfileDetailsByIdResponse, GetUserProfileDetailsByIdRequest>({
+      query: (payload) => ({
+        url: '/user/get_user_profile_details_by_id',
+        method: 'POST',
+        body: payload,
+      }),
+      providesTags: ['User'],
+    }),
     updateUserDetails: builder.mutation<UpdateUserDetailsResponse, UpdateUserDetailsRequest>({
       query: (payload) => ({
         url: '/user/update_user_details',
@@ -184,5 +227,6 @@ export const {
   useCreateRoleManagerMutation,
   useGetUserBoughtFarmlandsQuery,
   useGetUserDetailsByIdQuery,
+  useGetUserProfileDetailsByIdQuery,
   useUpdateUserDetailsMutation,
 } = userApi;

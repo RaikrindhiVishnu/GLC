@@ -4,22 +4,34 @@ import React from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-
-const locations = [
-  { id: "loc-tanuku", name: "Tanuku", img: "/assets/home/TrendingLocations/tanuku.svg" },
-  { id: "loc-bhimavaram", name: "Bhimavaram", img: "/assets/home/TrendingLocations/bhimavaram.svg" },
-  { id: "loc-rajahmundry", name: "Rajahmundry", img: "/assets/home/TrendingLocations/rajamudry.svg" },
-  { id: "loc-vizag", name: "Vizag", img: "/assets/home/TrendingLocations/vizag.svg" },
-];
+import { useGetAllTopSellingLocationsQuery } from "../../services/home";
 
 export default function TrendingLocations() {
   const router = useRouter();
+  const { data: res, isLoading } = useGetAllTopSellingLocationsQuery({ state_id: 1 });
+  
+  const locations = res?.data && res.data.length > 0 
+    ? res.data.map((loc) => {
+        const hasValidImg = loc.district_img && (loc.district_img.startsWith('/') || loc.district_img.startsWith('http'));
+        return {
+          id: loc.district_id.toString(),
+          name: loc.district_name,
+          img: hasValidImg ? loc.district_img : "/assets/home/TrendingLocations/tanuku.svg",
+        };
+      })
+    : [
+        { id: "loc-tanuku", name: "Tanuku", img: "/assets/home/TrendingLocations/tanuku.svg" },
+        { id: "loc-bhimavaram", name: "Bhimavaram", img: "/assets/home/TrendingLocations/bhimavaram.svg" },
+        { id: "loc-rajahmundry", name: "Rajahmundry", img: "/assets/home/TrendingLocations/rajamudry.svg" },
+        { id: "loc-vizag", name: "Vizag", img: "/assets/home/TrendingLocations/vizag.svg" },
+      ];
+
   const handleCardClick = () => router.push("/search");
   return (
     <section id="trending-locations" className="w-full bg-transparent py-12 lg:py-[70px] overflow-hidden">
 
       {/* Header — constrained to page margin */}
-      <div className="w-full px-4 md:px-[60px] mb-6 lg:mb-8">
+      <div className="w-full max-w-[1440px] mx-auto px-4 md:px-[60px] mb-6 lg:mb-8">
         <div
           className="flex justify-between items-center w-full cursor-pointer group"
           onClick={() => router.push("/topselling")}
@@ -44,14 +56,18 @@ export default function TrendingLocations() {
       </div>
 
       {/* Cards — full-width scroll container matching PopularFarmlands layout */}
-      <div className="flex lg:grid lg:grid-cols-4 gap-6.5 lg:gap-6 w-full overflow-x-auto lg:overflow-x-visible pb-4 lg:pb-0 hide-scrollbar px-4 md:px-[60px]">
+      <div className="flex lg:grid lg:grid-cols-4 gap-6.5 lg:gap-6 w-full max-w-[1440px] mx-auto overflow-x-auto lg:overflow-x-visible pb-4 lg:pb-0 hide-scrollbar px-4 md:px-[60px]">
         <style dangerouslySetInnerHTML={{
           __html: `
           #trending-locations .hide-scrollbar::-webkit-scrollbar { display: none; }
           #trending-locations .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         `}} />
 
-        {locations.map((loc, i) => (
+        {isLoading ? (
+          <div className="flex justify-center items-center w-full h-[150px] lg:h-[200px]">
+            <span className="font-jakarta text-brand-primary">Loading top locations...</span>
+          </div>
+        ) : locations.map((loc, i) => (
           <motion.div
             key={loc.id}
             initial={{ opacity: 0, filter: "blur(8px)" }}

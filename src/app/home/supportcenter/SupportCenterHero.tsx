@@ -91,8 +91,8 @@ export default function SupportCenterHero() {
             className="relative flex items-center justify-center w-9 h-9 md:w-13 md:h-13 bg-white/10 backdrop-blur-xl rounded-full border border-white/10 transition-transform hover:scale-105 active:scale-95 shadow-sm"
             title="Notifications Platform"
           >
-            <Image src="/assets/home/HeroScreen/notification.svg" alt="Notifications bell" width={24} height={24} className="w-4 h-4 md:w-6.5 md:h-6.5" />
-            <span className="absolute top-2 right-2 md:top-3.25 md:right-3 w-1.5 h-1.5 bg-[#E53935] border border-white rounded-full" />
+            <Image src="/assets/home/HeroScreen/notification-v2.svg" alt="Notifications bell" width={24} height={24} className="w-4 h-4 md:w-6.5 md:h-6.5" />
+            
           </button>
 
           <div

@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 import { useGetUserUnlockedFarmlandsQuery } from "../../services/unlocked";
 import { BadgeCheck } from "lucide-react";
 
@@ -13,6 +14,7 @@ export default function UnlockedDocs() {
   useEffect(() => setMounted(true), []);
 
   const [userId, setUserId] = useState<number | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     setMounted(true);
@@ -65,7 +67,9 @@ export default function UnlockedDocs() {
     if (dragged) {
       e.preventDefault();
       e.stopPropagation();
+      return;
     }
+    router.push("/home/unlockeddocuments");
   };
 
   return (
@@ -74,7 +78,7 @@ export default function UnlockedDocs() {
     >
       <div className="w-full flex flex-col gap-6 md:gap-8 box-border">
         {/* Header */}
-        <div className="flex justify-between items-center w-full max-w-[1216px] px-4 md:px-[60px]">
+        <div className="flex justify-between items-center w-full max-w-[1440px] mx-auto px-4 md:px-[60px]">
           <h2 className="m-0 font-jakarta font-bold text-[20px] md:text-[24px] leading-[32px] text-[#0F2F4C] flex gap-x-[6px] items-center">
             {"Unlocked Docs".split(" ").map((word, i) => (
               <motion.span
@@ -89,6 +93,7 @@ export default function UnlockedDocs() {
             ))}
           </h2>
           <button
+            onClick={() => router.push("/home/unlockeddocuments")}
             className="bg-none border-none font-jakarta font-bold text-[14px] md:text-[18px] leading-[32px] text-[#0F2F4C] cursor-pointer p-0 flex items-center hover:opacity-75 transition-opacity [-webkit-tap-highlight-color:transparent]"
           >
             View All
@@ -96,15 +101,16 @@ export default function UnlockedDocs() {
         </div>
 
         {/* Scrollable Container (Drag-to-Scroll) */}
-        <div
-          ref={containerRef}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUpOrLeave}
-          onMouseLeave={handleMouseUpOrLeave}
-          className={`flex flex-nowrap gap-[24px] w-full overflow-x-auto pb-2 hide-scrollbar pl-4 md:pl-[60px] select-none ${isDragging ? "cursor-grabbing" : "cursor-grab"
-            }`}
-        >
+        <div className="w-full max-w-[1440px] mx-auto px-4 md:px-[60px]">
+          <div
+            ref={containerRef}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUpOrLeave}
+            onMouseLeave={handleMouseUpOrLeave}
+            className={`flex flex-nowrap gap-[24px] w-full overflow-x-auto pb-2 hide-scrollbar select-none ${isDragging ? "cursor-grabbing" : "cursor-grab"
+              }`}
+          >
           <style dangerouslySetInnerHTML={{
             __html: `
             #unlocked-docs .hide-scrollbar::-webkit-scrollbar { display: none; }
@@ -229,6 +235,7 @@ export default function UnlockedDocs() {
               </motion.div>
             ))
           )}
+          </div>
         </div>
       </div>
     </section>

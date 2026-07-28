@@ -2,25 +2,95 @@
 
 import React from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
+import { useGetFacilitiesByFarmlandIdQuery } from "@/services/farmland";
+import { Suspense } from "react";
 
-const KEY_FEATURES = [
-  { label: "ENERGY ACCESS", icon: "energyaccess.svg", a: "3-Phase Industrial Grid", b: "Solar-Ready Infrastructure" },
-  { label: "HYDRAULIC DEPTH", icon: "hydraulicdepth.svg", a: "Borewell 100m", b: "Canal Access" },
-  { label: "LAST MILE", icon: "lastmile.svg", a: "40ft Black Top", b: "Gravel Approach" },
-];
-const CONNECTIVITY = [
-  { label: "NEAREST CITY", icon: "nearest.svg", a: "Zaheerabad (15km)", b: "Vijayawada (120m)" },
-  { label: "NEAREST AIRPORT", icon: "rgia.svg", a: "RGIA (90m)", b: "Canal Access" },
-  { label: "NEAREST MEDICAL", icon: "apollo.svg", a: "Apollo (10km)", b: "Emergency (8km)" },
-];
+export default function CompareAssetsPage() {
+  return (
+    <Suspense fallback={
+      <div className="w-full min-h-screen flex items-center justify-center bg-[#F8F9FA]">
+        <span className="font-jakarta text-[#0F2F4C]">Loading Compare Assets...</span>
+      </div>
+    }>
+      <CompareAssetsContent />
+    </Suspense>
+  );
+}
 
-export default function CompareAssetsWorkspacePage() {
+function CompareAssetsContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const id1 = searchParams.get('id1') || "101"; // Default for testing/preview
+  const id2 = searchParams.get('id2') || "102";
+
+  const { data: res1, isLoading: loading1 } = useGetFacilitiesByFarmlandIdQuery({ farmland_id: parseInt(id1, 10) });
+  const { data: res2, isLoading: loading2 } = useGetFacilitiesByFarmlandIdQuery({ farmland_id: parseInt(id2, 10) });
+
+  const data1 = res1 || {} as any;
+  const data2 = res2 || {} as any;
+
+  const farmCode1 = data1.farm_code || "GLC SOS 01";
+  const farmCode2 = data2.farm_code || "GLC SOS 02";
+  
+  const price1 = data1.price ? `₹${(data1.price/100000).toFixed(2)} L` : "₹1.20 Cr";
+  const price2 = data2.price ? `₹${(data2.price/100000).toFixed(2)} L` : "₹85.00 L";
+  const acres1 = data1.acers ? `${data1.acers} Acres` : "5.0 Acres";
+  const acres2 = data2.acers ? `${data2.acers} Acres` : "2.5 Acres";
+
+  const KEY_FEATURES = [
+    { 
+      label: "ENERGY ACCESS", icon: "energyaccess.svg", 
+      a: data1.electricity?.is_3phase ? "3-Phase Industrial Grid" : (data1.electricity?.is_2phase ? "2-Phase Grid" : "Solar-Ready Infrastructure"), 
+      b: data2.electricity?.is_3phase ? "3-Phase Industrial Grid" : (data2.electricity?.is_2phase ? "2-Phase Grid" : "Solar-Ready Infrastructure") 
+    },
+    { 
+      label: "HYDRAULIC DEPTH", icon: "hydraulicdepth.svg", 
+      a: data1.water?.is_bore ? "Borewell 100m" : "Canal Access", 
+      b: data2.water?.is_bore ? "Borewell 100m" : "Canal Access" 
+    },
+    { 
+      label: "LAST MILE", icon: "lastmile.svg", 
+      a: data1.road_appoarch?.road_width ? `${data1.road_appoarch.road_width}ft Road` : "40ft Black Top", 
+      b: data2.road_appoarch?.road_width ? `${data2.road_appoarch.road_width}ft Road` : "Gravel Approach" 
+    },
+  ];
+
+  const CONNECTIVITY = [
+    { 
+      label: "NEAREST RAILWAY", icon: "nearest.svg", 
+      a: data1.railway?.distance_id ? `Station (${data1.railway.distance_id}km)` : "Zaheerabad (15km)", 
+      b: data2.railway?.distance_id ? `Station (${data2.railway.distance_id}km)` : "Vijayawada (120m)" 
+    },
+    { 
+      label: "NEAREST AIRPORT", icon: "rgia.svg", 
+      a: data1.airport?.distance_id ? `Airport (${data1.airport.distance_id}km)` : "RGIA (90km)", 
+      b: data2.airport?.distance_id ? `Airport (${data2.airport.distance_id}km)` : "RGIA (120km)" 
+    },
+  ];
+
+  const CULTIVATION = [
+    { 
+      id: farmCode1, 
+      soil: data1.soil?.type_id ? `Soil Type ${data1.soil.type_id}` : "Black Cotton Soil", 
+      soilDesc: "High water retention, ideal for moisture-intensive crops and long-term sustainability.", 
+      current: data1.current_cultivation || "Seasonal Rice / Cotton Cultivation", 
+      potential: data1.crops_that_can_be_grown?.length ? `Crop Type ${data1.crops_that_can_be_grown[0]}` : "Sandalwood", 
+      currentIcon: "leaf.svg", potentialIcon: "leaf.svg" 
+    },
+    { 
+      id: farmCode2, 
+      soil: data2.soil?.type_id ? `Soil Type ${data2.soil.type_id}` : "Red Laterite Soil", 
+      soilDesc: "Excellent drainage properties, perfect for plantation crops like Cashew or Mango.", 
+      current: data2.current_cultivation || "Bare Land (Fallow)", 
+      potential: data2.crops_that_can_be_grown?.length ? `Crop Type ${data2.crops_that_can_be_grown[0]}` : "Rice/Wheat", 
+      currentIcon: "block.svg", potentialIcon: "block.svg" 
+    },
+  ];
 
   return (
     <main style={{ width: "100%", minHeight: "100vh", backgroundColor: "#F8F9FA", display: "flex", flexDirection: "column", overflowX: "hidden" }}>
@@ -66,15 +136,15 @@ export default function CompareAssetsWorkspacePage() {
               <div style={{ width: "48px", height: "48px", borderRadius: "8px", overflow: "hidden", position: "relative" }}>
                 <Image src="/assets/compareassets/image2.1.svg" alt="GLC SOS 01" fill style={{ objectFit: "cover" }} />
               </div>
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "15px", color: "#0F2F4C", textAlign: "center" }}>GLC SOS 01</span>
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "12px", color: "#45474C", textAlign: "center" }}>₹1.20 Cr | 5.0 Acres</span>
+              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "15px", color: "#0F2F4C", textTransform: "capitalize", textAlign: "center" }}>{farmCode1}</span>
+              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "12px", color: "#45474C", textAlign: "center" }}>{price1} | {acres1}</span>
             </div>
             <div style={{ flex: 1, background: "#FFFFFF", borderRadius: "20px", padding: "16px", boxShadow: "0px 1px 2px rgba(0,0,0,0.05)", display: "flex", flexDirection: "column", gap: "6px", alignItems: "center" }}>
               <div style={{ width: "48px", height: "48px", borderRadius: "8px", overflow: "hidden", position: "relative" }}>
                 <Image src="/assets/compareassets/image2.2.svg" alt="GLC SOS 02" fill style={{ objectFit: "cover" }} />
               </div>
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "15px", color: "#0F2F4C", textAlign: "center" }}>GLC SOS 02</span>
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "12px", color: "#45474C", textAlign: "center" }}>₹85.00 L | 2.5 Acres</span>
+              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "15px", color: "#0F2F4C", textTransform: "capitalize", textAlign: "center" }}>{farmCode2}</span>
+              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "12px", color: "#45474C", textAlign: "center" }}>{price2} | {acres2}</span>
             </div>
           </motion.div>
 
@@ -140,12 +210,9 @@ export default function CompareAssetsWorkspacePage() {
               <Image src="/assets/compareassets/cultivation.svg" alt="Cultivation" width={18} height={20} />
               <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C", textTransform: "uppercase" }}>Cultivation</span>
             </div>
-            {[
-              { id: "SOS 01", soil: "Black Cotton Soil", soilDesc: "High water retention, ideal for moisture-intensive crops.", current: "Seasonal Rice / Cotton Cultivation", potential: "Sandalwood", currentIcon: "leaf.svg", potentialIcon: "leaf.svg" },
-              { id: "SOS 02", soil: "Red Laterite Soil", soilDesc: "Excellent drainage properties, perfect for plantation crops.", current: "Bare Land (Fallow)", potential: "Rice/Wheat", currentIcon: "block.svg", potentialIcon: "block.svg" },
-            ].map((asset, i) => (
+            {CULTIVATION.map((asset, i) => (
               <motion.div key={asset.id} initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: i * 0.1 }} viewport={{ once: true }} style={{ background: "#FFFFFF", borderRadius: "20px", padding: "20px", boxShadow: "0px 1px 2px rgba(0,0,0,0.05)", display: "flex", flexDirection: "column", gap: "14px" }}>
-                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "11px", color: "#2780C4", textTransform: "uppercase", letterSpacing: "0.5px" }}>GLC {asset.id}</span>
+                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "11px", color: "#2780C4", textTransform: "uppercase", letterSpacing: "0.5px" }}>{asset.id}</span>
                 <div>
                   <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", color: "#45474C", textTransform: "uppercase", letterSpacing: "0.8px" }}>SOIL COMPOSITION</span>
                   <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "18px", color: "#0F2F4C", marginTop: "4px" }}>{asset.soil}</div>
@@ -173,11 +240,11 @@ export default function CompareAssetsWorkspacePage() {
 
         {/* Fixed bottom select banner */}
         <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 50, display: "flex", gap: "10px", padding: "12px 16px", background: "rgba(255,255,255,0.97)", borderTop: "1px solid #EDEEEF", backdropFilter: "blur(8px)", boxSizing: "border-box" }}>
-          <button onClick={() => router.push("/home/myassets/details")} style={{ flex: 1, height: "48px", background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)", borderRadius: "9999px", border: "none", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", color: "#FFFFFF", cursor: "pointer" }}>
-            SELECT SOS 01
+          <button onClick={() => router.push("/home/myassets/details")} style={{ flex: 1, height: "48px", background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)", borderRadius: "9999px", border: "none", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", color: "#FFFFFF", cursor: "pointer", textTransform: "uppercase" }}>
+            SELECT {farmCode1}
           </button>
-          <button onClick={() => router.push("/home/myassets/details")} style={{ flex: 1, height: "48px", background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)", borderRadius: "9999px", border: "none", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", color: "#FFFFFF", cursor: "pointer" }}>
-            SELECT SOS 02
+          <button onClick={() => router.push("/home/myassets/details")} style={{ flex: 1, height: "48px", background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)", borderRadius: "9999px", border: "none", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", color: "#FFFFFF", cursor: "pointer", textTransform: "uppercase" }}>
+            SELECT {farmCode2}
           </button>
         </div>
 
@@ -223,8 +290,8 @@ export default function CompareAssetsWorkspacePage() {
                 <Image src="/assets/home/HeroScreen/unlock 1.svg" alt="Unlock" width={26.32} height={26.32} />
               </button>
               <button style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "52px", height: "52px", background: "rgba(255,255,255,0.1)", boxShadow: "0px 10px 7.5px rgba(0,0,0,0.05), inset 3.76px 5px 2.5px -3.76px rgba(255,255,255,0.55)", backdropFilter: "blur(62px)", WebkitBackdropFilter: "blur(62px)", borderRadius: "50%", border: "none", cursor: "pointer", position: "relative" }}>
-                <Image src="/assets/home/HeroScreen/notification.svg" alt="Notifications" width={26.32} height={26.32} />
-                <span style={{ position: "absolute", top: "13.5px", right: "11.6px", width: "6.3px", height: "6.3px", background: "#E53935", border: "1px solid rgba(255,255,255,0.9)", borderRadius: "50%" }} />
+                <Image src="/assets/home/HeroScreen/notification-v2.svg" alt="Notifications" width={26.32} height={26.32} />
+                
               </button>
               <div onClick={() => router.push("/profile")} style={{ width: "52px", height: "52px", borderRadius: "50%", overflow: "hidden", cursor: "pointer" }}>
                 <img src="/assets/home/HeroScreen/person.svg" alt="User" style={{ width: "100%", height: "100%", objectFit: "cover", transform: "scale(1.5)" }} />
@@ -260,8 +327,8 @@ export default function CompareAssetsWorkspacePage() {
           <div style={{ boxSizing: "border-box", width: "1216px", height: "128px", background: "#FFFFFF", boxShadow: "0px 20px 50px rgba(0,0,0,0.04)", borderRadius: "32px", position: "relative", marginBottom: "16px" }}>
             <div style={{ boxSizing: "border-box", display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", padding: "16px", gap: "24px", position: "absolute", height: "96px", left: "16px", right: "616px", top: "16px", background: "#FFFFFF", borderRadius: "32px" }}>
               <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "138px" }}>
-                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "24px", color: "#0F2F4C", textAlign: "center" }}>GLC SOS 01</span>
-                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "14px", color: "#45474C", marginTop: "4px", textAlign: "center" }}>₹1.20 Cr | 5.0 Acres</span>
+                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "24px", color: "#0F2F4C", textTransform: "capitalize", textAlign: "center" }}>{farmCode1}</span>
+                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "14px", color: "#45474C", marginTop: "4px", textAlign: "center" }}>{price1} | {acres1}</span>
               </div>
               <div style={{ width: "64px", height: "64px", borderRadius: "6px", overflow: "hidden", position: "relative", flexShrink: 0 }}>
                 <Image src="/assets/compareassets/image2.1.svg" alt="GLC SOS 01 Preview" fill style={{ objectFit: "cover" }} />
@@ -272,8 +339,8 @@ export default function CompareAssetsWorkspacePage() {
                 <Image src="/assets/compareassets/image2.2.svg" alt="GLC SOS 02 Preview" fill style={{ objectFit: "cover" }} />
               </div>
               <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "143px" }}>
-                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "24px", color: "#0F2F4C", textAlign: "center" }}>GLC SOS 02</span>
-                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "14px", color: "#45474C", marginTop: "4px", textAlign: "center" }}>₹85.00 L | 2.5 Acres</span>
+                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "24px", color: "#0F2F4C", textTransform: "capitalize", textAlign: "center" }}>{farmCode2}</span>
+                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "14px", color: "#45474C", marginTop: "4px", textAlign: "center" }}>{price2} | {acres2}</span>
               </div>
             </div>
           </div>
@@ -337,10 +404,7 @@ export default function CompareAssetsWorkspacePage() {
               <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "24px", lineHeight: "32px", color: "#0F2F4C", textTransform: "uppercase" }}>Cultivation</span>
             </div>
             <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", gap: "24px", width: "100%" }}>
-              {[
-                { soil: "Black Cotton Soil", soilDesc: "High water retention, ideal for moisture-intensive crops and long-term sustainability.", current: "Seasonal Rice / Cotton Cultivation", potential: "Sandalwood", currentIcon: "leaf.svg", potentialIcon: "leaf.svg" },
-                { soil: "Red Laterite Soil", soilDesc: "Excellent drainage properties, perfect for plantation crops like Cashew or Mango.", current: "Bare Land (Fallow)", potential: "Rice/Wheat", currentIcon: "block.svg", potentialIcon: "block.svg" },
-              ].map((asset, i) => (
+              {CULTIVATION.map((asset, i) => (
                 <div key={i} style={{ boxSizing: "border-box", display: "flex", flexDirection: "column", padding: "40px", gap: "24px", width: "596px", background: "#FFFFFF", borderRadius: "32px", boxShadow: "0px 12px 40px rgba(0,31,63,0.04)" }}>
                   <div style={{ display: "flex", flexDirection: "column", gap: "24px", width: "512px" }}>
                     <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
@@ -370,13 +434,12 @@ export default function CompareAssetsWorkspacePage() {
 
           {/* ─── STICKY BOTTOM SELECTION CONTROLS BANNER ─── */}
           <div style={{ boxSizing: "border-box", display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", width: "1216px", padding: "24px 32px", background: "rgba(255,255,255,0.95)", borderTop: "1px solid rgba(197,198,205,0.2)", borderRadius: "24px", boxShadow: "0px -10px 40px rgba(0,0,0,0.03)", gap: "48px", marginTop: "40px" }}>
-            <button onClick={() => router.push("/home/myassets/details")} style={{ flex: 1, height: "52px", background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)", borderRadius: "9999px", border: "none", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", letterSpacing: "0.35px", color: "#FFFFFF", cursor: "pointer" }} onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")} onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}>SELECT GLC SOS 01</button>
-            <button onClick={() => router.push("/home/myassets/details")} style={{ flex: 1, height: "52px", background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)", borderRadius: "9999px", border: "none", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", letterSpacing: "0.35px", color: "#FFFFFF", cursor: "pointer" }} onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")} onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}>SELECT GLC SOS 02</button>
+            <button onClick={() => router.push("/home/myassets/details")} style={{ flex: 1, height: "52px", background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)", borderRadius: "9999px", border: "none", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", letterSpacing: "0.35px", color: "#FFFFFF", cursor: "pointer", textTransform: "uppercase" }} onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")} onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}>SELECT {farmCode1}</button>
+            <button onClick={() => router.push("/home/myassets/details")} style={{ flex: 1, height: "52px", background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)", borderRadius: "9999px", border: "none", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", letterSpacing: "0.35px", color: "#FFFFFF", cursor: "pointer", textTransform: "uppercase" }} onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")} onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}>SELECT {farmCode2}</button>
           </div>
 
         </section>
-
-        {/* ─── 3. CTA + FOOTER ─── */}
+        {/* ─── 3. CTA + FOOTER ─── */}
         <CTA />
         <Footer />
       </div>

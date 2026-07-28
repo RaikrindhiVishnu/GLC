@@ -55,18 +55,15 @@ const ICON_BTN_STYLE: React.CSSProperties = {
 };
 
 const UTILITY_BTN_STYLE: React.CSSProperties = {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  background: "rgba(255, 255, 255, 0.1)",
-  boxShadow:
-    "0px 10px 7.5px rgba(0,0,0,0.05), inset 3.76px 5px 2.5px -3.76px rgba(255,255,255,0.55), inset 0px -1.25px 1.25px rgba(255,255,255,0.25), inset 0px 1.25px 1.25px rgba(255,255,255,0.25)",
-  backdropFilter: "blur(62.6px)",
-  WebkitBackdropFilter: "blur(62.6px)",
-  borderRadius: "125px",
-  border: "none",
-  cursor: "pointer",
-  boxSizing: "border-box",
+  background: 'rgba(255, 255, 255, 0.10)',
+  borderRadius: '50%',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  border: 'none',
+  boxShadow: '0px 10px 7.5px rgba(0, 0, 0, 0.05), inset 0px 1.25px 1.25px rgba(255,255,255,0.25), inset 0px -1.25px 1.25px rgba(255,255,255,0.25), inset 3.76px 5px 2.5px -1px rgba(255,255,255,0.55)',
+  backdropFilter: 'blur(62.6px)',
+  WebkitBackdropFilter: 'blur(62.6px)',
 };
 
 const ACTIVE_UTILITY_BTN_STYLE: React.CSSProperties = {
@@ -245,15 +242,15 @@ function AppNavbar({ active, className, forceScrolled }: { active?: NavbarActive
             WebkitBackdropFilter: isScrolled ? "none" : "blur(62.6px)",
             transition: "all 0.3s ease"
           }}
-          className="w-10 h-10 md:w-[44px] md:h-[44px]"
+          className="w-10 h-10 md:w-[52px] md:h-[52px] shrink-0"
           aria-label="Unlocked Documents"
           aria-current={active === "documents" ? "page" : undefined}
         >
           <Image
             src="/assets/home/HeroScreen/unlock 1.svg"
             alt=""
-            width={22}
-            height={22}
+            width={26}
+            height={26}
             style={{
               filter: isScrolled && active !== "documents" ? darkBlueFilter : "none",
               transition: "filter 0.3s ease"
@@ -275,30 +272,17 @@ function AppNavbar({ active, className, forceScrolled }: { active?: NavbarActive
               WebkitBackdropFilter: isScrolled ? "none" : "blur(62.6px)",
               transition: "all 0.3s ease"
             }}
-            className="w-10 h-10 md:w-[44px] md:h-[44px]"
+            className="w-10 h-10 md:w-[52px] md:h-[52px] shrink-0"
             aria-label="Notifications"
           >
             <Image
-              src="/assets/home/HeroScreen/notification.svg"
+              src="/assets/home/HeroScreen/notification-v2.svg"
               alt=""
-              width={22}
-              height={22}
+              width={26}
+              height={26}
               style={{
                 filter: isScrolled ? darkBlueFilter : "none",
                 transition: "filter 0.3s ease"
-              }}
-            />
-            <span
-              style={{
-                position: "absolute",
-                top: "22%",
-                right: "20%",
-                width: "6px",
-                height: "6px",
-                background: "#E53935",
-                border: "1px solid rgba(255, 255, 255, 0.9)",
-                borderRadius: "50%",
-                zIndex: 1,
               }}
             />
           </button>
@@ -541,7 +525,6 @@ function AppNavbar({ active, className, forceScrolled }: { active?: NavbarActive
               >
                 Notifications
               </span>
-              <span className="w-2 h-2 rounded-full bg-[#E53935] border border-white shrink-0" />
             </div>
           </button>
         </div>

@@ -211,11 +211,11 @@ export default function VerifiedDocsModal({ isOpen, onClose, farmlandId }: Verif
                 <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                     {activeCategory && (
-                      <button 
-                        onClick={() => setActiveCategory(null)} 
+                      <button
+                        onClick={() => setActiveCategory(null)}
                         style={{ background: "transparent", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", padding: 0 }}
                       >
-                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0F2F4C" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0F2F4C" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
                       </button>
                     )}
                     <h2 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "30px", lineHeight: "36px", letterSpacing: "-0.75px", color: "#0F2F4C", margin: 0, width: activeCategory ? "auto" : "221px" }}>
@@ -252,7 +252,7 @@ export default function VerifiedDocsModal({ isOpen, onClose, farmlandId }: Verif
                         </span>
                       </div>
 
-                      <button 
+                      <button
                         style={{ position: "absolute", right: "24px", width: "99px", height: "42px", background: "transparent", border: "1px solid rgba(39, 128, 196, 0.2)", borderRadius: "9999px", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}
                       >
                         <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", color: "#2780C4" }}>
@@ -295,44 +295,96 @@ export default function VerifiedDocsModal({ isOpen, onClose, farmlandId }: Verif
                   // Default categories
                   const items = [
                     { label: "Legal Documents", btnText: "View Documents", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2780C4" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg> },
-                    { label: "Agriculture Report", btnText: "View Documents", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2780C4" strokeWidth="2"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg> },
+                    { label: "Agriculture Report", btnText: "View Documents", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2780C4" strokeWidth="2"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" /></svg> },
                     { label: "Land & Boundaries", btnText: "View Documents", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2780C4" strokeWidth="2"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"></polygon><line x1="9" y1="3" x2="9" y2="18"></line><line x1="15" y1="6" x2="15" y2="21"></line></svg> },
                     { label: "Valuation", btnText: "View Documents", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2780C4" strokeWidth="2"><rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2"></circle><path d="M6 12h.01M18 12h.01"></path></svg> }
                   ];
 
-                  return items.map((item, idx) => {
-                    const doc = documents?.[idx];
-                    const label = (doc && doc.description) ? doc.description : item.label;
-                    const isUploaded = doc ? doc.uploaded : true;
-                    const docUrl = doc?.versions?.[0]?.files?.[0]?.document_url;
-                    
-                    return (
+                  const rawData = legalDocsRes?.data || {};
+
+                  if (!activeCategory) {
+                    const items = [
+                      { label: "Legal Documents", btnText: "View Documents", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2780C4" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg> },
+                      { label: "Agriculture Report", btnText: "View Documents", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2780C4" strokeWidth="2"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" /></svg> },
+                      { label: "Land & Boundaries", btnText: "View Documents", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2780C4" strokeWidth="2"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"></polygon><line x1="9" y1="3" x2="9" y2="18"></line><line x1="15" y1="6" x2="15" y2="21"></line></svg> },
+                      { label: "Valuation", btnText: "View Documents", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2780C4" strokeWidth="2"><rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2"></circle><path d="M6 12h.01M18 12h.01"></path></svg> }
+                    ];
+
+                    return items.map((item, idx) => (
                       <div key={idx} style={{ width: "480px", height: "96px", background: "#FFFFFF", borderRadius: "16px", display: "flex", alignItems: "center", padding: "0 24px", boxSizing: "border-box", position: "relative" }}>
                         <div style={{ width: "38px", height: "38px", background: "#EEF6FF", borderRadius: "48px", display: "flex", alignItems: "center", justifyContent: "center" }}>
                           {item.icon}
                         </div>
                         <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C", marginLeft: "16px" }}>
-                          {label}
+                          {item.label}
                         </span>
 
-                        <button 
-                          onClick={() => {
-                            if (["Legal Documents", "Agriculture Report", "Land & Boundaries", "Valuation"].includes(item.label)) {
-                              setActiveCategory(item.label);
-                            } else if (docUrl) {
-                              window.open(docUrl, "_blank");
-                            }
-                          }}
-                          style={{ position: "absolute", right: "24px", width: "139px", height: "42px", background: "transparent", border: "1px solid rgba(39, 128, 196, 0.2)", borderRadius: "9999px", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", opacity: (documents && !isUploaded) ? 0.5 : 1 }}
-                          disabled={documents ? !isUploaded : false}
+                        <button
+                          onClick={() => setActiveCategory(item.label)}
+                          style={{ position: "absolute", right: "24px", width: "139px", height: "42px", background: "transparent", border: "1px solid rgba(39, 128, 196, 0.2)", borderRadius: "9999px", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}
                         >
                           <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", color: "#2780C4" }}>
                             {item.btnText}
                           </span>
                         </button>
                       </div>
-                    );
-                  });
+                    ));
+                  }
+
+                  // Active category view
+                  const categoryKeyMap: Record<string, string> = {
+                    "Legal Documents": "legal_documents",
+                    "Agriculture Report": "agriculture_report",
+                    "Land & Boundaries": "land_and_boundaries",
+                    "Valuation": "valuation"
+                  };
+                  const activeKey = categoryKeyMap[activeCategory];
+                  const categoryData = activeKey && rawData ? rawData[activeKey] : null;
+                  const docs = (categoryData && typeof categoryData === 'object') ? Object.values(categoryData) : [];
+
+                  if (docs && docs.length > 0) {
+                    return docs.map((doc: any, idx: number) => {
+                      const label = doc.description || doc.code || "Document";
+                      const isUploaded = doc.uploaded;
+                      const docUrl = doc.document_url || doc.versions?.[0]?.files?.[0]?.document_url;
+                      
+                      return (
+                        <div key={idx} style={{ width: "480px", minHeight: "96px", background: "#FFFFFF", borderRadius: "16px", display: "flex", alignItems: "center", padding: "16px 24px", boxSizing: "border-box", position: "relative" }}>
+                          <div style={{ width: "38px", height: "38px", background: "#EEF6FF", borderRadius: "48px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2780C4" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                          </div>
+                          <div style={{ display: "flex", flexDirection: "column", marginLeft: "16px", flex: 1, paddingRight: "140px" }}>
+                            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C", lineHeight: "24px", textTransform: "capitalize" }}>
+                              {label.replace(/_/g, " ")}
+                            </span>
+                            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "14px", color: isUploaded ? "#2780C4" : "#727782", lineHeight: "24px" }}>
+                              {isUploaded ? "Verified Document" : "Pending Verification"}
+                            </span>
+                          </div>
+
+                          <button 
+                            onClick={() => {
+                              if (docUrl) window.open(docUrl, "_blank");
+                            }}
+                            disabled={!isUploaded || !docUrl}
+                            style={{ position: "absolute", right: "24px", width: "139px", height: "42px", background: "transparent", border: (isUploaded && docUrl) ? "1px solid rgba(39, 128, 196, 0.4)" : "1px solid rgba(197, 198, 205, 0.4)", borderRadius: "9999px", display: "flex", alignItems: "center", justifyContent: "center", cursor: (isUploaded && docUrl) ? "pointer" : "not-allowed", opacity: (isUploaded && docUrl) ? 1 : 0.5 }}
+                          >
+                            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", color: (isUploaded && docUrl) ? "#2780C4" : "#727782" }}>
+                              View Document
+                            </span>
+                          </button>
+                        </div>
+                      );
+                    });
+                  }
+
+                  return (
+                    <div style={{ padding: "40px 24px", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", gap: "12px" }}>
+                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "16px", color: "#727782" }}>
+                        No legal documents available in this category.
+                      </span>
+                    </div>
+                  );
                 })()}
 
               </div>

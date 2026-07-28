@@ -4,11 +4,15 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import PromoteListingModal from "./PromoteListingModal";
+import { useSearchParams } from "next/navigation";
 import { useGetUserListedFarmlandByIdQuery } from "@/services/home";
 
 export default function ListingConsole() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { data: farmlandResponse, isLoading } = useGetUserListedFarmlandByIdQuery({ farmland_id: 101 });
+  const searchParams = useSearchParams();
+  const farmlandId = Number(searchParams.get("id")) || 101;
+
+  const { data: farmlandResponse, isLoading } = useGetUserListedFarmlandByIdQuery({ farmland_id: farmlandId });
   
   const farmlandData = farmlandResponse?.data;
   const isUnlisted = farmlandData ? farmlandData.is_active === 0 : false;
@@ -274,7 +278,7 @@ export default function ListingConsole() {
       </div>
       
       {/* Modal */}
-      <PromoteListingModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <PromoteListingModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} farmlandId={farmlandId} />
     </>
   );
 }

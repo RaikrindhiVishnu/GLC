@@ -56,7 +56,7 @@ export default function TrendingFarmlands() {
     <section id="trending-farmlands" className="w-full bg-transparent py-12 lg:py-[70px] overflow-hidden">
 
       {/* Section Header Wrapper (Constrained to Page Margin) */}
-      <div className="w-full px-4 md:px-[60px] mb-6 lg:mb-8">
+      <div className="w-full max-w-[1440px] mx-auto px-4 md:px-[60px] mb-6 lg:mb-8">
         <div className="flex justify-between items-center w-full">
           <h2 className="font-jakarta font-extrabold text-[20px] md:text-[24px] leading-[1.2] text-[#0F2F4C] m-0 flex gap-x-[6px]">
             {"Trending Farmlands".split(" ").map((word, i) => (
@@ -78,15 +78,16 @@ export default function TrendingFarmlands() {
       </div>
 
       {/* Cards Scrollable Container (Free Drag-to-Scroll + Asymmetric Offset Layout) */}
-      <div
-        ref={containerRef}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUpOrLeave}
-        onMouseLeave={handleMouseUpOrLeave}
-        className={`flex gap-4 md:gap-6 lg:gap-[30px] w-full overflow-x-auto pb-4 hide-scrollbar px-4 md:px-[60px] select-none ${isDragging ? "cursor-grabbing" : "cursor-grab"
-          }`}
-      >
+      <div className="w-full max-w-[1440px] mx-auto px-4 md:px-[60px]">
+        <div
+          ref={containerRef}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUpOrLeave}
+          onMouseLeave={handleMouseUpOrLeave}
+          className={`flex gap-4 md:gap-6 lg:gap-[30px] w-full overflow-x-auto pb-4 hide-scrollbar select-none ${isDragging ? "cursor-grabbing" : "cursor-grab"
+            }`}
+        >
         <style dangerouslySetInnerHTML={{
           __html: `
           #trending-farmlands .hide-scrollbar::-webkit-scrollbar { display: none; }
@@ -176,6 +177,7 @@ export default function TrendingFarmlands() {
             </motion.div>
           ))
         )}
+        </div>
       </div>
 
     </section>

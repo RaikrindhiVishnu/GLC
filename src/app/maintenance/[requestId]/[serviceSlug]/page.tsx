@@ -92,7 +92,7 @@ function TrackProgressHero() {
             <Image src="/assets/home/HeroScreen/unlock 1.svg" alt="Lock" width={22} height={22} />
           </button>
           <button className="w-11 h-11 sm:w-[52px] sm:h-[52px] rounded-full bg-white/10 backdrop-blur-md border border-white/20 shadow-sm flex items-center justify-center cursor-pointer relative hover:bg-white/20 transition-all shrink-0">
-            <Image src="/assets/home/HeroScreen/notification.svg" alt="Notifications" width={22} height={22} />
+            <Image src="/assets/home/HeroScreen/notification-v2.svg" alt="Notifications" width={22} height={22} />
             <span className="absolute top-0 sm:top-1 right-0 sm:right-1 w-3 h-3 sm:w-[14px] sm:h-[14px] bg-[#E33629] rounded-full flex items-center justify-center text-[8px] sm:text-[9px] font-bold text-white border-[1.5px] border-white shadow-sm">4</span>
           </button>
           <button onClick={() => router.push("/profile")} className="hidden sm:flex w-[52px] h-[52px] rounded-full border-[2.5px] border-white overflow-hidden cursor-pointer hover:scale-105 transition-transform shrink-0">

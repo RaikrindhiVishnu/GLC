@@ -25,6 +25,15 @@ export default function SparkleButton() {
   const [isGlass, setIsGlass] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
+
+  useEffect(() => {
+    const handleMapFullscreen = (e: any) => {
+      setIsHidden(e.detail);
+    };
+    window.addEventListener("mapFullscreenChange", handleMapFullscreen);
+    return () => window.removeEventListener("mapFullscreenChange", handleMapFullscreen);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -82,6 +91,8 @@ export default function SparkleButton() {
     }
     return isHovered ? "#b5ca47" : "white"; // White on Glass bg
   };
+
+  if (isHidden) return null;
 
   return (
     <>

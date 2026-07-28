@@ -11,7 +11,7 @@ export default function DocumentUnlocks() {
 
   return (
     <section id="document-unlocks-section" className="w-full bg-transparent py-12 lg:py-[70px] overflow-hidden">
-      <div className="w-full px-4 md:px-[60px]">
+      <div className="w-full max-w-[1440px] mx-auto px-4 md:px-[60px]">
         <div className="flex flex-col gap-6 lg:gap-[32px] w-full items-start">
 
           {/* Top Part: Document Unlocks Hero */}

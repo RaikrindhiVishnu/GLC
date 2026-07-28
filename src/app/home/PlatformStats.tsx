@@ -13,7 +13,7 @@ export default function PlatformStats() {
 
   return (
     <section id="platform-stats" className="w-full bg-transparent py-12 lg:py-[70px] overflow-hidden">
-      <div className="w-full px-4 md:px-[60px]">
+      <div className="w-full max-w-[1440px] mx-auto px-4 md:px-[60px]">
         <div className="flex flex-col items-center gap-10 lg:gap-[80px]">
 
           {/* Heading */}

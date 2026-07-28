@@ -1,65 +1,32 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import TrendingCard from "@/app/home/trendingfarmlands/TrendingCard";
+import { useGetUserUploadedFarmlandsQuery } from "@/services/upload";
 
 export default function YourListingGrid() {
-  const cardsData = [
-    {
-      id: "1",
-      title: "GLC SOS 01",
-      description: "High-yield mango grove with established irrigation systems and road access.",
-      price: "₹5.2Cr",
-      location: "Vizag, A.P.",
-      tagText: "Trending Listing",
-      imageUrl: "/assets/search/image2.1.svg",
-    },
-    {
-      id: "2",
-      title: "GLC SOS 02",
-      description: "Elevated terrain suitable for premium grape varieties and boutique agro-tourism.",
-      price: "₹6.2Cr",
-      location: "Tanuku, A.P.",
-      tagText: "Most Viewed Listing",
-      imageUrl: "/assets/search/image2.2.svg",
-    },
-    {
-      id: "3",
-      title: "GLC SOS 03",
-      description: "Unrivaled water rights and pure organic certification for premium exports.",
-      price: "₹6.2Cr",
-      location: "Tanuku, A.P.",
-      tagText: "Most Viewed Listing",
-      imageUrl: "/assets/search/image2.3.svg",
-    },
-    {
-      id: "4",
-      title: "GLC SOS 04",
-      description: "Flood-resistant alluvial soil perfect for sustainable rice farming.",
-      price: "₹4.4Cr",
-      location: "Vizag, A.P.",
-      tagText: "Trending Listing",
-      imageUrl: "/assets/search/image2.4.svg",
-    },
-    {
-      id: "5",
-      title: "GLC SOS 05",
-      description: "Established orchard with mature fruit-bearing trees and cold storage proximity.",
-      price: "₹6.2Cr",
-      location: "Eluru, A.P.",
-      tagText: "Hot Deal",
-      imageUrl: "/assets/home/PopularFarmlands/glc1.svg",
-    },
-    {
-      id: "6",
-      title: "GLC SOS 06",
-      description: "Modernized agricultural estate ready for immediate integration and yields.",
-      price: "₹2.9Cr",
-      location: "Eluru, A.P.",
-      tagText: "Trending Listing",
-      imageUrl: "/assets/home/PopularFarmlands/glc2.svg",
+  const [userId, setUserId] = useState<number>(0);
+
+  useEffect(() => {
+    const storedUserId = typeof window !== "undefined" ? localStorage.getItem("userId") : null;
+    if (storedUserId) {
+      setUserId(parseInt(storedUserId, 10));
     }
-  ];
+  }, []);
+
+  const { data: uploadData, isLoading } = useGetUserUploadedFarmlandsQuery(
+    { userId: userId },
+    { skip: userId === 0 }
+  );
+
+  const formatPrice = (price?: number) => {
+    if (!price) return "Price on Request";
+    if (price >= 10000000) return `₹${(price / 10000000).toFixed(1)}Cr`;
+    if (price >= 100000) return `₹${(price / 100000).toFixed(1)}L`;
+    return `₹${price}`;
+  };
+
+  const farmlands = uploadData?.data || [];
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-8 mt-12 mb-24">
@@ -76,26 +43,66 @@ export default function YourListingGrid() {
         </div>
       </div>
 
-      {/* Masonry Layout: 3 Columns */}
-      <div className="flex flex-col md:flex-row gap-8 items-start w-full">
-        {/* Column 1 */}
-        <div className="flex-1 flex flex-col w-full gap-8">
-          <TrendingCard {...cardsData[0]} linkDestination="/home/yourlisting/details" />
-          <TrendingCard {...cardsData[3]} linkDestination="/home/yourlisting/details" />
-        </div>
+      {isLoading ? (
+        <div className="w-full text-center py-10 font-jakarta text-gray-500">Loading your listings...</div>
+      ) : farmlands.length === 0 ? (
+        <div className="w-full text-center py-10 font-jakarta text-gray-500">You haven't listed any farmlands yet.</div>
+      ) : (
+        /* Masonry Layout: 3 Columns */
+        <div className="flex flex-col md:flex-row gap-8 items-start w-full">
+          {/* Column 1 */}
+          <div className="flex-1 flex flex-col w-full gap-8">
+            {farmlands.filter((_, i) => i % 3 === 0).map((farm) => (
+              <TrendingCard
+                key={farm.farmland_id}
+                id={String(farm.farmland_id)}
+                title={farm.farm_code || "Your Listing"}
+                description={"Your listed farmland property."}
+                price={formatPrice(farm.valuation)}
+                location={"Location N/A"}
+                tagText={"Your Listing"}
+                imageUrl={farm.farmland_img || "/assets/search/image2.1.svg"}
+                linkDestination={`/home/yourlisting/details?id=${farm.farmland_id}`}
+              />
+            ))}
+          </div>
 
-        {/* Column 2 */}
-        <div className="flex-1 flex flex-col w-full gap-8">
-          <TrendingCard {...cardsData[1]} linkDestination="/home/yourlisting/details" reverseLayout={true} />
-          <TrendingCard {...cardsData[4]} linkDestination="/home/yourlisting/details" reverseLayout={true} />
-        </div>
+          {/* Column 2 */}
+          <div className="flex-1 flex flex-col w-full gap-8">
+            {farmlands.filter((_, i) => i % 3 === 1).map((farm) => (
+              <TrendingCard
+                key={farm.farmland_id}
+                id={String(farm.farmland_id)}
+                title={farm.farm_code || "Your Listing"}
+                description={"Your listed farmland property."}
+                price={formatPrice(farm.valuation)}
+                location={"Location N/A"}
+                tagText={"Your Listing"}
+                imageUrl={farm.farmland_img || "/assets/search/image2.1.svg"}
+                linkDestination={`/home/yourlisting/details?id=${farm.farmland_id}`}
+                reverseLayout={true}
+              />
+            ))}
+          </div>
 
-        {/* Column 3 */}
-        <div className="flex-1 flex flex-col w-full gap-8">
-          <TrendingCard {...cardsData[2]} linkDestination="/home/yourlisting/details" />
-          <TrendingCard {...cardsData[5]} linkDestination="/home/yourlisting/details" />
+          {/* Column 3 */}
+          <div className="flex-1 flex flex-col w-full gap-8">
+            {farmlands.filter((_, i) => i % 3 === 2).map((farm) => (
+              <TrendingCard
+                key={farm.farmland_id}
+                id={String(farm.farmland_id)}
+                title={farm.farm_code || "Your Listing"}
+                description={"Your listed farmland property."}
+                price={formatPrice(farm.valuation)}
+                location={"Location N/A"}
+                tagText={"Your Listing"}
+                imageUrl={farm.farmland_img || "/assets/search/image2.1.svg"}
+                linkDestination={`/home/yourlisting/details?id=${farm.farmland_id}`}
+              />
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

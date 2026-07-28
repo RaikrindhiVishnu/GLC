@@ -4,8 +4,11 @@ import React, { useState, useRef } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { useEffect } from "react";
+import { useGetFarmlandsForComparisonQuery } from "../../services/farmland";
+import { useGetUserDetailsByIdQuery } from "../../services/user";
 
-const comparisonData = [
+const defaultComparisonData = [
   {
     id: "comp-1",
     plots: [
@@ -54,6 +57,70 @@ export default function CompareAssets() {
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
 
+  const [mounted, setMounted] = useState(false);
+  const [userId, setUserId] = useState<number | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+    const storedUserId = localStorage.getItem("userId");
+    if (storedUserId) {
+      setUserId(parseInt(storedUserId, 10));
+    }
+  }, []);
+
+  const { data: userDetailsResponse } = useGetUserDetailsByIdQuery(
+    { user_id: userId || 0 },
+    { skip: !mounted || !userId }
+  );
+
+  const stateId = (userDetailsResponse?.data as any)?.state_id || 1;
+
+  const { data: res, isLoading } = useGetFarmlandsForComparisonQuery(
+    { state_id: stateId },
+    { skip: !mounted }
+  );
+
+  let displayData = defaultComparisonData;
+  if (res?.data && res.data.length > 0) {
+    const pairs = [];
+    for (let i = 0; i < res.data.length; i += 2) {
+      if (res.data[i + 1]) {
+        const p1 = res.data[i];
+        const p2 = res.data[i + 1];
+
+        const hasValidImg1 = p1.farmland_img && (p1.farmland_img.startsWith('/') || p1.farmland_img.startsWith('http')) && !p1.farmland_img.toLowerCase().endsWith('.pdf');
+        const hasValidImg2 = p2.farmland_img && (p2.farmland_img.startsWith('/') || p2.farmland_img.startsWith('http')) && !p2.farmland_img.toLowerCase().endsWith('.pdf');
+
+        pairs.push({
+          id: `comp-${i}`,
+          plots: [
+            {
+              id: p1.farmland_id,
+              title: p1.farmland_code || `Plot ${p1.farmland_id}`,
+              location: "Andhra Pradesh",
+              img: hasValidImg1 ? p1.farmland_img : "/assets/home/CompareAssets/compare1.svg",
+              soil: p1.soil_type_id ? `Soil Type ${p1.soil_type_id}` : "Red Sandy Loam",
+              ph: "pH Level: 6.8 (Optimal)",
+              yield: p1.price ? (p1.price / 10000000).toFixed(2) : "5.2",
+            },
+            {
+              id: p2.farmland_id,
+              title: p2.farmland_code || `Plot ${p2.farmland_id}`,
+              location: "Andhra Pradesh",
+              img: hasValidImg2 ? p2.farmland_img : "/assets/home/CompareAssets/compare2.svg",
+              soil: p2.soil_type_id ? `Soil Type ${p2.soil_type_id}` : "Black Cotton Soil",
+              ph: "pH Level: 7.4 (Alkaline)",
+              yield: p2.price ? (p2.price / 10000000).toFixed(2) : "7.8",
+            }
+          ]
+        });
+      }
+    }
+    if (pairs.length > 0) {
+      displayData = pairs;
+    }
+  }
+
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeftState, setScrollLeftState] = useState(0);
@@ -89,7 +156,7 @@ export default function CompareAssets() {
     <section id="compare-assets" className="w-full bg-transparent py-12 lg:py-[70px] overflow-hidden">
 
       {/* Header — constrained to page margin */}
-      <div className="w-full px-4 md:px-[60px] mb-6 lg:mb-8">
+      <div className="w-full max-w-[1440px] mx-auto px-4 md:px-[60px] mb-6 lg:mb-8">
         <div className="flex flex-col gap-2">
           <span className="font-jakarta font-bold text-[10px] md:text-[12px] leading-[16px] tracking-[2.4px] uppercase text-[#0F2F4C]">
             Portfolio Intelligence
@@ -117,7 +184,7 @@ export default function CompareAssets() {
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUpOrLeave}
         onMouseLeave={handleMouseUpOrLeave}
-        className={`flex gap-6 lg:gap-12 w-full overflow-x-auto pb-4 hide-scrollbar px-4 md:px-[60px] select-none ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
+        className={`flex gap-6 lg:gap-12 w-full overflow-x-auto pb-4 hide-scrollbar max-w-[1440px] mx-auto px-4 md:px-[60px] select-none ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
       >
         <style dangerouslySetInnerHTML={{
           __html: `
@@ -125,7 +192,11 @@ export default function CompareAssets() {
           #compare-assets .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         `}} />
 
-        {comparisonData.map((comp, i) => (
+        {isLoading ? (
+          <div className="flex justify-center items-center w-full min-h-[500px]">
+            <span className="font-jakarta text-[#0F2F4C]">Loading comparisons...</span>
+          </div>
+        ) : displayData.map((comp, i) => (
           <motion.div
             key={comp.id}
             initial={{ opacity: 0, filter: "blur(8px)", y: 20 }}
@@ -183,7 +254,7 @@ export default function CompareAssets() {
             {/* CTA Button */}
             <div className="absolute bottom-6 lg:bottom-[48px] left-1/2 -translate-x-1/2 w-[90%] sm:w-[345px]">
               <button
-                onClick={() => router.push("/home/compareassets")}
+                onClick={() => router.push(`/home/compareassets?id1=${comp.plots[0].id || 101}&id2=${comp.plots[1].id || 102}`)}
                 className="w-full h-[48px] lg:h-[52px] bg-[radial-gradient(50%_50%_at_50%_50%,#2780C4_0%,#164573_100%)] border-2 border-[#2780C4] rounded-full font-jakarta font-bold text-[12px] text-white uppercase tracking-[1px] cursor-pointer "
               >
                 View Comparison

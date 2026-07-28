@@ -1,18 +1,37 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { MapPin } from "lucide-react";
 import { useGetFarmlandByTagAndStateQuery } from "../../services/home";
+import { useGetUserDetailsByIdQuery } from "../../services/user";
 
 export default function Recommended() {
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Reusing the same query or similar to get properties, you can change tag_ids if needed
-  const { data: res, isLoading } = useGetFarmlandByTagAndStateQuery({ tag_ids: [1, 2, 3], state_id: 1 });
+  const [userId, setUserId] = useState<number | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const storedUserId = localStorage.getItem("userId");
+    if (storedUserId) {
+      setUserId(parseInt(storedUserId, 10));
+    }
+  }, []);
+
+  const { data: userDetailsResponse } = useGetUserDetailsByIdQuery(
+    { user_id: userId || 0 },
+    { skip: !mounted || !userId }
+  );
+
+  const stateId = (userDetailsResponse?.data as any)?.state_id || 1;
+
+  // Fetch recommended properties with empty tag_ids and user location
+  const { data: res, isLoading } = useGetFarmlandByTagAndStateQuery({ tag_ids: [], state_id: stateId });
   const farmlands = res?.data || [];
 
   // Drag scroll states
@@ -63,8 +82,8 @@ export default function Recommended() {
     <section id="recommended-farmlands" className="w-full bg-transparent py-12 lg:py-[70px] overflow-hidden">
       
       {/* Section Header */}
-      <div className="w-full px-4 md:px-[60px] mb-6 lg:mb-8">
-        <div className="flex justify-between items-center w-full max-w-[1280px] mx-auto">
+      <div className="w-full max-w-[1440px] mx-auto px-4 md:px-[60px] mb-6 lg:mb-8">
+        <div className="flex justify-between items-center w-full">
           <h2 className="font-jakarta font-extrabold text-[24px] leading-[36px] tracking-[-0.6px] text-[#001F3F] m-0">
             Recommended
           </h2>
@@ -75,14 +94,15 @@ export default function Recommended() {
       </div>
 
       {/* Cards Scrollable Container */}
-      <div
-        ref={containerRef}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUpOrLeave}
-        onMouseLeave={handleMouseUpOrLeave}
-        className={`flex gap-4 md:gap-[32px] w-full max-w-[1280px] mx-auto overflow-x-auto pb-8 hide-scrollbar px-4 md:px-[20px] select-none ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
-      >
+      <div className="w-full max-w-[1440px] mx-auto px-4 md:px-[60px]">
+        <div
+          ref={containerRef}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUpOrLeave}
+          onMouseLeave={handleMouseUpOrLeave}
+          className={`flex gap-4 md:gap-[32px] w-full overflow-x-auto pb-8 hide-scrollbar select-none ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
+        >
         <style dangerouslySetInnerHTML={{
           __html: `
           #recommended-farmlands .hide-scrollbar::-webkit-scrollbar { display: none; }
@@ -105,7 +125,7 @@ export default function Recommended() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: i * 0.1 }}
               viewport={{ once: true }}
-              onClick={(e: React.MouseEvent) => handleCardClick(e, item.farmland_id)}
+              onClick={(e: React.MouseEvent) => handleCardClick(e, String(item.farmland_id))}
               className="flex flex-col w-[300px] sm:w-[362px] h-[367px] shrink-0 bg-white rounded-[29px] overflow-hidden cursor-pointer group pointer-events-auto"
               style={{
                 boxShadow: "0px 7.32697px 9.15871px -5.49523px rgba(0, 0, 0, 0.1)"
@@ -124,24 +144,24 @@ export default function Recommended() {
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
 
-                {/* Overlaid Tag */}
-                <div className="absolute left-[20px] bottom-[-13px] bg-white/95 border-[0.6px] border-[#CACDD4] rounded-[8px] h-[26px] px-[12px] flex items-center shadow-sm z-10">
-                  <span className="font-jakarta font-medium text-[12px] leading-[15px] tracking-[0.5px] capitalize text-[#091426]">
-                    {getTagText(i)}
-                  </span>
-                </div>
               </div>
 
               {/* Bottom Content Area */}
-              <div className="flex flex-col pt-[34px] px-[20px] pb-[20px] h-full pointer-events-none">
+              <div className="flex flex-col pt-[17px] pl-[16px] pr-[16px] pb-[20px] h-[132.54px] pointer-events-none">
                 <h3 className="m-0 font-jakarta font-extrabold text-[24px] leading-[28px] text-[#001F3F]">
                   {item.farmland_code}
                 </h3>
 
-                <div className="flex items-center gap-1.5 mt-auto">
+                <div className="flex items-center gap-[6px] mt-[11px]">
                   <MapPin size={12} color="#000000" className="shrink-0" />
                   <span className="font-manrope font-bold text-[12px] leading-[16px] tracking-[-0.275px] text-[#000000]">
                     {item.farmland_district_id ? `District ${item.farmland_district_id}, A.P.` : "Vizag, A.P."}
+                  </span>
+                </div>
+
+                <div className="mt-[10px] bg-white/95 border-[0.6px] border-[#CACDD4] rounded-[8px] h-[26px] px-[12px] flex items-center shadow-sm w-max">
+                  <span className="font-jakarta font-medium text-[12px] leading-[15px] tracking-[0.5px] capitalize text-[#091426]">
+                    {getTagText(i)}
                   </span>
                 </div>
               </div>
@@ -149,6 +169,7 @@ export default function Recommended() {
             </motion.div>
           ))
         )}
+        </div>
       </div>
 
     </section>

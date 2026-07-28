@@ -82,12 +82,12 @@ export default function MaintenanceHero() {
                   </button>
                 ))}
               </div>
-              <button onClick={() => router.push("/home/unlockeddocuments")} style={{ position: "absolute", width: "52px", height: "52px", left: "1194px", top: "36px", background: "rgba(255,255,255,0.1)", backdropFilter: "blur(62.67px)", borderRadius: "125px", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "auto" }}>
+              <button onClick={() => router.push("/home/unlockeddocuments")} style={{ position: "absolute", width: "52px", height: "52px", left: "1194px", top: "36px", background: "rgba(255,255,255,0.1)", backdropFilter: "blur(62.67px)", borderRadius: "50%", border: "none", boxShadow: "0px 10px 7.5px rgba(0,0,0,0.05), inset 0px 1.25px 1.25px rgba(255,255,255,0.25), inset 0px -1.25px 1.25px rgba(255,255,255,0.25), inset 3.76px 5px 2.5px -1px rgba(255,255,255,0.55)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "auto" }}>
                 <Image src="/assets/home/HeroScreen/unlock 1.svg" alt="Unlock" width={26} height={26} />
               </button>
-              <button onClick={() => router.push("/home/supportcenter")} style={{ position: "absolute", width: "52px", height: "52px", left: "1261px", top: "36px", background: "rgba(255,255,255,0.1)", backdropFilter: "blur(62.67px)", borderRadius: "125px", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "auto" }}>
-                <Image src="/assets/home/HeroScreen/notification.svg" alt="Notifications" width={26} height={26} />
-                <span style={{ position: "absolute", width: "6px", height: "6px", left: "27px", top: "13px", background: "#E53935", border: "0.9px solid rgba(255,255,255,0.9)", borderRadius: "50%" }} />
+              <button onClick={() => router.push("/home/supportcenter")} style={{ position: "absolute", width: "52px", height: "52px", left: "1261px", top: "36px", background: "rgba(255,255,255,0.1)", backdropFilter: "blur(62.67px)", borderRadius: "50%", border: "none", boxShadow: "0px 10px 7.5px rgba(0,0,0,0.05), inset 0px 1.25px 1.25px rgba(255,255,255,0.25), inset 0px -1.25px 1.25px rgba(255,255,255,0.25), inset 3.76px 5px 2.5px -1px rgba(255,255,255,0.55)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "auto" }}>
+                <Image src="/assets/home/HeroScreen/notification-v2.svg" alt="Notifications" width={26} height={26} />
+                
               </button>
 
 

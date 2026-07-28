@@ -62,8 +62,8 @@ export default function TrendingFeaturedSection() {
   const handlePrev = () => {
     if (isAnimating) return;
     setIsAnimating(true);
-    const wrappingItemIndex = carouselItems.findIndex((item) => getSlotIndex(item.id, activeIndex) === 0);
-    setWrapId(wrappingItemIndex);
+    const wrappingItemIndex = carouselItems.findIndex((item) => getSlotIndex(item.id, activeIndex) === 6);
+    setWrapId(wrappingItemIndex !== -1 ? carouselItems[wrappingItemIndex].id : null);
     setActiveIndex((prev) => (prev > 0 ? prev - 1 : carouselItems.length - 1));
     setTimeout(() => { setWrapId(null); setIsAnimating(false); }, 500);
   };
@@ -71,8 +71,8 @@ export default function TrendingFeaturedSection() {
   const handleNext = () => {
     if (isAnimating) return;
     setIsAnimating(true);
-    const wrappingItemIndex = carouselItems.findIndex((item) => getSlotIndex(item.id, activeIndex) === 6);
-    setWrapId(wrappingItemIndex);
+    const wrappingItemIndex = carouselItems.findIndex((item) => getSlotIndex(item.id, activeIndex) === 0);
+    setWrapId(wrappingItemIndex !== -1 ? carouselItems[wrappingItemIndex].id : null);
     setActiveIndex((prev) => (prev < carouselItems.length - 1 ? prev + 1 : 0));
     setTimeout(() => { setWrapId(null); setIsAnimating(false); }, 500);
   };

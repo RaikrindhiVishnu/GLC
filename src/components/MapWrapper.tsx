@@ -11,4 +11,12 @@ const InteractiveMap = dynamic(() => import("./InteractiveMap"), {
   )
 });
 
-export default InteractiveMap;
+interface MapWrapperProps {
+  onLocationChange?: (location: { lat: number; lng: number }) => void;
+  onPolygonChange?: (polygon: { lat: number; lng: number }[]) => void;
+  onFullscreenChange?: (isFullscreen: boolean) => void;
+}
+
+export default function MapWrapper(props: MapWrapperProps) {
+  return <InteractiveMap {...props} />;
+}

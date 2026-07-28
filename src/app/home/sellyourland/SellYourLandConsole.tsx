@@ -5,10 +5,13 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useGetAllGeoMasterDataQuery } from "../../../services/master";
+import { useSellFarmlandMutation } from "../../../services/farmland";
 import MapWrapper from "../../../components/MapWrapper";
 
 export default function SellYourLandConsole() {
   const router = useRouter();
+  const [sellFarmland, { isLoading: isSubmitting }] = useSellFarmlandMutation();
+  const [isMapFullscreen, setIsMapFullscreen] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
     code: "+91",
@@ -63,8 +66,42 @@ export default function SellYourLandConsole() {
     alert(`Land Asset owner parameter payload securely archived.\nProceeding to verify Land Specifics and Institutional Audit workflows.`);
   };
 
-  const handleFinalAuditTrigger = () => {
-    setShowModal(true);
+  const handleFinalAuditTrigger = async () => {
+    try {
+      const payload = {
+        location_details: {
+          country_id: 1,
+          state_id: Number(formData.region) || 1,
+          district_id: Number(formData.district) || 1,
+          mandal_id: Number(formData.mandal) || 1,
+          lat: formData.lat || "1.3455544",
+          long: formData.lng || "1.387733",
+          pin_label: "Farm Entry Gate"
+        },
+        owner_details: {
+          first_name: formData.fullName.split(' ')[0] || "Unknown",
+          last_name: formData.fullName.split(' ').slice(1).join(' ') || "Unknown",
+          country_code: formData.code || "+91",
+          phone_number: formData.contactNumber,
+          email_address: formData.email
+        },
+        cover_image: "", // Adjust when image upload is complete
+        total_acers: Number(formData.acreage) || 10,
+        price: formData.baseValuation || "300000",
+        land_description: formData.description || "N/A",
+        polygon: formData.polygon && formData.polygon.length > 0 ? formData.polygon : undefined
+      };
+      
+      const res = await sellFarmland(payload).unwrap();
+      if (res.success) {
+        setShowModal(true);
+      } else {
+        alert("Failed to submit: " + (res.message || "Unknown error"));
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Submission failed. Please check your network and try again.");
+    }
   };
 
   const inputStyle: React.CSSProperties = {
@@ -142,23 +179,28 @@ export default function SellYourLandConsole() {
             <MapWrapper 
               onLocationChange={(loc) => setFormData(prev => ({ ...prev, lat: loc.lat.toString(), lng: loc.lng.toString() }))}
               onPolygonChange={(poly) => setFormData(prev => ({ ...prev, polygon: poly }))}
+              onFullscreenChange={setIsMapFullscreen}
             />
           </div>
-          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.6) 100%)", zIndex: 1, pointerEvents: "none" }} />
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px", zIndex: 5, position: "relative", pointerEvents: "none" }}>
-            <button
-              onClick={() => router.push("/home/sellyourland")}
-              style={{ display: "flex", flexDirection: "row", alignItems: "center", padding: "16px 32px", gap: "12px", background: "#0F2F4C", borderRadius: "9999px", border: "none", boxShadow: "0px 25px 50px -12px rgba(0,0,0,0.25)", cursor: "pointer", justifyContent: "center", pointerEvents: "auto" }}
-            >
-              <svg width="16" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" />
-              </svg>
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#FFFFFF", letterSpacing: "0.4px" }}>DROP GPS PIN TO LOCATE</span>
-            </button>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "8px 16px", background: "rgba(255,255,255,0.8)", backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)", borderRadius: "9999px" }}>
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", color: "rgba(9,20,38,0.6)" }}>GEOSPATIAL PRECISION REQUIRED</span>
+          {!isMapFullscreen && (
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.6) 100%)", zIndex: 1, pointerEvents: "none" }} />
+          )}
+          {!isMapFullscreen && (
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px", zIndex: 5, position: "relative", pointerEvents: "none" }}>
+              <button
+                onClick={() => router.push("/home/sellyourland")}
+                style={{ display: "flex", flexDirection: "row", alignItems: "center", padding: "16px 32px", gap: "12px", background: "#0F2F4C", borderRadius: "9999px", border: "none", boxShadow: "0px 25px 50px -12px rgba(0,0,0,0.25)", cursor: "pointer", justifyContent: "center", pointerEvents: "auto" }}
+              >
+                <svg width="16" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" />
+                </svg>
+                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#FFFFFF", letterSpacing: "0.4px" }}>DROP GPS PIN TO LOCATE</span>
+              </button>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "8px 16px", background: "rgba(255,255,255,0.8)", backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)", borderRadius: "9999px" }}>
+                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", color: "rgba(9,20,38,0.6)" }}>GEOSPATIAL PRECISION REQUIRED</span>
+              </div>
             </div>
-          </div>
+          )}
         </motion.div>
 
         {/* RIGHT: Owner details form */}
@@ -213,6 +255,7 @@ export default function SellYourLandConsole() {
         whileInView={{ y: 0 }}
         transition={{ duration: 0.5 }}
         viewport={{ once: true }}
+        style={{ display: isMapFullscreen ? "none" : "block" }}
       >
         <div
           style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", width: "100%", gap: "32px", opacity: 0.4, transition: "opacity 0.3s ease" }}
@@ -545,11 +588,12 @@ export default function SellYourLandConsole() {
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px", minWidth: "260px" }}>
             <button
               onClick={handleFinalAuditTrigger}
-              style={{ display: "flex", flexDirection: "row", alignItems: "center", padding: "24px 32px", gap: "16px", width: "100%", background: "#2780C4", borderRadius: "16px", border: "none", cursor: "pointer", boxShadow: "0px 10px 20px rgba(0,0,0,0.15)" }}
+              disabled={isSubmitting}
+              style={{ display: "flex", flexDirection: "row", alignItems: "center", padding: "24px 32px", gap: "16px", width: "100%", background: "#2780C4", borderRadius: "16px", border: "none", cursor: isSubmitting ? "not-allowed" : "pointer", boxShadow: "0px 10px 20px rgba(0,0,0,0.15)", opacity: isSubmitting ? 0.7 : 1 }}
             >
               <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "4px" }}>
                 <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "2px", textTransform: "uppercase", color: "rgba(255,255,255,0.7)" }}>SECURED VIA FACEID</span>
-                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "20px", lineHeight: "28px", letterSpacing: "-0.5px", color: "#FFFFFF" }}>SUBMIT FOR CCS SCREENING</span>
+                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "20px", lineHeight: "28px", letterSpacing: "-0.5px", color: "#FFFFFF" }}>{isSubmitting ? "SUBMITTING..." : "SUBMIT FOR CCS SCREENING"}</span>
               </div>
             </button>
             <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1px", textTransform: "uppercase", color: "#2780C4" }}>DIGITAL SIGNATURE REQUIRED</span>
