@@ -8,7 +8,7 @@ import Image from "next/image";
 
 function CheckEmailContent() {
   const searchParams = useSearchParams();
-  const email = searchParams.get("email") || "arjun.v@gmail.com";
+  const email = searchParams.get("email") || "";
 
   return (
     <div className="flex flex-col w-full max-w-[448px]">

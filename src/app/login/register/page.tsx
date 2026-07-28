@@ -27,6 +27,7 @@ export default function RegisterPage() {
     flags: { png: "https://flagcdn.com/w320/in.png" }
   });
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isStateDropdownOpen, setIsStateDropdownOpen] = useState(false);
   
   const [createUser] = useCreateUserMutation();
 
@@ -229,23 +230,40 @@ export default function RegisterPage() {
         transition={{ duration: 0.6, delay: 0.65 }}
         className="mb-5 lg:mb-6 relative"
       >
-        <div className="w-full bg-[#FEFEFE] border-[2px] border-[#F8F8F8] rounded-[30px] h-[64px] flex items-center px-6 gap-2 focus-within:border-[#2780C4] focus-within:ring-1 focus-within:ring-[#2780C4]/20 transition-all shadow-sm">
-          <select
-            value={preferredState}
-            onChange={(e) => setPreferredState(e.target.value)}
-            className={`flex-1 bg-transparent focus:outline-none font-jakarta text-[13px] appearance-none cursor-pointer ${preferredState ? "text-[#353535]" : "text-[#BDBDBD]"}`}
+        <div className={`w-full bg-[#FEFEFE] border-[2px] ${isStateDropdownOpen ? 'border-[#2780C4] ring-1 ring-[#2780C4]/20' : 'border-[#F8F8F8]'} rounded-[30px] h-[64px] flex items-center px-6 gap-2 transition-all shadow-sm relative`}>
+          <button
+            type="button"
+            onClick={() => setIsStateDropdownOpen(!isStateDropdownOpen)}
+            className={`flex-1 bg-transparent focus:outline-none font-jakarta text-[13px] text-left appearance-none cursor-pointer ${preferredState ? "text-[#353535]" : "text-[#BDBDBD]"}`}
           >
-            <option value="" disabled className="text-[#BDBDBD] py-2">Select Preferred Investment State</option>
-            <option value="Karnataka" className="text-[#353535] py-2">Karnataka</option>
-            <option value="Maharashtra" className="text-[#353535] py-2">Maharashtra</option>
-            <option value="Tamil Nadu" className="text-[#353535] py-2">Tamil Nadu</option>
-            <option value="Telangana" className="text-[#353535] py-2">Telangana</option>
-            <option value="Andhra Pradesh" className="text-[#353535] py-2">Andhra Pradesh</option>
-            <option value="Kerala" className="text-[#353535] py-2">Kerala</option>
-          </select>
+            {preferredState || "Select Preferred Investment State"}
+          </button>
+          
           <div className="pointer-events-none absolute right-6 top-1/2 -translate-y-1/2">
-            <svg width="14" height="8" viewBox="0 0 14 8" fill="none" stroke="#6C7A8A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1 1 7 7 13 1"></polyline></svg>
+            <svg className={`w-3.5 h-3.5 text-[#6C7A8A] transition-transform duration-300 ${isStateDropdownOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+            </svg>
           </div>
+
+          {isStateDropdownOpen && (
+            <>
+              <div className="fixed inset-0 z-40" onClick={() => setIsStateDropdownOpen(false)} />
+              <div className="absolute top-[72px] left-0 w-full bg-white rounded-[20px] shadow-[0_15px_40px_rgba(0,0,0,0.12)] border border-[#EBEBEB] z-50 overflow-hidden animate-in fade-in zoom-in duration-200">
+                <div className="max-h-[220px] overflow-y-auto custom-scrollbar py-2">
+                  {["Karnataka", "Maharashtra", "Tamil Nadu", "Telangana", "Andhra Pradesh", "Kerala"].map((state) => (
+                    <button
+                      key={state}
+                      type="button"
+                      onClick={() => { setPreferredState(state); setIsStateDropdownOpen(false); }}
+                      className={`w-full flex items-center px-6 py-3 hover:bg-[#EEF6FF] transition-all text-left font-jakarta text-[14px] ${preferredState === state ? "text-[#2780C4] font-semibold bg-[#F5F9FF]" : "text-[#434343] font-medium"}`}
+                    >
+                      {state}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </motion.div>
 

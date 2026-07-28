@@ -2,8 +2,13 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-export default function VerifyMailPage() {
+function VerifyMailContent() {
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email") || "";
+
   return (
     <div className="w-full max-w-110">
       <motion.h1
@@ -21,7 +26,7 @@ export default function VerifyMailPage() {
         className="text-[14px] text-[#B8B8B8] font-jakarta mb-10 leading-[1.6]"
       >
         We&apos;ve sent a secure verification link to your email address:{" "}
-        <span className="text-[#434343]">arjun.v@gmail.com</span>
+        <span className="text-[#434343]">{email}</span>
       </motion.p>
 
       {/* Mail icon */}
@@ -69,5 +74,13 @@ export default function VerifyMailPage() {
         </button>
       </motion.p>
     </div>
+  );
+}
+
+export default function VerifyMailPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <VerifyMailContent />
+    </Suspense>
   );
 }
