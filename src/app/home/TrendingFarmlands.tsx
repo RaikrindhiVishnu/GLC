@@ -6,13 +6,29 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { MapPin } from "lucide-react";
 import { useGetFarmlandByTagAndStateQuery } from "../../services/home";
+import { useGetAllGeoMasterDataQuery } from "../../services/master";
 
 export default function TrendingFarmlands() {
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
 
   const { data: res, isLoading } = useGetFarmlandByTagAndStateQuery({ tag_ids: [1, 2, 3], state_id: 1 });
+  const { data: geoDataRes } = useGetAllGeoMasterDataQuery();
   const farmlands = res?.data || [];
+
+  // Helper to format location
+  const getLocationString = (districtId?: number) => {
+    if (!districtId || !geoDataRes?.districts) return "UNKNOWN LOCATION";
+    const district = geoDataRes.districts.slice(1).find(d => d[0] === districtId);
+    if (!district) return "UNKNOWN LOCATION";
+    
+    const stateId = district[1];
+    const state = geoDataRes.states?.slice(1).find(s => s[0] === stateId);
+    if (!state) return String(district[3]).toUpperCase();
+    
+    const stateStr = state[2] ? state[2] : state[3];
+    return `${district[3]}, ${stateStr}`.toUpperCase();
+  };
 
   // Drag scroll states
   const [isDragging, setIsDragging] = useState(false);
@@ -111,10 +127,10 @@ export default function TrendingFarmlands() {
               transition={{ duration: 0.6, delay: i * 0.1 }}
               viewport={{ once: true }}
               onClick={handleCardClick}
-              className="flex flex-col sm:flex-row w-[280px] sm:w-[450px] lg:w-[511px] shrink-0 bg-white shadow-[0px_11px_38px_rgba(0,31,63,0.04)] rounded-[24px] lg:rounded-[45px] overflow-hidden cursor-pointer box-border group pointer-events-auto"
+              className="flex flex-col sm:flex-row w-[280px] sm:w-[450px] lg:w-[511px] h-auto sm:h-[200px] lg:h-[261px] shrink-0 bg-white shadow-[0px_11px_38px_rgba(0,31,63,0.04)] rounded-[24px] lg:rounded-[45px] overflow-hidden cursor-pointer box-border group pointer-events-auto"
             >
               {/* Left Side: Image */}
-              <div className="relative w-full h-[180px] sm:w-[180px] lg:w-[204px] sm:h-[260px] shrink-0 pointer-events-none">
+              <div className="relative w-full h-[180px] sm:w-[180px] lg:w-[205px] sm:h-full shrink-0 pointer-events-none">
                 <Image
                   src={
                     (() => {
@@ -132,49 +148,49 @@ export default function TrendingFarmlands() {
               </div>
 
               {/* Right Side: Content */}
-              <div className="flex flex-1 flex-col justify-between p-6 sm:p-6 lg:p-[30px] gap-4 box-border">
+              <div className="flex flex-1 flex-col justify-center p-6 sm:p-6 lg:px-[30px] lg:pt-[48px] lg:pb-[49px] box-border">
                 <div className="flex flex-col gap-[8px]">
 
                   {/* Tag */}
                   <div
                     style={{ background: i % 2 === 0 ? "rgba(0, 31, 63, 0.1)" : "rgba(207, 102, 103, 0.1)" }}
-                    className="inline-flex items-center px-[11px] py-[4px] rounded-full w-fit pointer-events-none"
+                    className="inline-flex items-center px-[11px] py-[4px] gap-[8px] rounded-full w-fit pointer-events-none"
                   >
                     {i % 2 !== 0 ? (
                       /* Red Label: Bookmark Icon */
-                      <svg width="9" height="10" viewBox="0 0 10 12" fill="none" xmlns="http://www.w3.org/2000/svg" className="mr-1.5 shrink-0">
+                      <svg width="9" height="10" viewBox="0 0 10 12" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
                         <path d="M1 1H9V11L5 8.5L1 11V1Z" fill="#CF6667" stroke="#CF6667" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
                     ) : (
                       /* Grey Label: Star Icon */
-                      <svg width="10" height="10" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" className="mr-1.5 shrink-0">
+                      <svg width="10" height="10" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
                         <path d="M6 1L7.5 4.5H11L8.2 6.5L9.5 10L6 7.8L2.5 10L3.8 6.5L1 4.5H4.5L6 1Z" fill="#001F3F" />
                       </svg>
                     )}
                     <span
                       style={{ color: i % 2 === 0 ? "#001F3F" : "#CF6667" }}
-                      className="font-jakarta font-bold text-[9px] leading-[14px] tracking-[0.9px] uppercase"
+                      className="font-jakarta font-bold text-[9.5px] leading-[14px] tracking-[0.95px] uppercase"
                     >
                       {i % 2 === 0 ? "HIGH YIELD 2025" : "MOST BOOKMARKED"}
                     </span>
                   </div>
 
                   {/* Title */}
-                  <h3 className="m-0 font-jakarta font-extrabold text-[20px] lg:text-[24px] text-[#001F3F] mt-1 pointer-events-none">
+                  <h3 className="m-0 font-jakarta font-extrabold text-[20px] lg:text-[24px] lg:leading-[28px] text-[#001F3F] pt-[8px] pointer-events-none">
                     {item.farmland_code}
                   </h3>
 
                   {/* Description */}
-                  <p className="m-0 font-jakarta font-normal text-[12px] lg:text-[13.25px] leading-[1.6] text-[#43474E] line-clamp-2 pointer-events-none">
+                  <p className="m-0 font-jakarta font-normal text-[12px] lg:text-[13px] lg:leading-[22px] text-[#43474E] line-clamp-2 pointer-events-none">
                     Verified real-time GLC farmland offering optimal returns and curated organic facilities.
                   </p>
                 </div>
 
                 {/* Footer */}
-                <div className="flex items-center pt-4 lg:pt-[22px] border-t border-[#EDEEEF] gap-2 mt-auto pointer-events-none">
-                  <MapPin size={12} color="#64748B" className="shrink-0" />
-                  <span className="font-jakarta font-bold text-[10px] lg:text-[11px] leading-[15px] tracking-[0.3px] uppercase text-[#64748B]">
-                    {item.farmland_district_id ? `District ${item.farmland_district_id}` : "Unknown Location"}
+                <div className="flex items-center pt-[20px] lg:pt-[28px] mt-[12px] lg:mt-[16px] border-t border-[#EDEEEF] gap-[8px] pointer-events-none w-full">
+                  <MapPin size={14} color="#64748B" className="shrink-0" />
+                  <span className="font-jakarta font-bold text-[10px] lg:text-[11px] lg:leading-[15px] tracking-[0.3px] uppercase text-[#64748B]">
+                    {getLocationString(item.farmland_district_id)}
                   </span>
                 </div>
               </div>

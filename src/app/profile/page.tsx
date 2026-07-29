@@ -73,13 +73,42 @@ export default function ProfileScreen() {
   const profileInputRef = useRef<HTMLInputElement>(null);
 
   const rightSidebarRef = useRef<HTMLDivElement>(null);
-  const [containerHeight, setContainerHeight] = useState(1768);
+  const [containerHeight, setContainerHeight] = useState(1500);
+  const [trackingImageUrls, setTrackingImageUrls] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    if (!profileDetails?.user_purchased_lands_tracking) return;
+    const fetchUrls = async () => {
+      const newUrls: Record<string, string> = { ...trackingImageUrls };
+      let changed = false;
+      for (const item of profileDetails.user_purchased_lands_tracking) {
+        const url = item.cover_image_url;
+        if (!url || newUrls[item.farm_id]) continue;
+        if (url.startsWith("http") || url.startsWith("data:") || url.startsWith("/")) {
+          newUrls[item.farm_id] = url;
+          changed = true;
+          continue;
+        }
+        try {
+          const res = await s3Service.generateUrl({ key: url, filename: url, folderPath: '' });
+          if (res.url) {
+            newUrls[item.farm_id] = res.url;
+            changed = true;
+          }
+        } catch (error) {
+          console.warn("Failed to presign tracking URL for", url);
+        }
+      }
+      if (changed) setTrackingImageUrls(newUrls);
+    };
+    fetchUrls();
+  }, [profileDetails?.user_purchased_lands_tracking]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       if (rightSidebarRef.current) {
         const height = rightSidebarRef.current.offsetHeight;
-        setContainerHeight(Math.max(1768, height + 511 + 100)); // 511 is top offset
+        setContainerHeight(Math.max(1500, height + 511 + 80)); // 511 is top offset
       }
     }, 100);
     return () => clearTimeout(timer);
@@ -128,9 +157,14 @@ export default function ProfileScreen() {
 
         let key = userDetails.profile_url;
         if (key.startsWith("http")) {
-          try {
-            key = new URL(key).pathname.substring(1);
-          } catch (e) { }
+          if (key.includes("amazonaws.com") || key.includes("cloudfront.net")) {
+            try {
+              key = new URL(key).pathname.substring(1);
+            } catch (e) { }
+          } else {
+            setProfileImage(key);
+            return;
+          }
         }
 
         if (key && !key.includes('/assets/')) {
@@ -140,8 +174,8 @@ export default function ProfileScreen() {
               setProfileImage(res.url);
               return;
             }
-          } catch (e) {
-            console.error("Failed to generate fresh profile URL", e);
+          } catch (e: any) {
+            console.warn("Failed to generate fresh profile URL:", e?.message || "Unknown error");
           }
         }
 
@@ -497,12 +531,23 @@ export default function ProfileScreen() {
           <div style={{ padding: "0 16px 12px" }}>
             <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Land Purchase Tracking</span>
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+          <div data-lenis-prevent="true" className="hover-scrollbar" style={{ display: "flex", flexDirection: "column", gap: "12px", maxHeight: "236px", overflowY: "auto", paddingBottom: "8px" }}>
             {profileDetails?.user_purchased_lands_tracking?.length ? profileDetails.user_purchased_lands_tracking.map((item, idx) => (
               <div key={idx} onClick={() => setTrackingModalFarmId(item.farm_id)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", boxShadow: "0px 4px 12px rgba(0,0,0,0.04)", borderRadius: "20px", padding: "16px", position: "relative", display: "flex", flexDirection: "column" }}>
                 <div style={{ display: "flex", gap: "12px", width: "100%" }}>
                   <div style={{ width: "80px", height: "80px", borderRadius: "10px", overflow: "hidden", position: "relative", flexShrink: 0 }}>
-                    <Image src={item.cover_image_url || "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&q=80"} alt="Property" fill style={{ objectFit: "cover" }} />
+                    <Image 
+                      src={(() => {
+                        const url = item.cover_image_url;
+                        if (!url) return "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&q=80";
+                        if (url.startsWith("http") || url.startsWith("data:") || url.startsWith("/")) return url;
+                        return trackingImageUrls[item.farm_id] || "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&q=80";
+                      })()} 
+                      alt="Property" 
+                      fill 
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      style={{ objectFit: "cover" }} 
+                    />
                   </div>
                   <div style={{ display: "flex", flexDirection: "column", flexGrow: 1, justifyContent: "center" }}>
                     <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "14px", color: "#001F3F" }}>{item.farm_code}</span>
@@ -626,7 +671,12 @@ export default function ProfileScreen() {
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
                   <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.farm_code}</span>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>{item.mandal_id ? "Mandal " + item.mandal_id : "Location pending"}{item.price ? " • ₹" + (Number(item.price) / 100000).toFixed(1) + "L" : ""}{item.acers ? " • " + item.acers + " Ac" : ""}</span>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>
+                    {item.mandal_id ? "Mandal " + item.mandal_id : "Location pending"}
+                    {item.price ? " • ₹" + (Number(item.price) / 100000).toFixed(1) + "L" : ""}
+                    {item.acers ? " • " + item.acers + " Ac" : ""}
+                    {item.lat && item.long ? ` • Lat: ${item.lat}, Long: ${item.long}` : ""}
+                  </span>
                 </div>
               </div>
             </div>
@@ -779,12 +829,23 @@ export default function ProfileScreen() {
           <div style={{ padding: "0 8px" }}>
             <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Land Purchase Tracking</span>
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: "16px", width: "100%" }}>
+          <div data-lenis-prevent="true" className="hover-scrollbar" style={{ display: "flex", flexDirection: "column", gap: "16px", width: "100%", maxHeight: "264px", overflowY: "auto", paddingBottom: "10px", paddingRight: "4px" }}>
             {profileDetails?.user_purchased_lands_tracking?.length ? profileDetails.user_purchased_lands_tracking.map((item, idx) => (
               <div key={idx} onClick={() => setTrackingModalFarmId(item.farm_id)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", boxShadow: "0px 7.6px 25.33px rgba(0, 31, 63, 0.04)", borderRadius: "20px", padding: "16px", position: "relative", display: "flex", flexDirection: "column" }}>
                 <div style={{ display: "flex", gap: "14px", width: "100%" }}>
                   <div style={{ width: "90px", height: "90px", borderRadius: "10px", overflow: "hidden", position: "relative", flexShrink: 0 }}>
-                    <Image src={item.cover_image_url || "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&q=80"} alt="Property" fill style={{ objectFit: "cover" }} />
+                    <Image 
+                      src={(() => {
+                        const url = item.cover_image_url;
+                        if (!url) return "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&q=80";
+                        if (url.startsWith("http") || url.startsWith("data:") || url.startsWith("/")) return url;
+                        return trackingImageUrls[item.farm_id] || "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&q=80";
+                      })()} 
+                      alt="Property" 
+                      fill 
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      style={{ objectFit: "cover" }} 
+                    />
                   </div>
                   <div style={{ display: "flex", flexDirection: "column", flexGrow: 1, justifyContent: "center" }}>
                     <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "16px", color: "#001F3F", lineHeight: "17px" }}>{item.farm_code}</span>
@@ -976,7 +1037,7 @@ export default function ProfileScreen() {
               </div>
               <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: "20px 24px", borderTop: "1px solid #FAFAFA", cursor: "pointer" }} onClick={() => router.push("/profile/savedfarmlands")}>
                 <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-                  <div style={{ width: "16px", height: "13.73px", border: "1.6px solid #A1A1AA", borderRadius: "2px", display: "flex", alignItems: "center", justifyContent: "center", maskImage: "url('/assets/profile account/Vector (2).svg')", maskSize: "contain", maskRepeat: "no-repeat", WebkitMaskImage: "url('/assets/profile account/Vector (2).svg')", WebkitMaskSize: "contain", WebkitMaskRepeat: "no-repeat" }}></div>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A1A1AA" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
                   <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C" }}>Saved Farmlands</span>
                 </div>
                 <div style={{ width: "7.4px", height: "12px", background: "#D4D4D8", maskImage: "url('/assets/profile account/Icon (20).svg')", maskSize: "contain", maskRepeat: "no-repeat", WebkitMaskImage: "url('/assets/profile account/Icon (20).svg')", WebkitMaskSize: "contain", WebkitMaskRepeat: "no-repeat" }}></div>
@@ -1014,7 +1075,7 @@ export default function ProfileScreen() {
               <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Active Investments</span>
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: "16px", width: "100%" }}>
+            <div data-lenis-prevent="true" className="hover-scrollbar" style={{ display: "flex", flexDirection: "column", gap: "16px", width: "100%", maxHeight: "190px", overflowY: "auto", paddingBottom: "8px", paddingRight: "4px" }}>
               {boughtFarmlands.length > 0 ? boughtFarmlands.map((item, idx) => {
                 const colors = ["#059669", "#D97706", "#2563EB", "#7C3AED"];
                 const color = colors[idx % colors.length];
@@ -1042,8 +1103,9 @@ export default function ProfileScreen() {
             <div style={{ padding: "0 8px" }}>
               <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Site Vists in queue</span>
             </div>
-            {(profileDetails?.upcoming_site_visits || []).map((item: any, idx: number) => (
-              <div key={idx} onClick={() => setIsSiteVisitQueueModalOpen(true)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", borderRadius: "32px", padding: "20px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0px 4px 15px rgba(0,0,0,0.02)" }}>
+            <div data-lenis-prevent="true" className="hover-scrollbar" style={{ display: "flex", flexDirection: "column", gap: "16px", width: "100%", maxHeight: "95px", overflowY: "auto", paddingBottom: "8px", paddingRight: "4px" }}>
+              {(profileDetails?.upcoming_site_visits || []).map((item: any, idx: number) => (
+                <div key={idx} onClick={() => setIsSiteVisitQueueModalOpen(true)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", borderRadius: "32px", padding: "20px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0px 4px 15px rgba(0,0,0,0.02)" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
                   <div style={{ width: "42px", height: "42px", background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.04)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 2px 5px rgba(0,0,0,0.02)" }}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={["#059669", "#D97706", "#2563EB", "#7C3AED"][idx % 4]} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
@@ -1055,6 +1117,7 @@ export default function ProfileScreen() {
                 </div>
               </div>
             ))}
+            </div>
           </div>
 
           {/* Site Visits Completed */}
@@ -1062,8 +1125,9 @@ export default function ProfileScreen() {
             <div style={{ padding: "0 8px" }}>
               <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Site Vists Completed</span>
             </div>
-            {(profileDetails?.completed_site_vists || []).map((item: any, idx: number) => (
-              <div key={idx} onClick={() => setIsSiteVisitModalOpen(true)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", borderRadius: "32px", padding: "20px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0px 4px 15px rgba(0,0,0,0.02)" }}>
+            <div data-lenis-prevent="true" className="hover-scrollbar" style={{ display: "flex", flexDirection: "column", gap: "16px", width: "100%", maxHeight: "95px", overflowY: "auto", paddingBottom: "8px", paddingRight: "4px" }}>
+              {(profileDetails?.completed_site_vists || []).map((item: any, idx: number) => (
+                <div key={idx} onClick={() => setIsSiteVisitModalOpen(true)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", borderRadius: "32px", padding: "20px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0px 4px 15px rgba(0,0,0,0.02)" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
                   <div style={{ width: "42px", height: "42px", background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.04)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 2px 5px rgba(0,0,0,0.02)" }}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={["#059669", "#D97706", "#2563EB", "#7C3AED"][idx % 4]} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
@@ -1075,6 +1139,7 @@ export default function ProfileScreen() {
                 </div>
               </div>
             ))}
+            </div>
           </div>
 
           {/* Active Listing */}
@@ -1082,19 +1147,26 @@ export default function ProfileScreen() {
             <div style={{ padding: "0 8px" }}>
               <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Active Listing</span>
             </div>
-            {(profileDetails?.user_listed_farmlands || []).map((item: any, idx: number) => (
-              <div key={idx} onClick={() => router.push(`/profile/active-listing/${item.farm_id}`)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", borderRadius: "32px", padding: "20px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0px 4px 15px rgba(0,0,0,0.02)" }}>
+            <div data-lenis-prevent="true" className="hover-scrollbar" style={{ display: "flex", flexDirection: "column", gap: "16px", width: "100%", maxHeight: "95px", overflowY: "auto", paddingBottom: "8px", paddingRight: "4px" }}>
+              {(profileDetails?.user_listed_farmlands || []).map((item: any, idx: number) => (
+                <div key={idx} onClick={() => router.push(`/profile/active-listing/${item.farm_id}`)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", borderRadius: "32px", padding: "20px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0px 4px 15px rgba(0,0,0,0.02)" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
                   <div style={{ width: "42px", height: "42px", background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.04)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 2px 5px rgba(0,0,0,0.02)" }}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={["#059669", "#D97706", "#2563EB", "#7C3AED"][idx % 4]} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
                   </div>
                   <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
                     <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.farm_code}</span>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>{item.mandal_id ? "Mandal " + item.mandal_id : "Location pending"}{item.price ? " • ₹" + (Number(item.price) / 100000).toFixed(1) + "L" : ""}{item.acers ? " • " + item.acers + " Ac" : ""}</span>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>
+                      {item.mandal_id ? "Mandal " + item.mandal_id : "Location pending"}
+                      {item.price ? " • ₹" + (Number(item.price) / 100000).toFixed(1) + "L" : ""}
+                      {item.acers ? " • " + item.acers + " Ac" : ""}
+                      {item.lat && item.long ? ` • Lat: ${item.lat}, Long: ${item.long}` : ""}
+                    </span>
                   </div>
                 </div>
               </div>
             ))}
+            </div>
           </div>
 
           {/* Active Deals In Queue */}
@@ -1102,8 +1174,9 @@ export default function ProfileScreen() {
             <div style={{ padding: "0 8px" }}>
               <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Active Deals In Queue</span>
             </div>
-            {(profileDetails?.user_purchased_lands_tracking || []).map((item: any, idx: number) => (
-              <div key={idx} onClick={() => router.push(`/profile/active-deals/${item.farm_id || item.farmland_id}`)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", borderRadius: "32px", padding: "20px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0px 4px 15px rgba(0,0,0,0.02)" }}>
+            <div data-lenis-prevent="true" className="hover-scrollbar" style={{ display: "flex", flexDirection: "column", gap: "16px", width: "100%", maxHeight: "190px", overflowY: "auto", paddingBottom: "8px", paddingRight: "4px" }}>
+              {(profileDetails?.user_purchased_lands_tracking || []).map((item: any, idx: number) => (
+                <div key={idx} onClick={() => router.push(`/profile/active-deals/${item.farm_id || item.farmland_id}`)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", borderRadius: "32px", padding: "20px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0px 4px 15px rgba(0,0,0,0.02)" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
                   <div style={{ width: "42px", height: "42px", background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.04)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 2px 5px rgba(0,0,0,0.02)" }}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={["#059669", "#D97706", "#2563EB", "#7C3AED"][idx % 4]} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
@@ -1115,6 +1188,7 @@ export default function ProfileScreen() {
                 </div>
               </div>
             ))}
+            </div>
           </div>
         </motion.div>
       </div>

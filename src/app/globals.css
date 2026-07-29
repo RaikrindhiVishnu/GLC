@@ -135,3 +135,32 @@ html.lenis body {
     touch-action: none !important;
   }
 }
+
+/* ── Hover scroll areas: SHOW scrollbar only on hover ── */
+.hover-scrollbar {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.hover-scrollbar::-webkit-scrollbar {
+  display: block !important;
+  width: 6px !important;
+}
+
+.hover-scrollbar::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+.hover-scrollbar::-webkit-scrollbar-thumb {
+  background-color: transparent !important;
+  border-radius: 10px !important;
+}
+
+.hover-scrollbar:hover {
+  scrollbar-width: thin !important;
+  -ms-overflow-style: auto !important;
+}
+
+.hover-scrollbar:hover::-webkit-scrollbar-thumb {
+  background-color: #D4D4D8 !important;
+}

@@ -161,7 +161,7 @@ export default function TrendingFeaturedSection() {
   };
 
   return (
-    <section style={{ width: "100%", overflow: "hidden", boxSizing: "border-box" }}>
+    <section style={{ width: "100%", overflow: "visible", boxSizing: "border-box" }}>
 
       {/* ══════════════════════════════════════════════════════ */}
       {/* MOBILE LAYOUT (< lg) — full-width peek carousel       */}
@@ -295,7 +295,7 @@ export default function TrendingFeaturedSection() {
       {/* ══════════════════════════════════════════════════════ */}
       <div
         className="hidden lg:flex flex-col items-center"
-        style={{ margin: "clamp(30px, 5vw, 60px) 0 clamp(50px, 8vw, 100px) 0", gap: "clamp(30px, 5vw, 60px)", overflow: "hidden" }}
+        style={{ margin: "clamp(30px, 5vw, 60px) 0 clamp(50px, 8vw, 100px) 0", gap: "clamp(30px, 5vw, 60px)", overflow: "visible" }}
       >
       {/* ─── HEADER TYPOGRAPHY ROW ─── */}
       <motion.div

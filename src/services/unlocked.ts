@@ -4,6 +4,8 @@ import { baseQuery } from '../store/baseQuery';
 export interface UnlockedFarmland {
   farmland_id: number;
   farm_code: string;
+  created_on: string;
+  farmland_status_id: number;
 }
 
 export interface GetUserUnlockedFarmlandsRequest {

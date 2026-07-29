@@ -20,9 +20,18 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
         if (!payload.exp || payload.exp * 1000 > Date.now()) {
           isValidToken = true;
         } else {
-          console.log("AuthGuard: Token is expired");
-          localStorage.removeItem("token");
-          localStorage.removeItem("refreshToken");
+          const refreshToken = localStorage.getItem("refreshToken");
+          if (refreshToken && refreshToken !== "null" && refreshToken !== "undefined") {
+            // Access token is expired, but we have a refresh token.
+            // Optimistically consider the user authenticated and let RTK Query's baseQuery 
+            // handle the 401 and refresh the token when the first API call is made.
+            console.log("AuthGuard: Token is expired but refresh token exists. Deferring to baseQuery.");
+            isValidToken = true;
+          } else {
+            console.log("AuthGuard: Token is expired and no refresh token found");
+            localStorage.removeItem("token");
+            localStorage.removeItem("refreshToken");
+          }
         }
       } catch (e) {
         // If it's not a valid JWT format, assume it's invalid

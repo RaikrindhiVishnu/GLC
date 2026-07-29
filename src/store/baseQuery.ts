@@ -35,33 +35,41 @@ export const baseQuery: BaseQueryFn<
         if (typeof window !== 'undefined') {
           const refreshToken = localStorage.getItem('refreshToken');
           if (refreshToken) {
-            const refreshResult = await fetch('https://eq3tqsvcw7.execute-api.ap-south-1.amazonaws.com/auth/refreshToken', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'accept': 'application/json'
-              },
-              body: JSON.stringify({ token: refreshToken })
-            });
+            try {
+              const refreshResult = await fetch('https://eq3tqsvcw7.execute-api.ap-south-1.amazonaws.com/auth/refreshToken', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'accept': 'application/json'
+                },
+                body: JSON.stringify({ token: refreshToken })
+              });
 
-            if (refreshResult.ok) {
-              const data = await refreshResult.json();
-              if (data.token) {
-                localStorage.setItem('token', data.token);
-                if (data.refreshToken) {
-                  localStorage.setItem('refreshToken', data.refreshToken);
+              if (refreshResult.ok) {
+                const data = await refreshResult.json();
+                if (data.token) {
+                  localStorage.setItem('token', data.token);
+                  if (data.refreshToken) {
+                    localStorage.setItem('refreshToken', data.refreshToken);
+                  }
+                  // retry the initial query
+                  result = await rawBaseQuery(args, api, extraOptions);
+                } else {
+                  localStorage.removeItem('token');
+                  localStorage.removeItem('refreshToken');
+                  window.location.href = '/login';
                 }
-                // retry the initial query
-                result = await rawBaseQuery(args, api, extraOptions);
-              } else {
+              } else if (refreshResult.status >= 400 && refreshResult.status < 500) {
+                // Only log out if it's a client error (e.g., 401 Unauthorized, 403 Forbidden)
+                // meaning the refresh token is actually invalid/expired.
+                // If it's a 5xx error, it's a server issue, don't force logout.
                 localStorage.removeItem('token');
                 localStorage.removeItem('refreshToken');
                 window.location.href = '/login';
               }
-            } else {
-              localStorage.removeItem('token');
-              localStorage.removeItem('refreshToken');
-              window.location.href = '/login';
+            } catch (networkError) {
+              // Network error during refresh (e.g., disconnected). Do not log out.
+              console.log("Network error during token refresh. Keeping tokens intact.");
             }
           } else {
             localStorage.removeItem('token');

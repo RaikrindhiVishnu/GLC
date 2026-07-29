@@ -15,7 +15,7 @@ export default function ListingConsole() {
   const { data: farmlandResponse, isLoading } = useGetUserListedFarmlandByIdQuery({ farmland_id: farmlandId });
   
   const farmlandData = farmlandResponse?.data;
-  const isUnlisted = farmlandData ? farmlandData.is_active === 0 : false;
+  const isUnlisted = farmlandData ? farmlandData.for_sale === 0 : false;
 
   return (
     <>

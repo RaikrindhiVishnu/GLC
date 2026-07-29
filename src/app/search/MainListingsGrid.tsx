@@ -282,7 +282,7 @@ export default function MainListingsGrid() {
                     <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "14px", color: "#091426" }}>₹{item.price?.toLocaleString()}</span>
                     <span
                       onClick={(e) => { e.stopPropagation(); router.push(`/search/farmlanddetails?id=${item.farmland_id}`); }}
-                      style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "12px", color: "#00629E", cursor: "pointer", textDecoration: "underline" }}
+                      style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "12px", color: "#00629E", cursor: "pointer" }}
                     >View Details</span>
                   </div>
                 </div>
@@ -410,7 +410,8 @@ export default function MainListingsGrid() {
                       overflow: "hidden",
                       display: "flex",
                       flexDirection: "column",
-                      height: cardHeight,
+                      minHeight: cardHeight,
+                      height: "max-content",
                       boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)",
                       border: "1px solid #F1F5F9",
                       transition: "transform 0.2s ease, boxShadow 0.2s ease",
@@ -564,7 +565,6 @@ export default function MainListingsGrid() {
                             lineHeight: "20px",
                             color: "#00629E",
                             cursor: "pointer",
-                            textDecoration: "underline",
                           }}
                         >
                           View Details
@@ -585,7 +585,8 @@ export default function MainListingsGrid() {
                       overflow: "hidden",
                       display: "flex",
                       flexDirection: "column",
-                      height: cardHeight,
+                      minHeight: cardHeight,
+                      height: "max-content",
                       boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)",
                       border: "1px solid #F1F5F9",
                       transition: "transform 0.2s ease, boxShadow 0.2s ease",
@@ -676,7 +677,6 @@ export default function MainListingsGrid() {
                             lineHeight: "20px",
                             color: "#00629E",
                             cursor: "pointer",
-                            textDecoration: "underline",
                           }}
                         >
                           View Details

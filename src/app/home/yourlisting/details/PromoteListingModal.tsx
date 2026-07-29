@@ -106,7 +106,7 @@ export default function PromoteListingModal({ isOpen, onClose, farmlandId }: Pro
       }).unwrap();
       onClose();
     } catch (err) {
-      console.error("Failed to update images", err);
+      console.warn("Failed to update images", err);
     } finally {
       setIsSubmitting(false);
     }

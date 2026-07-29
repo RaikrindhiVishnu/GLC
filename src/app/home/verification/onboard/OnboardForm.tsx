@@ -18,6 +18,7 @@ export default function OnboardForm() {
     price: "",
     lat: "",
     long: "",
+    acers: "1",
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,6 +55,7 @@ export default function OnboardForm() {
       mandal_id: 1,
       milstone_stage_id: 1,
       milestone_status_id: 1,
+      acers: Number(formData.acers) || 1,
     };
 
     try {
@@ -153,7 +155,7 @@ export default function OnboardForm() {
           </div>
 
           {/* Property Details */}
-          <div className="w-full h-[255px] bg-white rounded-[48px] p-8 shadow-[0px_4px_20px_rgba(26,54,93,0.05)] flex flex-col gap-6">
+          <div className="w-full h-auto bg-white rounded-[48px] p-8 shadow-[0px_4px_20px_rgba(26,54,93,0.05)] flex flex-col gap-6">
             <h3 className="m-0 font-jakarta font-bold text-[12px] leading-[12px] tracking-[1.2px] text-[#0F2F4C] uppercase">PROPERTY DETAILS</h3>
             
             <div className="flex flex-row gap-4">
@@ -175,6 +177,13 @@ export default function OnboardForm() {
               <div className="flex flex-col gap-1 flex-1">
                 <label className="font-jakarta font-bold text-[10px] leading-[15px] tracking-[1px] text-[#45474C] uppercase ml-1">MANDAL</label>
                 <input type="text" value="Chevella" readOnly className="bg-[#F3F4F5] rounded-[16px] px-6 py-3 font-jakarta font-normal text-[14px] leading-[18px] text-[#6B7280] outline-none h-[48px]" />
+              </div>
+            </div>
+
+            <div className="flex flex-row gap-4">
+              <div className="flex flex-col gap-1 flex-1">
+                <label className="font-jakarta font-bold text-[10px] leading-[15px] tracking-[1px] text-[#45474C] uppercase ml-1">ACRES</label>
+                <input type="number" name="acers" value={formData.acers} onChange={handleInputChange} className="bg-[#F3F4F5] rounded-[16px] px-6 py-3 font-jakarta font-normal text-[14px] leading-[18px] text-[#191C1D] outline-none h-[48px]" />
               </div>
             </div>
           </div>

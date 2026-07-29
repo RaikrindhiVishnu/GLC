@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { MapPin } from "lucide-react";
 import { useGetFarmlandByTagAndStateQuery } from "../../services/home";
 import { useGetUserDetailsByIdQuery } from "../../services/user";
+import { useGetAllGeoMasterDataQuery } from "../../services/master";
 
 export default function Recommended() {
   const router = useRouter();
@@ -29,6 +30,21 @@ export default function Recommended() {
   );
 
   const stateId = (userDetailsResponse?.data as any)?.state_id || 1;
+
+  const { data: geoDataRes } = useGetAllGeoMasterDataQuery();
+
+  const getLocationString = (districtId?: number) => {
+    if (!districtId || !geoDataRes?.districts) return "UNKNOWN LOCATION";
+    const district = geoDataRes.districts.slice(1).find((d: any[]) => d[0] === districtId);
+    if (!district) return "UNKNOWN LOCATION";
+    
+    const stateId = district[1];
+    const state = geoDataRes.states?.slice(1).find((s: any[]) => s[0] === stateId);
+    if (!state) return String(district[3]).toUpperCase();
+    
+    const stateStr = state[2] ? state[2] : state[3];
+    return `${district[3]}, ${stateStr}`.toUpperCase();
+  };
 
   // Fetch recommended properties with empty tag_ids and user location
   const { data: res, isLoading } = useGetFarmlandByTagAndStateQuery({ tag_ids: [], state_id: stateId });
@@ -159,7 +175,7 @@ export default function Recommended() {
                 <div className="flex items-center gap-[6px] mt-[11px]">
                   <MapPin size={12} color="#000000" className="shrink-0" />
                   <span className="font-manrope font-bold text-[12px] leading-[16px] tracking-[-0.275px] text-[#000000]">
-                    {item.farmland_district_id ? `District ${item.farmland_district_id}, A.P.` : "Vizag, A.P."}
+                    {item.farmland_district_id ? getLocationString(item.farmland_district_id) : "VIZAG, A.P."}
                   </span>
                 </div>
 

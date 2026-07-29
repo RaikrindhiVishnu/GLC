@@ -20,7 +20,7 @@ export interface GetUserListedFarmlandByIdData {
   price: number;
   total_views: number;
   total_saves: number;
-  is_active: number;
+  for_sale: number;
 }
 
 export interface GetUserListedFarmlandByIdResponse {

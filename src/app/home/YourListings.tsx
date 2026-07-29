@@ -58,7 +58,8 @@ export default function YourListings() {
             newUrls[item.farmland_id] = res.url;
           }
         } catch (error) {
-          console.error("Failed to generate presigned URL for", url, error);
+          // Gracefully handle missing or inaccessible S3 images
+          console.warn(`S3 image unavailable for listing ${item.farmland_id}, using fallback.`);
         }
       }
       setImageUrls(newUrls);

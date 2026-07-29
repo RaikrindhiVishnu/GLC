@@ -66,59 +66,21 @@ export default function YourListingGrid() {
       ) : farmlands.length === 0 ? (
         <div className="w-full text-center py-10 font-jakarta text-gray-500">You haven't listed any farmlands yet.</div>
       ) : (
-        /* Staggered Masonry Layout: 3 Columns */
-        <div className="flex flex-col md:flex-row gap-8 items-start w-full">
-          {/* Column 1 */}
-          <div className="flex-1 flex flex-col w-full gap-8">
-            {displayedFarmlands.filter((_, i) => i % 3 === 0).map((farm) => (
-              <TrendingCard
-                key={farm.farmland_id}
-                id={String(farm.farmland_id)}
-                title={farm.farm_code || "Your Listing"}
-                description={"Your listed farmland property."}
-                price={formatPrice(farm.valuation)}
-                location={"Location N/A"}
-                tagText={"Your Listing"}
-                imageUrl={farm.farmland_img || ""}
-                linkDestination={`/home/yourlisting/details?id=${farm.farmland_id}`}
-              />
-            ))}
-          </div>
-
-          {/* Column 2 (Middle column with reverse layout) */}
-          <div className="flex-1 flex flex-col w-full gap-8">
-            {displayedFarmlands.filter((_, i) => i % 3 === 1).map((farm) => (
-              <TrendingCard
-                key={farm.farmland_id}
-                id={String(farm.farmland_id)}
-                title={farm.farm_code || "Your Listing"}
-                description={"Your listed farmland property."}
-                price={formatPrice(farm.valuation)}
-                location={"Location N/A"}
-                tagText={"Your Listing"}
-                imageUrl={farm.farmland_img || ""}
-                linkDestination={`/home/yourlisting/details?id=${farm.farmland_id}`}
-                reverseLayout={true}
-              />
-            ))}
-          </div>
-
-          {/* Column 3 */}
-          <div className="flex-1 flex flex-col w-full gap-8">
-            {displayedFarmlands.filter((_, i) => i % 3 === 2).map((farm) => (
-              <TrendingCard
-                key={farm.farmland_id}
-                id={String(farm.farmland_id)}
-                title={farm.farm_code || "Your Listing"}
-                description={"Your listed farmland property."}
-                price={formatPrice(farm.valuation)}
-                location={"Location N/A"}
-                tagText={"Your Listing"}
-                imageUrl={farm.farmland_img || ""}
-                linkDestination={`/home/yourlisting/details?id=${farm.farmland_id}`}
-              />
-            ))}
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full items-start">
+          {displayedFarmlands.map((farm, index) => (
+            <TrendingCard
+              key={farm.farmland_id}
+              id={String(farm.farmland_id)}
+              title={farm.farm_code || "Your Listing"}
+              description={"Your listed farmland property."}
+              price={formatPrice(farm.valuation)}
+              location={"Location N/A"}
+              tagText={"Your Listing"}
+              imageUrl={farm.farmland_img || ""}
+              linkDestination={`/home/yourlisting/details?id=${farm.farmland_id}`}
+              reverseLayout={index % 3 === 1}
+            />
+          ))}
         </div>
       )}
     </div>

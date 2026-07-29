@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import TrendingFeaturedSection from "@/app/search/TrendingFeaturedSection";
 
 const farmlands = [
   { id: "GLC-SOS-01", name: "GLC SOS 01", location: "Vizag, A.P.", price: "₹5.2Cr", image: "/assets/home/TrendingFarmlands/glcsos01.svg", status: "Under Maintenance", views: "TRENDING LISTING", desc: "High-yield mango grove with established irrigation systems and road access.", type: "image-top" },
@@ -19,6 +20,17 @@ export default function MaintenanceListings() {
 
   const renderCard = (land: any, index: number) => {
     const isImageTop = land.type === "image-top";
+    const colIndex = index % 3;
+    
+    let cardHeight = "587px";
+    let imageHeight = "320px";
+    if (colIndex === 1) {
+      cardHeight = "648px";
+      imageHeight = "373px";
+    } else if (colIndex === 2) {
+      cardHeight = "635px";
+      imageHeight = "384px";
+    }
 
     return (
       <motion.div
@@ -27,11 +39,12 @@ export default function MaintenanceListings() {
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: index * 0.1 }}
         viewport={{ once: true }}
-        className="flex flex-col bg-white border border-[#F3F4F5] rounded-[30px] overflow-hidden shadow-[0px_1px_2px_rgba(0,0,0,0.05)] cursor-pointer w-full mb-8 h-[587px]"
+        className="flex flex-col bg-white border border-[#F3F4F5] rounded-[30px] overflow-hidden shadow-[0px_1px_2px_rgba(0,0,0,0.05)] cursor-pointer w-full"
+        style={{ minHeight: cardHeight, height: "max-content" }}
         onClick={() => router.push(`/home/maintenance/asset-development?farmland=${land.id}`)}
       >
         {isImageTop && (
-          <div className="relative w-full h-[320px] bg-gray-100 flex-shrink-0">
+          <div className="relative w-full bg-gray-100 flex-shrink-0" style={{ height: imageHeight }}>
             <Image src={land.image} alt={land.name} fill style={{ objectFit: "cover" }} />
             <div className="absolute top-6 left-6 bg-white/90 backdrop-blur-sm px-4 py-1.5 rounded-full border border-white/30 shadow-sm">
               <span className="font-jakarta font-bold text-[10px] tracking-[0.2px] text-[#0F2F4C]">{land.status}</span>
@@ -72,7 +85,7 @@ export default function MaintenanceListings() {
         </div>
 
         {!isImageTop && (
-          <div className="relative w-full h-[373px] bg-gray-100 flex-shrink-0 mt-auto">
+          <div className="relative w-full bg-gray-100 flex-shrink-0 mt-auto" style={{ height: imageHeight }}>
             <Image src={land.image} alt={land.name} fill style={{ objectFit: "cover" }} />
             <div className="absolute top-6 left-6 bg-white/90 backdrop-blur-sm px-4 py-1.5 rounded-full border border-white/30 shadow-sm">
               <span className="font-jakarta font-bold text-[10px] tracking-[0.2px] text-[#0F2F4C]">{land.status}</span>
@@ -104,101 +117,13 @@ export default function MaintenanceListings() {
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-8 w-full">
-        <div className="flex flex-col flex-1 gap-8">
-          {renderCard(farmlands[0], 0)}
-          {renderCard(farmlands[3], 3)}
-        </div>
-        <div className="flex flex-col flex-1 gap-8">
-          {renderCard(farmlands[1], 1)}
-          {renderCard(farmlands[4], 4)}
-        </div>
-        <div className="flex flex-col flex-1 gap-8">
-          {renderCard(farmlands[2], 2)}
-          {renderCard(farmlands[5], 5)}
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full items-start">
+        {farmlands.map((land, index) => renderCard(land, index))}
       </div>
 
       {/* Farmland Trending Section */}
       <div className="mt-24 w-full flex flex-col items-center justify-center mb-16 relative">
-        <h3 className="font-jakarta font-bold text-[16px] text-[#131600] flex items-center gap-2 mb-12">
-          Farmland trending in <span className="text-[#2780C4] flex items-center gap-1 cursor-pointer">All Categories <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
-        </h3>
-
-        {/* Carousel Graphic */}
-        <div className="relative w-full max-w-[900px] h-[360px] flex justify-center items-center">
-          {/* Back Left 2 */}
-          <motion.div
-            initial={{ opacity: 0, x: -100 }}
-            whileInView={{ opacity: 0.8, x: -48 }}
-            transition={{ duration: 0.6 }}
-            className="absolute left-[0%] w-[180px] h-[240px] rounded-[16px] overflow-hidden scale-75 z-10 shadow-lg origin-right"
-          >
-            <Image src="/assets/home/TrendingFarmlands/glcsos03.svg" alt="thumb" fill style={{ objectFit: "cover" }} />
-          </motion.div>
-
-          {/* Back Left 1 */}
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 0.9, x: -24 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="absolute left-[12%] w-[200px] h-[280px] rounded-[16px] overflow-hidden scale-90 z-20 shadow-xl origin-right"
-          >
-            <Image src="/assets/home/TrendingFarmlands/glcsos02.svg" alt="thumb" fill style={{ objectFit: "cover" }} />
-          </motion.div>
-
-          {/* Back Right 2 */}
-          <motion.div
-            initial={{ opacity: 0, x: 100 }}
-            whileInView={{ opacity: 0.8, x: 48 }}
-            transition={{ duration: 0.6 }}
-            className="absolute right-[0%] w-[180px] h-[240px] rounded-[16px] overflow-hidden scale-75 z-10 shadow-lg origin-left"
-          >
-            <Image src="/assets/home/TrendingFarmlands/glcsos04.svg" alt="thumb" fill style={{ objectFit: "cover" }} />
-          </motion.div>
-
-          {/* Back Right 1 */}
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 0.9, x: 24 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="absolute right-[12%] w-[200px] h-[280px] rounded-[16px] overflow-hidden scale-90 z-20 shadow-xl origin-left"
-          >
-            <Image src="/assets/home/TrendingFarmlands/glcsos05.svg" alt="thumb" fill style={{ objectFit: "cover" }} />
-          </motion.div>
-
-          {/* Center */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8, y: 20 }}
-            whileInView={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="relative w-[340px] h-[360px] rounded-[24px] overflow-hidden z-30 shadow-2xl bg-white border border-gray-100 group"
-          >
-            <Image src="/assets/home/TrendingFarmlands/glcsos01.svg" alt="Main" fill style={{ objectFit: "cover" }} />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-6">
-              <div className="flex justify-between items-end">
-                <div className="flex flex-col">
-                  <h4 className="m-0 font-jakarta font-bold text-[20px] text-white">GLC SOS 01</h4>
-                  <span className="font-jakarta text-[12px] text-white/80 flex items-center gap-1">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                    Vizag, A.P.
-                  </span>
-                </div>
-                <span className="font-jakarta font-bold text-[18px] text-white">₹5.2 Cr</span>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Carousel controls */}
-        <div className="flex gap-4 mt-12">
-          <button className="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-gray-500 hover:bg-gray-100 transition-colors">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
-          </button>
-          <button className="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-gray-500 hover:bg-gray-100 transition-colors">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
-          </button>
-        </div>
+        <TrendingFeaturedSection />
       </div>
     </section>
   );

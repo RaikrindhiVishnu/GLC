@@ -21,7 +21,7 @@ export default function Newsletter() {
             duration: 1,
           }}
           viewport={{ once: true }}
-          className="flex flex-col items-center justify-center rounded-[32px] md:rounded-[40px] lg:rounded-[48px] bg-[#091426] px-5 md:px-10 lg:px-16 py-12 md:py-16 lg:p-24 border border-[rgba(105,182,254,0.1)] text-center gap-4 shadow-2xl"
+          className="flex flex-col items-center justify-center rounded-[32px] md:rounded-[40px] lg:rounded-[48px] bg-[#091426] px-5 md:px-10 lg:px-24 py-8 md:py-10 lg:py-12 border border-[rgba(105,182,254,0.1)] text-center gap-4 shadow-2xl"
           style={{
             minHeight: "310px",
           }}

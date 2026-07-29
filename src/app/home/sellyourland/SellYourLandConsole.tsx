@@ -139,7 +139,10 @@ export default function SellYourLandConsole() {
         price: formData.baseValuation || "300000",
         land_description: formData.description || "N/A",
         polygon: formData.polygon && formData.polygon.length > 0 ? formData.polygon : undefined,
-        gallery_images: galleryImageUrls.length > 0 ? galleryImageUrls : undefined
+        gallery_images: galleryImageUrls.length > 0 ? galleryImageUrls : undefined,
+        master_milestone_stage_id: 2,
+        master_milestone_stage_status_id: 1,
+        per_acer_value: (Number(formData.baseValuation) / (Number(formData.acreage) || 1)).toString()
       };
       
       const res = await sellFarmland(payload).unwrap();

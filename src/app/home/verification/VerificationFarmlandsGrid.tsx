@@ -58,7 +58,7 @@ export default function VerificationFarmlandsGrid() {
         transition={{ duration: 0.5, delay: colIndex * 0.1 }}
         viewport={{ once: true }}
         className="flex flex-col bg-white border border-[#F3F4F5] rounded-[30px] shadow-[0px_1px_2px_rgba(0,0,0,0.05)] cursor-pointer w-full"
-        style={{ height: cardHeight, overflow: "hidden", isolation: "isolate" }}
+        style={{ minHeight: cardHeight, height: "max-content", overflow: "hidden", isolation: "isolate" }}
         onClick={() => router.push(`/home/verification/tracker?farmland=${land.id}`)}
       >
         {isImageTop && (
@@ -181,16 +181,7 @@ export default function VerificationFarmlandsGrid() {
           <span className="font-jakarta text-[#0F2F4C]">No farmlands in verification found.</span>
         </div>
       ) : (
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: "32px",
-            boxSizing: "border-box",
-            alignItems: "start",
-            width: "100%",
-          }}
-        >
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full items-start">
           {displayedFarmlands.map((land: any, index: number) => {
             const colIndex = index % 3;
             let layoutType = "image-top";

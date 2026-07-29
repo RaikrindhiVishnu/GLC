@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { MapPin } from "lucide-react";
 
 import { useGetFarmlandByTagAndStateQuery } from "../../services/home";
-import { useGetAllMasterDataQuery } from "../../services/master";
+import { useGetAllMasterDataQuery, useGetAllGeoMasterDataQuery } from "../../services/master";
 import { useGetUserDetailsByIdQuery } from "../../services/user";
 
 const defaultFarmlands = [
@@ -69,6 +69,20 @@ export default function PopularFarmlands() {
   );
 
   const { data: masterDataResponse } = useGetAllMasterDataQuery();
+  const { data: geoDataRes } = useGetAllGeoMasterDataQuery();
+
+  const getLocationString = (districtId?: number) => {
+    if (!districtId || !geoDataRes?.districts) return "UNKNOWN LOCATION";
+    const district = geoDataRes.districts.slice(1).find((d: any[]) => d[0] === districtId);
+    if (!district) return "UNKNOWN LOCATION";
+    
+    const stateId = district[1];
+    const state = geoDataRes.states?.slice(1).find((s: any[]) => s[0] === stateId);
+    if (!state) return String(district[3]).toUpperCase();
+    
+    const stateStr = state[2] ? state[2] : state[3];
+    return `${district[3]}, ${stateStr}`.toUpperCase();
+  };
 
   const stateId = (userDetailsResponse?.data as any)?.state_id || 1;
   const tagResult = masterDataResponse?.data?.tagResult || [];
@@ -86,7 +100,7 @@ export default function PopularFarmlands() {
         return {
           id: item.farmland_id.toString(),
           title: item.farmland_code,
-          location: item.farmland_district_id ? `District ${item.farmland_district_id}` : "Vizag, A.P.",
+          location: item.farmland_district_id ? getLocationString(item.farmland_district_id) : "Vizag, A.P.",
           description: "Prime editorial land parcel featuring rich soil biodiversity and vintage irrigation architecture.",
           img: hasValidImg ? item.farmland_img : `/assets/home/PopularFarmlands/glc${(idx % 2) + 1}.svg`
         };

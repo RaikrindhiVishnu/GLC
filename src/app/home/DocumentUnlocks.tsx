@@ -128,7 +128,7 @@ export default function DocumentUnlocks() {
                   onClick={() => router.push("/home/unlockeddocuments")}
                   className="box-border flex flex-row justify-center items-center py-3 px-0 w-full sm:w-[214px] h-[60px] bg-[radial-gradient(50%_50%_at_50%_50%,#2780C4_0%,#164573_100%)] border-2 border-[#2780C4] rounded-[9999px] cursor-pointer transition-transform duration-300 hover:scale-105"
                 >
-                  <span className="w-[106px] h-4 font-jakarta font-bold text-[12px] leading-4 flex items-center justify-center text-center tracking-[2.4px] text-white">
+                  <span className="font-jakarta font-bold text-[12px] leading-4 flex items-center justify-center text-center tracking-[2.4px] text-white whitespace-nowrap">
                     GET PREMIUM
                   </span>
                 </button>

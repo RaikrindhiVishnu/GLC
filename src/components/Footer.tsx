@@ -97,6 +97,10 @@ export default function Footer() {
               {["Maintenance", "Verification", "Privacy Policy"].map((item) => (
                 <li
                   key={item}
+                  onClick={() => {
+                    if (item === "Maintenance") router.push("/home/maintenance");
+                    else if (item === "Verification") router.push("/home/verification");
+                  }}
                   className="text-white text-[18px] font-medium font-jakarta cursor-pointer hover:opacity-70 transition-opacity"
                 >
                   {item}
@@ -195,6 +199,11 @@ export default function Footer() {
                   {["Verification of Farmland", "Maintenance of Farmland", "Sell Your Land"].map((link) => (
                     <li
                       key={link}
+                      onClick={() => {
+                        if (link === "Verification of Farmland") router.push("/home/verification");
+                        else if (link === "Maintenance of Farmland") router.push("/home/maintenance");
+                        else if (link === "Sell Your Land") router.push("/home/sellyourland");
+                      }}
                       className="text-white text-[16px] font-semibold font-jakarta whitespace-nowrap leading-[100%] cursor-pointer hover:opacity-70 transition-opacity"
                     >
                       {link}

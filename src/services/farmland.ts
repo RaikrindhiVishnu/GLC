@@ -222,6 +222,9 @@ export interface SellFarmlandRequest {
   land_description: string;
   polygon?: { lat: number; lng: number }[];
   gallery_images?: string[];
+  master_milestone_stage_id?: number;
+  master_milestone_stage_status_id?: number;
+  per_acer_value?: string;
 }
 
 export interface SellFarmlandResponse {
@@ -230,6 +233,26 @@ export interface SellFarmlandResponse {
   data: {
     farmland_id: number;
   };
+}
+
+export interface UpdateCoverImageRequest {
+  farmland_id: number;
+  cover_image_url: string;
+}
+
+export interface UpdateCoverImageResponse {
+  success: boolean;
+  message: string;
+}
+
+export interface ChangeFarmlandListingStatusRequest {
+  farmland_id: number;
+  for_sale: number;
+}
+
+export interface ChangeFarmlandListingStatusResponse {
+  success: boolean;
+  message: string;
 }
 
 export interface DeleteFarmlandListingRequest {
@@ -317,6 +340,20 @@ export const farmlandApi = createApi({
         body: payload,
       }),
     }),
+    updateCoverImage: builder.mutation<UpdateCoverImageResponse, UpdateCoverImageRequest>({
+      query: (payload) => ({
+        url: '/farmland/update_cover_image',
+        method: 'POST',
+        body: payload,
+      }),
+    }),
+    changeFarmlandListingStatus: builder.mutation<ChangeFarmlandListingStatusResponse, ChangeFarmlandListingStatusRequest>({
+      query: (payload) => ({
+        url: '/farmland/change_farmland_listing_status',
+        method: 'POST',
+        body: payload,
+      }),
+    }),
   }),
 });
 
@@ -330,5 +367,7 @@ export const {
   useAddLandToUserSavedListMutation,
   useGetFarmlandsForComparisonQuery,
   useSellFarmlandMutation,
-  useDeleteFarmlandListingMutation
+  useDeleteFarmlandListingMutation,
+  useUpdateCoverImageMutation,
+  useChangeFarmlandListingStatusMutation
 } = farmlandApi;

@@ -49,9 +49,9 @@ export default function PoolInvestments() {
               <div className="relative w-[200px] h-[200px] sm:w-[256px] sm:h-[256px] shrink-0">
                 <svg width="100%" height="100%" viewBox="0 0 256 256" className="-rotate-90">
                   <defs>
-                    <linearGradient id="progress-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="#BDD327" />
-                      <stop offset="100%" stopColor="#2780C4" />
+                    <linearGradient id="progress-gradient" x1="100%" y1="0%" x2="0%" y2="0%">
+                      <stop offset="0%" stopColor="#2780C4" />
+                      <stop offset="100%" stopColor="#164573" />
                     </linearGradient>
                   </defs>
                   {/* Background Circle */}
@@ -60,7 +60,7 @@ export default function PoolInvestments() {
                     cy="128"
                     r="100"
                     fill="transparent"
-                    stroke="#E7E8E9"
+                    stroke="#D9D9D9"
                     strokeWidth="25"
                   />
                   {/* Progress Circle (3/4 = 75%) */}

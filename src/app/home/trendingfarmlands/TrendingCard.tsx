@@ -49,7 +49,7 @@ export default function TrendingCard({
           setResolvedImageUrl(res.url);
         }
       } catch (e) {
-        console.error("Failed to generate presigned URL for", imageUrl, e);
+        console.warn("Could not generate presigned URL, falling back to placeholder:", imageUrl);
       }
     };
     fetchImage();

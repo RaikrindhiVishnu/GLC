@@ -52,12 +52,14 @@ export interface SubmitFarmlandVerificationRequest {
   mandal_id: number;
   milstone_stage_id: number;
   milestone_status_id: number;
+  acers?: number;
 }
 
 export interface SubmitFarmlandVerificationResponse {
   success?: boolean;
   message?: string;
   error?: string;
+  farmland_id?: number;
 }
 
 export const verificationApi = createApi({

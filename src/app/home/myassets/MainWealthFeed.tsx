@@ -106,7 +106,7 @@ export default function MainWealthFeed() {
               >
                 {/* Image */}
                 <div className="relative rounded-3xl overflow-hidden w-full h-48 sm:w-48 sm:h-48 sm:shrink-0" style={{ background: "#F3F4F5", boxShadow: "inset 0px 0px 0px 1px rgba(0,0,0,0.05)" }}>
-                  <Image src={(card.farmland_img && card.farmland_img !== "string") ? card.farmland_img : `/assets/home/YourListings/glcsos1.svg`} alt={card.farmland_code} fill style={{ objectFit: "cover", opacity: i === 0 ? 1 : 0.8 }} />
+                  <Image src={(typeof card.farmland_img === 'string' && (card.farmland_img.startsWith('http') || card.farmland_img.startsWith('/'))) ? card.farmland_img : `/assets/home/YourListings/glcsos1.svg`} alt={card.farmland_code || 'farmland'} fill style={{ objectFit: "cover", opacity: i === 0 ? 1 : 0.8 }} />
                 </div>
 
                 {/* Info */}

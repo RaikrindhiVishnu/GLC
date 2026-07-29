@@ -4,6 +4,7 @@ import React, { useState, useEffect, Suspense } from "react";
 import { useLenis } from 'lenis/react';
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { useUpdateViewsForFarmlandByIdMutation } from "@/services/home";
 
 const SERVICES = [
   {
@@ -79,6 +80,16 @@ function MaintenanceServicesCatalogInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const farmlandId = searchParams.get("farmland") || "Unknown Asset";
+  const numericId = parseInt(farmlandId.replace(/\D/g, "")) || null;
+  const [updateViews] = useUpdateViewsForFarmlandByIdMutation();
+
+  useEffect(() => {
+    if (numericId) {
+      updateViews({ farmland_id: numericId }).catch((err) => {
+        console.warn("Failed to update views:", err);
+      });
+    }
+  }, [numericId, updateViews]);
 
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [showModal, setShowModal] = useState(false);
