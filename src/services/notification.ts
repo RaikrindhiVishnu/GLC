@@ -4,6 +4,8 @@ import { baseQuery } from '../store/baseQuery';
 const NOTIFICATION_API_BASE_URL = 'https://eq3tqsvcw7.execute-api.ap-south-1.amazonaws.com';
 
 export interface NotificationItem {
+  id?: number;
+  user_notification_id?: number;
   title: string;
   body: string;
   time: string;

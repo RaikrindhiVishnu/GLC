@@ -117,9 +117,13 @@ export default function TrendingFarmlands() {
               <div className="relative w-full h-[180px] sm:w-[180px] lg:w-[204px] sm:h-[260px] shrink-0 pointer-events-none">
                 <Image
                   src={
-                    (item.farmland_img && !item.farmland_img.toLowerCase().endsWith('.pdf'))
-                      ? item.farmland_img
-                      : `/assets/home/TrendingFarmlands/glcsos0${(i % 3) + 1}.svg`
+                    (() => {
+                      const url = item.farmland_img;
+                      if (!url || url === "null" || url === "") return `/assets/home/TrendingFarmlands/glcsos0${(i % 3) + 1}.svg`;
+                      if (url.toLowerCase().endsWith('.pdf')) return `/assets/home/TrendingFarmlands/glcsos0${(i % 3) + 1}.svg`;
+                      if (url.startsWith("http") || url.startsWith("data:") || url.startsWith("/")) return url;
+                      return `/assets/home/TrendingFarmlands/glcsos0${(i % 3) + 1}.svg`;
+                    })()
                   }
                   alt={item.farmland_code}
                   fill

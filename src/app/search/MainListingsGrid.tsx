@@ -111,12 +111,17 @@ export default function MainListingsGrid() {
     }
   }, [savedFarmlandsData]);
 
+  const [currentPage, setCurrentPage] = useState(0);
+
   const activeFilters = Object.keys(filters).length > 0 
-    ? { ...filters, offset: 0 } 
-    : { state_id: [1], offset: 0 };
+    ? { ...filters, offset: currentPage * 6 } 
+    : { state_id: [1], offset: currentPage * 6 };
   const { data: res, isLoading } = useGetAllFarmlandsByStateIdQuery(activeFilters);
   const farmlands = res?.data || [];
   const totalCount = res?.total_count || farmlands.length;
+
+  const displayedFarmlands = farmlands.slice(0, 6);
+  const totalPages = Math.max(1, Math.ceil(totalCount / 6));
 
   const scalerRef = useRef<HTMLDivElement>(null);
   const shellRef = useRef<HTMLDivElement>(null);
@@ -127,7 +132,7 @@ export default function MainListingsGrid() {
       const targetWidth = 1260;
       const currentScale = vw < targetWidth ? vw / targetWidth : 1;
       
-      const rowCount = Math.ceil(farmlands.length / 3);
+      const rowCount = Math.ceil(displayedFarmlands.length / 3);
       // Header is ~40px, each row is max 636px, gap is 32px
       const baseHeight = rowCount === 0 ? 100 : 40 + 32 + (rowCount * 636) + ((rowCount - 1) * 32) + 50;
       
@@ -142,7 +147,7 @@ export default function MainListingsGrid() {
     update();
     window.addEventListener("resize", update);
     return () => window.removeEventListener("resize", update);
-  }, [farmlands.length]);
+  }, [displayedFarmlands.length]);
 
   const [addFarmland] = useAddLandToUserSavedListMutation();
   const [removeFarmland] = useRemoveFarmLandFromUserSavedListMutation();
@@ -207,14 +212,22 @@ export default function MainListingsGrid() {
           className="flex gap-4 w-full overflow-x-auto pb-4 pl-4 sm:pl-6 pr-4 sm:pr-6"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
-          {farmlands.map((item, i) => {
+          {displayedFarmlands.map((item, i) => {
             const isBookmarked = !!bookmarks[item.farmland_id];
             
             // Map tag IDs to names
-            const mappedTags = item.tag_ids?.map((id: number) => {
-              const found = masterData?.data?.tagResult?.find((t: any) => t.id === id);
-              return found ? found.name : `Tag ${id}`;
-            }) || [];
+            let parsedTags: any[] = [];
+            if (Array.isArray(item.tag_ids)) {
+              parsedTags = item.tag_ids;
+            } else if (typeof item.tag_ids === 'string') {
+              try { parsedTags = JSON.parse(item.tag_ids); } catch (e) {}
+            }
+            const mappedTags = parsedTags.map((id: any) => {
+              const numId = Number(id);
+              const tagsList = masterData?.data?.tagResult || (masterData as any)?.tagResult || [];
+              const found = tagsList.find((t: any) => t.id === numId || t.tag_id === numId);
+              return found ? (found.description || found.name || found.tag_name) : `Tag ${numId}`;
+            });
             return (
               <motion.div
                 key={`mob-${item.farmland_id}`}
@@ -237,7 +250,17 @@ export default function MainListingsGrid() {
                 }}
               >
                 <div style={{ position: "relative", width: "100%", height: "160px" }}>
-                  <img src={item.farmland_image || "/assets/search/image2.1.png"} alt={item.farmland_code} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                  <img 
+                    src={item.farmland_image || "/assets/search/image2.1.svg"} 
+                    alt={item.farmland_code} 
+                    onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = "/assets/search/image2.1.svg" }}
+                    style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} 
+                  />
+                  {mappedTags[0] && (
+                    <div style={{ position: "absolute", top: "12px", left: "12px", background: "rgba(255, 255, 255, 0.9)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)", padding: "4px 10px", borderRadius: "9999px", border: "1px solid rgba(255, 255, 255, 0.3)", zIndex: 5 }}>
+                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "9px", color: "#0F2F4C" }}>{mappedTags[0]}</span>
+                    </div>
+                  )}
                   <button
                     onClick={(e) => toggleBookmark(item.farmland_id.toString(), e)}
                     style={{ position: "absolute", top: "12px", right: "12px", width: "34px", height: "34px", background: "#FFFFFF", borderRadius: "9999px", border: "none", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", boxShadow: "0px 4px 10px rgba(0,0,0,0.08)" }}
@@ -248,8 +271,8 @@ export default function MainListingsGrid() {
                   </button>
                 </div>
                 <div style={{ padding: "16px", display: "flex", flexDirection: "column", gap: "6px" }}>
-                  <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
-                    {mappedTags.map((t: string, idx: number) => (
+                  <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", minHeight: "20px" }}>
+                    {(mappedTags.length > 1 ? mappedTags.slice(1) : mappedTags).map((t: string, idx: number) => (
                       <span key={idx} style={{ padding: "3px 8px", background: "#E7E8E9", borderRadius: "9999px", fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "9px", color: "#45474C", textTransform: "uppercase" }}>{t}</span>
                     ))}
                   </div>
@@ -317,11 +340,21 @@ export default function MainListingsGrid() {
               Andhra Pradesh ({totalCount} Matches)
             </motion.h2>
 
-            {/* 3 Indicator Dots on the right */}
+            {/* Indicator Dots on the right */}
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <div style={{ width: "8px", height: "8px", background: "#0F2F4C", borderRadius: "9999px" }} />
-              <div style={{ width: "8px", height: "8px", background: "#E1E3E4", borderRadius: "9999px" }} />
-              <div style={{ width: "8px", height: "8px", background: "#E1E3E4", borderRadius: "9999px" }} />
+              {Array.from({ length: totalPages }).map((_, idx) => (
+                <div 
+                  key={idx}
+                  onClick={() => setCurrentPage(idx)}
+                  style={{ 
+                    width: "8px", 
+                    height: "8px", 
+                    background: currentPage === idx ? "#0F2F4C" : "#E1E3E4", 
+                    borderRadius: "9999px",
+                    cursor: "pointer"
+                  }} 
+                />
+              ))}
             </div>
           </div>
 
@@ -332,19 +365,39 @@ export default function MainListingsGrid() {
               gridTemplateColumns: "repeat(3, 1fr)",
               gap: "32px",
               boxSizing: "border-box",
+              alignItems: "start",
             }}
           >
-            {farmlands.map((item, index) => {
+            {displayedFarmlands.map((item, index) => {
               const isBookmarked = !!bookmarks[item.farmland_id];
-              const mappedTags = item.tag_ids?.map((id: number) => {
-                const found = masterData?.data?.tagResult?.find((t: any) => t.id === id);
-                return found ? found.name : `Tag ${id}`;
-              }) || [];
+              let parsedTags: any[] = [];
+              if (Array.isArray(item.tag_ids)) {
+                parsedTags = item.tag_ids;
+              } else if (typeof item.tag_ids === 'string') {
+                try { parsedTags = JSON.parse(item.tag_ids); } catch (e) {}
+              }
+              const mappedTags = parsedTags.map((id: any) => {
+                const numId = Number(id);
+                const tagsList = masterData?.data?.tagResult || (masterData as any)?.tagResult || [];
+                const found = tagsList.find((t: any) => t.id === numId || t.tag_id === numId);
+                return found ? (found.description || found.name || found.tag_name) : `Tag ${numId}`;
+              });
               
-              // Alternate layouts
-              const layout = index % 2 === 0 ? "image-top" : "text-top";
-              const cardHeight = layout === "image-top" ? "583px" : "636px";
-              const imageHeight = layout === "image-top" ? "320px" : "373px";
+              // Exact Figma layout by column index (0 = Left, 1 = Middle, 2 = Right)
+              const colIndex = index % 3;
+              const layout = colIndex === 1 ? "text-top" : "image-top";
+              
+              let cardHeight, imageHeight;
+              if (colIndex === 0) {
+                cardHeight = "587px";
+                imageHeight = "320px";
+              } else if (colIndex === 1) {
+                cardHeight = "648px";
+                imageHeight = "373px";
+              } else {
+                cardHeight = "635px";
+                imageHeight = "384px";
+              }
 
               if (layout === "image-top") {
                 return (
@@ -375,7 +428,34 @@ export default function MainListingsGrid() {
                   >
                     {/* Top Image Box */}
                     <div style={{ position: "relative", width: "100%", height: imageHeight, flexShrink: 0 }}>
-                      <img src={item.farmland_image || "/assets/search/image2.1.png"} alt={item.farmland_code} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                      <img 
+                        src={item.farmland_image || "/assets/search/image2.1.svg"} 
+                        alt={item.farmland_code} 
+                        onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = "/assets/search/image2.1.svg" }}
+                        style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} 
+                      />
+
+                      {/* Image Tag (White Pill) */}
+                      {mappedTags[0] && (
+                        <div
+                          style={{
+                            position: "absolute",
+                            top: "24px",
+                            left: "24px",
+                            background: "rgba(255, 255, 255, 0.9)",
+                            backdropFilter: "blur(4px)",
+                            WebkitBackdropFilter: "blur(4px)",
+                            padding: "6px 16px",
+                            borderRadius: "9999px",
+                            border: "1px solid rgba(255, 255, 255, 0.3)",
+                            zIndex: 5,
+                          }}
+                        >
+                          <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", color: "#0F2F4C" }}>
+                            {mappedTags[0]}
+                          </span>
+                        </div>
+                      )}
 
                       {/* Circular 48x48 Heart Button */}
                       <button
@@ -406,11 +486,11 @@ export default function MainListingsGrid() {
                     </div>
 
                     {/* Bottom Content Box with exactly 32px padding */}
-                    <div style={{ padding: "32px", display: "flex", flexDirection: "column", flex: 1, justifyContent: "space-between", boxSizing: "border-box" }}>
+                    <div style={{ padding: "32px", display: "flex", flexDirection: "column", flex: 1, justifyItems: "flex-start", boxSizing: "border-box" }}>
                       <div style={{ display: "flex", flexDirection: "column" }}>
                         {/* Tags */}
-                        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-                          {mappedTags.map((t: string, idx: number) => (
+                        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", minHeight: "23px" }}>
+                          {(mappedTags.length > 1 ? mappedTags.slice(1) : mappedTags).map((t: string, idx: number) => (
                             <span
                               key={idx}
                               style={{
@@ -505,7 +585,7 @@ export default function MainListingsGrid() {
                       overflow: "hidden",
                       display: "flex",
                       flexDirection: "column",
-                      height: (item as any).cardHeight,
+                      height: cardHeight,
                       boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)",
                       border: "1px solid #F1F5F9",
                       transition: "transform 0.2s ease, boxShadow 0.2s ease",
@@ -524,8 +604,8 @@ export default function MainListingsGrid() {
                     {/* Top Content Box */}
                     <div style={{ padding: "32px", display: "flex", flexDirection: "column", flex: 1, justifyContent: "space-between", boxSizing: "border-box" }}>
                       <div style={{ display: "flex", flexDirection: "column" }}>
-                        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-                          {mappedTags.map((t: string, idx: number) => (
+                        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", minHeight: "23px" }}>
+                          {(mappedTags.length > 1 ? mappedTags.slice(1) : mappedTags).map((t: string, idx: number) => (
                             <span
                               key={idx}
                               style={{
@@ -606,7 +686,35 @@ export default function MainListingsGrid() {
 
                     {/* Bottom Image Box */}
                     <div style={{ position: "relative", width: "100%", height: imageHeight, flexShrink: 0 }}>
-                      <img src={item.farmland_image || "/assets/search/image2.1.png"} alt={item.farmland_code} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                      <img 
+                        src={item.farmland_image || "/assets/search/image2.1.svg"} 
+                        alt={item.farmland_code} 
+                        onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = "/assets/search/image2.1.svg" }}
+                        style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} 
+                      />
+
+                      {/* Image Tag (White Pill) */}
+                      {mappedTags[0] && (
+                        <div
+                          style={{
+                            position: "absolute",
+                            bottom: "24px",
+                            left: "24px",
+                            background: "rgba(255, 255, 255, 0.9)",
+                            backdropFilter: "blur(4px)",
+                            WebkitBackdropFilter: "blur(4px)",
+                            padding: "6px 16px",
+                            borderRadius: "9999px",
+                            border: "1px solid rgba(255, 255, 255, 0.3)",
+                            zIndex: 5,
+                          }}
+                        >
+                          <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", color: "#0F2F4C" }}>
+                            {mappedTags[0]}
+                          </span>
+                        </div>
+                      )}
+
 
                       {/* Floating Heart Button at Bottom Right */}
                       <button

@@ -5,6 +5,8 @@ export const VERIFICATION_API_BASE_URL = 'https://blkzmtts30.execute-api.ap-sout
 
 export interface GetVerificationLandsRequest {
   user_id: number;
+  offset: number;
+  limit: number;
 }
 
 export interface VerificationLand {

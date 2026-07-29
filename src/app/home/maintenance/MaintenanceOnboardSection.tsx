@@ -1,9 +1,11 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import MapWrapper from "../../../components/MapWrapper";
+import { s3Service } from "../../../services/s3";
+import { useGetAllGeoMasterDataQuery } from "../../../services/master";
 
 export default function MaintenanceOnboardSection() {
   const router = useRouter();
@@ -13,11 +15,28 @@ export default function MaintenanceOnboardSection() {
     code: "+91",
     contactNumber: "",
     quotedPrice: "",
-    country: "India",
-    state: "Telangana",
-    district: "Rangareddy",
-    mandal: "Chevella",
+    country: "1", // Default to India usually
+    state: "",
+    district: "",
+    mandal: "",
+    documentUrl: "",
   });
+
+  const [isMapFullscreen, setIsMapFullscreen] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const { data: geoDataRes } = useGetAllGeoMasterDataQuery();
+  const countries = geoDataRes?.countries?.slice(1) || [];
+  const states = formData.country 
+    ? (geoDataRes?.states?.slice(1) || []).filter((s: any[]) => s[1] === Number(formData.country))
+    : geoDataRes?.states?.slice(1) || [];
+  const districts = formData.state 
+    ? (geoDataRes?.districts?.slice(1) || []).filter((d: any[]) => d[1] === Number(formData.state))
+    : [];
+  const mandals = formData.district
+    ? (geoDataRes?.mandals?.slice(1) || []).filter((m: any[]) => m[1] === Number(formData.district) || m[2] === Number(formData.district))
+    : [];
 
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -26,6 +45,36 @@ export default function MaintenanceOnboardSection() {
       setIsSubmitted(true);
     }
   }, []);
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 10 * 1024 * 1024) {
+      alert("File size exceeds 10MB limit.");
+      return;
+    }
+
+    try {
+      setIsUploading(true);
+      const response = await s3Service.uploadFile(file);
+      if (response.url) {
+        setFormData(prev => ({ ...prev, documentUrl: response.url! }));
+        alert("File uploaded successfully!");
+      } else {
+        throw new Error("Upload failed, no URL returned.");
+      }
+    } catch (err) {
+      console.error("Upload error:", err);
+      alert("Failed to upload file.");
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleBrowseClick = () => {
+    fileInputRef.current?.click();
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -78,10 +127,10 @@ export default function MaintenanceOnboardSection() {
       </motion.div>
 
       {/* ─── PHASE 01: MAP & FORMS ─── */}
-      <form onSubmit={handleSubmit} className="flex flex-col lg:flex-row gap-8 w-full justify-between items-start relative">
+      <div className="flex flex-col lg:flex-row gap-8 w-full justify-between items-start relative">
         
         {/* LEFT COLUMN: Map & Documents */}
-        <div className="flex flex-col gap-6 w-full lg:w-[592px] shrink-0">
+        <div className="flex flex-col gap-6 w-full lg:w-[592px] shrink-0" style={{ zIndex: isMapFullscreen ? 99999 : 1 }}>
           
           {/* Map Component */}
           <motion.div
@@ -99,26 +148,31 @@ export default function MaintenanceOnboardSection() {
               overflow: "hidden",
             }}
           >
-            <div style={{ position: "absolute", inset: 0, zIndex: 0, overflow: "hidden", borderRadius: "48px" }}>
+            <div style={{ position: "absolute", inset: 0, zIndex: isMapFullscreen ? 99999 : 0, overflow: "hidden", borderRadius: "48px" }}>
               <MapWrapper 
                 onLocationChange={(loc) => setFormData(prev => ({ ...prev, lat: loc.lat.toString(), lng: loc.lng.toString() }))}
+                onFullscreenChange={setIsMapFullscreen}
               />
             </div>
-            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.6) 100%)", zIndex: 1, pointerEvents: "none" }} />
-            
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", position: "absolute", bottom: "48px", left: "50%", transform: "translateX(-50%)", zIndex: 5, width: "100%", pointerEvents: "none" }}>
-              <div
-                style={{ display: "flex", flexDirection: "row", alignItems: "center", padding: "16px 32px", gap: "12px", background: "#0F2F4C", borderRadius: "9999px", boxShadow: "0px 25px 50px -12px rgba(0,0,0,0.25)", cursor: "pointer", justifyContent: "center", width: "fit-content", height: "56px", pointerEvents: "auto" }}
-              >
-                <svg width="16" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" />
-                </svg>
-                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#FFFFFF", letterSpacing: "0.4px", whiteSpace: "nowrap" }}>DROP GPS PIN TO LOCATE</span>
-              </div>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "8px 16px", background: "rgba(255,255,255,0.8)", backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)", borderRadius: "9999px", marginTop: "16px" }}>
-                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", color: "rgba(9,20,38,0.6)" }}>GEOSPATIAL PRECISION REQUIRED</span>
-              </div>
-            </div>
+            {!isMapFullscreen && (
+              <>
+                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.6) 100%)", zIndex: 1, pointerEvents: "none" }} />
+                
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", position: "absolute", bottom: "48px", left: "50%", transform: "translateX(-50%)", zIndex: 5, width: "100%", pointerEvents: "none" }}>
+                  <div
+                    style={{ display: "flex", flexDirection: "row", alignItems: "center", padding: "16px 32px", gap: "12px", background: "#0F2F4C", borderRadius: "9999px", boxShadow: "0px 25px 50px -12px rgba(0,0,0,0.25)", cursor: "pointer", justifyContent: "center", width: "fit-content", height: "56px", pointerEvents: "auto" }}
+                  >
+                    <svg width="16" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" />
+                    </svg>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#FFFFFF", letterSpacing: "0.4px", whiteSpace: "nowrap" }}>DROP GPS PIN TO LOCATE</span>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "8px 16px", background: "rgba(255,255,255,0.8)", backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)", borderRadius: "9999px", marginTop: "16px" }}>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", color: "rgba(9,20,38,0.6)" }}>GEOSPATIAL PRECISION REQUIRED</span>
+                  </div>
+                </div>
+              </>
+            )}
           </motion.div>
 
           {/* Legal Documents Card */}
@@ -158,8 +212,22 @@ export default function MaintenanceOnboardSection() {
               <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "14px", lineHeight: "20px", color: "#43474E", marginTop: "4px" }}>
                 PDF, JPG, PNG Max 10MB per file
               </span>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "12px 32px", background: "#FFFFFF", border: "2px solid #0061A5", borderRadius: "9999px", marginTop: "21px", width: "fit-content", cursor: "pointer" }}>
-                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", lineHeight: "20px", color: "#0061A5", letterSpacing: "0.7px", textTransform: "uppercase" }}>BROWSE FILES OR SCAN</span>
+              
+              <input 
+                type="file" 
+                ref={fileInputRef} 
+                onChange={handleFileChange} 
+                accept=".pdf,.jpg,.jpeg,.png" 
+                style={{ display: "none" }} 
+              />
+              
+              <div 
+                onClick={handleBrowseClick}
+                style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "12px 32px", background: formData.documentUrl ? "#D6E3FF" : "#FFFFFF", border: "2px solid #0061A5", borderRadius: "9999px", marginTop: "21px", width: "fit-content", cursor: isUploading ? "not-allowed" : "pointer", opacity: isUploading ? 0.7 : 1 }}
+              >
+                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", lineHeight: "20px", color: "#0061A5", letterSpacing: "0.7px", textTransform: "uppercase" }}>
+                  {isUploading ? "UPLOADING..." : formData.documentUrl ? "DOCUMENT UPLOADED" : "BROWSE FILES OR SCAN"}
+                </span>
               </div>
             </div>
           </motion.div>
@@ -244,25 +312,77 @@ export default function MaintenanceOnboardSection() {
             <div style={{ display: "flex", flexDirection: "column", gap: "24px", width: "100%" }}>
               {/* Row 1 */}
               <div style={{ display: "flex", flexDirection: "row", gap: "16px", width: "100%" }}>
-                <div style={{ display: "flex", flexDirection: "column", gap: "4px", flex: 1 }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "4px", flex: 1, position: "relative" }}>
                   <label style={labelStyle}>COUNTRY</label>
-                  <input type="text" value={formData.country} onChange={(e) => setFormData({ ...formData, country: e.target.value })} style={inputStyle} />
+                  <select 
+                    name="country" 
+                    value={formData.country} 
+                    onChange={(e) => setFormData({ ...formData, country: e.target.value, state: "", district: "", mandal: "" })} 
+                    style={{ ...inputStyle, appearance: "none", cursor: "pointer", color: formData.country ? "#191C1D" : "#6B7280", fontWeight: formData.country ? 600 : 400 }}
+                  >
+                    <option value="" disabled>Select Country</option>
+                    {countries.map((c: any[]) => (
+                      <option key={c[0]} value={c[0]}>{c[2] || c[1]}</option>
+                    ))}
+                  </select>
+                  <div style={{ position: "absolute", right: "16px", top: "35px", pointerEvents: "none" }}>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </div>
                 </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: "4px", flex: 1 }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "4px", flex: 1, position: "relative" }}>
                   <label style={labelStyle}>STATE</label>
-                  <input type="text" value={formData.state} onChange={(e) => setFormData({ ...formData, state: e.target.value })} style={inputStyle} />
+                  <select 
+                    name="state" 
+                    value={formData.state} 
+                    onChange={(e) => setFormData({ ...formData, state: e.target.value, district: "", mandal: "" })} 
+                    style={{ ...inputStyle, appearance: "none", cursor: "pointer", color: formData.state ? "#191C1D" : "#6B7280", fontWeight: formData.state ? 600 : 400 }}
+                  >
+                    <option value="" disabled>Select State</option>
+                    {states.map((s: any[]) => (
+                      <option key={s[0]} value={s[0]}>{s[3]}</option>
+                    ))}
+                  </select>
+                  <div style={{ position: "absolute", right: "16px", top: "35px", pointerEvents: "none" }}>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </div>
                 </div>
               </div>
 
               {/* Row 2 */}
               <div style={{ display: "flex", flexDirection: "row", gap: "16px", width: "100%" }}>
-                <div style={{ display: "flex", flexDirection: "column", gap: "4px", flex: 1 }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "4px", flex: 1, position: "relative" }}>
                   <label style={labelStyle}>DISTRICT</label>
-                  <input type="text" value={formData.district} onChange={(e) => setFormData({ ...formData, district: e.target.value })} style={inputStyle} />
+                  <select 
+                    name="district" 
+                    value={formData.district} 
+                    onChange={(e) => setFormData({ ...formData, district: e.target.value, mandal: "" })} 
+                    style={{ ...inputStyle, appearance: "none", cursor: "pointer", color: formData.district ? "#191C1D" : "#6B7280", fontWeight: formData.district ? 600 : 400 }}
+                  >
+                    <option value="" disabled>Select District</option>
+                    {districts.map((d: any[]) => (
+                      <option key={d[0]} value={d[0]}>{d[3]}</option>
+                    ))}
+                  </select>
+                  <div style={{ position: "absolute", right: "16px", top: "35px", pointerEvents: "none" }}>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </div>
                 </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: "4px", flex: 1 }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "4px", flex: 1, position: "relative" }}>
                   <label style={labelStyle}>MANDAL</label>
-                  <input type="text" value={formData.mandal} onChange={(e) => setFormData({ ...formData, mandal: e.target.value })} style={inputStyle} />
+                  <select 
+                    name="mandal" 
+                    value={formData.mandal} 
+                    onChange={(e) => setFormData({ ...formData, mandal: e.target.value })} 
+                    style={{ ...inputStyle, appearance: "none", cursor: "pointer", color: formData.mandal ? "#191C1D" : "#6B7280", fontWeight: formData.mandal ? 600 : 400 }}
+                  >
+                    <option value="" disabled>Select Mandal</option>
+                    {mandals.map((m: any[]) => (
+                      <option key={m[0]} value={m[0]}>{m[3]}</option>
+                    ))}
+                  </select>
+                  <div style={{ position: "absolute", right: "16px", top: "35px", pointerEvents: "none" }}>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </div>
                 </div>
               </div>
             </div>
@@ -270,7 +390,7 @@ export default function MaintenanceOnboardSection() {
 
         </div>
 
-      </form>
+      </div>
 
       {/* ─── BOTTOM SUBMIT BUTTON ─── */}
       <div style={{ display: "flex", justifyContent: "center", width: "100%", marginTop: "32px" }}>

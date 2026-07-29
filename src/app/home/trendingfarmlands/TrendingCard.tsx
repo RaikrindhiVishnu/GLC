@@ -1,8 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { s3Service } from "../../../services/s3";
 
 interface TrendingCardProps {
   title: string;
@@ -28,24 +29,62 @@ export default function TrendingCard({
   reverseLayout = false,
 }: TrendingCardProps) {
   const router = useRouter();
-  const [isLiked, setIsLiked] = React.useState(false);
+  const [isLiked, setIsLiked] = useState(false);
+  const [resolvedImageUrl, setResolvedImageUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchImage = async () => {
+      if (!imageUrl || imageUrl === "null" || imageUrl === "") {
+        if (isMounted) setResolvedImageUrl(null);
+        return;
+      }
+      if (imageUrl.startsWith("http") || imageUrl.startsWith("data:") || imageUrl.startsWith("/")) {
+        if (isMounted) setResolvedImageUrl(imageUrl);
+        return;
+      }
+      try {
+        const res = await s3Service.generateUrl({ key: imageUrl, filename: imageUrl, folderPath: '' });
+        if (isMounted && res.url) {
+          setResolvedImageUrl(res.url);
+        }
+      } catch (e) {
+        console.error("Failed to generate presigned URL for", imageUrl, e);
+      }
+    };
+    fetchImage();
+    return () => { isMounted = false; };
+  }, [imageUrl]);
 
   const handleLike = (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsLiked(!isLiked);
   };
 
+  const displayUrl = resolvedImageUrl;
+
   return (
     <div className={`w-full bg-white rounded-[30px] overflow-hidden shadow-[0px_1px_2px_rgba(0,0,0,0.05)] flex ${reverseLayout ? 'flex-col-reverse' : 'flex-col'} mb-6`}>
 
       {/* Top Image Section */}
-      <div className={`relative w-full ${reverseLayout ? 'h-[373px]' : 'h-[320px]'}`}>
-        <Image
-          src={imageUrl}
-          alt={title}
-          fill
-          className="object-cover"
-        />
+      <div className={`relative w-full ${reverseLayout ? 'h-[373px]' : 'h-[320px]'} bg-[#F4F4F5] flex flex-col items-center justify-center`}>
+        {displayUrl ? (
+          <Image
+            src={displayUrl}
+            alt={title}
+            fill
+            className="object-cover"
+          />
+        ) : (
+          <>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#A1A1AA" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="mb-2">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+              <circle cx="8.5" cy="8.5" r="1.5" />
+              <polyline points="21 15 16 10 5 21" />
+            </svg>
+            <span className="font-jakarta text-[#A1A1AA] text-[12px] font-medium">No Image</span>
+          </>
+        )}
 
         {/* Tag on Image */}
         <div className={`absolute left-8 ${reverseLayout ? 'bottom-8' : 'top-8'} bg-[#E7E8E9] rounded-full px-4 py-1.5 w-fit z-10`}>
@@ -59,8 +98,8 @@ export default function TrendingCard({
           onClick={handleLike}
           className={`absolute right-6 ${reverseLayout ? 'bottom-6' : 'top-6'} w-12 h-12 bg-white/90 backdrop-blur-md rounded-full flex items-center justify-center shadow-sm hover:scale-105 transition-transform z-10`}
         >
-          <svg width="20" height="18" viewBox="0 0 20 18" fill={isLiked ? "#2780C4" : "none"} stroke="#2780C4" strokeWidth={isLiked ? "0" : "2"}>
-            <path d="M10 17.5L8.55 16.18C3.4 11.5 0 8.42 0 4.5C0 1.98 2.02 0 4.5 0C5.88 0 7.2 0.63 8.13 1.63L10 3.75L11.87 1.63C12.8 0.63 14.12 0 15.5 0C17.98 0 20 1.98 20 4.5C20 8.42 16.6 11.5 11.45 16.19L10 17.5Z" />
+          <svg width="20" height="18" viewBox="0 0 24 24" fill={isLiked ? "#2780C4" : "none"} stroke="#2780C4" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="transition-colors duration-200">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
           </svg>
         </button>
       </div>

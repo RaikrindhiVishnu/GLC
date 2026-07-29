@@ -84,7 +84,7 @@ export default function TrendingGrid() {
           <TrendingCard {...cardsData[3]} />
         </div>
 
-        {/* Column 2 */}
+        {/* Column 2 (Middle column with reverse layout) */}
         <div className="flex-1 flex flex-col w-full gap-8">
           <TrendingCard {...cardsData[1]} reverseLayout={true} />
           <TrendingCard {...cardsData[4]} reverseLayout={true} />

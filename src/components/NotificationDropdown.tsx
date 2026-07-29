@@ -1,7 +1,13 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { 
+  useGetAllNotificationsByUserIdQuery, 
+  useMarkNotificationAsReadMutation, 
+  useMarkAllNotificationsAsReadMutation,
+  NotificationItem as INotificationItem
+} from "../services/notification";
 
 interface NotificationDropdownProps {
   isOpen: boolean;
@@ -24,6 +30,60 @@ export default function NotificationDropdown({ isOpen, onClose }: NotificationDr
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isOpen, onClose]);
+
+  const [userId, setUserId] = useState<number | null>(null);
+  useEffect(() => {
+    const storedUserId = localStorage.getItem("userId");
+    if (storedUserId) {
+      setUserId(parseInt(storedUserId, 10));
+    }
+  }, []);
+
+  const { data: notifications = [] } = useGetAllNotificationsByUserIdQuery(
+    { user_id: userId || 0, offset: 0 },
+    { skip: !userId }
+  );
+
+  const [markNotificationAsRead] = useMarkNotificationAsReadMutation();
+  const [markAllAsRead] = useMarkAllNotificationsAsReadMutation();
+
+  const handleMarkAllAsRead = async () => {
+    if (userId) {
+      try {
+        await markAllAsRead({ user_id: userId }).unwrap();
+      } catch (err) {
+        console.error("Failed to mark all as read:", err);
+      }
+    }
+  };
+
+  const handleNotificationClick = async (notif: INotificationItem) => {
+    const id = notif.user_notification_id || notif.id;
+    if (id && notif.is_read === 0) {
+      try {
+        await markNotificationAsRead({ UserNotificationIds: [id] }).unwrap();
+      } catch (err) {
+        console.error("Failed to mark notification as read:", err);
+      }
+    }
+  };
+
+  const unreadCount = notifications.filter(n => n.is_read === 0).length;
+
+  const formatTimeAgo = (dateStr: string) => {
+    if (!dateStr) return "";
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+    
+    if (diffInSeconds < 60) return "Just now";
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    if (diffInMinutes < 60) return `${diffInMinutes} minute${diffInMinutes > 1 ? 's' : ''} ago`;
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    if (diffInHours < 24) return `${diffInHours} hour${diffInHours > 1 ? 's' : ''} ago`;
+    const diffInDays = Math.floor(diffInHours / 24);
+    return `${diffInDays} day${diffInDays > 1 ? 's' : ''} ago`;
+  };
 
   if (!isOpen) return null;
 
@@ -50,9 +110,12 @@ export default function NotificationDropdown({ isOpen, onClose }: NotificationDr
       <div style={{ padding: "24px 24px 16px 24px", display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexShrink: 0 }}>
         <div>
           <h2 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "20px", color: "#0F2F4C", margin: 0, lineHeight: "28px" }}>Notifications</h2>
-          <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "12px", color: "#42474F", margin: 0 }}>You have 8 new alerts</p>
+          <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "12px", color: "#42474F", margin: 0 }}>You have {unreadCount} new alerts</p>
         </div>
-        <button style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "12px", color: "#2780C4", background: "none", border: "none", cursor: "pointer", padding: "4px 0" }}>
+        <button 
+          onClick={handleMarkAllAsRead}
+          style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "12px", color: "#2780C4", background: "none", border: "none", cursor: "pointer", padding: "4px 0" }}
+        >
           Mark all as read
         </button>
       </div>
@@ -68,89 +131,21 @@ export default function NotificationDropdown({ isOpen, onClose }: NotificationDr
         flexGrow: 1,
       }}>
         
-        {/* Site Visit Scheduled Card */}
-        <div style={{
-          width: "100%",
-          height: "167px",
-          background: "#FFFFFF",
-          boxShadow: "0px 1px 1px rgba(0, 0, 0, 0.09)",
-          borderRadius: "24px",
-          position: "relative",
-          flexShrink: 0,
-        }}>
-          {/* Top section of card */}
-          <div style={{ position: "absolute", left: "26px", top: "24px" }}>
-            <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "24px", color: "#000000", marginBottom: "8px" }}>Site Visit Scheduled</div>
-            <Link href="#" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "12px", color: "#2780C4", display: "flex", alignItems: "center", textDecoration: "none" }}>
-              View Details 
-              <span style={{ marginLeft: "4px" }}>&gt;</span>
-            </Link>
+        {notifications.length > 0 ? (
+          notifications.map((notif, idx) => (
+            <div key={notif.user_notification_id || notif.id || idx} onClick={() => handleNotificationClick(notif)} style={{ width: "100%", cursor: "pointer" }}>
+              <NotificationItem 
+                title={notif.body || notif.title}
+                time={formatTimeAgo(notif.time)}
+                isRead={notif.is_read === 1}
+              />
+            </div>
+          ))
+        ) : (
+          <div style={{ padding: "20px", width: "100%", textAlign: "center", fontFamily: "'Plus Jakarta Sans', sans-serif", color: "#42474F" }}>
+            No notifications
           </div>
-          
-          {/* Bottom grey section */}
-          <div style={{
-            position: "absolute",
-            width: "calc(100% + 6px)",
-            height: "68px",
-            left: "-3px",
-            top: "102px",
-            background: "rgba(238, 238, 238, 0.3)",
-            boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.05)",
-            borderRadius: "12px",
-            display: "flex",
-            alignItems: "center",
-            padding: "0 20px",
-          }}>
-            <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "12px", color: "#000000", lineHeight: "20px" }}>Visit Date</span>
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#000000", lineHeight: "20px" }}>24/04/2026</span>
-            </div>
-            <div style={{ display: "flex", flexDirection: "column", flex: 1, paddingLeft: "10px" }}>
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "12px", color: "#000000", lineHeight: "20px" }}>Location</span>
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#000000", lineHeight: "20px" }}>Vizag</span>
-            </div>
-            <div style={{ display: "flex", flexDirection: "column", flex: 1, paddingLeft: "10px" }}>
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "12px", color: "#000000", lineHeight: "20px" }}>Land ID</span>
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#000000", lineHeight: "20px" }}>GLC SOS 01</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Notification Item 8 */}
-        <NotificationItem 
-          title="Unlock land ownership with this 5 acre investment opportunity in Medchal."
-          time="3 hours ago"
-          imgColor="#A68B75"
-          imgLabel="GLC SOS 01"
-        />
-
-        {/* Notification Item 3 */}
-        <NotificationItem 
-          title="Your KYC documents have been successfully verified and approved."
-          time="3 hours ago"
-        />
-
-        {/* Notification Item 9 */}
-        <NotificationItem 
-          title="Unlock land ownership with this 5 acre investment opportunity in Medchal."
-          time="3 hours ago"
-          imgColor="#8BA675"
-          imgLabel="GLC SOS 01"
-        />
-
-        {/* Notification Item 10 */}
-        <NotificationItem 
-          title="Site visit confirmed for tomorrow at 10:00 AM Geo-navigation link attached."
-          time="3 hours ago"
-          imgColor="#758BA6"
-          imgLabel="GLC SOS 01"
-        />
-
-        {/* Notification Item 11 */}
-        <NotificationItem 
-          title="Subscription activated. Your Silver Tier plan is active until 15 July 2026."
-          time="3 hours ago"
-        />
+        )}
         
         {/* Padding bottom inside scroll area */}
         <div style={{ height: "8px", width: "100%", flexShrink: 0 }}></div>
@@ -160,12 +155,12 @@ export default function NotificationDropdown({ isOpen, onClose }: NotificationDr
   );
 }
 
-function NotificationItem({ title, time, imgColor, imgLabel }: { title: string, time: string, imgColor?: string, imgLabel?: string }) {
+function NotificationItem({ title, time, imgColor, imgLabel, isRead }: { title: string, time: string, imgColor?: string, imgLabel?: string, isRead?: boolean }) {
   return (
     <div style={{
       width: "100%",
       minHeight: "89px",
-      background: "#FFFFFF",
+      background: isRead ? "#FFFFFF" : "#F8FBFF",
       borderRadius: "24px",
       display: "flex",
       flexDirection: "row",
@@ -176,7 +171,7 @@ function NotificationItem({ title, time, imgColor, imgLabel }: { title: string, 
       borderBottom: "1px solid rgba(0,0,0,0.03)"
     }}>
       <div style={{ flex: 1, display: "flex", flexDirection: "column", paddingLeft: "16px", gap: "8px" }}>
-        <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "12px", lineHeight: "16px", color: "#42474F", paddingRight: imgColor ? "10px" : "0" }}>
+        <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: isRead ? 500 : 700, fontSize: "12px", lineHeight: "16px", color: "#42474F", paddingRight: imgColor ? "10px" : "0" }}>
           {title}
         </div>
         <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", lineHeight: "15px", color: "rgba(66, 71, 79, 0.6)" }}>

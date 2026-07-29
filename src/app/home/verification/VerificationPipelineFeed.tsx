@@ -17,7 +17,7 @@ export default function VerificationPipelineFeed() {
   const userId = 2; // Hardcoded to 2 as per backend request
   
   const { data: res, isLoading: isQueryLoading } = useGetVerificationLandsByUserIdQuery(
-    { user_id: userId },
+    { user_id: userId, offset: 0, limit: 200 },
     { skip: !mounted || !userId }
   );
   

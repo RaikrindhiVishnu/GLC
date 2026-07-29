@@ -82,7 +82,7 @@ export default function PopularFarmlands() {
 
   const apiFarmlands = res?.data && res.data.length > 0 
     ? res.data.map((item: any, idx: number) => {
-        const hasValidImg = item.farmland_img && (item.farmland_img.startsWith('/') || item.farmland_img.startsWith('http')) && !item.farmland_img.toLowerCase().endsWith('.pdf');
+        const hasValidImg = item.farmland_img && (item.farmland_img.startsWith('/') || item.farmland_img.startsWith('http') || item.farmland_img.startsWith('data:')) && !item.farmland_img.toLowerCase().endsWith('.pdf');
         return {
           id: item.farmland_id.toString(),
           title: item.farmland_code,

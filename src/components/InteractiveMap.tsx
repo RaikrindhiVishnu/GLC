@@ -12,9 +12,12 @@ interface InteractiveMapProps {
   onLocationChange?: (location: { lat: number; lng: number }) => void;
   onPolygonChange?: (polygon: { lat: number; lng: number }[]) => void;
   onFullscreenChange?: (isFullscreen: boolean) => void;
+  initialLocation?: { lat: number; lng: number };
+  initialPolygon?: { lat: number; lng: number }[];
+  viewOnly?: boolean;
 }
 
-export default function InteractiveMap({ onLocationChange, onPolygonChange, onFullscreenChange }: InteractiveMapProps) {
+export default function InteractiveMap({ onLocationChange, onPolygonChange, onFullscreenChange, initialLocation, initialPolygon, viewOnly }: InteractiveMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
@@ -67,55 +70,67 @@ export default function InteractiveMap({ onLocationChange, onPolygonChange, onFu
     });
 
     // Increased maxZoom for drawing fine details
-    const map = L.map(mapRef.current, { attributionControl: false, maxZoom: 22 }).setView([17.3850, 78.4867], 12);
+    const initialCenter = initialLocation ? [initialLocation.lat, initialLocation.lng] as L.LatLngTuple : [17.3850, 78.4867] as L.LatLngTuple;
+    const map = L.map(mapRef.current, { attributionControl: false, maxZoom: 22 }).setView(initialCenter, initialLocation ? 16 : 12);
     mapInstanceRef.current = map;
 
-    // Fix for DOM rendering timing issues with geolocation
     setTimeout(() => {
       if (mapInstanceRef.current) {
         mapInstanceRef.current.invalidateSize();
-        mapInstanceRef.current.locate({ setView: true, maxZoom: 16 });
+        if (!initialLocation && !viewOnly) {
+          mapInstanceRef.current.locate({ setView: true, maxZoom: 16 });
+        }
       }
     }, 250);
 
-    // Use satellite map layer with maxNativeZoom to allow overscaling
     L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
       maxZoom: 22,
       maxNativeZoom: 19
     }).addTo(map);
 
-    // Add search control
-    const provider = new OpenStreetMapProvider();
-    const searchControl = new (GeoSearchControl as any)({
-      provider: provider,
-      style: "bar",
-      showMarker: false, // User requested no old pin points (search pins)
-      retainZoomLevel: false,
-      animateZoom: true,
-      autoClose: true,
-      searchLabel: "Search for a location...",
-      keepResult: true,
-    });
-    map.addControl(searchControl);
+    if (!viewOnly) {
+      const provider = new OpenStreetMapProvider();
+      const searchControl = new (GeoSearchControl as any)({
+        provider: provider,
+        style: "bar",
+        showMarker: false, 
+        retainZoomLevel: false,
+        animateZoom: true,
+        autoClose: true,
+        searchLabel: "Search for a location...",
+        keepResult: true,
+      });
+      map.addControl(searchControl);
+    }
 
     const drawnItems = new L.FeatureGroup();
     map.addLayer(drawnItems);
     drawnItemsRef.current = drawnItems;
 
-    const drawControl = new L.Control.Draw({
-      edit: {
-        featureGroup: drawnItems,
-      },
-      draw: {
-        polygon: true,
-        marker: true,
-        polyline: false,
-        circle: false,
-        rectangle: false,
-        circlemarker: false,
-      },
-    });
-    map.addControl(drawControl);
+    if (initialLocation) {
+      markerRef.current = L.marker([initialLocation.lat, initialLocation.lng]).addTo(drawnItems);
+    }
+
+    if (initialPolygon && initialPolygon.length > 0) {
+      const latlngs = initialPolygon.map(p => [p.lat, p.lng] as L.LatLngTuple);
+      polygonLayerRef.current = L.polygon(latlngs, { color: '#004A78', weight: 3, fillColor: '#004A78', fillOpacity: 0.2 }).addTo(drawnItems);
+      map.fitBounds(polygonLayerRef.current.getBounds(), { padding: [20, 20] });
+    }
+
+    if (!viewOnly) {
+      const drawControl = new L.Control.Draw({
+        edit: { featureGroup: drawnItems },
+        draw: {
+          polygon: { allowIntersection: false, showArea: true, shapeOptions: { color: '#004A78', weight: 3 } },
+          polyline: false,
+          rectangle: false,
+          circle: false,
+          circlemarker: false,
+          marker: true
+        }
+      });
+      map.addControl(drawControl);
+    }
 
     map.on(L.Draw.Event.CREATED, (event: any) => {
       const layer = event.layer;
@@ -211,6 +226,52 @@ export default function InteractiveMap({ onLocationChange, onPolygonChange, onFu
 
   return (
     <div ref={containerRef} style={backdropStyles}>
+      <style>{`
+        .leaflet-control-geosearch.bar {
+          width: 340px !important;
+          max-width: calc(100% - 100px) !important;
+          margin-top: 16px !important;
+          border-radius: 9999px !important;
+          box-shadow: 0 10px 30px rgba(9,20,38,0.1) !important;
+          border: none !important;
+        }
+        .leaflet-control-geosearch.bar form {
+          border-radius: 9999px !important;
+          border: none !important;
+          overflow: hidden !important;
+          background: #FFFFFF !important;
+          display: flex !important;
+          align-items: center !important;
+        }
+        .leaflet-control-geosearch.bar form input {
+          font-family: 'Plus Jakarta Sans', sans-serif !important;
+          font-size: 14px !important;
+          font-weight: 500 !important;
+          height: 52px !important;
+          padding: 0 20px !important;
+          color: #0F2F4C !important;
+          border: none !important;
+          outline: none !important;
+          background: transparent !important;
+        }
+        .leaflet-control-geosearch.bar form input::placeholder {
+          color: #8C94A1 !important;
+        }
+        .leaflet-control-geosearch.bar a.reset {
+          background: #F1F5F9 !important;
+          border-radius: 50% !important;
+          margin: 0 12px !important;
+          height: 28px !important;
+          line-height: 28px !important;
+          width: 28px !important;
+          color: #0F2F4C !important;
+          text-align: center !important;
+          text-decoration: none !important;
+        }
+        .leaflet-control-geosearch.bar a.reset:hover {
+          background: #E2E8F0 !important;
+        }
+      `}</style>
       <div style={mapContainerStyles}>
         <div ref={mapRef} style={{ width: "100%", height: "100%", zIndex: 0, borderRadius: "inherit" }} />
         <button 

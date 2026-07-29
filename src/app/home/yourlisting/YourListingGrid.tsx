@@ -28,6 +28,16 @@ export default function YourListingGrid() {
 
   const farmlands = uploadData?.data || [];
 
+  // Pagination logic
+  const itemsPerPage = 6;
+  const totalPages = Math.ceil(farmlands.length / itemsPerPage) || 1;
+  const [currentPage, setCurrentPage] = useState(0);
+
+  const displayedFarmlands = farmlands.slice(
+    currentPage * itemsPerPage,
+    (currentPage + 1) * itemsPerPage
+  );
+
   return (
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-8 mt-12 mb-24">
       {/* Header section */}
@@ -36,11 +46,19 @@ export default function YourListingGrid() {
           Your Listing
         </h2>
         {/* Pagination Dots */}
-        <div className="flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-[#0F2F4C]" />
-          <div className="w-2 h-2 rounded-full bg-[#E1E3E4]" />
-          <div className="w-2 h-2 rounded-full bg-[#E1E3E4]" />
-        </div>
+        {totalPages > 1 && (
+          <div className="flex items-center gap-2">
+            {Array.from({ length: totalPages }).map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => setCurrentPage(idx)}
+                className={`w-2 h-2 rounded-full transition-colors cursor-pointer border-none p-0 ${currentPage === idx ? "bg-[#0F2F4C]" : "bg-[#E1E3E4] hover:bg-[#C1C3C4]"
+                  }`}
+                aria-label={`Go to page ${idx + 1}`}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       {isLoading ? (
@@ -48,11 +66,11 @@ export default function YourListingGrid() {
       ) : farmlands.length === 0 ? (
         <div className="w-full text-center py-10 font-jakarta text-gray-500">You haven't listed any farmlands yet.</div>
       ) : (
-        /* Masonry Layout: 3 Columns */
+        /* Staggered Masonry Layout: 3 Columns */
         <div className="flex flex-col md:flex-row gap-8 items-start w-full">
           {/* Column 1 */}
           <div className="flex-1 flex flex-col w-full gap-8">
-            {farmlands.filter((_, i) => i % 3 === 0).map((farm) => (
+            {displayedFarmlands.filter((_, i) => i % 3 === 0).map((farm) => (
               <TrendingCard
                 key={farm.farmland_id}
                 id={String(farm.farmland_id)}
@@ -61,15 +79,15 @@ export default function YourListingGrid() {
                 price={formatPrice(farm.valuation)}
                 location={"Location N/A"}
                 tagText={"Your Listing"}
-                imageUrl={farm.farmland_img || "/assets/search/image2.1.svg"}
+                imageUrl={farm.farmland_img || ""}
                 linkDestination={`/home/yourlisting/details?id=${farm.farmland_id}`}
               />
             ))}
           </div>
 
-          {/* Column 2 */}
+          {/* Column 2 (Middle column with reverse layout) */}
           <div className="flex-1 flex flex-col w-full gap-8">
-            {farmlands.filter((_, i) => i % 3 === 1).map((farm) => (
+            {displayedFarmlands.filter((_, i) => i % 3 === 1).map((farm) => (
               <TrendingCard
                 key={farm.farmland_id}
                 id={String(farm.farmland_id)}
@@ -78,7 +96,7 @@ export default function YourListingGrid() {
                 price={formatPrice(farm.valuation)}
                 location={"Location N/A"}
                 tagText={"Your Listing"}
-                imageUrl={farm.farmland_img || "/assets/search/image2.1.svg"}
+                imageUrl={farm.farmland_img || ""}
                 linkDestination={`/home/yourlisting/details?id=${farm.farmland_id}`}
                 reverseLayout={true}
               />
@@ -87,7 +105,7 @@ export default function YourListingGrid() {
 
           {/* Column 3 */}
           <div className="flex-1 flex flex-col w-full gap-8">
-            {farmlands.filter((_, i) => i % 3 === 2).map((farm) => (
+            {displayedFarmlands.filter((_, i) => i % 3 === 2).map((farm) => (
               <TrendingCard
                 key={farm.farmland_id}
                 id={String(farm.farmland_id)}
@@ -96,7 +114,7 @@ export default function YourListingGrid() {
                 price={formatPrice(farm.valuation)}
                 location={"Location N/A"}
                 tagText={"Your Listing"}
-                imageUrl={farm.farmland_img || "/assets/search/image2.1.svg"}
+                imageUrl={farm.farmland_img || ""}
                 linkDestination={`/home/yourlisting/details?id=${farm.farmland_id}`}
               />
             ))}

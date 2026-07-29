@@ -59,8 +59,8 @@ export default function RecommendedCard({
           onClick={handleLike}
           className={`absolute right-6 ${reverseLayout ? 'bottom-6' : 'top-6'} w-12 h-12 bg-white/90 backdrop-blur-md rounded-full flex items-center justify-center shadow-sm hover:scale-105 transition-transform z-10`}
         >
-          <svg width="20" height="18" viewBox="0 0 20 18" fill={isLiked ? "#2780C4" : "none"} stroke="#2780C4" strokeWidth={isLiked ? "0" : "2"}>
-            <path d="M10 17.5L8.55 16.18C3.4 11.5 0 8.42 0 4.5C0 1.98 2.02 0 4.5 0C5.88 0 7.2 0.63 8.13 1.63L10 3.75L11.87 1.63C12.8 0.63 14.12 0 15.5 0C17.98 0 20 1.98 20 4.5C20 8.42 16.6 11.5 11.45 16.19L10 17.5Z" />
+          <svg width="20" height="18" viewBox="0 0 24 24" fill={isLiked ? "#2780C4" : "none"} stroke="#2780C4" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="transition-colors duration-200">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
           </svg>
         </button>
       </div>

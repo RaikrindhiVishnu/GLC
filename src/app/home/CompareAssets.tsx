@@ -88,8 +88,8 @@ export default function CompareAssets() {
         const p1 = res.data[i];
         const p2 = res.data[i + 1];
 
-        const hasValidImg1 = p1.farmland_img && (p1.farmland_img.startsWith('/') || p1.farmland_img.startsWith('http')) && !p1.farmland_img.toLowerCase().endsWith('.pdf');
-        const hasValidImg2 = p2.farmland_img && (p2.farmland_img.startsWith('/') || p2.farmland_img.startsWith('http')) && !p2.farmland_img.toLowerCase().endsWith('.pdf');
+        const hasValidImg1 = p1.farmland_img && (p1.farmland_img.startsWith('/') || p1.farmland_img.startsWith('http') || p1.farmland_img.startsWith('data:')) && !p1.farmland_img.toLowerCase().endsWith('.pdf');
+        const hasValidImg2 = p2.farmland_img && (p2.farmland_img.startsWith('/') || p2.farmland_img.startsWith('http') || p2.farmland_img.startsWith('data:')) && !p2.farmland_img.toLowerCase().endsWith('.pdf');
 
         pairs.push({
           id: `comp-${i}`,

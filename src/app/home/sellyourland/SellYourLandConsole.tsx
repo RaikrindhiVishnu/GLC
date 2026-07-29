@@ -5,7 +5,8 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useGetAllGeoMasterDataQuery } from "../../../services/master";
-import { useSellFarmlandMutation } from "../../../services/farmland";
+import { useSellFarmlandMutation } from "@/services/farmland";
+import { s3Service } from "@/services/s3";
 import MapWrapper from "../../../components/MapWrapper";
 
 export default function SellYourLandConsole() {
@@ -30,6 +31,8 @@ export default function SellYourLandConsole() {
   const [coverImage, setCoverImage] = useState<File | null>(null);
   const [propertyPhotos, setPropertyPhotos] = useState<File[]>([]);
   const [showModal, setShowModal] = useState(false);
+  const [createdFarmlandId, setCreatedFarmlandId] = useState<number | null>(null);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const { data: geoDataRes } = useGetAllGeoMasterDataQuery();
   const states = geoDataRes?.states?.slice(1) || [];
@@ -56,9 +59,12 @@ export default function SellYourLandConsole() {
     };
   }, [showModal]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
   };
 
   const handleIntermediateSubmit = (e: React.FormEvent) => {
@@ -67,7 +73,50 @@ export default function SellYourLandConsole() {
   };
 
   const handleFinalAuditTrigger = async () => {
+    // Form Validations
+    const newErrors: Record<string, string> = {};
+    if (!formData.fullName.trim()) newErrors.fullName = "Please enter the Full Name.";
+    if (!formData.contactNumber.trim()) newErrors.contactNumber = "Please enter the Contact Number.";
+    if (!formData.email.trim()) newErrors.email = "Please enter the Email Address.";
+    if (!formData.region) newErrors.region = "Please select a Region (State).";
+    if (!formData.district) newErrors.district = "Please select a District.";
+    if (!formData.mandal) newErrors.mandal = "Please select a Mandal.";
+    if (!formData.acreage) newErrors.acreage = "Please enter the Total Acreage.";
+    if (!formData.baseValuation) newErrors.baseValuation = "Please enter the Base Valuation.";
+    if (!formData.description.trim()) newErrors.description = "Please enter the Land Description.";
+    
+    // Map Validations
+    if (!formData.lat || !formData.lng) newErrors.map = "Please drop a pin on the map.";
+    if (!formData.polygon || formData.polygon.length === 0) newErrors.polygon = "Please draw a polygon boundary.";
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      // Optional: Scroll to top smoothly so they see errors
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
     try {
+      let coverImageUrl = "";
+      if (coverImage) {
+        try {
+          const res = await s3Service.uploadFile(coverImage);
+          if (res.url) coverImageUrl = res.url;
+        } catch (e) {
+          console.error("Failed to upload cover image", e);
+        }
+      }
+
+      const galleryImageUrls: string[] = [];
+      for (const photo of propertyPhotos) {
+        try {
+          const res = await s3Service.uploadFile(photo);
+          if (res.url) galleryImageUrls.push(res.url);
+        } catch (e) {
+          console.error("Failed to upload gallery image", e);
+        }
+      }
+
       const payload = {
         location_details: {
           country_id: 1,
@@ -85,15 +134,17 @@ export default function SellYourLandConsole() {
           phone_number: formData.contactNumber,
           email_address: formData.email
         },
-        cover_image: "", // Adjust when image upload is complete
+        cover_image: coverImageUrl,
         total_acers: Number(formData.acreage) || 10,
         price: formData.baseValuation || "300000",
         land_description: formData.description || "N/A",
-        polygon: formData.polygon && formData.polygon.length > 0 ? formData.polygon : undefined
+        polygon: formData.polygon && formData.polygon.length > 0 ? formData.polygon : undefined,
+        gallery_images: galleryImageUrls.length > 0 ? galleryImageUrls : undefined
       };
       
       const res = await sellFarmland(payload).unwrap();
       if (res.success) {
+        if (res.data?.farmland_id) setCreatedFarmlandId(res.data.farmland_id);
         setShowModal(true);
       } else {
         alert("Failed to submit: " + (res.message || "Unknown error"));
@@ -104,31 +155,47 @@ export default function SellYourLandConsole() {
     }
   };
 
-  const inputStyle: React.CSSProperties = {
+  const getInputStyle = (fieldName: string): React.CSSProperties => ({
     boxSizing: "border-box",
     width: "100%",
     height: "55px",
     background: "#F3F4F5",
     borderRadius: "16px",
-    border: "none",
+    border: errors[fieldName] ? "2px solid #FF3B30" : "none",
     padding: "17px 24px 18px",
     fontFamily: "'Plus Jakarta Sans', sans-serif",
     fontSize: "16px",
     lineHeight: "20px",
     color: "#191C1D",
     outline: "none",
-  };
+  });
 
-  const labelStyle: React.CSSProperties = {
+  const getSelectStyle = (fieldName: string): React.CSSProperties => ({
+    width: "100%", 
+    height: "100%", 
+    boxSizing: "border-box", 
+    background: "#FFFFFF", 
+    border: errors[fieldName] ? "2px solid #FF3B30" : "1px solid rgba(197, 198, 205, 0.3)", 
+    borderRadius: "9999px", 
+    padding: "0 48px", 
+    fontFamily: "'Plus Jakarta Sans', sans-serif", 
+    fontSize: "16px", 
+    color: "#131600", 
+    outline: "none", 
+    appearance: "none", 
+    cursor: "pointer" 
+  });
+
+  const labelStyle = (fieldName: string): React.CSSProperties => ({
     fontFamily: "'Plus Jakarta Sans', sans-serif",
     fontWeight: 700,
     fontSize: "10px",
     lineHeight: "15px",
     letterSpacing: "1px",
-    color: "#45474C",
+    color: errors[fieldName] ? "#FF3B30" : "#45474C",
     textTransform: "uppercase",
     paddingLeft: "4px",
-  };
+  });
 
   return (
     <section className="w-full max-w-7xl mx-auto px-4 lg:px-8 py-16 lg:py-24 box-border flex flex-col gap-12">
@@ -175,10 +242,10 @@ export default function SellYourLandConsole() {
             isolation: "isolate",
           }}
         >
-          <div style={{ position: "absolute", inset: 0, background: "#F1F5F9", zIndex: 0, overflow: "hidden", borderRadius: "48px" }}>
+          <div style={{ position: "absolute", inset: 0, background: "#F1F5F9", zIndex: 0, overflow: "hidden", borderRadius: "48px", border: (errors.map || errors.polygon) ? "2px solid #FF3B30" : "none" }}>
             <MapWrapper 
-              onLocationChange={(loc) => setFormData(prev => ({ ...prev, lat: loc.lat.toString(), lng: loc.lng.toString() }))}
-              onPolygonChange={(poly) => setFormData(prev => ({ ...prev, polygon: poly }))}
+              onLocationChange={(loc) => { setFormData(prev => ({ ...prev, lat: loc.lat.toString(), lng: loc.lng.toString() })); setErrors(prev => ({...prev, map: ""})) }}
+              onPolygonChange={(poly) => { setFormData(prev => ({ ...prev, polygon: poly })); setErrors(prev => ({...prev, polygon: ""})) }}
               onFullscreenChange={setIsMapFullscreen}
             />
           </div>
@@ -221,26 +288,26 @@ export default function SellYourLandConsole() {
             <div style={{ display: "flex", flexDirection: "column", gap: "24px", width: "100%" }}>
               {/* FULL LEGAL NAME */}
               <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                <label style={labelStyle}>FULL LEGAL NAME</label>
-                <input type="text" name="fullName" placeholder="Executive Name" value={formData.fullName} onChange={handleInputChange} style={inputStyle} />
+                <label style={labelStyle("fullName")}>FULL LEGAL NAME</label>
+                <input type="text" name="fullName" placeholder="Executive Name" value={formData.fullName} onChange={handleInputChange} style={getInputStyle("fullName")} />
               </div>
 
               {/* CODE + CONTACT NUMBER */}
               <div style={{ display: "flex", flexDirection: "row", gap: "16px", width: "100%" }}>
                 <div style={{ display: "flex", flexDirection: "column", gap: "8px", width: "120px", flexShrink: 0 }}>
-                  <label style={labelStyle}>CODE</label>
-                  <input type="text" name="code" value={formData.code} onChange={handleInputChange} style={{ ...inputStyle, height: "56px", textAlign: "center", fontWeight: 700 }} />
+                  <label style={labelStyle("code")}>CODE</label>
+                  <input type="text" name="code" value={formData.code} onChange={handleInputChange} style={{ ...getInputStyle("code"), height: "56px", textAlign: "center", fontWeight: 700 }} />
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: "8px", flex: 1 }}>
-                  <label style={labelStyle}>CONTACT NUMBER</label>
-                  <input type="text" name="contactNumber" placeholder="000 000 0000" value={formData.contactNumber} onChange={handleInputChange} style={inputStyle} />
+                  <label style={labelStyle("contactNumber")}>CONTACT NUMBER</label>
+                  <input type="text" name="contactNumber" placeholder="000 000 0000" value={formData.contactNumber} onChange={handleInputChange} style={getInputStyle("contactNumber")} />
                 </div>
               </div>
 
               {/* CORPORATE EMAIL */}
               <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                <label style={labelStyle}>CORPORATE EMAIL</label>
-                <input type="email" name="email" placeholder="name@corporation.com" value={formData.email} onChange={handleInputChange} style={inputStyle} />
+                <label style={labelStyle("email")}>CORPORATE EMAIL</label>
+                <input type="email" name="email" placeholder="name@corporation.com" value={formData.email} onChange={handleInputChange} style={getInputStyle("email")} />
               </div>
             </div>
             <button type="submit" style={{ display: "none" }} />
@@ -278,49 +345,49 @@ export default function SellYourLandConsole() {
               <div className="flex flex-col md:flex-row gap-4 w-full">
                 {/* State Search */}
                 <div style={{ flex: 1, position: "relative", height: "57px" }}>
-                  <select name="region" value={formData.region} onChange={handleInputChange} style={{ width: "100%", height: "100%", boxSizing: "border-box", background: "#FFFFFF", border: "1px solid rgba(197, 198, 205, 0.3)", borderRadius: "9999px", padding: "0 48px", fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "16px", color: "#131600", outline: "none", appearance: "none", cursor: "pointer" }}>
+                  <select name="region" value={formData.region} onChange={handleInputChange} style={getSelectStyle("region")}>
                     <option value="" disabled style={{ color: "#C5C6CD" }}>State Search</option>
                     {states.map((s: any[]) => (
                       <option key={s[0]} value={s[0]}>{s[3]}</option>
                     ))}
                   </select>
                   <div style={{ position: "absolute", left: "16px", top: "50%", transform: "translateY(-50%)", width: "16px", height: "20px", display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "none" }}>
-                    <svg width="16" height="20" viewBox="0 0 24 24" fill="none" stroke="#75777D" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
+                    <svg width="16" height="20" viewBox="0 0 24 24" fill="none" stroke={errors.region ? "#FF3B30" : "#75777D"} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
                   </div>
                   <div style={{ position: "absolute", right: "20px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#75777D" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={errors.region ? "#FF3B30" : "#75777D"} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                   </div>
                 </div>
 
                 {/* City / District Search */}
                 <div style={{ flex: 1, position: "relative", height: "57px" }}>
-                  <select name="district" value={formData.district} onChange={handleInputChange} style={{ width: "100%", height: "100%", boxSizing: "border-box", background: "#FFFFFF", border: "1px solid rgba(197, 198, 205, 0.3)", borderRadius: "9999px", padding: "0 48px", fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "16px", color: "#131600", outline: "none", appearance: "none", cursor: "pointer" }}>
+                  <select name="district" value={formData.district} onChange={handleInputChange} style={getSelectStyle("district")}>
                     <option value="" disabled style={{ color: "#C5C6CD" }}>City / District Search</option>
                     {filteredDistricts.map((d: any[]) => (
                       <option key={d[0]} value={d[0]}>{d[3]}</option>
                     ))}
                   </select>
                   <div style={{ position: "absolute", left: "16px", top: "50%", transform: "translateY(-50%)", width: "18px", height: "18px", display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "none" }}>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#75777D" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21" /><line x1="9" y1="3" x2="9" y2="21" /><line x1="15" y1="3" x2="15" y2="21" /></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={errors.district ? "#FF3B30" : "#75777D"} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21" /><line x1="9" y1="3" x2="9" y2="21" /><line x1="15" y1="3" x2="15" y2="21" /></svg>
                   </div>
                   <div style={{ position: "absolute", right: "20px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#75777D" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={errors.district ? "#FF3B30" : "#75777D"} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                   </div>
                 </div>
 
                 {/* Mandal Search */}
                 <div style={{ flex: 1, position: "relative", height: "57px" }}>
-                  <select name="mandal" value={formData.mandal} onChange={handleInputChange} style={{ width: "100%", height: "100%", boxSizing: "border-box", background: "#FFFFFF", border: "1px solid rgba(197, 198, 205, 0.3)", borderRadius: "9999px", padding: "0 48px", fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "16px", color: "#131600", outline: "none", appearance: "none", cursor: "pointer" }}>
+                  <select name="mandal" value={formData.mandal} onChange={handleInputChange} style={getSelectStyle("mandal")}>
                     <option value="" disabled style={{ color: "#C5C6CD" }}>Mandal Search</option>
                     {filteredMandals.map((m: any[]) => (
                       <option key={m[0]} value={m[0]}>{m[3]}</option>
                     ))}
                   </select>
                   <div style={{ position: "absolute", left: "16px", top: "50%", transform: "translateY(-50%)", width: "18px", height: "18px", display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "none" }}>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#75777D" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21" /><line x1="9" y1="3" x2="9" y2="21" /><line x1="15" y1="3" x2="15" y2="21" /></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={errors.mandal ? "#FF3B30" : "#75777D"} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21" /><line x1="9" y1="3" x2="9" y2="21" /><line x1="15" y1="3" x2="15" y2="21" /></svg>
                   </div>
                   <div style={{ position: "absolute", right: "20px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#75777D" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={errors.mandal ? "#FF3B30" : "#75777D"} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                   </div>
                 </div>
               </div>
@@ -337,8 +404,8 @@ export default function SellYourLandConsole() {
                 </div>
                 <div style={{ background: "#FFFFFF", boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)", borderRadius: "24px", padding: "4px", display: "flex", flexDirection: "column", minHeight: "182px" }}>
                   {/* Acreage Row */}
-                  <div style={{ display: "flex", flexDirection: "column", padding: "20px", gap: "4px", borderBottom: "1px solid rgba(199, 200, 175, 0.1)" }}>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", lineHeight: "15px", letterSpacing: "0.5px", textTransform: "uppercase", color: "rgba(70, 72, 53, 0.6)" }}>
+                  <div style={{ display: "flex", flexDirection: "column", padding: "20px", gap: "4px", borderBottom: "1px solid rgba(199, 200, 175, 0.1)", background: errors.acreage ? "rgba(255, 59, 48, 0.05)" : "transparent" }}>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", lineHeight: "15px", letterSpacing: "0.5px", textTransform: "uppercase", color: errors.acreage ? "#FF3B30" : "rgba(70, 72, 53, 0.6)" }}>
                       Total Acreage
                     </span>
                     <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "8px" }}>
@@ -348,25 +415,25 @@ export default function SellYourLandConsole() {
                         value={formData.acreage} 
                         onChange={handleInputChange} 
                         placeholder="0.00" 
-                        style={{ flex: 1, border: "none", outline: "none", background: "transparent", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "20px", color: "#131600" }} 
+                        style={{ flex: 1, border: "none", outline: "none", background: "transparent", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "20px", color: errors.acreage ? "#FF3B30" : "#131600" }} 
                       />
                       <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "16px", color: "#0F2F4C" }}>Acres</span>
                     </div>
                   </div>
                   {/* Price Row */}
-                  <div style={{ display: "flex", flexDirection: "column", padding: "20px", gap: "4px" }}>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", lineHeight: "15px", letterSpacing: "0.5px", textTransform: "uppercase", color: "rgba(70, 72, 53, 0.6)" }}>
+                  <div style={{ display: "flex", flexDirection: "column", padding: "20px", gap: "4px", background: errors.baseValuation ? "rgba(255, 59, 48, 0.05)" : "transparent" }}>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", lineHeight: "15px", letterSpacing: "0.5px", textTransform: "uppercase", color: errors.baseValuation ? "#FF3B30" : "rgba(70, 72, 53, 0.6)" }}>
                       Quoted Price
                     </span>
                     <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "8px" }}>
-                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "20px", color: "#0F2F4C" }}>₹</span>
+                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "20px", color: errors.baseValuation ? "#FF3B30" : "#0F2F4C" }}>₹</span>
                       <input 
                         type="text" 
                         name="baseValuation" 
                         value={formData.baseValuation} 
                         onChange={handleInputChange} 
                         placeholder="Enter amount" 
-                        style={{ flex: 1, border: "none", outline: "none", background: "transparent", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "20px", color: "#131600" }} 
+                        style={{ flex: 1, border: "none", outline: "none", background: "transparent", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "20px", color: errors.baseValuation ? "#FF3B30" : "#131600" }} 
                       />
                     </div>
                   </div>
@@ -381,9 +448,10 @@ export default function SellYourLandConsole() {
                   </h3>
                 </div>
                 <div style={{ 
-                  background: "#FFFFFF", 
+                  background: errors.description ? "rgba(255, 59, 48, 0.02)" : "#FFFFFF", 
                   boxShadow: "0px 8px 30px rgba(0, 0, 0, 0.04)", 
                   borderRadius: "24px", 
+                  border: errors.description ? "2px solid #FF3B30" : "none",
                   padding: "30px 42px",
                   width: "100%",
                   boxSizing: "border-box",
@@ -419,28 +487,33 @@ export default function SellYourLandConsole() {
                 width: "100%",
                 boxSizing: "border-box"
               }}>
-                <label style={{
-                  background: coverImage ? `url(${URL.createObjectURL(coverImage)}) center/cover no-repeat` : "#F1F3FA",
-                  border: coverImage ? "none" : "2px dashed rgba(192, 199, 210, 0.4)",
-                  borderRadius: "clamp(16px, 3vw, 32px)",
-                  width: "100%",
-                  aspectRatio: "1116/350",
-                  minHeight: "180px",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "8px",
-                  cursor: "pointer",
-                  position: "relative",
-                  overflow: "hidden"
-                }}>
+
+                <label 
+                  onClick={() => document.getElementById('coverImageUpload')?.click()}
+                  style={{
+                    background: coverImage ? `url(${URL.createObjectURL(coverImage)}) center/cover no-repeat` : "#F1F3FA",
+                    border: errors.coverImage ? "2px dashed #FF3B30" : (coverImage ? "none" : "2px dashed rgba(192, 199, 210, 0.4)"),
+                    borderRadius: "clamp(16px, 3vw, 32px)",
+                    width: "100%",
+                    aspectRatio: "1116/350",
+                    minHeight: "180px",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "8px",
+                    cursor: "pointer",
+                    position: "relative",
+                    overflow: "hidden"
+                  }}>
                   <input 
                     type="file" 
+                    id="coverImageUpload"
                     accept="image/*" 
                     onChange={(e) => {
                       if (e.target.files && e.target.files.length > 0) {
                         setCoverImage(e.target.files[0]);
+                        setErrors(prev => ({...prev, coverImage: ""}));
                       }
                     }} 
                     style={{ display: "none" }} 
@@ -502,22 +575,26 @@ export default function SellYourLandConsole() {
                     </div>
                   ))}
                   {/* Upload Button */}
-                  <label style={{ 
-                    width: "100%", aspectRatio: "1/1",
-                    borderRadius: "33.33%", 
-                    background: "#F1F3FA",
-                    border: "clamp(2px, 0.4vw, 4.1px) dashed rgba(192, 199, 210, 0.4)",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    cursor: "pointer", boxSizing: "border-box"
-                  }}>
+                  <label 
+                    onClick={() => document.getElementById('propertyPhotosUpload')?.click()}
+                    style={{ 
+                      width: "100%", aspectRatio: "1/1",
+                      borderRadius: "33.33%", 
+                      background: "#F1F3FA",
+                      border: errors.propertyPhotos ? "2px dashed #FF3B30" : "clamp(2px, 0.4vw, 4.1px) dashed rgba(192, 199, 210, 0.4)",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      cursor: "pointer", boxSizing: "border-box"
+                    }}>
                     <input 
                       type="file" 
+                      id="propertyPhotosUpload"
                       accept="image/*" 
                       multiple 
                       onChange={(e) => {
                         if (e.target.files && e.target.files.length > 0) {
                           const newFiles = Array.from(e.target.files);
                           setPropertyPhotos(prev => [...prev, ...newFiles]);
+                          setErrors(prev => ({...prev, propertyPhotos: ""}));
                         }
                       }} 
                       style={{ display: "none" }} 
@@ -634,19 +711,25 @@ export default function SellYourLandConsole() {
                   {/* Rows */}
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "12px", letterSpacing: "1.2px", textTransform: "uppercase", color: "#47617C" }}>ASSET ID</span>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#181C20" }}>GLC SOS 01</span>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#181C20" }}>
+                      {createdFarmlandId ? `GLC FL-${createdFarmlandId}` : "GLC SOS 01"}
+                    </span>
                   </div>
                   <div style={{ width: "100%", height: "1px", background: "rgba(224, 226, 232, 0.5)" }} />
 
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "12px", letterSpacing: "1.2px", textTransform: "uppercase", color: "#47617C" }}>ACREAGE</span>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#181C20" }}>10.00 Acres</span>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#181C20" }}>
+                      {Number(formData.acreage) || 10.00} Acres
+                    </span>
                   </div>
                   <div style={{ width: "100%", height: "1px", background: "rgba(224, 226, 232, 0.5)" }} />
 
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "12px", letterSpacing: "1.2px", textTransform: "uppercase", color: "#47617C" }}>QUOTED PRICE</span>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "20px", color: "#00609A" }}>₹5,00,00,000</span>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "20px", color: "#00609A" }}>
+                      ₹{new Intl.NumberFormat('en-IN').format(Number(formData.baseValuation) || 0)}
+                    </span>
                   </div>
 
                   {/* Document Status */}
@@ -723,7 +806,7 @@ export default function SellYourLandConsole() {
 
             {/* Action Deck */}
             <div style={{ width: "100%", maxWidth: "825px", display: "flex", flexDirection: "row", flexWrap: "wrap", justifyContent: "center", gap: "20px", padding: "0 24px 40px", boxSizing: "border-box", marginTop: "auto" }}>
-              <button onClick={() => router.push("/home/sellyourland/tracking")} style={{ flex: "1 1 300px", maxWidth: "400px", height: "62px", background: "radial-gradient(49.97% 160.36% at 50% 50%, #2780C4 0%, #164573 100%)", borderRadius: "9999px", border: "none", cursor: "pointer", boxShadow: "0px 9px 13px -2px rgba(0,0,0,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <button onClick={() => router.push(`/home/sellyourland/tracking${createdFarmlandId ? `?farmland=${createdFarmlandId}` : ''}`)} style={{ flex: "1 1 300px", maxWidth: "400px", height: "62px", background: "radial-gradient(49.97% 160.36% at 50% 50%, #2780C4 0%, #164573 100%)", borderRadius: "9999px", border: "none", cursor: "pointer", boxShadow: "0px 9px 13px -2px rgba(0,0,0,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#FFFFFF" }}>Tracking Listing Status</span>
               </button>
               <button onClick={() => { setShowModal(false); router.push("/home"); }} style={{ flex: "1 1 300px", maxWidth: "400px", height: "62px", background: "transparent", border: "2px solid #2780C4", borderRadius: "9999px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>

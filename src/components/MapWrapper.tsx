@@ -15,6 +15,9 @@ interface MapWrapperProps {
   onLocationChange?: (location: { lat: number; lng: number }) => void;
   onPolygonChange?: (polygon: { lat: number; lng: number }[]) => void;
   onFullscreenChange?: (isFullscreen: boolean) => void;
+  initialLocation?: { lat: number; lng: number };
+  initialPolygon?: { lat: number; lng: number }[];
+  viewOnly?: boolean;
 }
 
 export default function MapWrapper(props: MapWrapperProps) {

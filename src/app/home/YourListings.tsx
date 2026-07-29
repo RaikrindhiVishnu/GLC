@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useGetUserUploadedFarmlandsQuery } from "../../services/upload";
+import { s3Service } from "../../services/s3";
 
 export default function YourListings() {
   const router = useRouter();
@@ -34,6 +35,39 @@ export default function YourListings() {
   const [startX, setStartX] = useState(0);
   const [scrollLeftState, setScrollLeftState] = useState(0);
   const [dragged, setDragged] = useState(false);
+
+  // Resolved image URLs mapping farmland_id -> public URL
+  const [imageUrls, setImageUrls] = useState<Record<number, string>>({});
+
+  useEffect(() => {
+    const fetchUrls = async () => {
+      const newUrls: Record<number, string> = {};
+      for (const item of listings) {
+        const url = item.farmland_img;
+        if (!url || url === "null" || url === "" || url.toLowerCase().endsWith('.pdf')) {
+          continue;
+        }
+        if (url.startsWith("http") || url.startsWith("data:") || url.startsWith("/")) {
+          newUrls[item.farmland_id] = url;
+          continue;
+        }
+        try {
+          // Resolve S3 key
+          const res = await s3Service.generateUrl({ key: url, filename: url, folderPath: '' });
+          if (res.url) {
+            newUrls[item.farmland_id] = res.url;
+          }
+        } catch (error) {
+          console.error("Failed to generate presigned URL for", url, error);
+        }
+      }
+      setImageUrls(newUrls);
+    };
+
+    if (listings.length > 0) {
+      fetchUrls();
+    }
+  }, [listings]);
 
   // Click-and-drag scrolling handlers
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -131,17 +165,42 @@ export default function YourListings() {
               className="flex flex-col items-center p-5 lg:p-[28px] w-[260px] lg:w-[296px] shrink-0 bg-white shadow-[0px_8px_6px_rgba(0,0,0,0.05),inset_3px_4px_2px_-3px_rgba(255,255,255,0.55)] rounded-[24px] lg:rounded-[30px] cursor-pointer box-border group pointer-events-auto"
             >
               {/* Image */}
-              <div className="relative w-full aspect-[1.25] rounded-[15px] overflow-hidden mb-4 shrink-0 pointer-events-none">
-                <Image
-                  src={
-                    (item.farmland_img && !item.farmland_img.toLowerCase().endsWith('.pdf'))
-                      ? item.farmland_img
-                      : `/assets/home/YourListings/glcsos${(i % 4) + 1}.svg`
+              <div className="relative w-full aspect-[1.25] rounded-[15px] overflow-hidden mb-4 shrink-0 pointer-events-none bg-[#F4F4F5] flex items-center justify-center">
+                {(() => {
+                  const resolvedUrl = imageUrls[item.farmland_id];
+                  const url = item.farmland_img;
+                  let finalUrl = null;
+
+                  if (resolvedUrl) {
+                    finalUrl = resolvedUrl;
+                  } else if (url && url !== "null" && url !== "" && !url.toLowerCase().endsWith('.pdf')) {
+                    if (url.startsWith("http") || url.startsWith("data:") || url.startsWith("/")) {
+                      finalUrl = url;
+                    }
                   }
-                  alt={item.farm_code}
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                />
+
+                  if (finalUrl) {
+                    return (
+                      <Image
+                        src={finalUrl}
+                        alt={item.farm_code}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    );
+                  }
+
+                  return (
+                    <div className="flex flex-col items-center gap-2">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#A1A1AA" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                        <polyline points="21 15 16 10 5 21"/>
+                      </svg>
+                      <span className="font-jakarta text-[#A1A1AA] text-[12px] font-medium">No Image</span>
+                    </div>
+                  );
+                })()}
               </div>
 
               {/* Title */}

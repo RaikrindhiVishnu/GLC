@@ -221,6 +221,7 @@ export interface SellFarmlandRequest {
   price: string;
   land_description: string;
   polygon?: { lat: number; lng: number }[];
+  gallery_images?: string[];
 }
 
 export interface SellFarmlandResponse {

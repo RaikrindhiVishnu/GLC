@@ -3,6 +3,7 @@ import VerificationHero from "./VerificationHero";
 import VerificationFarmlandsGrid from "./VerificationFarmlandsGrid";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
+import VerificationTrendingCarousel from "./VerificationTrendingCarousel";
 
 export default function VerificationOfFarmlandPage() {
   return (
@@ -12,6 +13,7 @@ export default function VerificationOfFarmlandPage() {
         subtitle="Verify every farmland through comprehensive legal, survey, ownership, and compliance checks to invest with complete confidence." 
       />
       <VerificationFarmlandsGrid />
+      <VerificationTrendingCarousel />
       <CTA />
       <Footer />
     </main>

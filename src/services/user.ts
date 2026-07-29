@@ -133,6 +133,7 @@ export interface GetUserProfileDetailsByIdRequest {
 export interface PurchasedLandTracking {
   farm_id: number;
   farm_code: string;
+  cover_image_url?: string | null;
   state_id: number | null;
   district_id: number | null;
   mandal_id: number | null;
