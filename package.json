@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "vercel-build": "next build",
     "dev": "env-cmd -f .env.dev next dev",
     "qa": "env-cmd -f .env.qa next dev",
     "build:dev": "env-cmd -f .env.dev next build",

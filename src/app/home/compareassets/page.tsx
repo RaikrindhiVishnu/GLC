@@ -282,6 +282,8 @@ function CompareAssetsContent() {
           <div style={{ position: "absolute", top: 0, left: 0, right: 0, zIndex: 20, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 60px", height: "110px" }}>
             <div style={{ display: "flex", alignItems: "center", cursor: "pointer", flexShrink: 0 }} onClick={() => router.push("/home")}>
               <Image src="/assets/common/Logo green land 1.svg" alt="Green Land Capital Brand Logo" width={150} height={64} style={{ objectFit: "contain" }} />
+            </div>
+          </div>
         </section>
 
         {/* Mobile Comparison Content */}

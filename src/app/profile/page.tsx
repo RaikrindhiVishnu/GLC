@@ -137,7 +137,10 @@ export default function ProfileScreen() {
         const response = await s3Service.uploadFile(file);
         if (response.url) {
           setProfileImage(response.url);
-          const urlOrKeyToSave = response.key || response.url;
+          let urlOrKeyToSave = response.key || response.url || "";
+          if (urlOrKeyToSave.startsWith("http")) {
+            try { urlOrKeyToSave = new URL(urlOrKeyToSave).pathname.substring(1); } catch (e) {}
+          }
           setLastUploadedUrl(urlOrKeyToSave);
           if (userId && userDetails) {
             await updateUserDetails({

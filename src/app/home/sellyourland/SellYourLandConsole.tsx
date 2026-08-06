@@ -5,13 +5,16 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useGetAllGeoMasterDataQuery } from "../../../services/master";
-import { useSellFarmlandMutation } from "@/services/farmland";
+import { useSellFarmlandMutation, useUpdateCoverImageMutation } from "@/services/farmland";
+import { useUpdateFarmlandImagesMutation } from "@/services/home";
 import { s3Service } from "@/services/s3";
 import MapWrapper from "../../../components/MapWrapper";
 
 export default function SellYourLandConsole() {
   const router = useRouter();
   const [sellFarmland, { isLoading: isSubmitting }] = useSellFarmlandMutation();
+  const [updateCoverImage] = useUpdateCoverImageMutation();
+  const [updateFarmlandImages] = useUpdateFarmlandImagesMutation();
   const [isMapFullscreen, setIsMapFullscreen] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
@@ -152,7 +155,31 @@ export default function SellYourLandConsole() {
       
       const res = await sellFarmland(payload).unwrap();
       if (res.success) {
-        if (res.data?.farmland_id) setCreatedFarmlandId(res.data.farmland_id);
+        const newFarmlandId = res.data?.farmland_id;
+        if (newFarmlandId) {
+          setCreatedFarmlandId(newFarmlandId);
+          
+          // Step 2: Now that we have the ID, update the paths
+          if (coverImageUrl) {
+            const finalCoverImage = `farmlands/${newFarmlandId}/land_images/cover_images/${coverImageUrl}`;
+            await updateCoverImage({
+              farmland_id: newFarmlandId,
+              cover_image_url: finalCoverImage
+            }).unwrap().catch(e => console.error("Cover image update failed", e));
+          }
+
+          if (galleryImageUrls.length > 0) {
+            const finalGalleryImages = galleryImageUrls.map(url => `farmlands/${newFarmlandId}/land_images/gallery_images/${url}`);
+            const storedUserId = typeof window !== "undefined" ? localStorage.getItem("userId") : null;
+            const numericUserId = storedUserId ? parseInt(storedUserId, 10) : 45;
+            await updateFarmlandImages({
+              farmland_id: newFarmlandId,
+              user_id: numericUserId,
+              add_list: finalGalleryImages,
+              delete_list: []
+            }).unwrap().catch(e => console.error("Gallery images update failed on backend", e));
+          }
+        }
         setShowModal(true);
       } else {
         alert("Failed to submit: " + (res.message || "Unknown error"));

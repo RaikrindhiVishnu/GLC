@@ -58,8 +58,12 @@ export default function MaintenanceOnboardSection() {
     try {
       setIsUploading(true);
       const response = await s3Service.uploadFile(file);
-      if (response.url) {
-        setFormData(prev => ({ ...prev, documentUrl: response.url! }));
+      let urlOrKeyToSave = response.key || response.url || "";
+      if (urlOrKeyToSave.startsWith("http")) {
+        try { urlOrKeyToSave = new URL(urlOrKeyToSave).pathname.substring(1); } catch (e) {}
+      }
+      if (urlOrKeyToSave) {
+        setFormData(prev => ({ ...prev, documentUrl: urlOrKeyToSave }));
         alert("File uploaded successfully!");
       } else {
         throw new Error("Upload failed, no URL returned.");

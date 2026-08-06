@@ -91,8 +91,11 @@ export default function PromoteListingModal({ isOpen, onClose, farmlandId }: Pro
         addList.map(async (item) => {
           try {
             const response = await s3Service.uploadFile(item.file);
-            const extractedKey = response.key || (response.url ? new URL(response.url).pathname.substring(1) : "");
-            return extractedKey || item.url;
+            let extractedKey = response.key || response.url || "";
+            if (extractedKey.startsWith("http")) {
+              try { extractedKey = new URL(extractedKey).pathname.substring(1); } catch (e) {}
+            }
+            return extractedKey ? `farmlands/${farmlandId}/land_images/gallery_images/${extractedKey}` : item.url;
           } catch (e) {
             console.error("Upload failed for file", item.file.name, e);
             throw e;
