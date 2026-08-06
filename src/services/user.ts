@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { baseQuery } from '../store/baseQuery';
 
-const MAIL_API_BASE_URL = 'https://eq3tqsvcw7.execute-api.ap-south-1.amazonaws.com';
+const MAIL_API_BASE_URL = process.env.NEXT_PUBLIC_AUTH_API_URL || 'https://eq3tqsvcw7.execute-api.ap-south-1.amazonaws.com';
 
 export interface CreateAgentRequest {
   email: string;

@@ -148,9 +148,8 @@ export default function AiCurationModal({ onClose, onGenerate }: AiCurationModal
                   border: size === 'entry' ? '1px solid #1D64B5' : '1px solid #E5E7EB', borderRadius: '16px', cursor: 'pointer'
                 }}>
                   <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', width: '100%', marginBottom: '16px' }}>
-                    <div style={{ width: '36px', height: '36px', background: '#EFF6FF', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1D64B5" strokeWidth="2"><rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2"></circle></svg>
-                    </div>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/assets/ai-suggested/Background%20(31).svg" alt="Icon" width={36} height={36} />
                     <div style={{ width: '20px', height: '20px', border: size === 'entry' ? 'none' : '2px solid #D1D5DB', borderRadius: '9999px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       {size === 'entry' && <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: '#1D64B5', border: '2px solid #1D64B5' }}><CheckIcon /></div>}
                     </div>
@@ -167,9 +166,8 @@ export default function AiCurationModal({ onClose, onGenerate }: AiCurationModal
                   border: size === 'mid' ? '1px solid #1D64B5' : '1px solid #E5E7EB', borderRadius: '16px', cursor: 'pointer'
                 }}>
                   <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', width: '100%', marginBottom: '16px' }}>
-                    <div style={{ width: '36px', height: '36px', background: '#EFF6FF', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1D64B5" strokeWidth="2"><rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2"></circle><path d="M6 12h.01M18 12h.01"></path></svg>
-                    </div>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/assets/ai-suggested/Background%20(32).svg" alt="Icon" width={36} height={36} />
                     <div style={{ width: '20px', height: '20px', border: size === 'mid' ? 'none' : '2px solid #D1D5DB', borderRadius: '9999px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       {size === 'mid' && <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: '#1D64B5', border: '2px solid #1D64B5' }}><CheckIcon /></div>}
                     </div>
@@ -186,9 +184,8 @@ export default function AiCurationModal({ onClose, onGenerate }: AiCurationModal
                   border: size === 'premium' ? '1px solid #1D64B5' : '1px solid #E5E7EB', borderRadius: '16px', cursor: 'pointer'
                 }}>
                   <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', width: '100%', marginBottom: '16px' }}>
-                    <div style={{ width: '36px', height: '36px', background: '#EFF6FF', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1D64B5" strokeWidth="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                    </div>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/assets/ai-suggested/Background%20(33).svg" alt="Icon" width={36} height={36} />
                     <div style={{ width: '20px', height: '20px', border: size === 'premium' ? 'none' : '2px solid #D1D5DB', borderRadius: '9999px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       {size === 'premium' && <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: '#1D64B5', border: '2px solid #1D64B5' }}><CheckIcon /></div>}
                     </div>
@@ -205,9 +202,8 @@ export default function AiCurationModal({ onClose, onGenerate }: AiCurationModal
                   border: size === 'hnw' ? '1px solid #1D64B5' : '1px solid #E5E7EB', borderRadius: '16px', cursor: 'pointer'
                 }}>
                   <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', width: '100%', marginBottom: '16px' }}>
-                    <div style={{ width: '36px', height: '36px', background: '#EFF6FF', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1D64B5" strokeWidth="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
-                    </div>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/assets/ai-suggested/Background%20(34).svg" alt="Icon" width={36} height={36} />
                     <div style={{ width: '20px', height: '20px', border: size === 'hnw' ? 'none' : '2px solid #D1D5DB', borderRadius: '9999px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       {size === 'hnw' && <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: '#1D64B5', border: '2px solid #1D64B5' }}><CheckIcon /></div>}
                     </div>
@@ -259,7 +255,8 @@ export default function AiCurationModal({ onClose, onGenerate }: AiCurationModal
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '4px' }}>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1D64B5" strokeWidth="2"><path d="M14 3L15.8 10.2L23 12L15.8 13.8L14 21L12.2 13.8L5 12L12.2 10.2L14 3Z"/></svg>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/assets/ai-suggested/SVG.svg" alt="Surprise Me" width={12} height={12} />
                     <span style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 700, fontSize: '12px', letterSpacing: '0.6px', textTransform: 'uppercase', color: '#1D64B5' }}>
                       SURPRISE ME
                     </span>
@@ -279,10 +276,10 @@ export default function AiCurationModal({ onClose, onGenerate }: AiCurationModal
               </span>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', width: '510px' }}>
                 {[
-                  { id: 'groundwater', label: 'Abundant Groundwater', icon: <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" /> },
-                  { id: 'highway', label: 'Highway Frontage', icon: <path d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-4M17 9l-5-5-5 5M12 4v12" /> },
-                  { id: 'soil', label: 'Specific Soil (Red/Black)', icon: <path d="M2 22h20M7 2v20M17 2v20M12 22V10" /> },
-                  { id: 'organic', label: 'Organic-Ready', icon: <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /> }
+                  { id: 'groundwater', label: 'Abundant Groundwater', icon: '/assets/ai-suggested/SVG.png' },
+                  { id: 'highway', label: 'Highway Frontage', icon: '/assets/ai-suggested/SVG%20(2).svg' },
+                  { id: 'soil', label: 'Specific Soil (Red/Black)', icon: '/assets/ai-suggested/SVG%20(3).svg' },
+                  { id: 'organic', label: 'Organic-Ready', icon: '/assets/ai-suggested/SVG%20(1).svg' }
                 ].map((req) => (
                   <div
                     key={req.id}
@@ -294,9 +291,8 @@ export default function AiCurationModal({ onClose, onGenerate }: AiCurationModal
                     }}
                   >
                     <div style={{ width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={requirements.includes(req.id) ? '#1D64B5' : '#6B7280'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                         {req.icon}
-                       </svg>
+                       {/* eslint-disable-next-line @next/next/no-img-element */}
+                       <img src={req.icon} alt={req.label} width={14} height={14} />
                     </div>
                     <span style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 500, fontSize: '14px', lineHeight: '20px', color: requirements.includes(req.id) ? '#1D64B5' : '#374151' }}>
                       {req.label}
@@ -324,9 +320,8 @@ export default function AiCurationModal({ onClose, onGenerate }: AiCurationModal
               boxShadow: '0px 8px 20px rgba(26, 115, 232, 0.3)', borderRadius: '53px', cursor: 'pointer', border: 'none'
             }}
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M14 3L15.8 10.2L23 12L15.8 13.8L14 21L12.2 13.8L5 12L12.2 10.2L14 3Z"></path>
-            </svg>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/assets/ai-suggested/SVG%20(4).svg" alt="Generate" width={20} height={20} />
             <span style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 700, fontSize: '18px', lineHeight: '28px', textAlign: 'center', color: '#FFFFFF' }}>
               Generate AI Matches
             </span>

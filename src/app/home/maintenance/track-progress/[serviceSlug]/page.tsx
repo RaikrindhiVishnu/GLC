@@ -12,7 +12,7 @@ export default async function MaintenanceTrackProgressPage({ params }: { params:
     <main style={{ width: "100%", minHeight: "100vh", background: "#F8F9FA", display: "flex", flexDirection: "column" }}>
       <VerificationHero
         title="Track Progress"
-        subtitle="Track the real-time progress of your asset through our rigorous workflow pipeline"
+        subtitle="Track the real-time progress of your asset through our rigorous 4-tier legal, agronomy, and intelligence audit pipeline"
       />
 
       {/* Dynamic 2-column layout based on the service slug */}

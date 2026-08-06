@@ -308,6 +308,12 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
               setStateSearch("");
               setCitySearch("");
               setMandalSearch("");
+              setFilters({
+                state_id: [],
+                district_id: [],
+                mandal_id: [],
+                tag_ids: []
+              });
             }}
             style={{
               background: "transparent",

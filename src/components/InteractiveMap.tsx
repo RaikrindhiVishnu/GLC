@@ -15,9 +15,11 @@ interface InteractiveMapProps {
   initialLocation?: { lat: number; lng: number };
   initialPolygon?: { lat: number; lng: number }[];
   viewOnly?: boolean;
+  onMapClick?: () => void;
+  hideFullscreenButton?: boolean;
 }
 
-export default function InteractiveMap({ onLocationChange, onPolygonChange, onFullscreenChange, initialLocation, initialPolygon, viewOnly }: InteractiveMapProps) {
+export default function InteractiveMap({ onLocationChange, onPolygonChange, onFullscreenChange, initialLocation, initialPolygon, viewOnly, onMapClick, hideFullscreenButton }: InteractiveMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
@@ -30,12 +32,14 @@ export default function InteractiveMap({ onLocationChange, onPolygonChange, onFu
   const locationCbRef = useRef(onLocationChange);
   const polygonCbRef = useRef(onPolygonChange);
   const fullscreenCbRef = useRef(onFullscreenChange);
+  const mapClickCbRef = useRef(onMapClick);
 
   useEffect(() => {
     locationCbRef.current = onLocationChange;
     polygonCbRef.current = onPolygonChange;
     fullscreenCbRef.current = onFullscreenChange;
-  }, [onLocationChange, onPolygonChange, onFullscreenChange]);
+    mapClickCbRef.current = onMapClick;
+  }, [onLocationChange, onPolygonChange, onFullscreenChange, onMapClick]);
 
   const toggleFullscreen = () => {
     const next = !isFullscreen;
@@ -52,15 +56,33 @@ export default function InteractiveMap({ onLocationChange, onPolygonChange, onFu
 
   useEffect(() => {
     window.dispatchEvent(new CustomEvent("mapFullscreenChange", { detail: isFullscreen }));
+    if (typeof document !== 'undefined') {
+      if (isFullscreen) {
+        document.body.style.overflow = "hidden";
+      } else {
+        document.body.style.overflow = "";
+      }
+    }
     return () => {
       if (isFullscreen) {
         window.dispatchEvent(new CustomEvent("mapFullscreenChange", { detail: false }));
+        if (typeof document !== 'undefined') {
+          document.body.style.overflow = "";
+        }
       }
     };
   }, [isFullscreen]);
 
   useEffect(() => {
-    if (typeof window === "undefined" || !mapRef.current || mapInstanceRef.current) return;
+    if (typeof window === "undefined" || !mapRef.current) return;
+
+    if (mapInstanceRef.current) {
+      mapInstanceRef.current.remove();
+      mapInstanceRef.current = null;
+      drawnItemsRef.current = null;
+      markerRef.current = null;
+      polygonLayerRef.current = null;
+    }
 
     delete (L.Icon.Default.prototype as any)._getIconUrl;
     L.Icon.Default.mergeOptions({
@@ -71,7 +93,7 @@ export default function InteractiveMap({ onLocationChange, onPolygonChange, onFu
 
     // Increased maxZoom for drawing fine details
     const initialCenter = initialLocation ? [initialLocation.lat, initialLocation.lng] as L.LatLngTuple : [17.3850, 78.4867] as L.LatLngTuple;
-    const map = L.map(mapRef.current, { attributionControl: false, maxZoom: 22 }).setView(initialCenter, initialLocation ? 16 : 12);
+    const map = L.map(mapRef.current, { attributionControl: false, zoomControl: !viewOnly, maxZoom: 22 }).setView(initialCenter, initialLocation ? 16 : 12);
     mapInstanceRef.current = map;
 
     setTimeout(() => {
@@ -83,6 +105,12 @@ export default function InteractiveMap({ onLocationChange, onPolygonChange, onFu
       }
     }, 250);
 
+    map.on("click", () => {
+      if (mapClickCbRef.current) {
+        mapClickCbRef.current();
+      }
+    });
+
     L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
       maxZoom: 22,
       maxNativeZoom: 19
@@ -93,7 +121,7 @@ export default function InteractiveMap({ onLocationChange, onPolygonChange, onFu
       const searchControl = new (GeoSearchControl as any)({
         provider: provider,
         style: "bar",
-        showMarker: false, 
+        showMarker: false,
         retainZoomLevel: false,
         animateZoom: true,
         autoClose: true,
@@ -108,13 +136,47 @@ export default function InteractiveMap({ onLocationChange, onPolygonChange, onFu
     drawnItemsRef.current = drawnItems;
 
     if (initialLocation) {
-      markerRef.current = L.marker([initialLocation.lat, initialLocation.lng]).addTo(drawnItems);
+      const customPin = L.divIcon({
+        className: 'custom-pin',
+        html: `<svg width="32" height="32" viewBox="0 0 24 24" fill="#EA4335" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0px 3px 4px rgba(0,0,0,0.4))">
+                 <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" stroke="#FFFFFF" stroke-width="0.5"/>
+               </svg>`,
+        iconSize: [32, 32],
+        iconAnchor: [16, 32],
+      });
+      markerRef.current = L.marker([initialLocation.lat, initialLocation.lng], { icon: customPin }).addTo(drawnItems);
     }
 
     if (initialPolygon && initialPolygon.length > 0) {
-      const latlngs = initialPolygon.map(p => [p.lat, p.lng] as L.LatLngTuple);
-      polygonLayerRef.current = L.polygon(latlngs, { color: '#004A78', weight: 3, fillColor: '#004A78', fillOpacity: 0.2 }).addTo(drawnItems);
-      map.fitBounds(polygonLayerRef.current.getBounds(), { padding: [20, 20] });
+      let latlngs: L.LatLngTuple[] = [];
+
+      if (typeof initialPolygon[0] === 'string' && initialPolygon[0] === 'polygon') {
+        for (let i = 1; i < initialPolygon.length; i += 2) {
+          if (initialPolygon[i] && initialPolygon[i + 1]) {
+            latlngs.push([parseFloat(initialPolygon[i] as any), parseFloat(initialPolygon[i + 1] as any)]);
+          }
+        }
+      } else {
+        latlngs = initialPolygon.map((p: any) => {
+          if (p && typeof p === 'object' && 'lat' in p && 'lng' in p) {
+            return [p.lat, p.lng] as L.LatLngTuple;
+          } else if (Array.isArray(p) && p.length >= 2) {
+            return [p[0], p[1]] as L.LatLngTuple;
+          }
+          return null;
+        }).filter(Boolean) as L.LatLngTuple[];
+      }
+
+      if (latlngs.length > 0) {
+        polygonLayerRef.current = L.polygon(latlngs, { color: '#2780C4', weight: 3.84, fillColor: '#2780C4', fillOpacity: 0.1 }).addTo(drawnItems);
+        const bounds = polygonLayerRef.current.getBounds();
+        // Delay fitBounds so it fires after the map finishes its initial render
+        setTimeout(() => {
+          if (mapInstanceRef.current && bounds.isValid()) {
+            mapInstanceRef.current.fitBounds(bounds, { padding: [30, 30], maxZoom: 18 });
+          }
+        }, 300);
+      }
     }
 
     if (!viewOnly) {
@@ -142,7 +204,7 @@ export default function InteractiveMap({ onLocationChange, onPolygonChange, onFu
         }
         markerRef.current = layer;
         drawnItems.addLayer(layer);
-        
+
         const latlng = layer.getLatLng();
         if (locationCbRef.current) {
           locationCbRef.current({ lat: latlng.lat, lng: latlng.lng });
@@ -155,7 +217,7 @@ export default function InteractiveMap({ onLocationChange, onPolygonChange, onFu
         }
         polygonLayerRef.current = layer;
         drawnItems.addLayer(layer);
-        
+
         const latlngs = layer.getLatLngs()[0];
         if (polygonCbRef.current) {
           polygonCbRef.current(latlngs.map((ll: any) => ({ lat: ll.lat, lng: ll.lng })));
@@ -183,7 +245,7 @@ export default function InteractiveMap({ onLocationChange, onPolygonChange, onFu
         mapInstanceRef.current = null;
       }
     };
-  }, []);
+  }, [initialLocation, initialPolygon, viewOnly, isFullscreen]);
 
   const backdropStyles: React.CSSProperties = isFullscreen ? {
     position: "fixed",
@@ -191,14 +253,14 @@ export default function InteractiveMap({ onLocationChange, onPolygonChange, onFu
     left: 0,
     width: "100vw",
     height: "100vh",
-    zIndex: 99999,
+    zIndex: 2147483647,
     background: "rgba(9, 20, 38, 0.4)",
-    backdropFilter: "blur(8px)",
-    WebkitBackdropFilter: "blur(8px)",
+    backdropFilter: "blur(12px)",
+    WebkitBackdropFilter: "blur(12px)",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    padding: "clamp(16px, 3vw, 48px)",
+    padding: 0,
     boxSizing: "border-box"
   } : {
     width: "100%",
@@ -208,14 +270,14 @@ export default function InteractiveMap({ onLocationChange, onPolygonChange, onFu
   };
 
   const mapContainerStyles: React.CSSProperties = isFullscreen ? {
-    width: "100%",
-    maxWidth: "1400px",
-    height: "100%",
-    maxHeight: "90vh",
+    width: "calc(100% - 64px)",
+    height: "calc(100% - 64px)",
+    maxWidth: "1600px",
     position: "relative",
     borderRadius: "32px",
     overflow: "hidden",
-    boxShadow: "0px 25px 50px rgba(0,0,0,0.25)"
+    boxShadow: "0px 25px 50px rgba(0,0,0,0.25)",
+    background: "#FFFFFF"
   } : {
     width: "100%",
     height: "100%",
@@ -224,34 +286,30 @@ export default function InteractiveMap({ onLocationChange, onPolygonChange, onFu
     borderRadius: "inherit"
   };
 
-  return (
-    <div ref={containerRef} style={backdropStyles}>
+  const content = (
+    <div ref={containerRef} style={backdropStyles} data-lenis-prevent="true">
       <style>{`
         .leaflet-control-geosearch.bar {
           width: 340px !important;
           max-width: calc(100% - 100px) !important;
-          margin-top: 16px !important;
+          margin: 16px !important;
           border-radius: 9999px !important;
-          box-shadow: 0 10px 30px rgba(9,20,38,0.1) !important;
           border: none !important;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
+          overflow: hidden !important;
         }
         .leaflet-control-geosearch.bar form {
+          background: white !important;
           border-radius: 9999px !important;
-          border: none !important;
-          overflow: hidden !important;
-          background: #FFFFFF !important;
-          display: flex !important;
-          align-items: center !important;
         }
         .leaflet-control-geosearch.bar form input {
           font-family: 'Plus Jakarta Sans', sans-serif !important;
           font-size: 14px !important;
-          font-weight: 500 !important;
-          height: 52px !important;
-          padding: 0 20px !important;
           color: #0F2F4C !important;
           border: none !important;
           outline: none !important;
+          padding: 0 16px !important;
+          height: 44px !important;
           background: transparent !important;
         }
         .leaflet-control-geosearch.bar form input::placeholder {
@@ -274,33 +332,47 @@ export default function InteractiveMap({ onLocationChange, onPolygonChange, onFu
       `}</style>
       <div style={mapContainerStyles}>
         <div ref={mapRef} style={{ width: "100%", height: "100%", zIndex: 0, borderRadius: "inherit" }} />
-        <button 
-          onClick={toggleFullscreen}
-          style={{
-            position: "absolute",
-            top: "16px",
-            right: "16px",
-            zIndex: 1000,
-            background: "white",
-            border: "none",
-            borderRadius: "8px",
-            width: "40px",
-            height: "40px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            cursor: "pointer",
-            boxShadow: "0 4px 12px rgba(0,0,0,0.15)"
-          }}
-          title={isFullscreen ? "Exit Fullscreen" : "View Fullscreen"}
-        >
-          {isFullscreen ? (
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F2F4C" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/></svg>
-          ) : (
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F2F4C" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
-          )}
-        </button>
+        {!hideFullscreenButton && (
+          <button
+            onClick={toggleFullscreen}
+            style={{
+              position: "absolute",
+              bottom: "16px",
+              right: "16px",
+              zIndex: 1000,
+              background: "white",
+              border: "none",
+              borderRadius: "8px",
+              width: "40px",
+              height: "40px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.15)"
+            }}
+            title={isFullscreen ? "Exit Fullscreen" : "View Fullscreen"}
+          >
+            {isFullscreen ? (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F2F4C" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3" /></svg>
+            ) : (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F2F4C" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" /></svg>
+            )}
+          </button>
+        )}
       </div>
     </div>
   );
+
+  if (isFullscreen && typeof document !== 'undefined') {
+    const { createPortal } = require('react-dom');
+    return (
+      <>
+        <div style={{ width: "100%", height: "100%", position: "relative" }} />
+        {createPortal(content, document.body)}
+      </>
+    );
+  }
+
+  return content;
 }

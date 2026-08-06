@@ -5,6 +5,7 @@ export interface UploadedFarmland {
   farmland_id: number;
   farm_code: string;
   farmland_img?: string;
+  farmland_image?: string;
   valuation?: number;
   location_details?: {
     country_id: number;

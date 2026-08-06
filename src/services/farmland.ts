@@ -102,6 +102,7 @@ export interface GetFacilitiesByFarmlandIdResponse {
   farm_code: string;
   price: number;
   acers: number;
+  cover_image_url?: string;
   water: {
     is_bore: number;
     is_ground_water: number;

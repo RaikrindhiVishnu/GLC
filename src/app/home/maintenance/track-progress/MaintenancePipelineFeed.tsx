@@ -39,7 +39,7 @@ export default function MaintenancePipelineFeed({ serviceSlug = "fencing-securit
       price: "₹2,50,000",
       phases: ["Site Clearing & Pre", "Foundation & Framing", "Plumbing & Electical"],
       subtext: "Inspection in progress",
-      middleImage: "https://images.unsplash.com/photo-1541888086425-d81bb19240f5?auto=format&fit=crop&q=80&w=800"
+      middleImage: "/assets/home/TrendingFarmlands/glcsos01.svg"
     },
     "organic-farm-setup": {
       title: "Organic Farm Setup",
@@ -88,19 +88,9 @@ export default function MaintenancePipelineFeed({ serviceSlug = "fencing-securit
               return (
                 <div key={index} style={{ display: "flex", flexDirection: "row", alignItems: "flex-start", gap: "24px", width: "100%", opacity: isActive ? 1 : 0.4 }}>
                   {isActive ? (
-                    <div style={{ position: "relative", width: "32px", height: "32px", background: "#00629E", borderRadius: "9999px", display: "flex", justifyContent: "center", alignItems: "center", flexShrink: 0 }}>
-                      <div style={{ position: "absolute", inset: 0, boxShadow: "0px 0px 0px 4px rgba(0, 98, 158, 0.2)", borderRadius: "9999px" }} />
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" style={{ zIndex: 1 }}>
-                        <polyline points="20 6 9 17 4 12"></polyline>
-                      </svg>
-                    </div>
+                    <img src="/assets/Track Progress/Background (37).svg" alt={`Phase ${index + 1}`} style={{ width: "39px", height: "40px", flexShrink: 0 }} />
                   ) : (
-                    <div style={{ width: "32px", height: "32px", background: "#E1E3E4", borderRadius: "9999px", display: "flex", justifyContent: "center", alignItems: "center", flexShrink: 0 }}>
-                      <svg width="10" height="13" viewBox="0 0 24 24" fill="none" stroke="#45474C" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                      </svg>
-                    </div>
+                    <img src="/assets/Track Progress/Background (38).svg" alt={`Phase ${index + 1}`} style={{ width: "32px", height: "32px", flexShrink: 0 }} />
                   )}
                   
                   <div style={{ display: "flex", flexDirection: "column", marginTop: "-1px" }}>
@@ -147,13 +137,8 @@ export default function MaintenancePipelineFeed({ serviceSlug = "fencing-securit
             
             {/* Status Card */}
             <div style={{ width: "100%", padding: "40px", background: "#F3F4F5", borderRadius: "48px", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: "16px", marginTop: "16px" }}>
-              <div style={{ width: "48px", height: "48px", background: "#E1E3E4", borderRadius: "50%", display: "flex", justifyContent: "center", alignItems: "center" }}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A0A2A8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="1" y1="1" x2="23" y2="23"></line>
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                  <polyline points="7 10 12 15 17 10"></polyline>
-                  <line x1="12" y1="15" x2="12" y2="3"></line>
-                </svg>
+              <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                <img src="/assets/Track Progress/Overlay (18).svg" alt="No image yet" style={{ width: "64px", height: "64px" }} />
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                 <h3 style={{ margin: 0, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "18px", color: "#131600" }}>
@@ -188,12 +173,7 @@ export default function MaintenancePipelineFeed({ serviceSlug = "fencing-securit
                 <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", lineHeight: "16px", letterSpacing: "1.2px", textTransform: "uppercase", color: "#FFFFFF" }}>
                   INITIAL SETUP INVOICE
                 </span>
-                <svg width="22" height="16" viewBox="0 0 24 24" fill="none" stroke="#2780C4" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                  <circle cx="12" cy="12" r="3"></circle>
-                  <line x1="19" y1="4" x2="19" y2="4.01"></line>
-                  <line x1="5" y1="4" x2="5" y2="4.01"></line>
-                </svg>
+                <img src="/assets/Track Progress/Icon (30).svg" alt="Invoice" style={{ width: "22px", height: "16px" }} />
               </div>
               
               {/* Price & Subtext */}
@@ -227,15 +207,7 @@ export default function MaintenancePipelineFeed({ serviceSlug = "fencing-securit
             {/* Row 1 */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 24px", borderBottom: "1px solid #EDEEEF", cursor: "pointer" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-                <div style={{ width: "40px", height: "40px", background: "#EDEEEF", borderRadius: "32px", display: "flex", justifyContent: "center", alignItems: "center", flexShrink: 0 }}>
-                  <svg width="16" height="20" viewBox="0 0 24 24" fill="none" stroke="#091426" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                    <polyline points="14 2 14 8 20 8"></polyline>
-                    <line x1="16" y1="13" x2="8" y2="13"></line>
-                    <line x1="16" y1="17" x2="8" y2="17"></line>
-                    <polyline points="10 9 9 9 8 9"></polyline>
-                  </svg>
-                </div>
+                <img src="/assets/Track Progress/Background (39).svg" alt="Document" style={{ width: "40px", height: "40px", flexShrink: 0 }} />
                 <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "16px", lineHeight: "24px", color: "#131600" }}>
                   {farmlandIdParam}
                 </span>
@@ -248,11 +220,7 @@ export default function MaintenancePipelineFeed({ serviceSlug = "fencing-securit
             {/* Row 2 */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 24px", cursor: "pointer" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-                <div style={{ width: "40px", height: "40px", background: "#EDEEEF", borderRadius: "32px", display: "flex", justifyContent: "center", alignItems: "center", flexShrink: 0 }}>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#091426" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-                  </svg>
-                </div>
+                <img src="/assets/Track Progress/Background (40).svg" alt="Plan" style={{ width: "40px", height: "40px", flexShrink: 0 }} />
                 <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "16px", lineHeight: "24px", color: "#131600" }}>
                   {currentService.listTitle}
                 </span>

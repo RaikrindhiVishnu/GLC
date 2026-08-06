@@ -15,6 +15,9 @@ interface TrendingCardProps {
   id?: string;
   linkDestination?: string;
   reverseLayout?: boolean;
+  hideSaveIcon?: boolean;
+  cardHeight?: string;
+  imageHeight?: string;
 }
 
 export default function TrendingCard({
@@ -27,6 +30,9 @@ export default function TrendingCard({
   id = "1",
   linkDestination,
   reverseLayout = false,
+  hideSaveIcon = false,
+  cardHeight,
+  imageHeight,
 }: TrendingCardProps) {
   const router = useRouter();
   const [isLiked, setIsLiked] = useState(false);
@@ -64,16 +70,22 @@ export default function TrendingCard({
   const displayUrl = resolvedImageUrl;
 
   return (
-    <div className={`w-full bg-white rounded-[30px] overflow-hidden shadow-[0px_1px_2px_rgba(0,0,0,0.05)] flex ${reverseLayout ? 'flex-col-reverse' : 'flex-col'} mb-6`}>
+    <div 
+      className={`w-full bg-white rounded-[30px] overflow-hidden shadow-[0px_1px_2px_rgba(0,0,0,0.05)] flex ${reverseLayout ? 'flex-col-reverse' : 'flex-col'} mb-6`}
+      style={cardHeight ? { height: cardHeight } : {}}
+    >
 
       {/* Top Image Section */}
-      <div className={`relative w-full ${reverseLayout ? 'h-[373px]' : 'h-[320px]'} bg-[#F4F4F5] flex flex-col items-center justify-center`}>
+      <div 
+        className={`relative w-full flex flex-col items-center justify-center bg-[#F4F4F5]`}
+        style={{ height: imageHeight ? imageHeight : (reverseLayout ? '373px' : '320px'), flexShrink: 0 }}
+      >
         {displayUrl ? (
-          <Image
+          <img
             src={displayUrl}
             alt={title}
-            fill
-            className="object-cover"
+            className="absolute inset-0 w-full h-full object-cover"
+            onError={() => { setResolvedImageUrl(null); }}
           />
         ) : (
           <>
@@ -94,14 +106,16 @@ export default function TrendingCard({
         </div>
 
         {/* Action Button */}
-        <button
-          onClick={handleLike}
-          className={`absolute right-6 ${reverseLayout ? 'bottom-6' : 'top-6'} w-12 h-12 bg-white/90 backdrop-blur-md rounded-full flex items-center justify-center shadow-sm hover:scale-105 transition-transform z-10`}
-        >
-          <svg width="20" height="18" viewBox="0 0 24 24" fill={isLiked ? "#2780C4" : "none"} stroke="#2780C4" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="transition-colors duration-200">
-            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-          </svg>
-        </button>
+        {!hideSaveIcon && (
+          <button
+            onClick={handleLike}
+            className={`absolute right-6 ${reverseLayout ? 'bottom-6' : 'top-6'} w-12 h-12 bg-white/90 backdrop-blur-md rounded-full flex items-center justify-center shadow-sm hover:scale-105 transition-transform z-10 border-none cursor-pointer`}
+          >
+            <svg width="20" height="18" viewBox="0 0 24 24" fill={isLiked ? "#2780C4" : "none"} stroke="#2780C4" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="transition-colors duration-200">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+          </button>
+        )}
       </div>
 
       {/* Bottom Content Section */}

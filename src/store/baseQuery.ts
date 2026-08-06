@@ -6,7 +6,7 @@ import { Mutex } from 'async-mutex';
 const mutex = new Mutex();
 
 const rawBaseQuery = fetchBaseQuery({
-  baseUrl: 'https://blkzmtts30.execute-api.ap-south-1.amazonaws.com',
+  baseUrl: process.env.NEXT_PUBLIC_API_URL || 'https://blkzmtts30.execute-api.ap-south-1.amazonaws.com',
   prepareHeaders: (headers) => {
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem('token');
@@ -36,7 +36,8 @@ export const baseQuery: BaseQueryFn<
           const refreshToken = localStorage.getItem('refreshToken');
           if (refreshToken) {
             try {
-              const refreshResult = await fetch('https://eq3tqsvcw7.execute-api.ap-south-1.amazonaws.com/auth/refreshToken', {
+              const authUrl = process.env.NEXT_PUBLIC_AUTH_API_URL || 'https://eq3tqsvcw7.execute-api.ap-south-1.amazonaws.com';
+              const refreshResult = await fetch(`${authUrl}/auth/refreshToken`, {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',

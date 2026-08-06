@@ -14,6 +14,7 @@ import LandPurchaseTrackingModal from "@/components/LandPurchaseTrackingModal";
 import EditProfileModal from "@/components/EditProfileModal";
 import WalletHistoryModal from "@/components/WalletHistoryModal";
 import { s3Service } from "../../services/s3";
+import { authService } from "../../services/auth";
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -50,8 +51,17 @@ export default function ProfileScreen() {
   const totalEstimatedAssets = boughtFarmlands.reduce((acc: number, curr: any) => acc + (Number(curr.price) || 0), 0);
   const formattedAssets = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 2 }).format(totalEstimatedAssets);
 
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        await authService.logout({ device_id: "web", platform: "web" }, token);
+      } catch (err) {
+        console.error("Logout API failed:", err);
+      }
+    }
     localStorage.removeItem("token");
+    localStorage.removeItem("userId");
     window.location.replace("/landing");
   };
 

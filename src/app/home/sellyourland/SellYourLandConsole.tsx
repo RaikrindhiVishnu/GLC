@@ -30,8 +30,9 @@ export default function SellYourLandConsole() {
   });
   const [coverImage, setCoverImage] = useState<File | null>(null);
   const [propertyPhotos, setPropertyPhotos] = useState<File[]>([]);
-  const [showModal, setShowModal] = useState(false);
+  const [isMapActive, setIsMapActive] = useState(false);
   const [createdFarmlandId, setCreatedFarmlandId] = useState<number | null>(null);
+  const [showModal, setShowModal] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const { data: geoDataRes } = useGetAllGeoMasterDataQuery();
@@ -101,7 +102,8 @@ export default function SellYourLandConsole() {
       if (coverImage) {
         try {
           const res = await s3Service.uploadFile(coverImage);
-          if (res.url) coverImageUrl = res.url;
+          const extractedKey = res.key || (res.url ? new URL(res.url).pathname.substring(1) : "");
+          if (extractedKey) coverImageUrl = extractedKey;
         } catch (e) {
           console.error("Failed to upload cover image", e);
         }
@@ -111,7 +113,8 @@ export default function SellYourLandConsole() {
       for (const photo of propertyPhotos) {
         try {
           const res = await s3Service.uploadFile(photo);
-          if (res.url) galleryImageUrls.push(res.url);
+          const extractedKey = res.key || (res.url ? new URL(res.url).pathname.substring(1) : "");
+          if (extractedKey) galleryImageUrls.push(extractedKey);
         } catch (e) {
           console.error("Failed to upload gallery image", e);
         }
@@ -138,7 +141,9 @@ export default function SellYourLandConsole() {
         total_acers: Number(formData.acreage) || 10,
         price: formData.baseValuation || "300000",
         land_description: formData.description || "N/A",
-        polygon: formData.polygon && formData.polygon.length > 0 ? formData.polygon : undefined,
+        polygon: formData.polygon && Array.isArray(formData.polygon) && formData.polygon.length > 0 
+          ? ["polygon", ...formData.polygon.flatMap((p: any) => [p.lat.toString(), p.lng.toString()])] 
+          : undefined,
         gallery_images: galleryImageUrls.length > 0 ? galleryImageUrls : undefined,
         master_milestone_stage_id: 2,
         master_milestone_stage_status_id: 1,
@@ -252,13 +257,13 @@ export default function SellYourLandConsole() {
               onFullscreenChange={setIsMapFullscreen}
             />
           </div>
-          {!isMapFullscreen && (
+          {!isMapFullscreen && !isMapActive && (
             <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.6) 100%)", zIndex: 1, pointerEvents: "none" }} />
           )}
-          {!isMapFullscreen && (
+          {!isMapFullscreen && !isMapActive && (
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px", zIndex: 5, position: "relative", pointerEvents: "none" }}>
               <button
-                onClick={() => router.push("/home/sellyourland")}
+                onClick={() => setIsMapActive(true)}
                 style={{ display: "flex", flexDirection: "row", alignItems: "center", padding: "16px 32px", gap: "12px", background: "#0F2F4C", borderRadius: "9999px", border: "none", boxShadow: "0px 25px 50px -12px rgba(0,0,0,0.25)", cursor: "pointer", justifyContent: "center", pointerEvents: "auto" }}
               >
                 <svg width="16" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">

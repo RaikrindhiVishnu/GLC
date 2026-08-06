@@ -1,4 +1,4 @@
-export const API_BASE_URL = 'https://eq3tqsvcw7.execute-api.ap-south-1.amazonaws.com';
+export const API_BASE_URL = process.env.NEXT_PUBLIC_AUTH_API_URL || 'https://eq3tqsvcw7.execute-api.ap-south-1.amazonaws.com';
 
 export interface SendMailRequest {
   to_mails: string[];

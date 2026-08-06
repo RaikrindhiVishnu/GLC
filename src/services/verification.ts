@@ -1,7 +1,7 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQuery } from '../store/baseQuery';
 
-export const VERIFICATION_API_BASE_URL = 'https://blkzmtts30.execute-api.ap-south-1.amazonaws.com';
+export const VERIFICATION_API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://blkzmtts30.execute-api.ap-south-1.amazonaws.com';
 
 export interface GetVerificationLandsRequest {
   user_id: number;
@@ -53,6 +53,9 @@ export interface SubmitFarmlandVerificationRequest {
   milstone_stage_id: number;
   milestone_status_id: number;
   acers?: number;
+  price?: number;
+  per_acer_value?: number;
+  per_acre_value?: number;
 }
 
 export interface SubmitFarmlandVerificationResponse {

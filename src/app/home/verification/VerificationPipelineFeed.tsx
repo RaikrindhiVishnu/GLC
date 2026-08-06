@@ -5,7 +5,6 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useGetVerificationLandsByUserIdQuery } from "../../../services/verification";
-import { useUpdateViewsForFarmlandByIdMutation } from "@/services/home";
 
 export default function VerificationPipelineFeed() {
   const router = useRouter();
@@ -15,15 +14,6 @@ export default function VerificationPipelineFeed() {
 
   const farmlandIdParam = searchParams.get("farmland");
   const numericId = farmlandIdParam ? parseInt(farmlandIdParam.replace(/\D/g, "")) : null;
-  const [updateViews] = useUpdateViewsForFarmlandByIdMutation();
-
-  useEffect(() => {
-    if (numericId) {
-      updateViews({ farmland_id: numericId }).catch((err) => {
-        console.warn("Failed to update views:", err);
-      });
-    }
-  }, [numericId, updateViews]);
 
   const userId = 2; // Hardcoded to 2 as per backend request
   

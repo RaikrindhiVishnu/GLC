@@ -14,42 +14,22 @@ const specs = (areaProp: string, boreDepthProp: string, efficiencyProp: string, 
   {
     label: "TOTAL AREA",
     value: areaProp,
-    icon: (
-      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#2780C4" strokeWidth="2.5">
-        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v13a2 2 0 0 1-2 2z" />
-        <polyline points="15 3 15 8 21 8" />
-        <path d="M7 17h5" /><path d="M7 13h10" /><path d="M7 9h4" />
-      </svg>
-    ),
+    icon: <img src="/assets/search/Background (17).svg" alt="Total Area" width={48} height={48} />,
   },
   {
     label: "BORE DEPTH",
     value: boreDepthProp,
-    icon: (
-      <svg width="16" height="20" viewBox="0 0 24 24" fill="none" stroke="#2780C4" strokeWidth="2.5">
-        <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
-      </svg>
-    ),
+    icon: <img src="/assets/search/Background (18).svg" alt="Bore Depth" width={48} height={48} />,
   },
   {
     label: "EFFICIENCY",
     value: efficiencyProp,
-    icon: (
-      <svg width="20" height="13" viewBox="0 0 24 24" fill="none" stroke="#2780C4" strokeWidth="2.5">
-        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-      </svg>
-    ),
+    icon: <img src="/assets/search/Background (19).svg" alt="Efficiency" width={48} height={48} />,
   },
   {
     label: "SOIL QUALITY",
     value: soilQualityProp,
-    icon: (
-      <svg width="18" height="19" viewBox="0 0 24 24" fill="none" stroke="#2780C4" strokeWidth="2.5">
-        <polygon points="12 2 2 7 12 12 22 7 12 2" />
-        <polyline points="2 17 12 22 22 17" />
-        <polyline points="2 12 12 17 22 12" />
-      </svg>
-    ),
+    icon: <img src="/assets/search/Background (20).svg" alt="Soil Quality" width={48} height={48} />,
   },
 ];
 
@@ -85,7 +65,7 @@ export default function LandSpecificationsBento({
             style={{ background: "#FFFFFF", boxShadow: "0px 1px 2px rgba(0,0,0,0.05)", borderRadius: "32px", padding: "20px", boxSizing: "border-box", display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "12px", minHeight: "130px" }}
             className="lg:rounded-[48px] lg:p-6"
           >
-            <div style={{ width: "48px", height: "48px", background: "#CFE5FF", borderRadius: "32px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+            <div style={{ width: "48px", height: "48px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
               {item.icon}
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 0, width: "100%" }}>

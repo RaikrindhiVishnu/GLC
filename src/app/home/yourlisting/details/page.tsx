@@ -8,21 +8,11 @@ import ListingConsole from "./ListingConsole";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 import { useSearchParams } from "next/navigation";
-import { useUpdateViewsForFarmlandByIdMutation } from "@/services/home";
 
 function InnerYourListingDetails() {
   const searchParams = useSearchParams();
   const rawId = searchParams.get("id");
   const numericId = rawId ? parseInt(rawId.replace(/\D/g, "")) : null;
-  const [updateViews] = useUpdateViewsForFarmlandByIdMutation();
-
-  useEffect(() => {
-    if (numericId) {
-      updateViews({ farmland_id: numericId }).catch((err) => {
-        console.warn("Failed to update views:", err);
-      });
-    }
-  }, [numericId, updateViews]);
 
   return (
     <>

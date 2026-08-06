@@ -51,7 +51,8 @@ export default function AIGeneratedFarmlandsPage() {
 
                 {/* Absolute Top-Left Image Alignment Indicator Pill */}
                 <div className="absolute left-6 top-6 z-20 bg-white/90 backdrop-blur-[6px] px-4 py-1.5 rounded-full flex items-center gap-2 shadow-xs box-border">
-                  <span className="w-3 h-3 rounded-full bg-[#0F2F4C] block shadow-2xs" />
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/assets/ai-suggested/Icon%20(29).svg" alt="Match" width={13} height={13} />
                   <span className="font-bold text-xs text-[#0F2F4C] tracking-wide block">
                     98% AI Match
                   </span>
@@ -86,8 +87,9 @@ export default function AIGeneratedFarmlandsPage() {
                 {/* Inset Glass Card: Intelligence Lens layer block exactly reproducing blue container context */}
                 <div className="w-full bg-[#CFE5FF]/30 border border-white/40 backdrop-blur-md rounded-[32px] p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 box-border">
                   {/* Left circular target deep blue badge */}
-                  <div className="w-12 h-12 rounded-full bg-[#00629E] flex items-center justify-center shrink-0 shadow-xs">
-                    <span className="text-white text-base block font-bold">✨</span>
+                  <div className="shrink-0 flex items-center justify-center w-12 h-12">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/assets/ai-suggested/Background%20(35).svg" alt="AI Insight" width={72} height={72} className="shrink-0 -ml-2 -mt-2 scale-125" />
                   </div>
 
                   <p className="m-0 font-semibold text-sm sm:text-base text-[#004673] leading-relaxed flex-grow">

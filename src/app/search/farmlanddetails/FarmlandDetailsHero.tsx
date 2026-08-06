@@ -1,18 +1,59 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
+import { s3Service } from "@/services/s3";
 
 interface FarmlandDetailsHeroProps {
   title: string;
   locationSubtitle: string;
   tags: string[];
   heroBg: string;
+  isLoading?: boolean;
 }
 
-export default function FarmlandDetailsHero({ title, locationSubtitle, tags, heroBg }: FarmlandDetailsHeroProps) {
+export default function FarmlandDetailsHero({ title, locationSubtitle, tags, heroBg, isLoading }: FarmlandDetailsHeroProps) {
   const primaryTag = tags && tags.length > 0 ? tags[0] : "ACTIVE YIELD";
+  const [resolvedImageUrl, setResolvedImageUrl] = useState<string | null>(null);
+  const [isResolving, setIsResolving] = useState<boolean>(true);
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchImage = async () => {
+      setIsResolving(true);
+      if (!heroBg || heroBg === "null" || heroBg === "") {
+        if (isMounted) {
+          setResolvedImageUrl(null);
+          setIsResolving(false);
+        }
+        return;
+      }
+      if (heroBg.startsWith("http") || heroBg.startsWith("data:") || heroBg.startsWith("/")) {
+        if (isMounted) {
+          setResolvedImageUrl(heroBg);
+          setIsResolving(false);
+        }
+        return;
+      }
+      try {
+        const res = await s3Service.generateUrl({ key: heroBg, filename: heroBg, folderPath: '' });
+        if (isMounted && res.url) {
+          setResolvedImageUrl(res.url);
+        }
+      } catch (e) {
+        console.warn("Could not generate presigned URL for Hero:", heroBg);
+        if (isMounted) setResolvedImageUrl(null);
+      } finally {
+        if (isMounted) setIsResolving(false);
+      }
+    };
+    fetchImage();
+    return () => { isMounted = false; };
+  }, [heroBg]);
+
+  const displayUrl = resolvedImageUrl;
+  const showLoader = isLoading || isResolving;
 
   return (
     <section
@@ -29,12 +70,16 @@ export default function FarmlandDetailsHero({ title, locationSubtitle, tags, her
       }}
     >
       {/* Base Cover */}
-      <img
-        src={heroBg}
-        alt={title}
-        style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0 }}
-        onError={(e) => { e.currentTarget.src = "/assets/compareassets/hero.svg"; }}
-      />
+      {showLoader ? (
+        <div className="animate-pulse bg-[#1E293B]" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", zIndex: 0 }} />
+      ) : displayUrl ? (
+        <img
+          src={displayUrl}
+          alt={title}
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0 }}
+          onError={(e) => { e.currentTarget.style.display = 'none'; }}
+        />
+      ) : null}
 
       {/* Dual Gradient Overlays */}
       <div style={{ position: "absolute", inset: 0, background: "linear-gradient(0deg, rgba(0,0,0,0.25), rgba(0,0,0,0.25))", zIndex: 1 }} />

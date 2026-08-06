@@ -5,12 +5,11 @@ import { useRouter } from "next/navigation";
 import AiCurationModal from "./AiCurationModal";
 
 const glassStyle: React.CSSProperties = {
-  background: "rgba(255, 255, 255, 0.25)", // Increased from 0.15 for better mobile visibility
+  background: "rgba(255, 255, 255, 0.1)",
   boxShadow:
-    "0px 10.03px 7.52px rgba(0,0,0,0.15), inset 3.76px 5.01px 2.51px -3.76px rgba(255,255,255,0.6), inset 0px -1.25px 1.25px rgba(255,255,255,0.3), inset 0px 1.25px 1.25px rgba(255,255,255,0.3)",
-  backdropFilter: "blur(20px)", // Reduced blur slightly for performance on mobile
-  WebkitBackdropFilter: "blur(20px)",
-  border: "1px solid rgba(255,255,255,0.35)",
+    "0px 10.03px 7.52px 0px #0000000D, inset 0px 1.25px 1.25px 0px #FFFFFF40, inset 0px -1.25px 1.25px 0px #FFFFFF40, inset 3.76px 5.01px 2.51px -3.76px #FFFFFF8C",
+  backdropFilter: "blur(125.33px)",
+  WebkitBackdropFilter: "blur(125.33px)",
 };
 
 const solidStyle: React.CSSProperties = {
@@ -37,7 +36,6 @@ export default function SparkleButton() {
 
   useEffect(() => {
     const handleScroll = () => {
-      // Dynamically locate the hero/cover element on any page
       const heroEl =
         document.getElementById("hero-section") ||
         document.getElementById("hero-screen") ||
@@ -48,14 +46,16 @@ export default function SparkleButton() {
         document.querySelector('[class*="Hero"]') ||
         document.querySelector("section") ||
         (() => {
-          // Look for top cover/header divs (e.g., in profile page)
+          // Fallback to top-level large elements
           const divs = Array.from(document.querySelectorAll("div"));
           return divs.find(d => {
             const rect = d.getBoundingClientRect();
-            return rect.height > 300 && rect.height < window.innerHeight * 1.5 && (rect.top + window.scrollY) <= 100;
+            // If it's tall and starts near the top, it's likely a hero
+            return rect.height > 300 && (rect.top + window.scrollY) <= 100;
           });
         })();
 
+      // If absolutely nothing matches, default to window innerHeight to assume a typical hero space
       const heroBottom = heroEl ? (heroEl.getBoundingClientRect().bottom + window.scrollY) : window.innerHeight;
       const ctaSection = document.getElementById("cta-section");
 
@@ -82,38 +82,22 @@ export default function SparkleButton() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Define colors for the sparkle based on state
-  // Solid state (Dark Green button) -> Brand Accent (Lime)
-  // Glass state (White button) -> White (or Brand Accent on hover)
-  const getSparkleColor = (isPrimary: boolean) => {
-    if (!isGlass) {
-      return isHovered ? "white" : "#b5ca47"; // Requested Lime on Blue bg
-    }
-    return isHovered ? "#b5ca47" : "white"; // White on Glass bg
-  };
-
   if (isHidden) return null;
 
   return (
     <>
       <button
         onClick={() => setIsModalOpen(true)}
-        className="fixed bottom-8 right-6 md:right-[60px] z-50 flex h-[52px] w-[52px] items-center justify-center rounded-full transition-all duration-500 cursor-pointer"
-        style={isGlass ? glassStyle : solidStyle}
+        className="fixed bottom-8 right-6 md:right-[60px] z-50 flex items-center justify-center rounded-full transition-all duration-500 cursor-pointer shrink-0"
+        style={isGlass ? { ...glassStyle, width: '52px', height: '52px' } : { ...solidStyle, width: '52px', height: '52px' }}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         title="A.I. Suggested Farmlands"
       >
-        <svg width="24" height="24" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width="22" height="22" viewBox="21 13 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
-            d="M14 3L15.8 10.2L23 12L15.8 13.8L14 21L12.2 13.8L5 12L12.2 10.2L14 3Z"
-            fill={getSparkleColor(true)}
-            className="transition-colors duration-300"
-          />
-          <path
-            d="M22 18L22.9 21.1L26 22L22.9 22.9L22 26L21.1 22.9L18 22L21.1 21.1L22 18Z"
-            fill={getSparkleColor(false)}
-            opacity={isGlass ? "0.7" : "0.5"}
+            d="M31.002 22.386L31.9619 19.0288C32.3215 17.7721 34.1025 17.7721 34.4622 19.0288L35.4209 22.386C35.4816 22.5984 35.5955 22.7918 35.7516 22.948C35.9078 23.1042 36.1012 23.218 36.3136 23.2787L39.6709 24.2375C40.9275 24.5971 40.9275 26.3781 39.6709 26.7378L36.3136 27.6965C36.1012 27.7572 35.9078 27.8711 35.7516 28.0272C35.5955 28.1834 35.4816 28.3768 35.4209 28.5892L34.4622 31.9465C34.1025 33.2031 32.3215 33.2031 31.9619 31.9465L31.0031 28.5892C30.9424 28.3768 30.8286 28.1834 30.6724 28.0272C30.5162 27.8711 30.3228 27.7572 30.1104 27.6965L26.7532 26.7378C25.4965 26.3781 25.4965 24.5971 26.7532 24.2375L30.1104 23.2787C30.3228 23.218 30.5162 23.1042 30.6724 22.948C30.8286 22.7918 30.9424 22.5984 31.0031 22.386M39.8247 30.3702C40.1378 29.457 41.454 29.4559 41.766 30.3702L41.7942 30.4645L42.1149 31.7515L43.4019 32.0732C44.4419 32.3332 44.4419 33.8087 43.4019 34.0687L42.1149 34.3905L41.7942 35.6775C41.5342 36.7164 40.0576 36.7164 39.7976 35.6775L39.4759 34.3905L38.1889 34.0687C37.1489 33.8087 37.1489 32.3321 38.1889 32.0732L39.4759 31.7515L39.7976 30.4645L39.8247 30.3702ZM40.7954 32.851C40.733 32.9345 40.6589 33.0086 40.5754 33.071C40.6589 33.1333 40.733 33.2074 40.7954 33.2909C40.8577 33.2074 40.9318 33.1333 41.0153 33.071C40.9317 33.0083 40.8576 32.9338 40.7954 32.85M24.658 15.2025C24.9809 14.2589 26.3751 14.2903 26.6275 15.2967L26.9482 16.5837L28.2352 16.9055C29.2752 17.1655 29.2752 18.641 28.2352 18.901L26.9482 19.2227L26.6275 20.5097C26.3675 21.5486 24.8909 21.5486 24.6309 20.5097L24.3092 19.2227L23.0222 18.901C21.9822 18.641 21.9822 17.1644 23.0222 16.9055L24.3092 16.5837L24.6309 15.2967L24.658 15.2025ZM25.6287 17.6844C25.5663 17.7675 25.4922 17.8412 25.4088 17.9032C25.4923 17.9659 25.5664 18.0403 25.6287 18.1242C25.691 18.0403 25.765 17.9659 25.8486 17.9032C25.7651 17.8409 25.691 17.7679 25.6287 17.6844Z"
+            fill={isGlass ? "white" : (isHovered ? "white" : "#b5ca47")}
             className="transition-colors duration-300"
           />
         </svg>

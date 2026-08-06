@@ -4,19 +4,13 @@ import React, { useState, useEffect, Suspense } from "react";
 import { useLenis } from 'lenis/react';
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { useUpdateViewsForFarmlandByIdMutation } from "@/services/home";
 
 const SERVICES = [
   {
     key: "borewell-drilling",
-    tag: { label: "ESSENTIAL SETUP", bg: "#E7E8E9", color: "#191C1D" },
+    tag: { label: "ESSENTIAL STEP 1", bg: "#E7E8E9", color: "#191C1D" },
     borderTop: false,
-    iconBg: "rgba(39,128,196,0.1)",
-    icon: (
-      <svg width="20" height="25" viewBox="0 0 24 24" fill="none" stroke="#2780C4" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
-      </svg>
-    ),
+    iconSrc: "/assets/maintenance/Overlay (13).svg",
     title: "Borewell & Drilling",
     desc: "Installation of high-yield borewells, solar power grids, and automated irrigation lines.",
     btnLabel: "+ Add to Estimate",
@@ -26,12 +20,7 @@ const SERVICES = [
     key: "fencing-security",
     tag: null,
     borderTop: false,
-    iconBg: "rgba(39,128,196,0.1)",
-    icon: (
-      <svg width="20" height="25" viewBox="0 0 24 24" fill="none" stroke="#2780C4" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-      </svg>
-    ),
+    iconSrc: "/assets/maintenance/Overlay (14).svg",
     title: "Fencing & Security",
     desc: "Reinforced perimeter fencing, gatehouse construction, and AI-enabled thermal surveillance.",
     btnLabel: "+ Add to Estimate",
@@ -41,12 +30,7 @@ const SERVICES = [
     key: "farmhouse-construction",
     tag: { label: "PREMIUM LIFESTYLE", bg: "#2780C4", color: "#FFFFFF" },
     borderTop: true,
-    iconBg: "rgba(39,128,196,0.2)",
-    icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2780C4" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-      </svg>
-    ),
+    iconSrc: "/assets/maintenance/Overlay (15).svg",
     title: "Farmhouse Construction",
     desc: "Sustainable architectural design tailored to your lifestyle. Pre-approved permit processing included.",
     btnLabel: "View Floorplans & Add",
@@ -56,13 +40,7 @@ const SERVICES = [
     key: "organic-farm-setup",
     tag: null,
     borderTop: false,
-    iconBg: "rgba(39,128,196,0.1)",
-    icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2780C4" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10" /><path d="M8 14s1.5 2 4 2 4-2 4-2" />
-        <line x1="9" y1="9" x2="9.01" y2="9" /><line x1="15" y1="9" x2="15.01" y2="9" />
-      </svg>
-    ),
+    iconSrc: "/assets/maintenance/Overlay (16).svg",
     title: "Organic Farming Setup",
     desc: "Soil enrichment, leveling, and plot division for immediate high-yield crop cultivation.",
     btnLabel: "+ Add to Estimate",
@@ -80,16 +58,7 @@ function MaintenanceServicesCatalogInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const farmlandId = searchParams.get("farmland") || "Unknown Asset";
-  const numericId = parseInt(farmlandId.replace(/\D/g, "")) || null;
-  const [updateViews] = useUpdateViewsForFarmlandByIdMutation();
-
-  useEffect(() => {
-    if (numericId) {
-      updateViews({ farmland_id: numericId }).catch((err) => {
-        console.warn("Failed to update views:", err);
-      });
-    }
-  }, [numericId, updateViews]);
+  // Views are not incremented on the owner's dashboard
 
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [showModal, setShowModal] = useState(false);
@@ -152,9 +121,7 @@ function MaintenanceServicesCatalogInner() {
           <div
             style={{ display: "flex", flexDirection: "row", alignItems: "center", padding: "16px 24px", gap: "16px", background: "#FFFFFF", boxShadow: "0px 1px 2px rgba(0,0,0,0.05)", borderRadius: "32px", cursor: "pointer", flexShrink: 0 }}
           >
-            <div style={{ width: "18px", height: "20px", background: "#2780C4", borderRadius: "4px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <span style={{ fontSize: "10px", color: "#FFFFFF", fontWeight: "bold" }}>⌖</span>
-            </div>
+            <img src="/assets/maintenance/Icon (27).svg" alt="Active Asset Icon" width={18} height={20} style={{ flexShrink: 0 }} />
             <div style={{ display: "flex", flexDirection: "column" }}>
               <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1px", textTransform: "uppercase", color: "#45474C" }}>ACTIVE ASSET</span>
               <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C" }}>
@@ -194,12 +161,10 @@ function MaintenanceServicesCatalogInner() {
                   }}
                 >
                   <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start" }}>
-                    <div style={{ width: "48px", height: "48px", background: svc.iconBg, borderRadius: "48px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                      {svc.icon}
-                    </div>
+                    <img src={svc.iconSrc} alt={svc.title} width={48} height={48} style={{ flexShrink: 0 }} />
                     {svc.tag && (
-                      <div style={{ background: svc.tag.bg, borderRadius: "9999px", padding: "4px 12px" }}>
-                        <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", color: svc.tag.color, letterSpacing: "0.5px", textTransform: "uppercase" }}>
+                      <div style={{ background: svc.tag.bg, borderRadius: "9999px", padding: "4px 12px", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                        <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", color: svc.tag.color, letterSpacing: "0.5px", textTransform: "uppercase", textAlign: "center" }}>
                           {svc.tag.label}
                         </span>
                       </div>
@@ -296,15 +261,11 @@ function MaintenanceServicesCatalogInner() {
                     return (
                       <div key={item} style={{ boxSizing: "border-box", display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: "16px", width: "100%", height: "56px", background: "#F3F4F5", borderRadius: "48px" }}>
                         <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "12px" }}>
-                          <div style={{ width: "24px", height: "24px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                            {svc?.icon}
-                          </div>
+                          <img src={svc?.iconSrc} alt={svc?.title} width={24} height={24} style={{ flexShrink: 0, borderRadius: "50%" }} />
                           <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "14px", color: "#0F2F4C" }}>{svc?.title}</span>
                         </div>
                         <button onClick={() => toggleService(item)} style={{ background: "transparent", border: "none", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
-                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#C5C6CD" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                            <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-                          </svg>
+                          <img src="/assets/maintenance/Icon (25).svg" alt="Remove" width={16} height={18} />
                         </button>
                       </div>
                     );
@@ -332,28 +293,28 @@ function MaintenanceServicesCatalogInner() {
                   Our architecture team will review your selection and generate a detailed cost sheet within 48 hours.
                 </span>
               </div>
+              
+              <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "4px", gap: "8px", cursor: "pointer" }}>
+                <svg width="12" height="11" viewBox="0 0 12 11" fill="none" stroke="#2780C4" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M6 10v-4M4 6H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-2"></path>
+                </svg>
+                <span style={{ color: "#2780C4", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px" }}>Speak to a Development Architect</span>
+              </div>
             </div>
 
             {/* Location widget */}
             <div style={{ boxSizing: "border-box", display: "flex", flexDirection: "column", alignItems: "flex-start", padding: "24px", gap: "16px", width: "100%", background: "#FFFFFF", border: "1px solid #EDEEEF", boxShadow: "0px 1px 2px rgba(0,0,0,0.05)", borderRadius: "32px" }}>
               <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "16px", width: "100%" }}>
-                <div style={{ width: "40px", height: "40px", borderRadius: "9999px", background: "#E2E8F0", overflow: "hidden", position: "relative", flexShrink: 0 }}>
-                  <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 70% 30%, #4ADE80 0%, #166534 100%)" }} />
+                <div style={{ width: "40px", height: "40px", borderRadius: "9999px", overflow: "hidden", flexShrink: 0, background: "#E2E8F0" }}>
+                  <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=200&auto=format&fit=crop" alt="Site" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 </div>
                 <div style={{ display: "flex", flexDirection: "column" }}>
                   <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", color: "#0F2F4C" }}>Site Status</span>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "12px", color: "#45474C" }}>GPS verified | Active Feeds</span>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "12px", color: "#45474C" }}>42% Infrastructure Ready</span>
                 </div>
               </div>
-              <div style={{ width: "100%", height: "128px", background: "#EDEEEF", borderRadius: "32px", position: "relative", overflow: "hidden", display: "flex", alignItems: "center", justifyItems: "center" }}>
-                <svg width="100%" height="100%" viewBox="0 0 364 128" fill="none" preserveAspectRatio="none" style={{ opacity: 0.5 }}>
-                  <rect width="364" height="128" fill="#F1F5F9" />
-                  <path d="M0 30 Q 90 0, 180 50 T 364 20 L 364 128 L 0 128 Z" fill="#E2E8F0" />
-                  <path d="M0 70 Q 120 40, 240 90 T 364 80 L 364 128 L 0 128 Z" fill="#CBD5E1" />
-                </svg>
-                <div style={{ position: "absolute", bottom: "12px", right: "12px", background: "rgba(15,47,76,0.85)", borderRadius: "12px", padding: "4px 8px" }}>
-                  <span style={{ fontSize: "9px", color: "#FFFFFF", fontWeight: "bold", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>🛰️ FEED READY</span>
-                </div>
+              <div style={{ width: "100%", height: "128px", borderRadius: "32px", overflow: "hidden", position: "relative" }}>
+                <img src="/assets/maintenance/Rectangle 4166 (11).svg" alt="Site Status Map" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               </div>
             </div>
           </motion.div>
@@ -416,9 +377,7 @@ function MaintenanceServicesCatalogInner() {
                         return (
                           <React.Fragment key={serviceId}>
                             <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "16px", padding: "12px 0" }}>
-                              <div style={{ width: "40px", height: "40px", background: "#2780C4", borderRadius: "50%", display: "flex", justifyContent: "center", alignItems: "center", flexShrink: 0 }}>
-                                {srv.icon}
-                              </div>
+                              <img src={srv.iconSrc} alt={srv.title} width={40} height={40} style={{ borderRadius: "50%", flexShrink: 0 }} />
                               <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "16px", color: "#003667" }}>{srv.title}</span>
                             </div>
                             {index < selectedServices.length - 1 && (
@@ -454,8 +413,8 @@ function MaintenanceServicesCatalogInner() {
                       <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", lineHeight: "20px", letterSpacing: "1.4px", textTransform: "uppercase", color: "rgba(15, 47, 76, 0.58)", width: "75px" }}>
                         CURRENT STATUS
                       </span>
-                      <div style={{ background: "rgba(39, 128, 196, 0.2)", borderRadius: "9999px", padding: "6px 16px" }}>
-                        <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "11px", lineHeight: "16px", letterSpacing: "0.55px", textTransform: "uppercase", color: "#0F2F4C" }}>
+                      <div style={{ background: "rgba(39, 128, 196, 0.2)", borderRadius: "9999px", padding: "6px 16px", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                        <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "11px", lineHeight: "16px", letterSpacing: "0.55px", textTransform: "uppercase", color: "#0F2F4C", textAlign: "center" }}>
                           PENDING FO VALIDATION
                         </span>
                       </div>

@@ -3,14 +3,55 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ListingRemovedModal from "./ListingRemovedModal";
+import { useDeleteFarmlandListingMutation, useChangeFarmlandListingStatusMutation } from "@/services/farmland";
+import { useGetUserListedFarmlandByIdQuery } from "@/services/home";
 
 interface DeleteListingModalProps {
   isOpen: boolean;
   onClose: () => void;
+  farmlandId: number;
 }
 
-export default function DeleteListingModal({ isOpen, onClose }: DeleteListingModalProps) {
+export default function DeleteListingModal({ isOpen, onClose, farmlandId }: DeleteListingModalProps) {
   const [isRemovedOpen, setIsRemovedOpen] = useState(false);
+  const [deleteFarmlandListing, { isLoading: isDeleting }] = useDeleteFarmlandListingMutation();
+  const [changeFarmlandListingStatus, { isLoading: isUnlisting }] = useChangeFarmlandListingStatusMutation();
+
+  const { data: farmlandDetails } = useGetUserListedFarmlandByIdQuery({ farmland_id: farmlandId }, { skip: !isOpen });
+  const farmlandData = farmlandDetails?.data;
+
+  // Formatting logic for price
+  let priceVal = "0.00";
+  let priceSuffix = "";
+  if (farmlandData?.price) {
+    if (farmlandData.price >= 10000000) {
+      priceVal = `₹${(farmlandData.price / 10000000).toFixed(2)}`;
+      priceSuffix = "Cr";
+    } else if (farmlandData.price >= 100000) {
+      priceVal = `₹${(farmlandData.price / 100000).toFixed(2)}`;
+      priceSuffix = "L";
+    } else {
+      priceVal = `₹${farmlandData.price.toLocaleString("en-IN")}`;
+    }
+  }
+
+  const handleDelete = async () => {
+    try {
+      await deleteFarmlandListing({ farmland_id: farmlandId, reason_id: 1, remarks: "Deleted by user" }).unwrap();
+      setIsRemovedOpen(true);
+    } catch (err) {
+      console.error("Failed to delete listing", err);
+    }
+  };
+
+  const handleUnlist = async () => {
+    try {
+      await changeFarmlandListingStatus({ farmland_id: farmlandId, for_sale: 0 }).unwrap();
+      onClose(); // Just close the modal on successful unlist
+    } catch (err) {
+      console.error("Failed to unlist", err);
+    }
+  };
 
   React.useEffect(() => {
     if (isOpen) {
@@ -60,12 +101,9 @@ export default function DeleteListingModal({ isOpen, onClose }: DeleteListingMod
             <div className="flex flex-col items-center w-full max-w-[618px]">
               
               {/* Top Warning Icon */}
-              <div className="flex justify-center items-center w-[96px] h-[96px] rounded-full bg-[#EFDBE1] mb-[20px]">
-                <svg width="38" height="32" viewBox="0 0 24 24" fill="none" stroke="#BA1A1A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-                  <line x1="12" y1="9" x2="12" y2="13" />
-                  <line x1="12" y1="17" x2="12.01" y2="17" />
-                </svg>
+              <div className="flex justify-center items-center w-[96px] h-[96px] mb-[20px]">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/assets/your-listing/Background%20(27).svg" alt="Warning" width={96} height={96} />
               </div>
 
               {/* Heading */}
@@ -122,7 +160,7 @@ export default function DeleteListingModal({ isOpen, onClose }: DeleteListingMod
                         ASSET IDENTIFIER
                       </span>
                       <span style={{ fontFamily: "'Plus Jakarta Sans'", fontWeight: 900, fontSize: "20px", letterSpacing: "-1px", color: "#181C20" }}>
-                        GLC SOS 3
+                        {farmlandData?.farmland_code || "..."}
                       </span>
                     </div>
                     {/* Pending Deletion Badge */}
@@ -143,28 +181,19 @@ export default function DeleteListingModal({ isOpen, onClose }: DeleteListingMod
                       </span>
                       <div className="flex flex-row items-baseline gap-1">
                         <span style={{ fontFamily: "'Plus Jakarta Sans'", fontWeight: 700, fontSize: "30px", color: "#00609A" }}>
-                          ₹5.20
+                          {priceVal}
                         </span>
-                        <span style={{ fontFamily: "'Plus Jakarta Sans'", fontWeight: 700, fontSize: "18px", color: "#00609A" }}>
-                          Cr
-                        </span>
+                        {priceSuffix && (
+                          <span style={{ fontFamily: "'Plus Jakarta Sans'", fontWeight: 700, fontSize: "18px", color: "#00609A" }}>
+                            {priceSuffix}
+                          </span>
+                        )}
                       </div>
                     </div>
                     {/* Building Icon */}
                     <div className="flex justify-center items-center w-[30px] h-[27px]">
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C0C7D2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <rect x="4" y="2" width="16" height="20" rx="2" ry="2" />
-                        <path d="M9 22v-4h6v4" />
-                        <path d="M8 6h.01" />
-                        <path d="M16 6h.01" />
-                        <path d="M12 6h.01" />
-                        <path d="M12 10h.01" />
-                        <path d="M12 14h.01" />
-                        <path d="M16 10h.01" />
-                        <path d="M16 14h.01" />
-                        <path d="M8 10h.01" />
-                        <path d="M8 14h.01" />
-                      </svg>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src="/assets/your-listing/Icon%20(28).svg" alt="Building" width={30} height={27} />
                     </div>
                   </div>
                 </div>
@@ -180,15 +209,16 @@ export default function DeleteListingModal({ isOpen, onClose }: DeleteListingMod
                   <p style={{ fontFamily: "'Plus Jakarta Sans'", fontWeight: 500, fontSize: "14px", lineHeight: "20px", textAlign: "center", color: "#404750", margin: 0 }}>
                     Not ready to sell right now? You can temporarily hide this listing from buyers without losing your verification status.
                   </p>
-                  <button className="flex flex-row items-center gap-[8px] bg-transparent border-none cursor-pointer group">
+                  <button 
+                    onClick={handleUnlist}
+                    disabled={isUnlisting || isDeleting}
+                    className="flex flex-row items-center gap-[8px] bg-transparent border-none cursor-pointer group disabled:opacity-50"
+                  >
                     <span style={{ fontFamily: "'Plus Jakarta Sans'", fontWeight: 700, fontSize: "14px", color: "#00609A" }} className="group-hover:underline">
-                      Temporarily Unlist Instead
+                      {isUnlisting ? "Unlisting..." : "Temporarily Unlist Instead"}
                     </span>
-                    <svg width="13" height="12" viewBox="0 0 24 24" fill="none" stroke="#00609A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" />
-                      <circle cx="12" cy="12" r="3" />
-                      <line x1="2" y1="2" x2="22" y2="22" />
-                    </svg>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/assets/your-listing/Container%20(34).svg" alt="Unlist" width={13} height={12} />
                   </button>
                 </div>
               </div>
@@ -204,13 +234,9 @@ export default function DeleteListingModal({ isOpen, onClose }: DeleteListingMod
                 <div className="flex flex-col gap-[16px]">
                   {/* Consequence 1 */}
                   <div className="flex flex-row items-start p-[20px] bg-[#FFFFFF] rounded-[32px] gap-[16px]">
-                    <div className="flex justify-center items-center w-[30px] h-[30px] rounded-full bg-[#E0E2E8] shrink-0">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#404750" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M3 6h18" />
-                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                        <line x1="10" y1="11" x2="10" y2="17" />
-                        <line x1="14" y1="11" x2="14" y2="17" />
-                      </svg>
+                    <div className="flex justify-center items-center w-[30px] h-[30px] shrink-0">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src="/assets/your-listing/Background%20(28).svg" alt="Data Erasure" width={30} height={30} />
                     </div>
                     <div className="flex flex-col gap-[4px]">
                       <span style={{ fontFamily: "'Plus Jakarta Sans'", fontWeight: 700, fontSize: "16px", color: "#181C20" }}>Data Erasure</span>
@@ -222,11 +248,9 @@ export default function DeleteListingModal({ isOpen, onClose }: DeleteListingMod
 
                   {/* Consequence 2 */}
                   <div className="flex flex-row items-start p-[20px] bg-[#FFFFFF] rounded-[32px] gap-[16px]">
-                    <div className="flex justify-center items-center w-[30px] h-[30px] rounded-full bg-[#E0E2E8] shrink-0">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#404750" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                        <line x1="2" y1="2" x2="22" y2="22" />
-                      </svg>
+                    <div className="flex justify-center items-center w-[30px] h-[30px] shrink-0">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src="/assets/your-listing/Background%20(29).svg" alt="Verification Voided" width={31} height={30} />
                     </div>
                     <div className="flex flex-col gap-[4px]">
                       <span style={{ fontFamily: "'Plus Jakarta Sans'", fontWeight: 700, fontSize: "16px", color: "#181C20" }}>Verification Voided</span>
@@ -243,8 +267,9 @@ export default function DeleteListingModal({ isOpen, onClose }: DeleteListingMod
             <div className="flex flex-row justify-center items-center gap-[22px] w-full">
               {/* Delete Button */}
               <button 
-                onClick={() => setIsRemovedOpen(true)}
-                className="flex justify-center items-center w-[403px] h-[66px] rounded-full cursor-pointer hover:bg-red-50 transition-colors box-border"
+                onClick={handleDelete}
+                disabled={isDeleting || isUnlisting}
+                className="flex justify-center items-center w-[403px] h-[66px] rounded-full cursor-pointer hover:bg-red-50 transition-colors box-border disabled:opacity-50"
                 style={{
                   background: "transparent",
                   border: "1.8px solid #EACACF",
@@ -259,7 +284,7 @@ export default function DeleteListingModal({ isOpen, onClose }: DeleteListingMod
                     color: "#BA1A1A",
                   }}
                 >
-                  Yes, Delete Permannently
+                  {isDeleting ? "Deleting..." : "Yes, Delete Permannently"}
                 </span>
               </button>
 
@@ -298,7 +323,7 @@ export default function DeleteListingModal({ isOpen, onClose }: DeleteListingMod
       </div>
     </AnimatePresence>
     
-    <ListingRemovedModal isOpen={isRemovedOpen} onClose={() => setIsRemovedOpen(false)} />
+    <ListingRemovedModal isOpen={isRemovedOpen} onClose={() => setIsRemovedOpen(false)} farmlandCode={farmlandData?.farmland_code || ""} />
     </>
   );
 }

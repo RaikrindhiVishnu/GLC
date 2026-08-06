@@ -56,7 +56,7 @@ export default function StickySidebarRight({
         <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
           <button
             onClick={() => setIsCompareModalOpen(true)}
-            style={{ width: "100%", height: "56px", background: "#0F2F4C", borderRadius: "48px", border: "none", color: "#FFFFFF", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", cursor: "pointer", boxShadow: "0px 4px 6px -1px rgba(0,0,0,0.1)" }}
+            style={{ width: "100%", height: "56px", background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)", borderRadius: "48px", border: "none", color: "#FFFFFF", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", cursor: "pointer", boxShadow: "0px 4px 6px -1px rgba(0,0,0,0.1)" }}
           >
             Compare Asset
           </button>
@@ -81,12 +81,10 @@ export default function StickySidebarRight({
           <div style={{ position: "absolute", inset: 0, opacity: 0.2, border: "2px solid #69B6FE", borderRadius: "9999px" }} />
           <div style={{ position: "absolute", inset: "16px", border: "2px solid #2780C4", borderRadius: "9999px" }} />
           <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <svg width="24" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.5">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
-            </svg>
+            <img src="/assets/search/Container (26).svg" alt="Lock" width={24} height={32} />
           </div>
         </div>
-        <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "18px", lineHeight: "28px", color: "#FFFFFF", textAlign: "center", marginBottom: "8px" }}>Verified Legal Dossier Locked</span>
+        <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "18px", lineHeight: "28px", color: "#FFFFFF", textAlign: "center", marginBottom: "8px" }}>Verified Legal Documents Locked</span>
         <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "14px", lineHeight: "23px", color: "#8590A6", textAlign: "center", marginBottom: "24px", maxWidth: "333px" }}>
           Access survey numbers, ownership history, and soil reports.
         </span>

@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import ActionRequiredModal from "./ActionRequiredModal";
 import DeleteListingModal from "./DeleteListingModal";
-import { useGetUserListedFarmlandImagesQuery, useUpdateFarmlandImagesMutation } from "@/services/home";
+import { useGetUserListedFarmlandImagesQuery, useUpdateFarmlandImagesMutation, useGetUserListedFarmlandByIdQuery } from "@/services/home";
 import { s3Service } from "@/services/s3";
 
 interface PromoteListingModalProps {
@@ -27,8 +27,9 @@ export default function PromoteListingModal({ isOpen, onClose, farmlandId }: Pro
   
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Toggle this to test the "booked" scenario for deleting a listing
-  const isBooked = false;
+  // Check if farmland is already bought
+  const { data: farmlandDetails } = useGetUserListedFarmlandByIdQuery({ farmland_id: farmlandId }, { skip: !isOpen });
+  const isBooked = farmlandDetails?.data?.is_bought === 1;
 
   // Prevent body scroll when modal is open
   useEffect(() => {
@@ -90,7 +91,8 @@ export default function PromoteListingModal({ isOpen, onClose, farmlandId }: Pro
         addList.map(async (item) => {
           try {
             const response = await s3Service.uploadFile(item.file);
-            return response.url || response.key || item.url;
+            const extractedKey = response.key || (response.url ? new URL(response.url).pathname.substring(1) : "");
+            return extractedKey || item.url;
           } catch (e) {
             console.error("Upload failed for file", item.file.name, e);
             throw e;
@@ -341,7 +343,7 @@ export default function PromoteListingModal({ isOpen, onClose, farmlandId }: Pro
       </AnimatePresence>
       
       <ActionRequiredModal isOpen={isActionOpen} onClose={() => setIsActionOpen(false)} />
-      <DeleteListingModal isOpen={isDeleteOpen} onClose={() => setIsDeleteOpen(false)} />
+      <DeleteListingModal isOpen={isDeleteOpen} onClose={() => setIsDeleteOpen(false)} farmlandId={farmlandId} />
     </>
   );
 }

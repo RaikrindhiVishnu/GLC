@@ -16,7 +16,7 @@ export default function TrendingLocations() {
         return {
           id: loc.district_id.toString(),
           name: loc.district_name,
-          img: hasValidImg ? loc.district_img : "/assets/home/TrendingLocations/tanuku.svg",
+          img: hasValidImg ? (loc.district_img as string) : "/assets/home/TrendingLocations/tanuku.svg",
         };
       })
     : [
@@ -25,8 +25,6 @@ export default function TrendingLocations() {
         { id: "loc-rajahmundry", name: "Rajahmundry", img: "/assets/home/TrendingLocations/rajamudry.svg" },
         { id: "loc-vizag", name: "Vizag", img: "/assets/home/TrendingLocations/vizag.svg" },
       ];
-
-  const handleCardClick = () => router.push("/search");
   return (
     <section id="trending-locations" className="w-full bg-transparent py-12 lg:py-[70px] overflow-hidden">
 
@@ -56,42 +54,44 @@ export default function TrendingLocations() {
       </div>
 
       {/* Cards — full-width scroll container matching PopularFarmlands layout */}
-      <div className="flex lg:grid lg:grid-cols-4 gap-6.5 lg:gap-6 w-full max-w-[1440px] mx-auto overflow-x-auto lg:overflow-x-visible pb-4 lg:pb-0 hide-scrollbar px-4 md:px-[60px]">
-        <style dangerouslySetInnerHTML={{
-          __html: `
-          #trending-locations .hide-scrollbar::-webkit-scrollbar { display: none; }
-          #trending-locations .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        `}} />
+      <div className="w-full max-w-[1440px] mx-auto px-4 md:px-[60px]">
+        <div className="flex gap-6.5 lg:gap-6 w-full overflow-x-auto pb-4 hide-scrollbar">
+          <style dangerouslySetInnerHTML={{
+            __html: `
+            #trending-locations .hide-scrollbar::-webkit-scrollbar { display: none; }
+            #trending-locations .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+          `}} />
 
-        {isLoading ? (
-          <div className="flex justify-center items-center w-full h-[150px] lg:h-[200px]">
-            <span className="font-jakarta text-brand-primary">Loading top locations...</span>
-          </div>
-        ) : locations.map((loc, i) => (
-          <motion.div
-            key={loc.id}
-            initial={{ opacity: 0, filter: "blur(8px)" }}
-            whileInView={{ opacity: 1, filter: "blur(0px)" }}
-            transition={{ duration: 0.6, delay: i * 0.1 }}
-            viewport={{ once: true }}
-            onClick={handleCardClick}
-            className="relative w-57.5 h-57.5 sm:w-67.5 sm:h-67.5 lg:w-full lg:h-auto lg:aspect-square min-w-57.5 sm:min-w-67.5 lg:min-w-0 rounded-3xl lg:rounded-4xl overflow-hidden cursor-pointer shrink-0 box-border group"
-          >
-            {/* Image + Overlay */}
-            <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/10 to-transparent z-10" />
-            <Image
-              src={loc.img}
-              alt={loc.name}
-              fill
-              className="object-cover transition-transform duration-500 group-hover:scale-105"
-            />
-
-            {/* Location Name */}
-            <div className="absolute left-5 bottom-6 z-20 font-jakarta font-bold text-[16px] sm:text-[18px] md:text-[20px] leading-7 text-white">
-              {loc.name}
+          {isLoading ? (
+            <div className="flex justify-center items-center w-full h-[150px] lg:h-[200px]">
+              <span className="font-jakarta text-brand-primary">Loading top locations...</span>
             </div>
-          </motion.div>
-        ))}
+          ) : locations.map((loc, i) => (
+            <motion.div
+              key={loc.id}
+              initial={{ opacity: 0, filter: "blur(8px)" }}
+              whileInView={{ opacity: 1, filter: "blur(0px)" }}
+              transition={{ duration: 0.6, delay: i * 0.1 }}
+              viewport={{ once: true }}
+              onClick={() => router.push(`/topselling?loc=${encodeURIComponent(loc.name)}`)}
+              className="relative w-57.5 h-57.5 sm:w-67.5 sm:h-67.5 lg:w-[calc((100%-72px)/4)] lg:min-w-[calc((100%-72px)/4)] lg:h-auto lg:aspect-square min-w-57.5 sm:min-w-67.5 rounded-3xl lg:rounded-4xl overflow-hidden cursor-pointer shrink-0 box-border group"
+            >
+              {/* Image + Overlay */}
+              <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/10 to-transparent z-10" />
+              <Image
+                src={loc.img}
+                alt={loc.name}
+                fill
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+
+              {/* Location Name */}
+              <div className="absolute left-5 bottom-6 z-20 font-jakarta font-bold text-[16px] sm:text-[18px] md:text-[20px] leading-7 text-white">
+                {loc.name}
+              </div>
+            </motion.div>
+          ))}
+        </div>
       </div>
 
     </section>

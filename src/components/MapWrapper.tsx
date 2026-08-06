@@ -18,6 +18,7 @@ interface MapWrapperProps {
   initialLocation?: { lat: number; lng: number };
   initialPolygon?: { lat: number; lng: number }[];
   viewOnly?: boolean;
+  onMapClick?: () => void;
 }
 
 export default function MapWrapper(props: MapWrapperProps) {

@@ -16,6 +16,7 @@ import FilterPropertiesModal from "./compare/FilterPropertiesModal";
 import { useGetFacilitiesByFarmlandIdQuery, useGetFarmlandByIdQuery } from "@/services/farmland";
 import { useGetAllMasterDataQuery } from "@/services/master";
 import { useUpdateViewsForFarmlandByIdMutation } from "@/services/home";
+import { useGetUserUploadedFarmlandsQuery } from "@/services/upload";
 
 // Comprehensive metadata mapping to deliver premium custom parameters per selected farmland listing
 const farmlandRegistry: Record<
@@ -46,7 +47,7 @@ const farmlandRegistry: Record<
     locationSubtitle: "Tanuku, Andhra Pradesh",
     tags: ["ACTIVE & MANAGED", "RED LATERITE"],
     description: "High-yield mango grove with established irrigation systems and road access.",
-    heroBg: "/assets/search/image2.1.png",
+    heroBg: "/assets/search/image2.1.svg",
     energyAccess: { left: "3-Phase Industrial Grid", right: "Solar-Ready Infrastructure" },
     hydraulicDepth: { left: "100m", right: "Dedicated Canal Access" },
     lastMile: { left: "40ft Black Top Approach", right: "Internal Private Paved Roads" },
@@ -175,23 +176,46 @@ function InnerFarmlandDetailsView() {
 
   // Safely resolve active farmland dataset with default fallbacks
   const activeLand = farmlandRegistry[rawId] || farmlandRegistry["match-1"];
-  
+
   const numericId = parseInt(rawId.replace(/\D/g, "")) || 101;
   const { data: facilitiesData, isLoading: isFacilitiesLoading } = useGetFacilitiesByFarmlandIdQuery({ farmland_id: numericId });
-  const { data: farmlandDetailDataArray } = useGetFarmlandByIdQuery({ farmland_id: numericId });
-  const farmlandDetailData = farmlandDetailDataArray?.[0];
+  const { data: farmlandDetailDataRaw, isLoading: isFarmlandLoading } = useGetFarmlandByIdQuery({ farmland_id: numericId });
+  const farmlandDetailData = Array.isArray(farmlandDetailDataRaw)
+    ? farmlandDetailDataRaw[0]
+    : farmlandDetailDataRaw;
   const { data: masterDataRes } = useGetAllMasterDataQuery();
   const [updateViews] = useUpdateViewsForFarmlandByIdMutation();
   const masterData = masterDataRes?.data;
 
+  const [currentUserId, setCurrentUserId] = React.useState<number>(0);
   React.useEffect(() => {
-    // Increment view count when this details view mounts
-    if (numericId) {
-      updateViews({ farmland_id: numericId }).catch(err => {
-        console.error("Failed to update views:", err);
-      });
+    const storedUserId = typeof window !== "undefined" ? localStorage.getItem("userId") : null;
+    if (storedUserId) {
+      setCurrentUserId(parseInt(storedUserId, 10));
     }
-  }, [numericId, updateViews]);
+  }, []);
+
+  const { data: uploadData, isLoading: isUploadDataLoading } = useGetUserUploadedFarmlandsQuery(
+    { userId: currentUserId },
+    { skip: currentUserId === 0 }
+  );
+
+  const hasViewedRef = React.useRef(false);
+
+  React.useEffect(() => {
+    // Only increment view count once, and only if the current user is not the owner
+    if (numericId && !isUploadDataLoading && !hasViewedRef.current) {
+      const isOwner = uploadData?.data?.some((farm: any) => farm.farmland_id === numericId) || false;
+
+      if (!isOwner) {
+        updateViews({ farmland_id: numericId }).catch(err => {
+          console.error("Failed to update views:", err);
+        });
+      }
+
+      hasViewedRef.current = true;
+    }
+  }, [numericId, updateViews, uploadData, isUploadDataLoading]);
 
   const soilId = facilitiesData?.soil?.type_id;
   const soilDesc = soilId && masterData?.soilTypeResult
@@ -200,7 +224,7 @@ function InnerFarmlandDetailsView() {
 
   // Resolve Real Data
   const title = farmlandDetailData?.farmland_code || activeLand.title;
-  
+
   let priceStr = activeLand.price;
   if (farmlandDetailData?.price) {
     priceStr = `₹${(farmlandDetailData.price / 10000000).toFixed(2)} Cr`;
@@ -216,11 +240,11 @@ function InnerFarmlandDetailsView() {
     }
   }
 
-  const heroBg = farmlandDetailData?.farmland_img || activeLand.heroBg;
-  const acreage = farmlandDetailData?.land_specifications?.total_acers 
-    ? `${farmlandDetailData.land_specifications.total_acers} Acres` 
+  const heroBg = facilitiesData?.cover_image_url || farmlandDetailData?.farmland_img || activeLand.heroBg;
+  const acreage = farmlandDetailData?.land_specifications?.total_acers
+    ? `${farmlandDetailData.land_specifications.total_acers} Acres`
     : (facilitiesData?.acers ? `${facilitiesData.acers} Acres` : activeLand.acreage);
-    
+
   const tags = activeLand.tags; // Fallback since API doesn't provide tags directly in detail response yet
 
   return (
@@ -231,6 +255,7 @@ function InnerFarmlandDetailsView() {
         locationSubtitle={locationSubtitle}
         tags={tags}
         heroBg={heroBg}
+        isLoading={isFacilitiesLoading || isFarmlandLoading}
       />
 
       {/* ─── 2. MASTER BODY LAYOUT ─── */}
@@ -238,18 +263,34 @@ function InnerFarmlandDetailsView() {
         <div className="flex flex-col lg:flex-row items-start gap-8 lg:gap-10">
           {/* Left Column */}
           <div className="w-full flex flex-col gap-8">
-            <MediaHub 
-              primaryImage={heroBg} 
-              title={title} 
+            <MediaHub
+              primaryImage={heroBg}
+              title={title}
               lat={farmlandDetailData?.location_details?.lat}
               long={farmlandDetailData?.location_details?.long}
               polygon={farmlandDetailData?.polygon}
             />
             <LandSpecificationsBento
               areaProp={acreage}
-              boreDepthProp={facilitiesData?.water?.is_bore ? `${facilitiesData.water.is_bore} Borewells` : (farmlandDetailData?.land_specifications?.borewell ? `${farmlandDetailData.land_specifications.borewell} Borewells` : activeLand.hydraulicDepth.left)}
-              efficiencyProp={facilitiesData?.water?.is_ground_water ? "Ground Water Available" : "High Yield"}
-              soilQualityProp={soilDesc || farmlandDetailData?.land_specifications?.soil_type || activeLand.soilComposition.title}
+              boreDepthProp={
+                facilitiesData?.water?.is_bore !== undefined
+                  ? `${facilitiesData.water.is_bore} Borewells`
+                  : (farmlandDetailData?.land_specifications?.borewell !== undefined && farmlandDetailData?.land_specifications?.borewell !== null
+                    ? `${farmlandDetailData.land_specifications.borewell} Borewells`
+                    : "Not specified")
+              }
+              efficiencyProp={
+                facilitiesData?.water?.is_ground_water
+                  ? "Ground Water Available"
+                  : (farmlandDetailData?.land_specifications?.is_ground_water
+                    ? "Ground Water Available"
+                    : "Unknown")
+              }
+              soilQualityProp={
+                soilDesc ||
+                (farmlandDetailData?.land_specifications?.soil_type && masterData?.soilTypeResult?.find((s: any) => s.id === farmlandDetailData.land_specifications.soil_type)?.description) ||
+                (farmlandDetailData?.land_specifications?.soil_type === 0 ? "Unknown" : activeLand.soilComposition.title)
+              }
             />
             <FacilitiesCultivation
               currentCrop={activeLand.currentVegetation}

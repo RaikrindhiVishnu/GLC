@@ -105,9 +105,9 @@ export default function MaintenanceListings() {
         <div className="flex flex-row items-center gap-4">
           <button
             onClick={() => router.push("/home/maintenance/onboard")}
-            className="bg-gradient-to-r from-[#2780C4] to-[#164573] text-white font-jakarta font-bold text-[14px] px-6 py-2.5 rounded-full shadow-md hover:scale-105 transition-transform"
+            className="bg-gradient-to-r from-[#2780C4] to-[#164573] text-white font-jakarta font-bold text-[14px] px-6 py-2.5 rounded-full shadow-md hover:scale-105 transition-transform uppercase"
           >
-            UPLOAD
+            Upload Farmland details
           </button>
           <div className="flex gap-1.5 items-center ml-2">
             <div className="w-2 h-2 rounded-full bg-[#0F2F4C]"></div>

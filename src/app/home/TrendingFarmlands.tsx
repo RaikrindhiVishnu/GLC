@@ -61,10 +61,12 @@ export default function TrendingFarmlands() {
     setIsDragging(false);
   };
 
-  const handleCardClick = (e: React.MouseEvent) => {
+  const handleCardClick = (e: React.MouseEvent, id: string) => {
     if (dragged) {
       e.preventDefault();
       e.stopPropagation();
+    } else {
+      router.push(`/search/farmlanddetails?id=${id}`);
     }
   };
 
@@ -87,7 +89,7 @@ export default function TrendingFarmlands() {
               </motion.span>
             ))}
           </h2>
-          <button onClick={() => router.push("/topselling")} className="bg-transparent border-none font-jakarta font-extrabold text-[14px] md:text-[18px] leading-[40px] text-[#0F2F4C] cursor-pointer [-webkit-tap-highlight-color:transparent] hover:opacity-70 transition-opacity">
+          <button onClick={() => router.push("/home/trendingfarmlands")} className="bg-transparent border-none font-jakarta font-extrabold text-[14px] md:text-[18px] leading-[40px] text-[#0F2F4C] cursor-pointer [-webkit-tap-highlight-color:transparent] hover:opacity-70 transition-opacity">
             View all
           </button>
         </div>
@@ -126,7 +128,7 @@ export default function TrendingFarmlands() {
               whileInView={{ opacity: 1, filter: "blur(0px)", x: 0 }}
               transition={{ duration: 0.6, delay: i * 0.1 }}
               viewport={{ once: true }}
-              onClick={handleCardClick}
+              onClick={(e) => handleCardClick(e, item.farmland_id.toString())}
               className="flex flex-col sm:flex-row w-[280px] sm:w-[450px] lg:w-[511px] h-auto sm:h-[200px] lg:h-[261px] shrink-0 bg-white shadow-[0px_11px_38px_rgba(0,31,63,0.04)] rounded-[24px] lg:rounded-[45px] overflow-hidden cursor-pointer box-border group pointer-events-auto"
             >
               {/* Left Side: Image */}

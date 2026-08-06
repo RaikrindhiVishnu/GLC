@@ -20,8 +20,9 @@ export default function RequestSuccessPage() {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="relative z-10 w-full max-w-[932px] max-h-full bg-white rounded-[48px] shadow-2xl flex flex-col overflow-hidden"
+        data-lenis-prevent
       >
-        <div className="w-full flex-1 overflow-y-auto p-8 lg:p-12 flex flex-col items-center">
+        <div className="w-full flex-1 overflow-y-auto p-8 lg:p-12 flex flex-col items-center" data-lenis-prevent>
           {/* Success Icon */}
           <div className="relative mb-6">
             <div

@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import TrendingCard from "@/app/home/trendingfarmlands/TrendingCard";
 import { useGetUserUploadedFarmlandsQuery } from "@/services/upload";
+import { useGetAllGeoMasterDataQuery } from "@/services/master";
 
 export default function YourListingGrid() {
   const [userId, setUserId] = useState<number>(0);
@@ -18,6 +19,21 @@ export default function YourListingGrid() {
     { userId: userId },
     { skip: userId === 0 }
   );
+
+  const { data: geoDataRes } = useGetAllGeoMasterDataQuery();
+
+  const getLocationString = (districtId?: number) => {
+    if (!districtId || !geoDataRes?.districts) return "Location Not Available";
+    const district = geoDataRes.districts.slice(1).find((d: any[]) => d[0] === districtId);
+    if (!district) return "Location Not Available";
+    
+    const stateId = district[1];
+    const state = geoDataRes.states?.slice(1).find((s: any[]) => s[0] === stateId);
+    if (!state) return String(district[3]).toUpperCase();
+    
+    const stateStr = state[2] ? state[2] : state[3];
+    return `${district[3]}, ${stateStr}`.toUpperCase();
+  };
 
   const formatPrice = (price?: number) => {
     if (!price) return "Price on Request";
@@ -74,11 +90,12 @@ export default function YourListingGrid() {
               title={farm.farm_code || "Your Listing"}
               description={"Your listed farmland property."}
               price={formatPrice(farm.valuation)}
-              location={"Location N/A"}
+              location={farm.district_name ? `${farm.district_name}, ${farm.state_name}` : getLocationString(farm.location_details?.district_id || farm.farmland_locations?.district_id || farm.district_id)}
               tagText={"Your Listing"}
-              imageUrl={farm.farmland_img || ""}
+              imageUrl={farm.farmland_image || farm.farmland_img || ""}
               linkDestination={`/home/yourlisting/details?id=${farm.farmland_id}`}
               reverseLayout={index % 3 === 1}
+              hideSaveIcon={true}
             />
           ))}
         </div>

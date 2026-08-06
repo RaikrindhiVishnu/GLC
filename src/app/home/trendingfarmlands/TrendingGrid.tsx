@@ -1,100 +1,136 @@
 "use client";
 
-import React from "react";
+import React, { useMemo } from "react";
 import TrendingCard from "./TrendingCard";
+import { useGetFarmlandByTagAndStateQuery } from "../../../services/home";
+import { useGetAllGeoMasterDataQuery, useGetAllMasterDataQuery } from "../../../services/master";
 
 export default function TrendingGrid() {
-  const cardsData = [
-    {
-      id: "1",
-      title: "GLC SOS 01",
-      description: "High-yield mango grove with established irrigation systems and road access.",
-      price: "₹5.2Cr",
-      location: "Vizag, A.P.",
-      tagText: "Trending Listing",
-      imageUrl: "/assets/search/image2.1.svg",
-    },
-    {
-      id: "2",
-      title: "GLC SOS 02",
-      description: "Elevated terrain suitable for premium grape varieties and boutique agro-tourism.",
-      price: "₹6.2Cr",
-      location: "Tanuku, A.P.",
-      tagText: "Most Viewed Listing",
-      imageUrl: "/assets/search/image2.2.svg",
-    },
-    {
-      id: "3",
-      title: "GLC SOS 03",
-      description: "Unrivaled water rights and pure organic certification for premium exports.",
-      price: "₹6.2Cr",
-      location: "Tanuku, A.P.",
-      tagText: "Most Viewed Listing",
-      imageUrl: "/assets/search/image2.3.svg",
-    },
-    {
-      id: "4",
-      title: "GLC SOS 04",
-      description: "Flood-resistant alluvial soil perfect for sustainable rice farming.",
-      price: "₹4.4Cr",
-      location: "Vizag, A.P.",
-      tagText: "Trending Listing",
-      imageUrl: "/assets/search/image2.4.svg",
-    },
-    {
-      id: "5",
-      title: "GLC SOS 05",
-      description: "Established orchard with mature fruit-bearing trees and cold storage proximity.",
-      price: "₹6.2Cr",
-      location: "Eluru, A.P.",
-      tagText: "Hot Deal",
-      imageUrl: "/assets/home/PopularFarmlands/glc1.svg",
-    },
-    {
-      id: "6",
-      title: "GLC SOS 06",
-      description: "Modernized agricultural estate ready for immediate integration and yields.",
-      price: "₹2.9Cr",
-      location: "Eluru, A.P.",
-      tagText: "Trending Listing",
-      imageUrl: "/assets/home/PopularFarmlands/glc2.svg",
+  const [currentPage, setCurrentPage] = React.useState(0);
+
+  // Fetch Trending tags (id=1, 2, 3)
+  const { data: res, isLoading } = useGetFarmlandByTagAndStateQuery({ tag_ids: [1, 2, 3], state_id: 1 });
+  const { data: geoDataRes } = useGetAllGeoMasterDataQuery();
+  const { data: masterData } = useGetAllMasterDataQuery();
+  
+  const farmlands = res?.data || [];
+
+  // Helper to get formatted location string
+  const getLocationDetails = (districtId?: number) => {
+    if (!districtId || !geoDataRes?.districts) return { fullStr: "UNKNOWN LOCATION" };
+    const district = geoDataRes.districts.slice(1).find(d => d[0] === districtId);
+    if (!district) return { fullStr: "UNKNOWN LOCATION" };
+
+    const districtName = String(district[3]);
+    const stateId = district[1];
+    const state = geoDataRes.states?.slice(1).find(s => s[0] === stateId);
+    if (!state) return { fullStr: districtName.toUpperCase() };
+
+    const stateStr = state[2] ? state[2] : state[3];
+    return {
+      fullStr: `${districtName}, ${stateStr}`.toUpperCase(),
+    };
+  };
+
+  // Pagination logic (max 6 cards = 2 rows per page)
+  const itemsPerPage = 6;
+  const totalPages = Math.max(1, Math.ceil(farmlands.length / itemsPerPage));
+  
+  const paginatedFarmlands = useMemo(() => {
+    const startIndex = currentPage * itemsPerPage;
+    return farmlands.slice(startIndex, startIndex + itemsPerPage);
+  }, [farmlands, currentPage]);
+
+  const renderCard = (farm: any, i: number) => {
+    const { fullStr } = getLocationDetails(farm.farmland_district_id || farm.location_details?.district_id);
+    let imgUrl = farm.farmland_image || farm.farmland_img;
+    if (imgUrl === "null" || imgUrl?.toLowerCase().endsWith('.pdf')) {
+      imgUrl = "";
     }
-  ];
+    
+    // Format price
+    const rawPrice = farm.price || farm.per_acer_value || 0;
+    const formattedPrice = Number(rawPrice).toLocaleString('en-IN');
+    
+    // Map tag
+    let displayTag = "Trending Listing";
+    const tagsArr = farm.farmland_tag_ids || farm.tag_ids;
+    if (Array.isArray(tagsArr) && tagsArr.length > 0) {
+      const tagsList = masterData?.data?.tagResult || (masterData as any)?.tagResult || [];
+      const found = tagsList.find((t: any) => t.id === Number(tagsArr[0]) || t.tag_id === Number(tagsArr[0]));
+      if (found) {
+        displayTag = found.description || found.name || found.tag_name || displayTag;
+      }
+    }
+    
+    // Determine layout based on column
+    const colIndex = i % 3;
+    const isReverse = colIndex === 1; // Middle column is text-top
+    let imgHeight = "320px"; // Left column
+    let cHeight = "587px";
+    
+    if (colIndex === 1) {
+      imgHeight = "373px"; // Middle column
+      cHeight = "648px";
+    } else if (colIndex === 2) {
+      imgHeight = "390px"; // Right column
+      cHeight = "640px";
+    }
+    
+    return (
+      <TrendingCard
+        key={farm.farmland_id}
+        id={farm.farmland_id.toString()}
+        title={farm.farmland_code}
+        description={farm.land_description || "A beautiful farmland listing."}
+        price={`₹${formattedPrice}`}
+        location={fullStr}
+        tagText={displayTag}
+        imageUrl={imgUrl}
+        reverseLayout={isReverse}
+        imageHeight={imgHeight}
+        cardHeight={cHeight}
+        linkDestination={`/search/farmlanddetails?id=${farm.farmland_id}`}
+      />
+    );
+  };
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 sm:px-8 mt-12 mb-24">
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-8 mt-12 mb-24 z-20">
       {/* Header section */}
       <div className="flex flex-row justify-between items-center mb-8">
         <h2 className="font-jakarta font-bold text-[24px] leading-[32px] text-[#131600]">
           Trending farmlands
         </h2>
         {/* Pagination Dots */}
-        <div className="flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-[#0F2F4C]" />
-          <div className="w-2 h-2 rounded-full bg-[#E1E3E4]" />
-          <div className="w-2 h-2 rounded-full bg-[#E1E3E4]" />
-        </div>
+        {totalPages > 1 && (
+          <div className="flex items-center gap-2">
+            {Array.from({ length: totalPages }).map((_, idx) => (
+              <div
+                key={idx}
+                onClick={() => setCurrentPage(idx)}
+                className={`w-2 h-2 rounded-full cursor-pointer transition-colors ${
+                  currentPage === idx ? "bg-[#0F2F4C]" : "bg-[#E1E3E4] hover:bg-[#A0A5AA]"
+                }`}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* Masonry Layout: 3 Columns */}
-      <div className="flex flex-col md:flex-row gap-8 items-start w-full">
-        {/* Column 1 */}
-        <div className="flex-1 flex flex-col w-full gap-8">
-          <TrendingCard {...cardsData[0]} />
-          <TrendingCard {...cardsData[3]} />
-        </div>
-
-        {/* Column 2 (Middle column with reverse layout) */}
-        <div className="flex-1 flex flex-col w-full gap-8">
-          <TrendingCard {...cardsData[1]} reverseLayout={true} />
-          <TrendingCard {...cardsData[4]} reverseLayout={true} />
-        </div>
-
-        {/* Column 3 */}
-        <div className="flex-1 flex flex-col w-full gap-8">
-          <TrendingCard {...cardsData[2]} />
-          <TrendingCard {...cardsData[5]} />
-        </div>
+      {/* CSS Grid Layout: 3 Columns */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start w-full min-h-[648px]">
+        {isLoading ? (
+          <div className="col-span-1 md:col-span-3 flex justify-center items-center py-20">
+            <span className="font-jakarta text-[#0F2F4C]">Loading trending properties...</span>
+          </div>
+        ) : paginatedFarmlands.length > 0 ? (
+          paginatedFarmlands.map((farm, i) => renderCard(farm, i))
+        ) : (
+          <div className="col-span-1 md:col-span-3 flex justify-center items-center py-20">
+            <span className="font-jakarta text-[#0F2F4C]">No trending properties found.</span>
+          </div>
+        )}
       </div>
     </div>
   );

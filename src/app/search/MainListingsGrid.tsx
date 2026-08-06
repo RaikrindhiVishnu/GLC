@@ -8,8 +8,62 @@ import {
   useGetAllFarmlandsByStateIdQuery,
   useAddLandToUserSavedListMutation,
   useRemoveFarmLandFromUserSavedListMutation,
-  useGetAllSavedFarmlandsByUserIdQuery
+  useGetAllSavedFarmlandsByUserIdQuery,
 } from "../../services/farmland";
+import { useGetAllGeoMasterDataQuery } from "../../services/master";
+import { useGetUserUploadedFarmlandsQuery } from "../../services/upload";
+import { s3Service } from "@/services/s3";
+
+// Helper component to resolve S3 images for search cards
+const S3ResolvedImage = ({ imageUrl, alt }: { imageUrl: string; alt: string }) => {
+  const [resolved, setResolved] = useState<string | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchImg = async () => {
+      if (!imageUrl || imageUrl === "null" || imageUrl === "") {
+        if (isMounted) setResolved(null);
+        return;
+      }
+      if (imageUrl.startsWith("http") || imageUrl.startsWith("data:") || imageUrl.startsWith("/")) {
+        if (isMounted) setResolved(imageUrl);
+        return;
+      }
+      try {
+        const res = await s3Service.generateUrl({ key: imageUrl, filename: imageUrl, folderPath: '' });
+        if (isMounted && res.url) {
+          setResolved(res.url);
+        }
+      } catch (e) {
+        if (isMounted) setResolved(null);
+      }
+    };
+    fetchImg();
+    return () => { isMounted = false; };
+  }, [imageUrl]);
+
+  if (!resolved) {
+    return (
+      <div style={{ width: "100%", height: "100%", backgroundColor: "#F4F4F5", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#A1A1AA" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: "8px" }}>
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+          <circle cx="8.5" cy="8.5" r="1.5" />
+          <polyline points="21 15 16 10 5 21" />
+        </svg>
+        <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: "#A1A1AA", fontSize: "12px", fontWeight: 500 }}>No Image</span>
+      </div>
+    );
+  }
+
+  return (
+    <img 
+      src={resolved} 
+      alt={alt} 
+      onError={(e) => { e.currentTarget.style.display = 'none'; }}
+      style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} 
+    />
+  );
+};
 
 // Absolute data parity mapping precisely to the 6 newly uploaded search assets
 const gridMatches = [
@@ -19,7 +73,7 @@ const gridMatches = [
     price: "₹4.8Cr",
     tags: ["RED LATERITE", "ACTIVE YIELD"],
     description: "High-yield mango grove with established irrigation systems and road access.",
-    img: "/assets/search/image2.1.png", 
+    img: "/assets/search/image2.1.svg", 
     layout: "image-top",
     cardHeight: "583px",
     imageHeight: "320px",
@@ -101,6 +155,11 @@ export default function MainListingsGrid() {
     { skip: !userId }
   );
 
+  const { data: uploadData } = useGetUserUploadedFarmlandsQuery(
+    { userId: userId || 0 },
+    { skip: !userId }
+  );
+
   useEffect(() => {
     if (savedFarmlandsData && Array.isArray(savedFarmlandsData)) {
       const initialBookmarks: Record<string, boolean> = {};
@@ -110,6 +169,21 @@ export default function MainListingsGrid() {
       setBookmarks(prev => ({ ...prev, ...initialBookmarks }));
     }
   }, [savedFarmlandsData]);
+
+  const { data: geoDataRes } = useGetAllGeoMasterDataQuery();
+
+  const getLocationString = (districtId?: number) => {
+    if (!districtId || !geoDataRes?.districts) return "Location Not Available";
+    const district = geoDataRes.districts.slice(1).find((d: any[]) => d[0] === districtId);
+    if (!district) return "Location Not Available";
+    
+    const stateId = district[1];
+    const state = geoDataRes.states?.slice(1).find((s: any[]) => s[0] === stateId);
+    if (!state) return String(district[3]).toUpperCase();
+    
+    const stateStr = state[2] ? state[2] : state[3];
+    return `${district[3]}, ${stateStr}`.toUpperCase();
+  };
 
   const [currentPage, setCurrentPage] = useState(0);
 
@@ -161,6 +235,14 @@ export default function MainListingsGrid() {
     }
 
     const numericId = parseInt(id);
+
+    // Check if the current user is the owner of this farmland
+    const isOwner = uploadData?.data?.some((farm: any) => farm.farmland_id === numericId);
+    if (isOwner) {
+      alert("You cannot save your own listing.");
+      return;
+    }
+
     const isCurrentlySaved = !!bookmarks[id];
 
     // Optimistic UI update
@@ -257,8 +339,8 @@ export default function MainListingsGrid() {
                     style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} 
                   />
                   {mappedTags[0] && (
-                    <div style={{ position: "absolute", top: "12px", left: "12px", background: "rgba(255, 255, 255, 0.9)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)", padding: "4px 10px", borderRadius: "9999px", border: "1px solid rgba(255, 255, 255, 0.3)", zIndex: 5 }}>
-                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "9px", color: "#0F2F4C" }}>{mappedTags[0]}</span>
+                    <div style={{ position: "absolute", top: "12px", left: "12px", background: "rgba(255, 255, 255, 0.9)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)", padding: "4px 10px", borderRadius: "9999px", border: "1px solid rgba(255, 255, 255, 0.3)", zIndex: 5, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "9px", color: "#0F2F4C", textAlign: "center" }}>{mappedTags[0]}</span>
                     </div>
                   )}
                   <button
@@ -273,13 +355,19 @@ export default function MainListingsGrid() {
                 <div style={{ padding: "16px", display: "flex", flexDirection: "column", gap: "6px" }}>
                   <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", minHeight: "20px" }}>
                     {(mappedTags.length > 1 ? mappedTags.slice(1) : mappedTags).map((t: string, idx: number) => (
-                      <span key={idx} style={{ padding: "3px 8px", background: "#E7E8E9", borderRadius: "9999px", fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "9px", color: "#45474C", textTransform: "uppercase" }}>{t}</span>
+                      <span key={idx} style={{ padding: "3px 8px", background: "#E7E8E9", borderRadius: "9999px", fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "9px", color: "#45474C", textTransform: "uppercase", textAlign: "center", display: "flex", alignItems: "center", justifyContent: "center" }}>{t}</span>
                     ))}
                   </div>
                   <h3 style={{ margin: 0, fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "16px", lineHeight: "22px", color: "#131600" }}>{item.farmland_code}</h3>
                   <p style={{ margin: 0, fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 400, fontSize: "12px", lineHeight: "18px", color: "#45474C" }}>High-yield farmland ready for investment.</p>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "10px", marginTop: "4px", borderTop: "1px solid #EDEEEF" }}>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "14px", color: "#091426" }}>₹{item.price?.toLocaleString()}</span>
+                    <div style={{ display: "flex", flexDirection: "column" }}>
+                      <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "14px", color: "#091426" }}>₹{item.price?.toLocaleString()}</span>
+                      <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 500, fontSize: "10px", color: "#45474C", display: "flex", alignItems: "center", gap: "2px", marginTop: "2px" }}>
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                        {getLocationString(item.farmland_locations?.district_id)}
+                      </span>
+                    </div>
                     <span
                       onClick={(e) => { e.stopPropagation(); router.push(`/search/farmlanddetails?id=${item.farmland_id}`); }}
                       style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "12px", color: "#00629E", cursor: "pointer" }}
@@ -429,11 +517,9 @@ export default function MainListingsGrid() {
                   >
                     {/* Top Image Box */}
                     <div style={{ position: "relative", width: "100%", height: imageHeight, flexShrink: 0 }}>
-                      <img 
-                        src={item.farmland_image || "/assets/search/image2.1.svg"} 
+                      <S3ResolvedImage 
+                        imageUrl={item.farmland_image || item.farmland_img || ""} 
                         alt={item.farmland_code} 
-                        onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = "/assets/search/image2.1.svg" }}
-                        style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} 
                       />
 
                       {/* Image Tag (White Pill) */}
@@ -450,9 +536,12 @@ export default function MainListingsGrid() {
                             borderRadius: "9999px",
                             border: "1px solid rgba(255, 255, 255, 0.3)",
                             zIndex: 5,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
                           }}
                         >
-                          <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", color: "#0F2F4C" }}>
+                          <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", color: "#0F2F4C", textAlign: "center" }}>
                             {mappedTags[0]}
                           </span>
                         </div>
@@ -504,6 +593,10 @@ export default function MainListingsGrid() {
                                 lineHeight: "15px",
                                 color: "#45474C",
                                 textTransform: "uppercase",
+                                textAlign: "center",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
                               }}
                             >
                               {t}
@@ -542,17 +635,23 @@ export default function MainListingsGrid() {
 
                       {/* Price & Action Button Row */}
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "20px" }}>
-                        <span
-                          style={{
-                            fontFamily: "'Plus Jakarta Sans', sans-serif",
-                            fontWeight: 700,
-                            fontSize: "20px",
-                            lineHeight: "28px",
-                            color: "#091426",
-                          }}
-                        >
-                          ₹{item.price?.toLocaleString()}
-                        </span>
+                        <div style={{ display: "flex", flexDirection: "column" }}>
+                          <span
+                            style={{
+                              fontFamily: "'Plus Jakarta Sans', sans-serif",
+                              fontWeight: 700,
+                              fontSize: "20px",
+                              lineHeight: "28px",
+                              color: "#091426",
+                            }}
+                          >
+                            ₹{item.price?.toLocaleString()}
+                          </span>
+                          <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 500, fontSize: "12px", color: "#45474C", display: "flex", alignItems: "center", gap: "4px", marginTop: "2px" }}>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                            {getLocationString(item.farmland_locations?.district_id)}
+                          </span>
+                        </div>
                         <span
                           onClick={(e) => {
                             e.stopPropagation();
@@ -619,6 +718,10 @@ export default function MainListingsGrid() {
                                 lineHeight: "15px",
                                 color: "#45474C",
                                 textTransform: "uppercase",
+                                textAlign: "center",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
                               }}
                             >
                               {t}
@@ -654,17 +757,23 @@ export default function MainListingsGrid() {
                       </div>
 
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "20px" }}>
-                        <span
-                          style={{
-                            fontFamily: "'Plus Jakarta Sans', sans-serif",
-                            fontWeight: 700,
-                            fontSize: "20px",
-                            lineHeight: "28px",
-                            color: "#091426",
-                          }}
-                        >
-                          ₹{item.price?.toLocaleString()}
-                        </span>
+                        <div style={{ display: "flex", flexDirection: "column" }}>
+                          <span
+                            style={{
+                              fontFamily: "'Plus Jakarta Sans', sans-serif",
+                              fontWeight: 700,
+                              fontSize: "20px",
+                              lineHeight: "28px",
+                              color: "#091426",
+                            }}
+                          >
+                            ₹{item.price?.toLocaleString()}
+                          </span>
+                          <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 500, fontSize: "12px", color: "#45474C", display: "flex", alignItems: "center", gap: "4px", marginTop: "2px" }}>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                            {getLocationString(item.farmland_locations?.district_id)}
+                          </span>
+                        </div>
                         <span
                           onClick={(e) => {
                             e.stopPropagation();
@@ -686,11 +795,9 @@ export default function MainListingsGrid() {
 
                     {/* Bottom Image Box */}
                     <div style={{ position: "relative", width: "100%", height: imageHeight, flexShrink: 0 }}>
-                      <img 
-                        src={item.farmland_image || "/assets/search/image2.1.svg"} 
+                      <S3ResolvedImage 
+                        imageUrl={item.farmland_image || item.farmland_img || ""} 
                         alt={item.farmland_code} 
-                        onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = "/assets/search/image2.1.svg" }}
-                        style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} 
                       />
 
                       {/* Image Tag (White Pill) */}
@@ -707,9 +814,12 @@ export default function MainListingsGrid() {
                             borderRadius: "9999px",
                             border: "1px solid rgba(255, 255, 255, 0.3)",
                             zIndex: 5,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
                           }}
                         >
-                          <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", color: "#0F2F4C" }}>
+                          <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", color: "#0F2F4C", textAlign: "center" }}>
                             {mappedTags[0]}
                           </span>
                         </div>

@@ -107,7 +107,7 @@ export default function MaintenanceServicesHero() {
               width: "242px",
               height: "68px",
               left: "calc(50% - 242px/2)",
-              top: "25px",
+              top: "59px",
               background: "rgba(255, 255, 255, 0.1)",
               boxShadow: "0px 8px 6px rgba(0, 0, 0, 0.05), inset 3px 4px 2px -3px rgba(255, 255, 255, 0.55), inset 0px -1px 1px rgba(255, 255, 255, 0.25), inset 0px 1px 1px rgba(255, 255, 255, 0.25)",
               backdropFilter: "blur(50px)",
@@ -219,8 +219,8 @@ export default function MaintenanceServicesHero() {
               position: "absolute",
               width: "52px",
               height: "51.39px",
-              left: "1194px",
-              top: "36px",
+              left: "1260px",
+              top: "70px",
               background: "rgba(255, 255, 255, 0.1)",
               boxShadow: "0px 10.0267px 7.52px rgba(0, 0, 0, 0.05), inset 3.76px 5.01333px 2.50667px -3.76px rgba(255, 255, 255, 0.55)",
               backdropFilter: "blur(62.6667px)",
@@ -245,8 +245,8 @@ export default function MaintenanceServicesHero() {
               position: "absolute",
               width: "52px",
               height: "51.39px",
-              left: "1261px",
-              top: "36px",
+              left: "1327px",
+              top: "70px",
               background: "rgba(255, 255, 255, 0.1)",
               boxShadow: "0px 10.0267px 7.52px rgba(0, 0, 0, 0.05), inset 3.76px 5.01333px 2.50667px -3.76px rgba(255, 255, 255, 0.55)",
               backdropFilter: "blur(62.6667px)",
@@ -360,9 +360,7 @@ export default function MaintenanceServicesHero() {
               color: "#FFFFFF",
             }}
           >
-            Track the real-time progress of your asset through our rigorous 4-tier legal, agronomy,
-            <br />
-            and intelligence audit pipeline
+            Keep your farmland productive with professional maintenance, agronomy support, irrigation management, and continuous field monitoring.
           </p>
         </div>
       </div>

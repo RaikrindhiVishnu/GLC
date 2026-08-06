@@ -88,9 +88,7 @@ export default function OrganicFarmingSetupPage() {
 
                     {/* Checkmark indicator slot */}
                     {selectedPlan === "agri-yield" && (
-                      <div className="absolute top-4 right-4 w-5 h-5 rounded-full bg-[#00629E] flex items-center justify-center text-white text-[10px] font-bold">
-                        ✓
-                      </div>
+                      <img src="/assets/organicfrmingsetup/Container (35).svg" alt="Check" className="absolute top-4 right-4 w-5 h-5" />
                     )}
                   </div>
 
@@ -114,9 +112,7 @@ export default function OrganicFarmingSetupPage() {
 
                     {/* Checkmark indicator slot */}
                     {selectedPlan === "timber" && (
-                      <div className="absolute top-4 right-4 w-5 h-5 rounded-full bg-[#00629E] flex items-center justify-center text-white text-[10px] font-bold">
-                        ✓
-                      </div>
+                      <img src="/assets/organicfrmingsetup/Container (35).svg" alt="Check" className="absolute top-4 right-4 w-5 h-5" />
                     )}
                   </div>
 
@@ -148,9 +144,7 @@ export default function OrganicFarmingSetupPage() {
                       <span className="font-semibold text-base text-[#091426]">
                         {item}
                       </span>
-                      <div className="w-5 h-5 rounded-full bg-[#00629E] flex items-center justify-center text-white shrink-0 text-xs font-bold">
-                        ✓
-                      </div>
+                      <img src="/assets/organicfrmingsetup/Container (35).svg" alt="Check" className="w-5 h-5 shrink-0" />
                     </div>
                   ))}
                 </div>
@@ -160,8 +154,8 @@ export default function OrganicFarmingSetupPage() {
               {/* ─── SUBMODULE C: DIGITAL VISIBILITY CARD LAYER ─── */}
               <div className="w-full bg-[#00629E]/5 border border-[#00629E]/10 rounded-[32px] p-6 flex flex-row items-start gap-4 box-border backdrop-blur-[6px]">
                 {/* Circular left overlay anchor block holding eye context logo */}
-                <div className="w-[46px] h-[46px] rounded-full bg-[#00629E]/10 flex items-center justify-center shrink-0 self-start">
-                  <span className="text-[#00629E] text-base font-bold">👁️</span>
+                <div className="w-[46px] h-[39px] shrink-0 self-start flex items-center justify-center">
+                  <img src="/assets/organicfrmingsetup/Overlay (17).svg" alt="Visibility" className="w-full h-full object-contain" />
                 </div>
 
                 <div className="flex flex-col gap-1">

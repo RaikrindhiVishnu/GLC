@@ -12,7 +12,10 @@ export default function ListingConsole() {
   const searchParams = useSearchParams();
   const farmlandId = Number(searchParams.get("id")) || 101;
 
-  const { data: farmlandResponse, isLoading } = useGetUserListedFarmlandByIdQuery({ farmland_id: farmlandId });
+  const { data: farmlandResponse, isLoading } = useGetUserListedFarmlandByIdQuery(
+    { farmland_id: farmlandId },
+    { refetchOnMountOrArgChange: true }
+  );
   
   const farmlandData = farmlandResponse?.data;
   const isUnlisted = farmlandData ? farmlandData.for_sale === 0 : false;
@@ -148,8 +151,8 @@ export default function ListingConsole() {
             >
               {/* Edit Photos Row */}
               <div 
-                onClick={() => setIsModalOpen(true)}
-                className="flex flex-row justify-between items-center p-[34px] w-full cursor-pointer hover:bg-gray-50 transition-colors"
+                onClick={() => { if (farmlandData?.is_bought !== 1) setIsModalOpen(true); }}
+                className={`flex flex-row justify-between items-center p-[34px] w-full transition-colors ${farmlandData?.is_bought === 1 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-gray-50'}`}
               >
                 <div className="flex flex-col gap-[2px]">
                   <span 
@@ -187,7 +190,7 @@ export default function ListingConsole() {
               <div className="w-[calc(100%-68px)] h-[1px] bg-[#EDEEEF] mx-[34px]" />
 
               {/* Temporarily Unlist Row */}
-              <div className="flex flex-row justify-between items-center p-[34px] w-full">
+              <div className={`flex flex-row justify-between items-center p-[34px] w-full ${farmlandData?.is_bought === 1 ? 'opacity-50 pointer-events-none' : ''}`}>
                 <div className="flex flex-col gap-[2px]">
                   <span 
                     style={{
@@ -229,7 +232,7 @@ export default function ListingConsole() {
 
             {/* Promote Listing Button */}
             <button 
-              className="flex justify-center items-center w-full h-[68.5px] rounded-full border-none cursor-pointer hover:opacity-90 transition-opacity"
+              className={`flex justify-center items-center w-full h-[68.5px] rounded-full border-none transition-opacity ${farmlandData?.is_bought === 1 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:opacity-90'}`}
               style={{
                 background: "radial-gradient(50% 130.51% at 50% 50%, #2780C4 0%, #164573 100%)",
                 boxShadow: "0px 12.2px 18.3px -3.6px rgba(0, 0, 0, 0.1), 0px 4.9px 7.3px -4.9px rgba(0, 0, 0, 0.1)",

@@ -39,7 +39,7 @@ const regionalOpportunities = [
     price: "₹6.2 Cr",
     area: "450 Acres",
     yield: "Maximum Yield",
-    img: "/assets/search/image2.1.png",
+    img: "/assets/search/image2.1.svg",
   },
 ];
 
@@ -55,7 +55,7 @@ export default function DiscoveryGridSection({ onOpenCompare }: DiscoveryGridSec
       style={{
         width: "100%",
         maxWidth: "1280px",
-        margin: "64px auto 0",
+        margin: "16px auto 0",
         padding: "0 24px",
         boxSizing: "border-box",
         display: "flex",
@@ -113,7 +113,7 @@ export default function DiscoveryGridSection({ onOpenCompare }: DiscoveryGridSec
           justifyContent: "flex-start",
           gap: "32px",
           overflowX: "auto",
-          paddingBottom: "24px",
+          paddingBottom: "64px",
           scrollBehavior: "smooth",
           WebkitOverflowScrolling: "touch",
         }}
@@ -160,7 +160,8 @@ export default function DiscoveryGridSection({ onOpenCompare }: DiscoveryGridSec
                   objectFit: "cover",
                 }}
                 onError={(e) => {
-                  e.currentTarget.src = "/assets/compareassets/farm1.jpg";
+                  e.currentTarget.onerror = null; 
+                  e.currentTarget.style.display = 'none';
                 }}
               />
 
@@ -270,7 +271,7 @@ export default function DiscoveryGridSection({ onOpenCompare }: DiscoveryGridSec
               }}
             >
               {/* Left Column: Area */}
-              <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+              <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "2px", alignItems: "flex-start" }}>
                 <span
                   style={{
                     fontFamily: "'Plus Jakarta Sans', sans-serif",
@@ -299,7 +300,7 @@ export default function DiscoveryGridSection({ onOpenCompare }: DiscoveryGridSec
               <div style={{ width: "1px", height: "32px", background: "#E7E8E9" }} />
 
               {/* Right Column: Yield */}
-              <div style={{ display: "flex", flexDirection: "column", gap: "2px", alignItems: "flex-end" }}>
+              <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "2px", alignItems: "flex-start", paddingLeft: "16px" }}>
                 <span
                   style={{
                     fontFamily: "'Plus Jakarta Sans', sans-serif",

@@ -6,9 +6,10 @@ import { motion, AnimatePresence } from "framer-motion";
 interface ListingRemovedModalProps {
   isOpen: boolean;
   onClose: () => void;
+  farmlandCode: string;
 }
 
-export default function ListingRemovedModal({ isOpen, onClose }: ListingRemovedModalProps) {
+export default function ListingRemovedModal({ isOpen, onClose, farmlandCode }: ListingRemovedModalProps) {
   React.useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -93,7 +94,7 @@ export default function ListingRemovedModal({ isOpen, onClose }: ListingRemovedM
                   margin: 0,
                 }}
               >
-                GLC SOS 3 has been successfully purged from the marketplace<br/>and all associated datahas been erased.
+                {farmlandCode || "The property"} has been successfully purged from the marketplace<br/>and all associated data has been erased.
               </p>
             </div>
 
@@ -116,7 +117,7 @@ export default function ListingRemovedModal({ isOpen, onClose }: ListingRemovedM
                     ASSET ID
                   </span>
                   <span style={{ fontFamily: "'Plus Jakarta Sans'", fontWeight: 700, fontSize: "16px", lineHeight: "24px", color: "#00609A" }}>
-                    GLC SOS 3
+                    {farmlandCode || "..."}
                   </span>
                 </div>
 
@@ -126,7 +127,7 @@ export default function ListingRemovedModal({ isOpen, onClose }: ListingRemovedM
                     DELETION DATE
                   </span>
                   <span style={{ fontFamily: "'Plus Jakarta Sans'", fontWeight: 700, fontSize: "16px", lineHeight: "24px", color: "#181C20" }}>
-                    Oct 24, 2023
+                    {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                   </span>
                 </div>
 

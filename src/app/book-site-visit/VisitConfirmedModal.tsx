@@ -148,7 +148,7 @@ export default function VisitConfirmedModal({ isOpen, onClose }: VisitConfirmedM
                 </svg>
                 <span style={{ fontFamily: "'Plus Jakarta Sans'", fontWeight: 600, fontSize: "16px", color: "#002045" }}>Contact Support</span>
                 <div className="ml-auto">
-                  <svg width="8" height="12" viewBox="0 0 24 24" fill="none" stroke="#74777F" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                  <svg width="14" height="20" viewBox="0 0 24 24" fill="none" stroke="#74777F" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
                 </div>
               </div>
             </div>
@@ -173,18 +173,18 @@ export default function VisitConfirmedModal({ isOpen, onClose }: VisitConfirmedM
                   <span style={{ fontFamily: "'Plus Jakarta Sans'", fontWeight: 400, fontSize: "16px", color: "#74777F" }}>Coordinates activate 24h prior</span>
                 </div>
               </div>
-              <svg width="8" height="12" viewBox="0 0 24 24" fill="none" stroke="#74777F" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              <svg width="14" height="20" viewBox="0 0 24 24" fill="none" stroke="#74777F" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
             </div>
             
             {/* Bottom Actions */}
-            <div className="flex flex-col md:flex-row items-center justify-center gap-[22px] w-full mt-[40px] mb-[20px]">
+            <div className="flex flex-col items-center justify-center gap-[16px] w-full mt-[40px] mb-[20px]">
               <button 
                 onClick={onClose}
                 className="hover:opacity-90 transition-opacity"
                 style={{
-                  width: "400px",
+                  width: "100%",
                   height: "63px",
-                  background: "radial-gradient(49.97% 160.36% at 50% 50%, #2780C4 0%, #164573 100%)",
+                  background: "linear-gradient(135deg, #2780C4 0%, #164573 100%)",
                   borderRadius: "9999px",
                   border: "none",
                   color: "#FFFFFF",
@@ -192,7 +192,7 @@ export default function VisitConfirmedModal({ isOpen, onClose }: VisitConfirmedM
                   fontWeight: 700,
                   fontSize: "16.5px",
                   cursor: "pointer",
-                  boxShadow: "0px 9px 13px -2px rgba(0,0,0,0.1)"
+                  boxShadow: "0px 10px 20px rgba(22, 69, 115, 0.3)"
                 }}
               >
                 Reschedule Visit
@@ -201,8 +201,8 @@ export default function VisitConfirmedModal({ isOpen, onClose }: VisitConfirmedM
                 onClick={() => window.location.href = '/home'}
                 className="hover:bg-[#F8F9FA] transition-colors"
                 style={{
-                  width: "403px",
-                  height: "66px",
+                  width: "100%",
+                  height: "63px",
                   background: "transparent",
                   border: "2px solid #2780C4",
                   borderRadius: "9999px",

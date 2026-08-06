@@ -32,9 +32,9 @@ function OrganicFarmingSetupConfirmationContent() {
             initial={{ opacity: 0, scale: 0 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ type: "spring", duration: 0.6, delay: 0.2 }}
-            className="w-24 h-24 rounded-full bg-[radial-gradient(59.38%_41.98%_at_50%_50%,#2780C4_0%,#164573_100%)] border-[5px] border-[#AED6EF] flex items-center justify-center relative shadow-sm box-border shrink-0"
+            className="w-[120px] h-[123px] flex items-center justify-center relative shrink-0"
           >
-            <span className="text-white text-4xl font-extrabold block">✓</span>
+            <img src="/assets/organicfrmingsetup/Background (36).svg" alt="Success Checkmark" className="w-full h-full object-contain" />
           </motion.div>
 
           {/* Core Announcement Typography */}

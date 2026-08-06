@@ -642,21 +642,22 @@ export default function BookSiteVisit() {
                 disabled={isLoading}
                 style={{
                   width: "100%",
-                  height: "56px",
-                  background: "#164573",
+                  height: "60px",
+                  background: "linear-gradient(135deg, #2780C4 0%, #164573 100%)",
                   borderRadius: "9999px",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   color: "#FFFFFF",
                   fontFamily: "'Plus Jakarta Sans', sans-serif",
-                  fontWeight: 600,
+                  fontWeight: 700,
                   fontSize: "16px",
                   border: "none",
                   cursor: isLoading ? "not-allowed" : "pointer",
                   marginTop: "10px",
                   transition: "opacity 0.2s ease",
-                  opacity: isLoading ? 0.7 : 1
+                  opacity: isLoading ? 0.7 : 1,
+                  boxShadow: "0px 10px 20px rgba(22, 69, 115, 0.3)"
                 }}
                 onMouseOver={(e) => { if(!isLoading) e.currentTarget.style.opacity = "0.9" }}
                 onMouseOut={(e) => { if(!isLoading) e.currentTarget.style.opacity = "1" }}
