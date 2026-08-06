@@ -18,14 +18,14 @@ export default function AIGeneratedFarmlandsPage() {
 
 
       {/* ─── MAIN BENTO CONSOLE WORKBENCH AREA ─── */}
-      <section className="w-full max-w-[1280px] mx-auto px-4 sm:px-8 py-12 md:py-20 relative z-30 box-border flex-grow flex flex-col gap-12">
+      <section className="w-full max-w-[1280px] mx-auto px-4 sm:px-8 py-16 md:pt-32 md:pb-24 relative z-30 box-border flex-grow flex flex-col gap-12">
         
         {/* AI Context Statement Header Section */}
-        <div className="w-full flex flex-col items-start gap-2 border-b border-slate-100 pb-6 box-border">
-          <h2 className="m-0 font-extrabold text-4xl sm:text-5xl md:text-[60px] text-[#0F2F4C] tracking-[-1.5px] leading-tight md:leading-[60px]">
+        <div className="w-full flex flex-col items-center justify-center gap-2 border-b border-slate-100 pb-6 box-border text-center">
+          <h2 className="m-0 font-extrabold text-4xl sm:text-5xl md:text-[60px] text-[#0F2F4C] tracking-[-1.5px] leading-tight md:leading-[60px] text-center">
             Curated for Arjun
           </h2>
-          <p className="m-0 font-medium text-base sm:text-lg text-[#45474C] max-w-[804px] leading-relaxed">
+          <p className="m-0 font-medium text-base sm:text-lg text-[#45474C] max-w-[804px] leading-relaxed text-center">
             We found 3 premium assets matching your preference for Zone A-1 and a ₹2Cr - ₹5Cr budget.
           </p>
         </div>
@@ -50,7 +50,7 @@ export default function AIGeneratedFarmlandsPage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent z-10" />
 
                 {/* Absolute Top-Left Image Alignment Indicator Pill */}
-                <div className="absolute left-6 top-6 z-20 bg-white/90 backdrop-blur-[6px] px-4 py-1.5 rounded-full flex items-center gap-2 shadow-xs box-border">
+                <div className="absolute left-4 top-4 z-20 bg-white/90 backdrop-blur-[6px] px-4 py-1.5 rounded-full flex items-center gap-2 shadow-xs box-border">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src="/assets/ai-suggested/Icon%20(29).svg" alt="Match" width={13} height={13} />
                   <span className="font-bold text-xs text-[#0F2F4C] tracking-wide block">
@@ -63,21 +63,21 @@ export default function AIGeneratedFarmlandsPage() {
               <div className="w-full p-6 sm:p-10 flex flex-col gap-6 box-border bg-white rounded-t-[48px] -mt-12 relative z-20">
                 
                 {/* Top row alignment block: Asset Nomenclature + Spatial coordinates vs. Appraised values */}
-                <div className="w-full flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[#F3F4F5] pb-6 box-border">
-                  <div className="flex flex-col gap-1">
-                    <span className="font-extrabold text-2xl sm:text-3xl md:text-[36px] text-[#0F2F4C] leading-none">
+                <div className="w-full flex flex-col items-center justify-center gap-4 border-b border-[#F3F4F5] pb-6 box-border text-center">
+                  <div className="flex flex-col gap-1 items-center">
+                    <span className="font-extrabold text-2xl sm:text-3xl md:text-[36px] text-[#0F2F4C] leading-none text-center">
                       GLC SOS 04
                     </span>
-                    <span className="font-medium text-sm sm:text-base text-[#45474C] block mt-1">
+                    <span className="font-medium text-sm sm:text-base text-[#45474C] block mt-1 text-center">
                       Himalayan Foothills, Uttarakhand
                     </span>
                   </div>
 
-                  <div className="flex flex-col items-start sm:items-end shrink-0">
-                    <span className="font-extrabold text-2xl sm:text-3xl md:text-[30px] text-[#0F2F4C] leading-none">
+                  <div className="flex flex-col items-center shrink-0 text-center">
+                    <span className="font-extrabold text-2xl sm:text-3xl md:text-[30px] text-[#0F2F4C] leading-none text-center">
                       ₹4.2 Cr
                     </span>
-                    <span className="font-bold text-[11px] sm:text-xs text-[#424B00] tracking-[1.2px] uppercase block mt-1.5">
+                    <span className="font-bold text-[11px] sm:text-xs text-[#424B00] tracking-[1.2px] uppercase block mt-1.5 text-center">
                       PRIME YIELD ASSET
                     </span>
                   </div>
@@ -99,12 +99,12 @@ export default function AIGeneratedFarmlandsPage() {
 
 
                 {/* Master Action Trigger encapsulation */}
-                <div className="pt-2">
+                <div className="pt-2 flex justify-center w-full">
                   <button
                     onClick={() => router.push("/home/unlockeddocuments")}
                     className="px-8 py-4 bg-[radial-gradient(50.07%_119.45%_at_50%_50%,#2780C4_0%,#164573_100%)] hover:opacity-95 active:scale-[0.99] transition-all text-white font-bold text-sm sm:text-base rounded-full shadow-md border-none cursor-pointer block tracking-wide"
                   >
-                    Explore Unlocked Dossier
+                    Explore Unlocked Documents
                   </button>
                 </div>
 

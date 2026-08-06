@@ -410,7 +410,7 @@ export default function MaintenanceOnboardSection() {
             minWidth: "250px"
           }}
         >
-          <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", color: "#FFFFFF", letterSpacing: "0.5px" }}>Farmland Details</span>
+          <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", color: "#FFFFFF", letterSpacing: "0.5px" }}>UPLOAD FARMLAND DETAILS</span>
         </button>
       </div>
 

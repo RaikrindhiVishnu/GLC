@@ -110,7 +110,7 @@ export default function MainWealthFeed() {
                 </div>
 
                 {/* Info */}
-                <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", flexGrow: 1, width: "100%", minHeight: "140px" }}>
+                <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", flexGrow: 1, width: "100%", minHeight: "192px" }}>
                   <div style={{ display: "flex", flexDirection: "column", gap: "8px", width: "100%" }}>
                     <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", flexWrap: "wrap", gap: "8px" }}>
                       <h3
@@ -134,7 +134,7 @@ export default function MainWealthFeed() {
                   </div>
 
                   {i === 0 ? (
-                    <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", marginTop: "16px" }}>
+                    <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", marginTop: "auto" }}>
                       <div style={{ display: "flex", flexDirection: "row", gap: "8px" }}>
                         <div style={{ width: "40px", height: "40px", background: "#F3F4F5", borderRadius: "9999px", display: "flex", alignItems: "center", justifyContent: "center" }}>
                           <div style={{ width: "14px", height: "16px", border: "1.5px solid #0F2F4C", borderRadius: "2px" }} />
@@ -153,7 +153,7 @@ export default function MainWealthFeed() {
                       </button>
                     </div>
                   ) : (
-                    <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "8px", cursor: "pointer", marginTop: "16px" }}>
+                    <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "8px", cursor: "pointer", marginTop: "auto" }}>
                       <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", lineHeight: "20px", color: "#00629E" }}>Request Add-On Services</span>
                       <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                         <path d="M2 6H10M10 6L6 2M10 6L6 10" stroke="#00629E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />

@@ -13,6 +13,7 @@ import SiteVisitQueueModal from "@/components/SiteVisitQueueModal";
 import LandPurchaseTrackingModal from "@/components/LandPurchaseTrackingModal";
 import EditProfileModal from "@/components/EditProfileModal";
 import WalletHistoryModal from "@/components/WalletHistoryModal";
+import SignOutModal from "@/components/SignOutModal";
 import { s3Service } from "../../services/s3";
 import { authService } from "../../services/auth";
 
@@ -76,6 +77,7 @@ export default function ProfileScreen() {
   const [trackingModalFarmId, setTrackingModalFarmId] = useState<number | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isWalletHistoryModalOpen, setIsWalletHistoryModalOpen] = useState(false);
+  const [isSignOutModalOpen, setIsSignOutModalOpen] = useState(false);
 
   const profileImageSrc = "/assets/account/account-hero.svg"; // Mock avatar
   const [profileImage, setProfileImage] = useState<string | null>(null);
@@ -723,7 +725,7 @@ export default function ProfileScreen() {
         {/* Mobile Sign Out — standalone centered at bottom */}
         <div style={{ display: "flex", justifyContent: "center", padding: "28px 16px 40px" }}>
           <button
-            onClick={handleSignOut}
+            onClick={() => setIsSignOutModalOpen(true)}
             style={{ background: "transparent", border: "none", display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", padding: 0 }}
             onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.7")}
             onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
@@ -1058,7 +1060,7 @@ export default function ProfileScreen() {
           {/* Desktop Sign Out */}
           <div style={{ padding: "0 16px" }}>
             <button
-              onClick={handleSignOut}
+              onClick={() => setIsSignOutModalOpen(true)}
               style={{ background: "transparent", border: "none", display: "flex", alignItems: "center", gap: "12px", cursor: "pointer", padding: 0 }}
               onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.7")}
               onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
@@ -1233,6 +1235,11 @@ export default function ProfileScreen() {
       <WalletHistoryModal
         isOpen={isWalletHistoryModalOpen}
         onClose={() => setIsWalletHistoryModalOpen(false)}
+      />
+      <SignOutModal
+        isOpen={isSignOutModalOpen}
+        onClose={() => setIsSignOutModalOpen(false)}
+        onConfirm={handleSignOut}
       />
       <input type="file" accept="image/*,application/pdf" style={{ display: "none" }} ref={fileInputRef} onChange={handleFileChange} />
       <input type="file" accept="image/*" style={{ display: "none" }} ref={profileInputRef} onChange={handleProfileImageChange} />

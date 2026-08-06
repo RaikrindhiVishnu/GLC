@@ -60,7 +60,7 @@ export default function PoolInvestments() {
                     cy="128"
                     r="100"
                     fill="transparent"
-                    stroke="#D9D9D9"
+                    stroke="#E7E8E9"
                     strokeWidth="25"
                   />
                   {/* Progress Circle (3/4 = 75%) */}
@@ -88,7 +88,7 @@ export default function PoolInvestments() {
               {/* Legend & CTA */}
               <div className="flex flex-col gap-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-3 h-3 bg-[#2780C4] rounded-full shrink-0" />
+                  <div className="w-3 h-3 bg-gradient-to-r from-[#2780C4] to-[#164573] rounded-full shrink-0" />
                   <span className="font-jakarta font-medium text-[14px] sm:text-[16px] text-[#191C1D] whitespace-nowrap">Secured Funding</span>
                 </div>
                 <div className="flex items-center gap-3">

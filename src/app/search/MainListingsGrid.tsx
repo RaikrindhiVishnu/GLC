@@ -370,7 +370,7 @@ export default function MainListingsGrid() {
                     </div>
                     <span
                       onClick={(e) => { e.stopPropagation(); router.push(`/search/farmlanddetails?id=${item.farmland_id}`); }}
-                      style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "12px", color: "#00629E", cursor: "pointer" }}
+                      style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "12px", color: "#00629E", cursor: "pointer", textDecoration: "none" }}
                     >View Details</span>
                   </div>
                 </div>
@@ -664,6 +664,7 @@ export default function MainListingsGrid() {
                             lineHeight: "20px",
                             color: "#00629E",
                             cursor: "pointer",
+                            textDecoration: "none",
                           }}
                         >
                           View Details
@@ -786,6 +787,7 @@ export default function MainListingsGrid() {
                             lineHeight: "20px",
                             color: "#00629E",
                             cursor: "pointer",
+                            textDecoration: "none",
                           }}
                         >
                           View Details

@@ -176,7 +176,7 @@ export default function VerificationTrendingCarousel() {
                   onClick={() => handleCardClick(idx, item.farmland_id)}
                   style={{
                     width: "calc(100vw - 80px)",
-                    height: "400px",
+                    height: "420px",
                     flexShrink: 0,
                     borderRadius: "24px",
                     overflow: "hidden",
@@ -211,8 +211,8 @@ export default function VerificationTrendingCarousel() {
                   >
                     <div className="flex justify-between items-end">
                       <div className="flex flex-col">
-                        <h4 className="m-0 font-jakarta font-bold text-[20px] text-white">{item.farmland_code}</h4>
-                        <span className="font-jakarta text-[12px] text-white/80 flex items-center gap-1">
+                        <h4 className="m-0 font-jakarta font-medium text-[14px] text-white">{item.farmland_code}</h4>
+                        <span className="font-jakarta text-[12px] text-white/80 flex items-center gap-1 mt-1">
                           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                           Verification Active
                         </span>
@@ -227,7 +227,7 @@ export default function VerificationTrendingCarousel() {
         </div>
 
         {/* Pagination arrows */}
-        <div className="flex gap-4 mt-8 justify-center">
+        <div className="flex gap-8 mt-8 justify-center">
           <button onClick={handlePrev} disabled={isAnimating} className="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-gray-500 hover:bg-gray-100 transition-colors">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
           </button>
@@ -296,7 +296,7 @@ export default function VerificationTrendingCarousel() {
                     >
                       <div className="flex justify-between items-end">
                         <div className="flex flex-col">
-                          <h4 className="m-0 font-jakarta font-bold text-[24px] text-white">{item.farmland_code}</h4>
+                          <h4 className="m-0 font-jakarta font-semibold text-[20px] text-white">{item.farmland_code}</h4>
                           <span className="font-jakarta text-[14px] text-white/80 flex items-center gap-1 mt-1">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                             Verification Active

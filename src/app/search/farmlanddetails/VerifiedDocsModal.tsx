@@ -131,6 +131,7 @@ export default function VerifiedDocsModal({ isOpen, onClose, farmlandId }: Verif
               display: "flex",
               gap: "32px",
               justifyContent: "space-between",
+              alignItems: "flex-start",
               marginTop: "64px",
               marginBottom: "32px",
               paddingLeft: "48px",
@@ -194,15 +195,16 @@ export default function VerifiedDocsModal({ isOpen, onClose, farmlandId }: Verif
 
             {/* Section - Center Pane */}
             <div style={{
-              width: "576px", // Adjusted to properly center, based on 1280 - 48*2 (padding) - 272*2 (sidebars) - 32*2 (gaps) = 576 roughly, layout in Figma is flexible or specific. The CSS says width 496px inside a 861px tall container with 40px padding, making total width 576px.
-              height: activeCategory ? "auto" : "861px",
+              width: "576px", 
+              height: "auto",
+              minHeight: "662px",
               background: "#FFFFFF",
               boxShadow: "0px 8px 30px rgba(0, 0, 0, 0.04)",
               borderRadius: "48px",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              padding: "40px 40px 24px 40px",
+              padding: "40px",
               boxSizing: "border-box",
               gap: "14px"
             }}>
@@ -235,7 +237,7 @@ export default function VerifiedDocsModal({ isOpen, onClose, farmlandId }: Verif
               </div>
 
               {/* List Background Container */}
-              <div className="hide-scroll" style={{ background: "#F3F4F5", borderRadius: "24px", width: "496px", padding: "8px", display: "flex", flexDirection: "column", gap: "8px", boxSizing: "border-box", overflowY: "auto", flexShrink: 0, minHeight: 0 }}>
+              <div className="hide-scroll" style={{ background: "#F3F4F5", borderRadius: "24px", width: "496px", padding: "8px", display: "flex", flexDirection: "column", gap: "8px", boxSizing: "border-box", flexShrink: 0 }}>
 
                 {(() => {
                   const renderSubItem = (doc: { label: string, size: string }, idx: number) => (
@@ -353,7 +355,7 @@ export default function VerifiedDocsModal({ isOpen, onClose, farmlandId }: Verif
                       const label = doc.description || doc.code || "Document";
                       const isUploaded = doc.uploaded;
                       const docUrl = doc.document_url || doc.versions?.[0]?.files?.[0]?.document_url;
-                      
+
                       return (
                         <div key={idx} style={{ width: "480px", minHeight: "96px", background: "#FFFFFF", borderRadius: "16px", display: "flex", alignItems: "center", padding: "16px 24px", boxSizing: "border-box", position: "relative" }}>
                           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
@@ -368,7 +370,7 @@ export default function VerifiedDocsModal({ isOpen, onClose, farmlandId }: Verif
                             </span>
                           </div>
 
-                          <button 
+                          <button
                             onClick={() => {
                               if (docUrl) window.open(docUrl, "_blank");
                             }}
@@ -396,8 +398,8 @@ export default function VerifiedDocsModal({ isOpen, onClose, farmlandId }: Verif
               </div>
 
               {/* CTA */}
-              <Link href="/book-site-visit" style={{ textDecoration: 'none', width: "100%", display: "flex", justifyContent: "center", marginTop: activeCategory ? "16px" : "auto" }}>
-                <button style={{ width: "400px", height: "57px", background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)", borderRadius: "9999px", border: "none", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 12px 24px -8px rgba(9, 20, 38, 0.4)", cursor: "pointer" }}>
+              <Link href="/book-site-visit" style={{ textDecoration: 'none', width: "100%", display: "flex", justifyContent: "center", marginTop: "auto" }}>
+                <button style={{ width: "100%", height: "57px", background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)", borderRadius: "9999px", border: "none", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 12px 24px -8px rgba(9, 20, 38, 0.4)", cursor: "pointer" }}>
                   <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "18px", color: "#FFFFFF", textTransform: "uppercase" }}>
                     Book Site Visit
                   </span>

@@ -59,7 +59,7 @@ export default function Footer() {
               <Image src={dot.img} alt="Dot" fill className="object-cover" />
             </motion.div>
           ))}
-          <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
+          <div className="absolute inset-0 flex flex-col items-center justify-center z-10 pointer-events-none">
             <h1 className="text-[clamp(44px,11.5vw,76px)] leading-[0.85] tracking-[-0.05em] font-semibold text-white text-center font-jakarta">
               <span className="block whitespace-nowrap">Green Land</span>
               <span className="block whitespace-nowrap">Capital</span>
@@ -170,7 +170,7 @@ export default function Footer() {
               </h1>
             </div>
 
-            <div className="w-[1312px] h-[151px] flex flex-row justify-between items-center z-10">
+            <div className="w-[1312px] h-[151px] flex flex-row justify-between items-center z-20 relative">
               <div className="flex flex-col gap-[40px] w-[129px] h-[151px]">
                 <div className="flex flex-col gap-4">
                   <div className="relative w-[127px] h-[55px]">
@@ -232,7 +232,7 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="w-[1312px] h-[80px] px-[48px] py-[32px] border-t border-white/10 flex flex-row justify-between items-center z-10">
+          <div className="w-[1312px] h-[80px] px-[48px] py-[32px] border-t border-white/10 flex flex-row justify-between items-center z-20 relative">
             <p className="text-white text-[12px] uppercase tracking-[1.2px] font-jakarta opacity-80 font-normal leading-[16px]">
               © 2024 GREEN LAND CAPITAL. ALL RIGHTS RESERVED.
             </p>

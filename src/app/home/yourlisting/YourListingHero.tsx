@@ -5,11 +5,11 @@ import { motion } from "framer-motion";
 export default function YourListingHero() {
   return (
     <div className="relative w-full h-screen min-h-[600px] flex flex-col justify-center items-center overflow-hidden">
-      {/* Background Image with Overlay */}
+      {/* Background Image */}
       <div
         className="absolute inset-0 z-0"
         style={{
-          background: "linear-gradient(0deg, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), url('/assets/trending-farmlands/Rectangle 4166 (22).svg') center/cover",
+          background: "url('/assets/trending-farmlands/Rectangle 4166 (22).svg') center/cover",
         }}
       />
 
@@ -19,7 +19,7 @@ export default function YourListingHero() {
           initial={{ opacity: 0, filter: "blur(8px)", y: 15 }}
           animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-center text-white whitespace-nowrap"
+          className="text-left text-white whitespace-nowrap w-full"
           style={{
             fontFamily: "'Plus Jakarta Sans', sans-serif",
             fontWeight: 800,
@@ -34,7 +34,7 @@ export default function YourListingHero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.2 }}
-          className="text-center text-white max-w-[1000px] w-full px-4"
+          className="text-left text-white max-w-[1000px] w-full"
           style={{
             fontFamily: "'Plus Jakarta Sans', sans-serif",
             fontWeight: 500,

@@ -234,8 +234,8 @@ export default function SupportChatScreen() {
             </div>
           </div>
 
-          {/* Dynamic Interactive Feed Panel with Scrollbar explicitly hidden via no-scrollbar class */}
-          <div className="p-6 sm:p-8 flex-grow flex flex-col gap-5 overflow-y-auto max-h-[500px] md:max-h-[580px] box-border no-scrollbar bg-white">
+          {/* Dynamic Interactive Feed Panel with Scrollbar */}
+          <div data-lenis-prevent className="p-6 sm:p-8 flex-grow flex flex-col gap-5 overflow-y-auto max-h-[500px] md:max-h-[580px] box-border overscroll-contain scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent bg-white">
             
             {/* Timestamp block separator */}
             <div className="w-full flex justify-center my-1">

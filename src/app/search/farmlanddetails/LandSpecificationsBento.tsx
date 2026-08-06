@@ -62,15 +62,27 @@ export default function LandSpecificationsBento({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: i * 0.08 }}
-            style={{ background: "#FFFFFF", boxShadow: "0px 1px 2px rgba(0,0,0,0.05)", borderRadius: "32px", padding: "20px", boxSizing: "border-box", display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "12px", minHeight: "130px" }}
+            style={{
+              background: item.label === "SOIL QUALITY" ? "url('/assets/compareassets/leaf.svg') center/cover no-repeat" : "#FFFFFF",
+              boxShadow: "0px 1px 2px rgba(0,0,0,0.05)",
+              borderRadius: "32px",
+              padding: "20px",
+              boxSizing: "border-box",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
+              gap: "12px",
+              minHeight: "130px",
+              color: item.label === "SOIL QUALITY" ? "#FFFFFF" : "inherit"
+            }}
             className="lg:rounded-[48px] lg:p-6"
           >
             <div style={{ width: "48px", height: "48px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
               {item.icon}
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 0, width: "100%" }}>
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1px", textTransform: "uppercase", color: "#45474C" }}>{item.label}</span>
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "18px", lineHeight: "28px", color: "#0F2F4C" }}>{item.value}</span>
+              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1px", textTransform: "uppercase", color: item.label === "SOIL QUALITY" ? "rgba(255,255,255,0.7)" : "#45474C" }}>{item.label}</span>
+              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "18px", lineHeight: "28px", color: item.label === "SOIL QUALITY" ? "#FFFFFF" : "#0F2F4C" }}>{item.value}</span>
             </div>
           </motion.div>
         ))}

@@ -90,6 +90,7 @@ export default function NotificationDropdown({ isOpen, onClose }: NotificationDr
   return (
     <div
       ref={ref}
+      onDoubleClick={onClose}
       style={{
         position: "absolute",
         top: "calc(100% + 15px)",

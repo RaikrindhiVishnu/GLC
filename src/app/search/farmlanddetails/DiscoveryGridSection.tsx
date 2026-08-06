@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 const regionalOpportunities = [
   {
     id: "match-1",
-    title: "Lush Orchard",
+    title: "GLC SOS 01",
     subtext: "Citrus Grove Estate",
     price: "₹5.2 Cr",
     area: "320 Acres",
@@ -16,7 +16,7 @@ const regionalOpportunities = [
   },
   {
     id: "match-2",
-    title: "Highland Plantation",
+    title: "GLC SOS 02",
     subtext: "Sprawling Terrain",
     price: "₹1.15 Cr",
     area: "200 Acres",
@@ -25,7 +25,7 @@ const regionalOpportunities = [
   },
   {
     id: "match-4",
-    title: "Emerald Plains",
+    title: "GLC SOS 04",
     subtext: "Fertile Field",
     price: "₹3.8 Cr",
     area: "150 Acres",
@@ -34,7 +34,7 @@ const regionalOpportunities = [
   },
   {
     id: "match-5",
-    title: "Golden Grove Tract",
+    title: "GLC SOS 05",
     subtext: "Premium Reserve",
     price: "₹6.2 Cr",
     area: "450 Acres",
@@ -57,6 +57,7 @@ export default function DiscoveryGridSection({ onOpenCompare }: DiscoveryGridSec
         maxWidth: "1280px",
         margin: "16px auto 0",
         padding: "0 24px",
+        paddingBottom: "80px",
         boxSizing: "border-box",
         display: "flex",
         flexDirection: "column",
@@ -164,43 +165,6 @@ export default function DiscoveryGridSection({ onOpenCompare }: DiscoveryGridSec
                   e.currentTarget.style.display = 'none';
                 }}
               />
-
-              {/* Top-Left Tag Pill */}
-              <div
-                style={{
-                  position: "absolute",
-                  top: "16px",
-                  left: "16px",
-                  background: "#D7EE44",
-                  borderRadius: "9999px",
-                  padding: "6px 12px",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "6px",
-                }}
-              >
-                {/* Tiny Dark Indicator Dot */}
-                <div
-                  style={{
-                    width: "8px",
-                    height: "8px",
-                    background: "#191E00",
-                    borderRadius: "9999px",
-                  }}
-                />
-                <span
-                  style={{
-                    fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    fontWeight: 700,
-                    fontSize: "10px",
-                    letterSpacing: "0.6px",
-                    textTransform: "uppercase",
-                    color: "#191E00",
-                  }}
-                >
-                  ACTIVE YIELD
-                </span>
-              </div>
             </div>
 
             {/* Title & Price Stack */}
@@ -300,7 +264,7 @@ export default function DiscoveryGridSection({ onOpenCompare }: DiscoveryGridSec
               <div style={{ width: "1px", height: "32px", background: "#E7E8E9" }} />
 
               {/* Right Column: Yield */}
-              <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "2px", alignItems: "flex-start", paddingLeft: "16px" }}>
+              <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "2px", alignItems: "flex-start", paddingLeft: "16px", textAlign: "left" }}>
                 <span
                   style={{
                     fontFamily: "'Plus Jakarta Sans', sans-serif",
@@ -309,6 +273,7 @@ export default function DiscoveryGridSection({ onOpenCompare }: DiscoveryGridSec
                     letterSpacing: "1px",
                     textTransform: "uppercase",
                     color: "#75777D",
+                    textAlign: "left",
                   }}
                 >
                   YIELD
@@ -319,6 +284,7 @@ export default function DiscoveryGridSection({ onOpenCompare }: DiscoveryGridSec
                     fontWeight: 600,
                     fontSize: "14px",
                     color: "#191C1D",
+                    textAlign: "left",
                   }}
                 >
                   {item.yield}
@@ -335,16 +301,16 @@ export default function DiscoveryGridSection({ onOpenCompare }: DiscoveryGridSec
                 style={{
                   width: "100%",
                   height: "48px",
-                  background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)",
+                  background: "#FFFFFF",
                   borderRadius: "30px",
-                  border: "none",
-                  color: "#FFFFFF",
+                  border: "1px solid #2780C4",
+                  color: "#2780C4",
                   fontFamily: "'Plus Jakarta Sans', sans-serif",
                   fontWeight: 700,
                   fontSize: "14px",
                   cursor: "pointer",
                   letterSpacing: "0.35px",
-                  boxShadow: "0px 4px 10px rgba(39, 128, 196, 0.2)",
+                  boxShadow: "0px 4px 10px rgba(39, 128, 196, 0.1)",
                 }}
               >
                 Compare

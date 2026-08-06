@@ -308,6 +308,8 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
               setStateSearch("");
               setCitySearch("");
               setMandalSearch("");
+              setPriceRange([10000000, 150000000]);
+              setSizeRange([10, 45]);
               setFilters({
                 state_id: [],
                 district_id: [],

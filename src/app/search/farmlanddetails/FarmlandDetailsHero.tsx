@@ -11,9 +11,11 @@ interface FarmlandDetailsHeroProps {
   tags: string[];
   heroBg: string;
   isLoading?: boolean;
+  priceStr?: string;
+  acreage?: string;
 }
 
-export default function FarmlandDetailsHero({ title, locationSubtitle, tags, heroBg, isLoading }: FarmlandDetailsHeroProps) {
+export default function FarmlandDetailsHero({ title, locationSubtitle, tags, heroBg, isLoading, priceStr, acreage }: FarmlandDetailsHeroProps) {
   const primaryTag = tags && tags.length > 0 ? tags[0] : "ACTIVE YIELD";
   const [resolvedImageUrl, setResolvedImageUrl] = useState<string | null>(null);
   const [isResolving, setIsResolving] = useState<boolean>(true);
@@ -133,6 +135,29 @@ export default function FarmlandDetailsHero({ title, locationSubtitle, tags, her
               {locationSubtitle}
             </span>
           </motion.div>
+
+          {/* Farmland Details row (Price & Acreage) */}
+          {(priceStr || acreage) && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.65 }}
+              style={{ display: "flex", alignItems: "center", gap: "24px", marginTop: "16px" }}
+            >
+              {acreage && (
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "18px", color: "rgba(255,255,255,0.8)", textTransform: "uppercase", letterSpacing: "1px" }}>Total Area:</span>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "20px", color: "#FFFFFF" }}>{acreage}</span>
+                </div>
+              )}
+              {priceStr && (
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "18px", color: "rgba(255,255,255,0.8)", textTransform: "uppercase", letterSpacing: "1px" }}>Value:</span>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "20px", color: "#FFFFFF" }}>{priceStr}</span>
+                </div>
+              )}
+            </motion.div>
+          )}
 
         </div>
       </div>

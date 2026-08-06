@@ -163,8 +163,8 @@ function MaintenanceServicesCatalogInner() {
                   <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start" }}>
                     <img src={svc.iconSrc} alt={svc.title} width={48} height={48} style={{ flexShrink: 0 }} />
                     {svc.tag && (
-                      <div style={{ background: svc.tag.bg, borderRadius: "9999px", padding: "4px 12px", display: "flex", justifyContent: "center", alignItems: "center" }}>
-                        <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", color: svc.tag.color, letterSpacing: "0.5px", textTransform: "uppercase", textAlign: "center" }}>
+                      <div style={{ background: svc.tag.bg, borderRadius: "100px", padding: "6px 12px", display: "flex", justifyContent: "center", alignItems: "center", textAlign: "center" }}>
+                        <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1px", textTransform: "uppercase", color: svc.tag.color, textAlign: "center" }}>
                           {svc.tag.label}
                         </span>
                       </div>
@@ -288,17 +288,21 @@ function MaintenanceServicesCatalogInner() {
               </button>
 
               <div style={{ boxSizing: "border-box", display: "flex", flexDirection: "row", alignItems: "flex-start", padding: "16px", gap: "12px", width: "100%", background: "#F3F4F5", borderRadius: "48px" }}>
-                <div style={{ width: "12px", height: "12px", background: "#75777D", borderRadius: "6px", flexShrink: 0, marginTop: "4px" }} />
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#75777D" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: "2px" }}>
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
                 <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "12px", lineHeight: "20px", color: "#45474C" }}>
                   Our architecture team will review your selection and generate a detailed cost sheet within 48 hours.
                 </span>
               </div>
               
-              <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "4px", gap: "8px", cursor: "pointer" }}>
-                <svg width="12" height="11" viewBox="0 0 12 11" fill="none" stroke="#2780C4" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M6 10v-4M4 6H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-2"></path>
-                </svg>
-                <span style={{ color: "#2780C4", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px" }}>Speak to a Development Architect</span>
+              <div style={{ display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", padding: "0px", gap: "7.99px", width: "100%", height: "20px", marginTop: "12px", marginBottom: "8px", cursor: "pointer" }}>
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", padding: "0px", width: "11.67px", height: "10.5px" }}>
+                  <img src="/assets/maintenance/Icon (31).svg" alt="Architect" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+                </div>
+                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", lineHeight: "20px", display: "flex", alignItems: "center", textAlign: "center", color: "#2780C4" }}>Speak to a Development Architect</span>
               </div>
             </div>
 

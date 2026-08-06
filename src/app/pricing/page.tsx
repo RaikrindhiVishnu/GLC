@@ -42,6 +42,15 @@ export default function PricingScreen() {
       {/* ─── SECTION 3: THE GLC VERIFICATION STANDARD ─── */}
       <VerificationStandardsSection />
 
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", margin: "40px 0" }}>
+        <button
+          onClick={() => window.location.href = "/profile/managesubscriptions"}
+          style={{ padding: "16px 32px", background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)", borderRadius: "9999px", border: "none", cursor: "pointer", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#FFFFFF", boxShadow: "0px 10px 15px -3px rgba(39, 128, 196, 0.2)" }}
+        >
+          Manage Subscription
+        </button>
+      </div>
+
       {/* ─── SECTION 4: TRANSFORMING LAND INTO LEGACY GALLERY ─── */}
       <TransformingLegacyGallery />
 

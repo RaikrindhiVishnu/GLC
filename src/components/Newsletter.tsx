@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 export default function Newsletter() {
   return (
-    <section className="relative w-full bg-transparent py-16 md:py-24 lg:py-32 overflow-hidden">
+    <section className="relative w-full bg-transparent py-8 md:py-12 lg:py-16 overflow-hidden">
 
       <div className="w-full px-4 md:px-[60px]">
 
@@ -21,9 +21,9 @@ export default function Newsletter() {
             duration: 1,
           }}
           viewport={{ once: true }}
-          className="flex flex-col items-center justify-center rounded-[32px] md:rounded-[40px] lg:rounded-[48px] bg-[#091426] px-5 md:px-10 lg:px-24 py-8 md:py-10 lg:py-12 border border-[rgba(105,182,254,0.1)] text-center gap-4 shadow-2xl"
+          className="flex flex-col items-center justify-center rounded-[32px] md:rounded-[40px] lg:rounded-[48px] bg-[#091426] px-5 md:px-10 lg:px-24 py-6 md:py-8 lg:py-8 border border-[rgba(105,182,254,0.1)] text-center gap-4 shadow-2xl"
           style={{
-            minHeight: "310px",
+            minHeight: "240px",
           }}
         >
 

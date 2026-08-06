@@ -117,7 +117,7 @@ export default function CompareAssets() {
       }
     }
     if (pairs.length > 0) {
-      displayData = pairs;
+      displayData = pairs.slice(0, 2);
     }
   }
 

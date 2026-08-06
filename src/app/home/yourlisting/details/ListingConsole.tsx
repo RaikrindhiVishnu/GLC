@@ -18,7 +18,9 @@ export default function ListingConsole() {
   );
   
   const farmlandData = farmlandResponse?.data;
-  const isUnlisted = farmlandData ? farmlandData.for_sale === 0 : false;
+  const initialUnlisted = farmlandData ? farmlandData.for_sale === 0 : false;
+  const [localUnlisted, setLocalUnlisted] = useState<boolean | null>(null);
+  const isUnlisted = localUnlisted !== null ? localUnlisted : initialUnlisted;
 
   return (
     <>
@@ -218,6 +220,7 @@ export default function ListingConsole() {
                 <div 
                   className="relative w-[68.5px] h-[39px] rounded-full flex items-center cursor-pointer transition-colors"
                   style={{ background: isUnlisted ? "#2780C4" : "#E1E3E4" }}
+                  onClick={() => setLocalUnlisted(!isUnlisted)}
                 >
                   <div 
                     className="absolute w-[29px] h-[29px] rounded-full bg-white transition-transform"

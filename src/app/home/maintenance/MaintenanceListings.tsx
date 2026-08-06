@@ -46,9 +46,6 @@ export default function MaintenanceListings() {
         {isImageTop && (
           <div className="relative w-full bg-gray-100 flex-shrink-0" style={{ height: imageHeight }}>
             <Image src={land.image} alt={land.name} fill style={{ objectFit: "cover" }} />
-            <div className="absolute top-6 left-6 bg-white/90 backdrop-blur-sm px-4 py-1.5 rounded-full border border-white/30 shadow-sm">
-              <span className="font-jakarta font-bold text-[10px] tracking-[0.2px] text-[#0F2F4C]">{land.status}</span>
-            </div>
           </div>
         )}
 
@@ -87,9 +84,6 @@ export default function MaintenanceListings() {
         {!isImageTop && (
           <div className="relative w-full bg-gray-100 flex-shrink-0 mt-auto" style={{ height: imageHeight }}>
             <Image src={land.image} alt={land.name} fill style={{ objectFit: "cover" }} />
-            <div className="absolute top-6 left-6 bg-white/90 backdrop-blur-sm px-4 py-1.5 rounded-full border border-white/30 shadow-sm">
-              <span className="font-jakarta font-bold text-[10px] tracking-[0.2px] text-[#0F2F4C]">{land.status}</span>
-            </div>
           </div>
         )}
       </motion.div>

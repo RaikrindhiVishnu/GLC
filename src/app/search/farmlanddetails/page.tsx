@@ -256,6 +256,8 @@ function InnerFarmlandDetailsView() {
         tags={tags}
         heroBg={heroBg}
         isLoading={isFacilitiesLoading || isFarmlandLoading}
+        priceStr={priceStr}
+        acreage={acreage}
       />
 
       {/* ─── 2. MASTER BODY LAYOUT ─── */}

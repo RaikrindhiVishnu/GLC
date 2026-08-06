@@ -148,7 +148,7 @@ export default function VisitConfirmedModal({ isOpen, onClose }: VisitConfirmedM
                 </svg>
                 <span style={{ fontFamily: "'Plus Jakarta Sans'", fontWeight: 600, fontSize: "16px", color: "#002045" }}>Contact Support</span>
                 <div className="ml-auto">
-                  <svg width="14" height="20" viewBox="0 0 24 24" fill="none" stroke="#74777F" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#74777F" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
                 </div>
               </div>
             </div>
@@ -173,7 +173,7 @@ export default function VisitConfirmedModal({ isOpen, onClose }: VisitConfirmedM
                   <span style={{ fontFamily: "'Plus Jakarta Sans'", fontWeight: 400, fontSize: "16px", color: "#74777F" }}>Coordinates activate 24h prior</span>
                 </div>
               </div>
-              <svg width="14" height="20" viewBox="0 0 24 24" fill="none" stroke="#74777F" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#74777F" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
             </div>
             
             {/* Bottom Actions */}

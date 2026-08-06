@@ -28,9 +28,9 @@ export default function ManageSubscriptionsPage() {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="w-full lg:w-76 shrink-0 flex flex-col"
+            className="w-full lg:w-[320px] shrink-0 flex flex-col"
           >
-            <div className="w-full bg-white shadow-sm border border-slate-100 rounded-[48px] p-8 flex flex-col items-center justify-between box-border min-h-[580px] lg:h-[840px]">
+            <div className="w-full bg-white shadow-sm border border-slate-100 rounded-[48px] p-8 flex flex-col items-center justify-between box-border min-h-[520px] lg:h-[720px]">
               
               {/* Header Title Row */}
               <div className="w-full flex items-center justify-between">
@@ -49,6 +49,12 @@ export default function ManageSubscriptionsPage() {
                 <div className="relative w-44 h-44 sm:w-48 sm:h-48 flex items-center justify-center">
                   {/* Base track arc */}
                   <svg className="w-full h-full transform -rotate-90" viewBox="0 0 192 192">
+                    <defs>
+                      <linearGradient id="pieGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#2780C4" />
+                        <stop offset="100%" stopColor="#164573" />
+                      </linearGradient>
+                    </defs>
                     <circle
                       cx="96"
                       cy="96"
@@ -63,7 +69,7 @@ export default function ManageSubscriptionsPage() {
                       cy="96"
                       r="80"
                       fill="none"
-                      stroke="#0F2F4C"
+                      stroke="url(#pieGradient)"
                       strokeWidth="14"
                       strokeDasharray="502"
                       strokeDashoffset="0"
@@ -270,9 +276,9 @@ export default function ManageSubscriptionsPage() {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
             viewport={{ once: true }}
-            className="w-full lg:w-101.25 shrink-0 flex flex-col"
+            className="w-full lg:w-[320px] shrink-0 flex flex-col"
           >
-            <div className="w-full bg-[#091426] shadow-2xl rounded-[48px] p-8 sm:p-10 flex flex-col justify-between box-border relative overflow-hidden min-h-[580px] lg:h-[840px]">
+            <div className="w-full bg-[#091426] shadow-2xl rounded-[48px] p-8 sm:p-10 flex flex-col justify-between box-border relative overflow-hidden min-h-[520px] lg:h-[720px]">
               
               {/* Internal Ambient Abstract Glow Node Overlay */}
               <div className="absolute -top-24 -right-24 w-64 h-64 bg-[#2780C4] opacity-15 blur-[50px] rounded-full pointer-events-none z-0" />

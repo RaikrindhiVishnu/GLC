@@ -70,61 +70,25 @@ export default function UnlockedDocsGrid() {
             viewport={{ once: true }}
             className="flex flex-col gap-2"
           >
-            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", letterSpacing: "1.2px", textTransform: "uppercase", color: "#004A78" }}>
-              PREMIUM ASSET DISCOVERY
-            </span>
             <h2 style={{ margin: 0, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "clamp(32px, 8vw, 48px)", letterSpacing: "-2px", color: "#0F2F4C", lineHeight: 1.1 }}>
               Intelligence Vault
             </h2>
-            <div style={{ display: "inline-flex", alignItems: "center", gap: "12px", background: "#0F2F4C", borderRadius: "9999px", padding: "10px 20px", marginTop: "4px", alignSelf: "flex-start", boxShadow: "0px 10px 15px -3px rgba(9,20,38,0.1)" }}>
-              <svg width="12" height="16" viewBox="0 0 24 24" fill="none" stroke="#2780C4" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-              </svg>
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "13px", color: "#FFFFFF", whiteSpace: "nowrap" }}>3 Premium Unlocks Remaining</span>
-              <div style={{ width: "1px", height: "14px", background: "rgba(255,255,255,0.2)" }} />
-              <span onClick={() => router.push("/pricing")} style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "13px", color: "#CFE5FF", cursor: "pointer" }}>
-                Get More Credits
-              </span>
-            </div>
-          </motion.div>
-
-          {/* Search + Filters */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            viewport={{ once: true }}
-            className="flex flex-col gap-3"
-          >
-
-
-            {/* Filter tabs */}
-            <div style={{ display: "flex", flexDirection: "row", gap: "8px", overflowX: "auto", paddingBottom: "4px", WebkitOverflowScrolling: "touch" as any, scrollbarWidth: "none" as any }}>
-              {filterTabs.map((tab) => {
-                const isActive = activeFilter === tab;
-                return (
-                  <button
-                    key={tab}
-                    onClick={() => setActiveFilter(tab)}
-                    style={{ flexShrink: 0, padding: "10px 20px", height: "40px", background: isActive ? "#0F2F4C" : "#E7E8E9", borderRadius: "9999px", border: "none", cursor: "pointer", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "13px", color: isActive ? "#FFFFFF" : "#45474C", whiteSpace: "nowrap" }}
-                  >
-                    {tab}
-                  </button>
-                );
-              })}
-              <button
-                onClick={() => router.push("/home/unlockeddocuments")}
-                style={{ flexShrink: 0, width: "40px", height: "40px", background: "#F3F4F5", borderRadius: "9999px", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#191C1D" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="4" y1="21" x2="4" y2="14" /><line x1="4" y1="10" x2="4" y2="3" />
-                  <line x1="12" y1="21" x2="12" y2="12" /><line x1="12" y1="8" x2="12" y2="3" />
-                  <line x1="20" y1="21" x2="20" y2="16" /><line x1="20" y1="12" x2="20" y2="3" />
-                  <line x1="1" y1="14" x2="7" y2="14" /><line x1="9" y1="8" x2="15" y2="8" />
-                  <line x1="17" y1="16" x2="23" y2="16" />
+            <div style={{ display: "inline-flex", flexDirection: "column", gap: "12px", background: "#0F2F4C", borderRadius: "24px", padding: "16px", marginTop: "8px", alignSelf: "flex-start", boxShadow: "0px 10px 15px -3px rgba(9,20,38,0.1)" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", color: "#FFFFFF", whiteSpace: "nowrap" }}>All Unlocks</span>
+                <div style={{ width: "1px", height: "16px", background: "rgba(255,255,255,0.2)" }} />
+                <span onClick={() => router.push("/pricing")} style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", color: "#CFE5FF", cursor: "pointer" }}>
+                  Get More Credits
+                </span>
+              </div>
+              <div style={{ height: "1px", width: "100%", background: "rgba(255,255,255,0.1)" }} />
+              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                <svg width="12" height="16" viewBox="0 0 24 24" fill="none" stroke="#2780C4" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                 </svg>
-              </button>
+                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "13px", color: "#FFFFFF" }}>3 Premium Unlocks Remaining</span>
+              </div>
             </div>
           </motion.div>
 
@@ -325,50 +289,32 @@ export default function UnlockedDocsGrid() {
               <section style={{ boxSizing: "border-box", display: "flex", flexDirection: "column", alignItems: "flex-start", padding: "128px 32px 96px", gap: "48px", width: "1280px" }}>
 
                 {/* Header & Credit Hub */}
-                <div style={{ boxSizing: "border-box", display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end", padding: "0px", width: "1216px", height: "84.5px" }}>
-                  <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", padding: "0px", gap: "8.5px", width: "357px", height: "84.5px" }}>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", lineHeight: "16px", letterSpacing: "1.2px", textTransform: "uppercase", color: "#004A78" }}>
-                      PREMIUM ASSET DISCOVERY
-                    </span>
-                    <h2 style={{ margin: 0, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "48px", lineHeight: "60px", letterSpacing: "-3px", color: "#0F2F4C" }}>
+                <div style={{ boxSizing: "border-box", display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end", padding: "0px", width: "1216px" }}>
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", padding: "0px", gap: "8.5px" }}>
+                    <h2 style={{ margin: 0, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "48px", lineHeight: "60px", letterSpacing: "-3px", color: "#0F2F4C", whiteSpace: "nowrap" }}>
                       Intelligence Vault
                     </h2>
                   </div>
-                  <div style={{ boxSizing: "border-box", display: "flex", flexDirection: "row", alignItems: "center", padding: "12px 24px", gap: "16px", isolation: "isolate", width: "418.66px", height: "44px", background: "#0F2F4C", borderRadius: "9999px", position: "relative" }}>
+                  <div style={{ boxSizing: "border-box", display: "flex", flexDirection: "row", alignItems: "center", padding: "12px 24px", gap: "16px", isolation: "isolate", width: "max-content", height: "44px", background: "#0F2F4C", borderRadius: "9999px", position: "relative" }}>
                     <div style={{ position: "absolute", inset: 0, background: "rgba(255,255,255,0.002)", boxShadow: "0px 10px 15px -3px rgba(9,20,38,0.1), 0px 4px 6px -4px rgba(9,20,38,0.1)", borderRadius: "9999px", zIndex: 0 }} />
+                    
+                    <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "8px", height: "20px", zIndex: 1 }}>
+                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", lineHeight: "20px", color: "#FFFFFF", whiteSpace: "nowrap" }}>All Unlocks</span>
+                    </div>
+
+                    <div style={{ width: "1px", height: "16px", background: "rgba(255,255,255,0.2)", zIndex: 2 }} />
+
                     <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "8px", height: "20px", zIndex: 1 }}>
                       <svg width="12" height="15.75" viewBox="0 0 24 24" fill="none" stroke="#2780C4" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                         <rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
                       </svg>
                       <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "14px", lineHeight: "20px", color: "#FFFFFF", whiteSpace: "nowrap" }}>3 Premium Unlocks Remaining</span>
                     </div>
+
                     <div style={{ width: "1px", height: "16px", background: "rgba(255,255,255,0.2)", zIndex: 2 }} />
                     <div onClick={() => router.push("/pricing")} style={{ cursor: "pointer", zIndex: 3 }}>
                       <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", lineHeight: "20px", color: "#CFE5FF" }}>Get More Credits</span>
                     </div>
-                  </div>
-                </div>
-
-                {/* Search & Filters */}
-                <div style={{ boxSizing: "border-box", display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-end", padding: "16px", gap: "24px", width: "1216px", height: "84px", background: "#FFFFFF", boxShadow: "0px 1px 2px rgba(0,0,0,0.05)", borderRadius: "32px" }}>
-                  <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "12px", height: "44px" }}>
-                    {filterTabs.map((tab) => {
-                      const isActive = activeFilter === tab;
-                      return (
-                        <button key={tab} onClick={() => setActiveFilter(tab)} style={{ boxSizing: "border-box", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", padding: "12px 24px", height: "44px", background: isActive ? "#0F2F4C" : "#E7E8E9", borderRadius: "32px", border: "none", cursor: "pointer" }}>
-                          <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "14px", color: isActive ? "#FFFFFF" : "#45474C", whiteSpace: "nowrap" }}>{tab}</span>
-                        </button>
-                      );
-                    })}
-                    <button onClick={() => router.push("/home/unlockeddocuments")} style={{ boxSizing: "border-box", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", padding: "12px", width: "42px", height: "42px", background: "#F3F4F5", borderRadius: "9999px", border: "none", cursor: "pointer" }}>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#191C1D" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <line x1="4" y1="21" x2="4" y2="14" /><line x1="4" y1="10" x2="4" y2="3" />
-                        <line x1="12" y1="21" x2="12" y2="12" /><line x1="12" y1="8" x2="12" y2="3" />
-                        <line x1="20" y1="21" x2="20" y2="16" /><line x1="20" y1="12" x2="20" y2="3" />
-                        <line x1="1" y1="14" x2="7" y2="14" /><line x1="9" y1="8" x2="15" y2="8" />
-                        <line x1="17" y1="16" x2="23" y2="16" />
-                      </svg>
-                    </button>
                   </div>
                 </div>
 

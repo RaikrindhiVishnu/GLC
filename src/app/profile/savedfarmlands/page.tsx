@@ -135,7 +135,7 @@ export default function SavedFarmlandsPage() {
       {/* ─── SAVED FARMLANDS CORE GALLERY STAGE ─── */}
       <section className="w-full max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 mt-16 md:mt-24 flex flex-col gap-8 md:gap-[32px] z-10">
         {/* Section Header Row */}
-        <div className="w-full flex flex-row items-center justify-between border-b border-gray-200/60 pb-4">
+        <div className="w-full flex flex-row items-center justify-between pb-4">
           <h2 className="text-xl sm:text-2xl md:text-[24px] font-bold text-[#131600] font-jakarta tracking-tight">
             Saved Farmlands
           </h2>
@@ -219,7 +219,7 @@ export default function SavedFarmlandsPage() {
                 </div>
 
                 {/* Card Control Footer containing absolute monetary asset value & detail action triggers */}
-                <div className="flex flex-row items-center justify-between pt-4 border-t border-gray-100 mt-2">
+                <div className="flex flex-row items-center justify-between pt-4 mt-2">
                   <span className="text-lg sm:text-[20px] font-bold text-[#091426] font-jakarta">
                     {item.price}
                   </span>

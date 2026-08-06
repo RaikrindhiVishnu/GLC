@@ -35,6 +35,7 @@ export default function SupportCenterHero() {
             alt="Green Land Capital Brand Logo"
             width={150}
             height={64}
+            priority={true}
             className="w-27.5 md:w-37.5 h-auto object-contain"
           />
         </div>
@@ -92,20 +93,7 @@ export default function SupportCenterHero() {
             title="Notifications Platform"
           >
             <Image src="/assets/home/HeroScreen/notification-v2.svg" alt="Notifications bell" width={24} height={24} className="w-4 h-4 md:w-6.5 md:h-6.5" />
-            
           </button>
-
-          <div
-            onClick={() => router.push("/profile")}
-            className="w-9 h-9 md:w-13 md:h-13 rounded-full border-2 border-white/80 overflow-hidden cursor-pointer shadow-sm shrink-0 transition-transform hover:scale-105"
-            title="Active Session Account"
-          >
-            <img
-              src="/assets/stats/person1.1.svg"
-              alt="Account Hub Avatar"
-              className="w-full h-full object-cover object-center"
-            />
-          </div>
         </div>
       </div>
 

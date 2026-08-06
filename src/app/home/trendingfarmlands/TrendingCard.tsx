@@ -98,13 +98,6 @@ export default function TrendingCard({
           </>
         )}
 
-        {/* Tag on Image */}
-        <div className={`absolute left-8 ${reverseLayout ? 'bottom-8' : 'top-8'} bg-[#E7E8E9] rounded-full px-4 py-1.5 w-fit z-10`}>
-          <span className="font-jakarta font-bold text-[10px] leading-[15px] uppercase text-[#45474C]">
-            {tagText}
-          </span>
-        </div>
-
         {/* Action Button */}
         {!hideSaveIcon && (
           <button
@@ -119,9 +112,14 @@ export default function TrendingCard({
       </div>
 
       {/* Bottom Content Section */}
-      <div className="p-8 flex flex-col gap-4">
+      <div className="p-8 flex flex-col items-center text-center gap-4">
 
-        {/* Tag used to be here, moved to image overlay */}
+        {/* Tag Pill */}
+        <div className="bg-[#E7E8E9] rounded-full px-4 py-1.5 w-fit">
+          <span className="font-jakarta font-bold text-[10px] leading-[15px] uppercase text-[#45474C]">
+            {tagText}
+          </span>
+        </div>
 
         {/* Title */}
         <h3 className="font-jakarta font-bold text-[24px] leading-[32px] text-[#131600]">
@@ -134,12 +132,12 @@ export default function TrendingCard({
         </p>
 
         {/* Footer row */}
-        <div className="flex flex-row justify-between items-end mt-4">
-          <div className="flex flex-col gap-[3.5px]">
+        <div className="flex flex-col items-center justify-center w-full mt-4 gap-4">
+          <div className="flex flex-col items-center gap-[3.5px]">
             <span className="font-jakarta font-bold text-[18px] leading-[28px] text-[#111827]">
               {price}
             </span>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center justify-center gap-1">
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                 <path d="M6 0C3.79086 0 2 1.79086 2 4C2 7 6 12 6 12C6 12 10 7 10 4C10 1.79086 8.20914 0 6 0ZM6 5.5C5.17157 5.5 4.5 4.82843 4.5 4C4.5 3.17157 5.17157 2.5 6 2.5C6.82843 2.5 7.5 3.17157 7.5 4C7.5 4.82843 6.82843 5.5 6 5.5Z" fill="#6B7280" />
               </svg>

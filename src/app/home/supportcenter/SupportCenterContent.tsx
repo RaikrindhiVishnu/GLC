@@ -10,16 +10,16 @@ export default function SupportCenterContent() {
     <section className="box-border w-full flex flex-col items-center relative bg-[#F8F9FA] pb-20 md:pb-[120px]">
       {/* Responsive Content Container */}
       <div className="relative w-full max-w-[1152px] mx-auto px-4 sm:px-6 md:px-8 mt-8 md:mt-[100px] flex flex-col lg:flex-row gap-8 justify-between items-stretch">
-        
+
         {/* 1. Left Column - Human Concierge Card */}
         <motion.div
           initial={{ opacity: 0, x: -30 }}
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="w-full lg:w-[757.33px] shrink-0 flex flex-col justify-between box-border bg-white border border-[#C5C6CD]/20 rounded-4xl md:rounded-[48px] p-6 sm:p-8 md:p-12 shadow-[0_20px_40px_-15px_rgba(9,20,38,0.05)] z-10"
+          className="relative w-full lg:w-[757.33px] shrink-0 flex flex-col justify-between box-border bg-white border border-[#C5C6CD]/20 rounded-4xl md:rounded-[48px] p-6 sm:p-8 md:p-12 shadow-[0_20px_40px_-15px_rgba(9,20,38,0.05)] z-10"
         >
-          
+
           {/* Top Header shell */}
           <div className="flex flex-col items-start gap-2 w-full">
             <h2 className="m-0 font-extrabold text-2xl sm:text-3xl md:text-[36px] leading-tight md:leading-[40px] tracking-tight md:tracking-[-0.9px] text-[#091426]">
@@ -69,12 +69,12 @@ export default function SupportCenterContent() {
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
           viewport={{ once: true }}
-          className="w-full lg:w-[362.67px] shrink-0 flex flex-col gap-8 justify-start"
+          className="relative w-full lg:w-[362.67px] shrink-0 flex flex-col gap-8 justify-start"
         >
-          
+
           {/* Module A: Active Tracker Component */}
           <div className="box-border flex flex-col justify-between p-6 sm:p-8 w-full min-h-[228px] bg-white border border-[#C5C6CD]/20 rounded-[32px] md:rounded-[48px] shadow-[0_20px_40px_-15px_rgba(9,20,38,0.05)] relative">
-            
+
             {/* Top Header Row */}
             <div className="flex flex-row justify-between items-start w-full gap-2">
               <div className="flex flex-col gap-1">
@@ -135,7 +135,7 @@ export default function SupportCenterContent() {
 
           {/* Module B: AI Intelligence Component */}
           <div className="box-border flex flex-col justify-between p-6 sm:p-8 w-full min-h-[442px] bg-white border border-[#C5C6CD]/20 rounded-[32px] md:rounded-[48px] shadow-[0_20px_40px_-15px_rgba(9,20,38,0.05)] relative">
-            
+
             {/* Header block row */}
             <div className="flex flex-row items-center gap-4 w-full">
               {/* Sparkling AI gradient icon platform */}
@@ -166,7 +166,7 @@ export default function SupportCenterContent() {
             {/* Dynamic list button shortcuts matrix */}
             <div className="flex flex-col gap-2 w-full mt-auto">
               <button
-                onClick={() => router.push("/home/supportcenter/supportchat")}
+                onClick={() => router.push("/book-site-visit")}
                 className="box-border flex flex-row justify-between items-center px-4 py-3 sm:py-3.5 w-full bg-white border border-[#E7E8E9] rounded-xl sm:rounded-2xl cursor-pointer transition-colors hover:border-[#2780C4] hover:bg-[#FAFAFA]"
               >
                 <span className="font-bold text-xs sm:text-sm text-[#091426]">
