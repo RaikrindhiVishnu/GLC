@@ -16,6 +16,7 @@ export interface VerificationLand {
   farmland_img?: string;
   is_active: number;
   is_glc_exclusive: number;
+  is_farmland_verified?: number;
   created_on: string;
   updated_on: string;
   farmland_location?: {
