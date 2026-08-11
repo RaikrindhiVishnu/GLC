@@ -44,7 +44,7 @@ export default function OnboardForm() {
     ? allMandals.filter((m: any[]) => m[1] === Number(formData.district) || m[2] === Number(formData.district))
     : [];
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     if (errors[name]) {
@@ -97,8 +97,8 @@ export default function OnboardForm() {
       milestone_status_id: 1,
       acers: Number(formData.acers) || 1,
       price: Number(formData.price) || 0,
-      per_acer_value: (Number(formData.price) || 0) / (Number(formData.acers) || 1),
-      per_acre_value: (Number(formData.price) || 0) / (Number(formData.acers) || 1),
+      per_acer_value: 100000,
+      per_acre_value: 100000,
       polygon: formData.polygon && Array.isArray(formData.polygon) && formData.polygon.length > 0 
         ? ["polygon", ...formData.polygon.flatMap((p: any) => [p.lat.toString(), p.lng.toString()])] 
         : undefined,
