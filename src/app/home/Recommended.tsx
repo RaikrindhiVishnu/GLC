@@ -142,7 +142,7 @@ export default function Recommended() {
               transition={{ duration: 0.6, delay: i * 0.1 }}
               viewport={{ once: true }}
               onClick={(e: React.MouseEvent) => handleCardClick(e, String(item.farmland_id))}
-              className="flex flex-col w-[300px] sm:w-[362px] h-[367px] shrink-0 bg-white rounded-[29px] overflow-hidden cursor-pointer group pointer-events-auto"
+              className="flex flex-col w-[300px] sm:w-[362px] min-h-[367px] h-auto shrink-0 bg-white rounded-[29px] overflow-hidden cursor-pointer group pointer-events-auto"
               style={{
                 boxShadow: "0px 7.32697px 9.15871px -5.49523px rgba(0, 0, 0, 0.1)"
               }}
@@ -167,7 +167,7 @@ export default function Recommended() {
               </div>
 
               {/* Bottom Content Area */}
-              <div className="flex flex-col pt-[17px] pl-[16px] pr-[16px] pb-[20px] h-[132.54px] pointer-events-none">
+              <div className="flex flex-col pt-[17px] pl-[16px] pr-[16px] pb-[20px] min-h-[132.54px] h-auto pointer-events-none">
                 <h3 className="m-0 font-jakarta font-extrabold text-[24px] leading-[28px] text-[#001F3F]">
                   {item.farmland_code}
                 </h3>

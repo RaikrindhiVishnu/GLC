@@ -201,10 +201,10 @@ export default function PopularFarmlands() {
             transition={{ duration: 0.6, delay: i * 0.1 }}
             viewport={{ once: true }}
             onClick={(e) => handleCardClick(e, land.id)}
-            className="flex flex-col lg:flex-row w-[290px] sm:w-[500px] lg:w-[600.23px] h-auto lg:h-[260.43px] shrink-0 bg-white border border-[#EDEEEF]/60 rounded-[32px] lg:rounded-[39.94px] overflow-hidden cursor-pointer box-border group pointer-events-auto"
+            className="flex flex-col lg:flex-row w-[290px] sm:w-[500px] lg:w-[600.23px] h-auto lg:min-h-[260.43px] shrink-0 bg-white border border-[#EDEEEF]/60 rounded-[32px] lg:rounded-[39.94px] overflow-hidden cursor-pointer box-border group pointer-events-auto"
           >
             {/* Left Side: Image (45%) */}
-            <div className="relative w-full h-[180px] lg:w-[266.58px] lg:h-[260.43px] shrink-0 overflow-hidden pointer-events-none">
+            <div className="relative w-full h-[180px] lg:w-[266.58px] lg:h-auto lg:min-h-[260.43px] shrink-0 overflow-hidden pointer-events-none">
               {/* Image Overlay Gradient */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent z-10" />
 

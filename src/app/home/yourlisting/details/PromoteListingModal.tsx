@@ -249,7 +249,7 @@ export default function PromoteListingModal({ isOpen, onClose, farmlandId }: Pro
                 <div className="flex flex-col items-center w-full gap-[32px]">
                   
                   <div className="flex flex-row justify-center items-center gap-[22px] w-full">
-                    {/* CANCLE Button */}
+                    {/* CANCEL Button */}
                     <button 
                       onClick={onClose}
                       className="flex justify-center items-center w-[403px] h-[66px] rounded-full cursor-pointer hover:bg-gray-50 transition-colors"
@@ -267,7 +267,7 @@ export default function PromoteListingModal({ isOpen, onClose, farmlandId }: Pro
                           color: "#2780C4",
                         }}
                       >
-                        CANCLE
+                        CANCEL
                       </span>
                     </button>
 

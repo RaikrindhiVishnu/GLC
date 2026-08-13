@@ -323,7 +323,17 @@ export default function DeleteListingModal({ isOpen, onClose, farmlandId }: Dele
       </div>
     </AnimatePresence>
     
-    <ListingRemovedModal isOpen={isRemovedOpen} onClose={() => setIsRemovedOpen(false)} farmlandCode={farmlandData?.farmland_code || ""} />
+    <ListingRemovedModal
+      isOpen={isRemovedOpen}
+      onClose={() => {
+        setIsRemovedOpen(false);
+        onClose();
+        if (typeof window !== "undefined") {
+          window.location.href = "/home/yourlisting";
+        }
+      }}
+      farmlandCode={farmlandData?.farmland_code || ""}
+    />
     </>
   );
 }

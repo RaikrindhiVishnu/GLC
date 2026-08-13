@@ -29,8 +29,12 @@ export default function Footer() {
       id="footer-section"
       className="relative w-full overflow-hidden"
       style={{
-        background:
-          "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)",
+        backgroundColor: "#164573",
+        backgroundImage: "radial-gradient(circle at center, #2780C4 0%, #164573 100%)",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        width: "100%",
       }}
     >
       {/* ================= MOBILE / TABLET ================= */}
@@ -132,11 +136,11 @@ export default function Footer() {
       {/* ================= DESKTOP ================= */}
       <div className="hidden lg:block">
         <div
-          className="container mx-auto max-w-[1312px] flex flex-col items-end gap-[30px] relative pt-[64px] pb-[64px]"
+          className="container mx-auto max-w-[1312px] flex flex-col items-center gap-[30px] relative pt-[64px] pb-[64px]"
           style={{ minHeight: "899px" }}
         >
-          <div className="relative w-[1312px] h-[672px] flex flex-col items-start gap-[84px]">
-            <div className="relative w-[1312px] h-[437px] flex items-center justify-center z-0">
+          <div className="relative w-full max-w-[1312px] h-[672px] flex flex-col items-start gap-[84px]">
+            <div className="relative w-full max-w-[1312px] h-[437px] flex items-center justify-center z-0">
               {dots.map((dot, i) => (
                 <motion.div
                   key={i}
@@ -150,7 +154,7 @@ export default function Footer() {
                   <Image src={dot.img} alt="Dot" fill className="object-cover" />
                 </motion.div>
               ))}
-              <h1 className="w-[1312px] h-[437px] text-[220px] font-semibold text-white leading-[80%] tracking-[-0.02em] text-center font-jakarta flex flex-col items-center justify-center select-none z-10">
+              <h1 className="w-full max-w-[1312px] h-[437px] text-[220px] font-semibold text-white leading-[80%] tracking-[-0.02em] text-center font-jakarta flex flex-col items-center justify-center select-none z-10">
                 <span className="flex">
                   {["Green", "Land"].map((word, i) => (
                     <motion.span
@@ -176,7 +180,7 @@ export default function Footer() {
               </h1>
             </div>
 
-            <div className="w-[1312px] h-[151px] flex flex-row justify-between items-center z-20 relative">
+            <div className="w-full max-w-[1312px] h-[151px] flex flex-row justify-between items-center z-20 relative">
               <div className="flex flex-col gap-[40px] w-[129px] h-[151px]">
                 <div className="flex flex-col gap-4">
                   <div className="relative w-[127px] h-[55px]">
@@ -238,7 +242,7 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="w-[1312px] h-[80px] px-[48px] py-[32px] border-t border-white/10 flex flex-row justify-between items-center z-20 relative">
+          <div className="w-full max-w-[1312px] h-[80px] px-[48px] py-[32px] border-t border-white/10 flex flex-row justify-between items-center z-20 relative">
             <p className="text-white text-[12px] uppercase tracking-[1.2px] font-jakarta opacity-80 font-normal leading-[16px]">
               © 2024 GREEN LAND CAPITAL. ALL RIGHTS RESERVED.
             </p>

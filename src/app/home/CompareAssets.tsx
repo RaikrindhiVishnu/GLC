@@ -13,6 +13,7 @@ const defaultComparisonData = [
     id: "comp-1",
     plots: [
       {
+        id: 101,
         title: "GLC SOS 01",
         location: "Vizag, Andhra Pradesh",
         img: "/assets/home/CompareAssets/compare1.svg",
@@ -21,6 +22,7 @@ const defaultComparisonData = [
         yield: "5.2",
       },
       {
+        id: 102,
         title: "GLC SOS 02",
         location: "Guntur, Andhra Pradesh",
         img: "/assets/home/CompareAssets/compare2.svg",
@@ -34,6 +36,7 @@ const defaultComparisonData = [
     id: "comp-2",
     plots: [
       {
+        id: 103,
         title: "WHEAT RIDGE X",
         location: "Srikakulam, A.P",
         img: "/assets/home/CompareAssets/compare3.svg",
@@ -42,6 +45,7 @@ const defaultComparisonData = [
         yield: "6.5",
       },
       {
+        id: 104,
         title: "PALM GROVE",
         location: "Nellore, A.P",
         img: "/assets/home/CompareAssets/compare4.svg",
@@ -204,7 +208,7 @@ export default function CompareAssets() {
             transition={{ duration: 0.6, delay: i * 0.1 }}
             viewport={{ once: true }}
             onClick={handleCardClick}
-            className="flex-shrink-0 w-[300px] sm:w-[480px] lg:w-[730px] min-h-[500px] lg:min-h-[695px] bg-white rounded-[32px] lg:rounded-[48px] border border-[#EDEEEF] p-4 sm:p-6 lg:p-[48px] box-border relative flex flex-col gap-6 lg:gap-[32px] pb-25 lg:pb-35"
+            className="flex-shrink-0 w-[300px] sm:w-[480px] lg:w-[730px] min-h-[500px] lg:min-h-[695px] bg-white rounded-[32px] lg:rounded-[48px] border border-[#EDEEEF] p-4 sm:p-6 lg:p-[48px] box-border relative flex flex-col gap-6 lg:gap-[32px] pb-[80px] lg:pb-[120px]"
           >
             {/* Top Previews Row */}
             <div className="flex flex-col sm:flex-row gap-4 lg:gap-[24px]">

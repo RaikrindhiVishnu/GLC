@@ -19,7 +19,7 @@ export default function HeroScreen() {
         overflow: "hidden",
         boxSizing: "border-box",
       }}
-      className="flex flex-col items-center justify-start h-[80vh] md:h-screen min-h-[500px] md:min-h-[640px]"
+      className="flex flex-col items-center justify-start h-[80vh] md:h-screen max-h-[960px] min-h-[500px] md:min-h-[640px]"
     >
       {/* Background Image + Dark Overlay */}
       <div
@@ -35,7 +35,8 @@ export default function HeroScreen() {
         alt="Farmland background"
         fill
         priority
-        style={{ objectFit: "cover", objectPosition: "center" }}
+        className="w-full h-full object-cover object-center min-w-full min-h-full"
+        style={{ objectFit: "cover", objectPosition: "center", minWidth: "100%", minHeight: "100%" }}
       />
 
       <Navbar variant="app" active="home" />

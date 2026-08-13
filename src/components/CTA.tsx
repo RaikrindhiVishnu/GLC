@@ -49,7 +49,7 @@ export default function CTA() {
       />
 
       {/* ================= CONTENT ================= */}
-      <div className="relative z-40 flex h-full flex-col items-center justify-start pt-[90px] md:pt-[120px] lg:pt-[160px] px-5 md:px-6">
+      <div className="relative z-40 flex h-full flex-col items-center justify-start pt-[90px] md:pt-[120px] lg:pt-[160px] px-5 md:px-6 w-full max-w-[1440px] mx-auto">
 
         <h2 className="max-w-[320px] md:max-w-[680px] lg:max-w-[738px] text-[34px] md:text-[52px] lg:text-[48px] leading-[1.08] lg:leading-[55px] tracking-[-0.04em] lg:tracking-[-1.2px] font-bold text-[#0F2F4C] text-center font-jakarta flex flex-wrap justify-center gap-x-3">
 

@@ -20,10 +20,10 @@ export default function DocumentUnlocks() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="w-full lg:h-[400px] bg-white shadow-[0px_12px_40px_rgba(0,31,63,0.04)] rounded-[48px] flex flex-col lg:flex-row overflow-hidden box-border border border-[#EDEEEF]/50 shrink-0"
+            className="w-full min-h-[400px] bg-white shadow-[0px_12px_40px_rgba(0,31,63,0.04)] rounded-[48px] flex flex-col lg:flex-row overflow-hidden box-border border border-[#EDEEEF]/50 shrink-0"
           >
             {/* Left: Dark Hero Area (Visual Hero) */}
-            <div className="w-full lg:w-[464px] min-h-[400px] lg:h-[400px] bg-black p-8 lg:p-[48px] flex flex-col justify-between box-border relative shrink-0 overflow-hidden isolate">
+            <div className="w-full lg:w-[464px] min-h-[400px] bg-black p-8 lg:p-[48px] flex flex-col justify-between box-border relative shrink-0 overflow-hidden isolate">
               {/* Glowing Overlays */}
               {/* Overlay 1 */}
               <div
@@ -37,18 +37,18 @@ export default function DocumentUnlocks() {
               />
 
               {/* Text Container */}
-              <div className="relative z-10 flex flex-col items-start p-0 gap-[16.5px] w-full lg:w-[368px] lg:h-[121.5px] mb-8 lg:mb-0">
+              <div className="relative z-10 flex flex-col items-start p-0 gap-[16.5px] w-full mb-8 lg:mb-0">
                 <span className="font-jakarta font-extrabold text-[10px] leading-[15px] tracking-[3px] uppercase text-white/70">
                   Premium Access
                 </span>
-                <h2 className="m-0 font-jakarta font-bold text-[28px] lg:text-[36px] lg:leading-[45px] text-white w-full lg:w-[368px] lg:h-[90px] flex items-center">
+                <h2 className="m-0 font-jakarta font-bold text-[28px] lg:text-[36px] lg:leading-[45px] text-white w-full flex items-center">
                   Unlock Hidden Insights
                 </h2>
               </div>
 
               {/* Member Status Card */}
-              <div className="box-border flex flex-col items-start p-6 lg:p-[24px] gap-2 lg:gap-[8px] w-full lg:w-[368px] lg:h-[138px] bg-white/5 border border-white/10 backdrop-blur-[6px] rounded-[32px] relative z-10 mt-auto">
-                <div className="flex flex-row items-center p-0 pb-2 lg:pb-[8px] gap-4 lg:gap-[16px] w-full lg:w-[318px] lg:h-[53px]">
+              <div className="box-border flex flex-col items-start p-6 lg:p-[24px] gap-2 lg:gap-[8px] w-full bg-white/5 border border-white/10 backdrop-blur-[6px] rounded-[32px] relative z-10 mt-auto">
+                <div className="flex flex-row items-center p-0 pb-2 lg:pb-[8px] gap-4 lg:gap-[16px] w-full">
                   {/* Icon Overlay container */}
                   <div className="flex flex-col items-start p-3 lg:p-[12px] w-[46px] h-[45px] bg-[#194F81]/20 rounded-[48px] shrink-0 justify-center items-center">
                     {/* Jagged Seal Badge SVG Icon with Checkmark */}
@@ -57,17 +57,17 @@ export default function DocumentUnlocks() {
                       <path d="M7 10.5L9.5 13L14.5 8" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </div>
-                  <div className="flex flex-col items-start p-0 w-full lg:w-[114.5px] lg:h-[36px]">
-                    <div className="font-jakarta font-bold text-[12px] leading-4 tracking-[1.2px] text-[#1B588D] uppercase w-full lg:w-[114.17px] h-4 flex items-center">
+                  <div className="flex flex-col items-start p-0 w-full">
+                    <div className="font-jakarta font-bold text-[12px] leading-4 tracking-[1.2px] text-[#1B588D] uppercase w-full flex items-center">
                       Member Status
                     </div>
-                    <div className="font-jakarta font-semibold text-[14px] leading-5 text-white w-full lg:w-[114.5px] h-5 flex items-center">
+                    <div className="font-jakarta font-semibold text-[14px] leading-5 text-white w-full flex items-center">
                       Tier 1 Contributor
                     </div>
                   </div>
                 </div>
                 {/* Progress bar track */}
-                <div className="w-full lg:w-[318px] h-1 bg-white/10 rounded-full relative overflow-hidden">
+                <div className="w-full h-1 bg-white/10 rounded-full relative overflow-hidden">
                   <motion.div
                     initial={{ width: 0 }}
                     whileInView={{ width: "66.66%" }}
@@ -77,8 +77,8 @@ export default function DocumentUnlocks() {
                   />
                 </div>
                 {/* Credits used text container */}
-                <div className="flex flex-col items-end p-0 w-full lg:w-[318px] h-[15px]">
-                  <span className="w-[88.88px] h-[15px] font-jakarta font-normal text-[10px] leading-[15px] flex items-center justify-end text-right text-white/50 uppercase">
+                <div className="flex flex-col items-end p-0 w-full">
+                  <span className="h-[15px] font-jakarta font-normal text-[10px] leading-[15px] flex items-center justify-end text-right text-white/50 uppercase">
                     4/6 CREDITS USED
                   </span>
                 </div>
@@ -86,10 +86,10 @@ export default function DocumentUnlocks() {
             </div>
 
             {/* Right: Clean Content Area */}
-            <div className="flex-1 flex flex-col justify-center items-start p-8 lg:p-[48px] lg:w-[576px] lg:h-[400px] box-border">
+            <div className="flex-1 flex flex-col justify-center items-start p-8 lg:p-[48px] w-full min-h-[400px] box-border">
               {/* Document Unlocks Label Margin */}
-              <div className="flex flex-col items-start pb-4 lg:pb-[16px] w-full lg:w-[480px] lg:h-[37px]">
-                <div className="flex flex-row items-center p-0 gap-2 lg:gap-[8px] w-full lg:w-[480px] lg:h-[21px]">
+              <div className="flex flex-col items-start pb-4 lg:pb-[16px] w-full">
+                <div className="flex flex-row items-center p-0 gap-2 lg:gap-[8px] w-full">
                   <div className="flex flex-col items-start p-0 w-[16px] h-[21px] shrink-0 justify-center">
                     {/* Outline Lock SVG Icon */}
                     <svg width="16" height="21" viewBox="0 0 16 21" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
@@ -98,8 +98,8 @@ export default function DocumentUnlocks() {
                       <circle cx="8" cy="14" r="1.5" fill="#2780C4" />
                     </svg>
                   </div>
-                  <div className="flex flex-col items-start p-0 w-[151.31px] h-[16px]">
-                    <span className="w-[151.31px] h-[16px] font-jakarta font-bold text-[12px] leading-[16px] flex items-center tracking-[1.2px] text-transform: uppercase text-[#2780C4] uppercase">
+                  <div className="flex flex-col items-start p-0">
+                    <span className="font-jakarta font-bold text-[12px] leading-[16px] flex items-center tracking-[1.2px] text-transform: uppercase text-[#2780C4] uppercase">
                       Document Unlocks
                     </span>
                   </div>
@@ -107,15 +107,15 @@ export default function DocumentUnlocks() {
               </div>
 
               {/* Heading 3 Container */}
-              <div className="flex flex-col items-start pb-6 lg:pb-[24px] w-full lg:w-[480px] lg:h-[60px]">
-                <h3 className="m-0 font-jakarta font-bold text-[24px] lg:text-[30px] lg:leading-[36px] text-[#001F3F] w-full lg:w-[524px] lg:h-[36px] flex items-center">
+              <div className="flex flex-col items-start pb-6 lg:pb-[24px] w-full">
+                <h3 className="m-0 font-jakarta font-bold text-[24px] lg:text-[30px] lg:leading-[36px] text-[#001F3F] w-full flex items-center">
                   4 Premium report credits remaining.
                 </h3>
               </div>
 
               {/* Paragraph Margin */}
-              <div className="flex flex-col items-start pb-10 lg:pb-[40px] w-full lg:w-[512px] lg:h-[99px]">
-                <div className="flex flex-col items-start p-0 w-full lg:w-[718px] lg:h-[59px]">
+              <div className="flex flex-col items-start pb-10 lg:pb-[40px] w-full">
+                <div className="flex flex-col items-start p-0 w-full max-w-[718px]">
                   <p className="m-0 font-jakarta font-normal text-[14px] lg:text-[18px] leading-[29px] text-[#64748B] flex items-center">
                     Use them to access deep-dive architectural surveys, soil analysis reports, and exclusive heritage archive data points curated by our editorial team.
                   </p>
@@ -123,7 +123,7 @@ export default function DocumentUnlocks() {
               </div>
 
               {/* Button Container */}
-              <div className="flex flex-row items-start p-0 gap-4 lg:gap-[16px] w-full lg:w-[585px] lg:h-[60px]">
+              <div className="flex flex-row items-start p-0 gap-4 lg:gap-[16px] w-full">
                 <button
                   onClick={() => router.push("/home/unlockeddocuments")}
                   className="box-border flex justify-center items-center w-full sm:w-[214px] h-[60px] bg-[radial-gradient(50%_50%_at_50%_50%,#2780C4_0%,#164573_100%)] border-2 border-[#2780C4] rounded-[9999px] cursor-pointer transition-transform duration-300 hover:scale-105"
@@ -158,8 +158,8 @@ export default function DocumentUnlocks() {
 
               {/* Primary Listing Label Margin */}
               <div className="absolute left-8 top-[165px] flex flex-col items-start p-0 pb-2 w-[calc(100%-64px)] h-6">
-                <div className="flex flex-col items-start p-0 w-full lg:w-[778.66px] h-4">
-                  <span className="w-full lg:w-[778.66px] h-4 font-jakarta font-bold text-[12px] leading-4 tracking-[1.2px] uppercase text-white/80 flex items-center">
+                <div className="flex flex-col items-start p-0 w-full">
+                  <span className="w-full font-jakarta font-bold text-[12px] leading-4 tracking-[1.2px] uppercase text-white/80 flex items-center">
                     Primary Listing
                   </span>
                 </div>
@@ -167,7 +167,7 @@ export default function DocumentUnlocks() {
 
               {/* Listing Heading */}
               <div className="absolute left-8 top-[189px] flex flex-col items-start p-0 w-[calc(100%-64px)] h-9">
-                <h3 className="m-0 font-jakarta font-bold text-[30px] leading-9 text-white w-full lg:w-[778.66px] h-9 flex items-center">
+                <h3 className="m-0 font-jakarta font-bold text-[30px] leading-9 text-white w-full flex items-center">
                   GLC SOS 01
                 </h3>
               </div>
@@ -179,33 +179,33 @@ export default function DocumentUnlocks() {
               whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
               transition={{ duration: 0.6, delay: 0.2 }}
               viewport={{ once: true }}
-              className="w-full lg:flex-1 h-[256px] bg-white shadow-[0px_1px_2px_rgba(0,0,0,0.05)] rounded-[48px] p-8 lg:p-[82px_32px] flex flex-col justify-center border border-[#EDEEEF] box-border shrink-0"
+              className="w-full lg:flex-1 min-h-[256px] bg-white shadow-[0px_1px_2px_rgba(0,0,0,0.05)] rounded-[48px] p-8 lg:p-[48px_32px] flex flex-col justify-center border border-[#EDEEEF] box-border shrink-0"
             >
               {/* Heading 4:margin */}
-              <div className="flex flex-col items-start p-0 pb-4 lg:pb-[16px] w-full lg:w-[341.33px] h-9">
-                <div className="w-full lg:w-[341.33px] h-5 font-jakarta font-bold text-[14px] leading-5 tracking-[1.4px] uppercase text-[#45474C] flex items-center">
+              <div className="flex flex-col items-start p-0 pb-4 lg:pb-[16px] w-full">
+                <div className="w-full font-jakarta font-bold text-[14px] leading-5 tracking-[1.4px] uppercase text-[#45474C] flex items-center">
                   Listing Status
                 </div>
               </div>
 
               {/* Container for Rows */}
-              <div className="flex flex-col gap-3 lg:gap-[8px] w-full lg:w-[341.33px] h-14">
+              <div className="flex flex-col gap-3 lg:gap-[8px] w-full">
                 {/* Row 1: Visibility */}
-                <div className="flex flex-row justify-between items-center p-0 w-full lg:w-[341.33px] h-6">
-                  <span className="w-[63.7px] h-6 font-jakarta font-medium text-[16px] leading-6 text-[#191C1D] flex items-center">
+                <div className="flex flex-row justify-between items-center p-0 w-full">
+                  <span className="font-jakarta font-medium text-[16px] leading-6 text-[#191C1D] flex items-center">
                     Visibility
                   </span>
-                  <span className="w-[70px] h-6 font-jakarta font-bold text-[16px] leading-6 text-[#2780C4] flex items-center justify-end">
+                  <span className="font-jakarta font-bold text-[16px] leading-6 text-[#2780C4] flex items-center justify-end">
                     Premium
                   </span>
                 </div>
 
                 {/* Row 2: Inquiries */}
-                <div className="flex flex-row justify-between items-center p-0 w-full lg:w-[341.33px] h-6">
-                  <span className="w-[64.69px] h-6 font-jakarta font-medium text-[16px] leading-6 text-[#191C1D] flex items-center">
+                <div className="flex flex-row justify-between items-center p-0 w-full">
+                  <span className="font-jakarta font-medium text-[16px] leading-6 text-[#191C1D] flex items-center">
                     Inquiries
                   </span>
-                  <span className="w-[85px] h-6 font-jakarta font-bold text-[16px] leading-6 text-[#091426] flex items-center justify-end whitespace-nowrap">
+                  <span className="font-jakarta font-bold text-[16px] leading-6 text-[#091426] flex items-center justify-end whitespace-nowrap">
                     <DynamicCounter value={24} />&nbsp;Active
                   </span>
                 </div>

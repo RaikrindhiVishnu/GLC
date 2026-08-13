@@ -180,6 +180,20 @@ export default function ListingRemovedModal({ isOpen, onClose, farmlandCode }: L
               </div>
 
             </div>
+
+            {/* Action Button */}
+            <button
+              onClick={onClose}
+              className="mt-4 flex justify-center items-center w-[340px] h-[56px] rounded-full cursor-pointer hover:opacity-90 transition-opacity border-none"
+              style={{
+                background: "radial-gradient(49.97% 160.36% at 50% 50%, #2780C4 0%, #164573 100%)",
+                boxShadow: "0px 9px 14px -3px rgba(0, 0, 0, 0.1)",
+              }}
+            >
+              <span className="font-jakarta font-bold text-[16px] text-white">
+                Return to Your Listings
+              </span>
+            </button>
           </div>
         </motion.div>
 

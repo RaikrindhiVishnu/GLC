@@ -133,12 +133,60 @@ export const s3Service = {
       }
     }
 
-    const response = await fetch(`${API_BASE_URL}/s3/generateUrl`, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(payload),
-    });
-    if (!response.ok) throw new Error('Failed to generate URL');
-    return response.json();
+    try {
+      let response = await fetch(`${API_BASE_URL}/s3/generateUrl`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(payload),
+      });
+
+      let data: any = await response.json().catch(() => ({}));
+
+      if (data?.error === "Token is not valid" || response.status === 401 || response.status === 403) {
+        if (typeof window !== 'undefined') {
+          const refreshToken = localStorage.getItem('refreshToken');
+          if (refreshToken) {
+            try {
+              const refreshRes = await fetch(`${API_BASE_URL}/auth/refreshToken`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'accept': 'application/json' },
+                body: JSON.stringify({ token: refreshToken })
+              });
+              if (refreshRes.ok) {
+                const refreshData = await refreshRes.json();
+                if (refreshData.token) {
+                  localStorage.setItem('token', refreshData.token);
+                  if (refreshData.refreshToken) {
+                    localStorage.setItem('refreshToken', refreshData.refreshToken);
+                  }
+                  headers['Authorization'] = `Bearer ${refreshData.token}`;
+                  response = await fetch(`${API_BASE_URL}/s3/generateUrl`, {
+                    method: 'POST',
+                    headers,
+                    body: JSON.stringify(payload),
+                  });
+                  data = await response.json().catch(() => ({}));
+                }
+              } else {
+                localStorage.removeItem('token');
+                localStorage.removeItem('refreshToken');
+              }
+            } catch (e) {
+              console.warn("Token refresh failed in s3Service:", e);
+            }
+          } else {
+            localStorage.removeItem('token');
+          }
+        }
+      }
+
+      if (!response.ok || data?.error) {
+        return {};
+      }
+      return data;
+    } catch (e) {
+      console.warn("Error calling s3Service.generateUrl:", e);
+      return {};
+    }
   }
 };

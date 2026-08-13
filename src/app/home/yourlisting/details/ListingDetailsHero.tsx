@@ -58,39 +58,46 @@ export default function ListingDetailsHero() {
     return () => { isMounted = false; };
   }, [farmlandData?.farmland_image]);
 
-  const displayUrl = resolvedImageUrl || '/assets/your-listing/Container (12).svg';
+  const displayUrl = resolvedImageUrl;
   return (
-    <div className="relative w-full h-screen flex justify-center overflow-hidden">
+    <div className="relative w-full h-screen flex justify-center overflow-hidden bg-[#181B1F]">
       {/* Background Image */}
-      <img
-        src={displayUrl}
-        alt={farmlandData?.farmland_code || "Listing Details"}
-        style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0 }}
-        onError={(e) => { e.currentTarget.src = "/assets/your-listing/Container (12).svg"; }}
-      />
+      {displayUrl && (
+        <img
+          src={displayUrl}
+          alt={farmlandData?.farmland_code || "Listing Details"}
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0 }}
+          onError={(e) => { e.currentTarget.style.display = "none"; }}
+        />
+      )}
       {/* Gradient Overlay */}
       <div
         style={{
           position: "absolute",
           inset: 0,
           zIndex: 1,
-          background: "linear-gradient(0deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 0) 100%)",
+          background: displayUrl
+            ? "linear-gradient(0deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 0) 100%)"
+            : "linear-gradient(135deg, #181B1F 0%, #2D3238 100%)",
         }}
       />
 
+      {/* No Image Placeholder */}
+      {!displayUrl && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center z-[2] gap-3 pointer-events-none">
+          <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="rgba(255, 255, 255, 0.3)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+            <circle cx="8.5" cy="8.5" r="1.5" />
+            <polyline points="21 15 16 10 5 21" />
+          </svg>
+          <span className="font-jakarta font-bold text-[18px] tracking-[1.5px] uppercase text-white/40">
+            No Image Available
+          </span>
+        </div>
+      )}
+
       {/* Content Container */}
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full pointer-events-none">
-
-        {/* Top Right: Delete Button */}
-        <div className="absolute top-[40px] right-8 lg:right-4 pointer-events-auto">
-          <button 
-            onClick={() => setIsDeleteModalOpen(true)}
-            className="p-0 border-none bg-transparent cursor-pointer hover:scale-105 transition-transform"
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/assets/your-listing/Button%20(1).svg" alt="Delete Listing" width={36} height={36} />
-          </button>
-        </div>
 
         {/* Left Side: Title & Badge */}
         <div className="absolute left-8 lg:left-4 bottom-[120px] flex flex-col gap-4 pointer-events-auto">

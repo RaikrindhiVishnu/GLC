@@ -42,24 +42,17 @@ const S3ResolvedImage = ({ imageUrl, alt }: { imageUrl: string; alt: string }) =
     return () => { isMounted = false; };
   }, [imageUrl]);
 
-  if (!resolved) {
-    return (
-      <div style={{ width: "100%", height: "100%", backgroundColor: "#F4F4F5", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#A1A1AA" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: "8px" }}>
-          <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-          <circle cx="8.5" cy="8.5" r="1.5" />
-          <polyline points="21 15 16 10 5 21" />
-        </svg>
-        <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: "#A1A1AA", fontSize: "12px", fontWeight: 500 }}>No Image</span>
-      </div>
-    );
-  }
+  const fallbackImg = "/assets/search/image2.1.svg";
 
   return (
     <img 
-      src={resolved} 
+      src={resolved || fallbackImg} 
       alt={alt} 
-      onError={(e) => { e.currentTarget.style.display = 'none'; }}
+      onError={(e) => { 
+        if (e.currentTarget.src !== fallbackImg) {
+          e.currentTarget.src = fallbackImg; 
+        }
+      }}
       style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} 
     />
   );
@@ -204,6 +197,23 @@ export default function MainListingsGrid() {
   
   const totalCount = res?.total_count ? (searchQuery ? farmlands.length : res.total_count) : farmlands.length;
 
+  const getStateTitle = () => {
+    const selectedStateIds = filters.state_id;
+    if (selectedStateIds && selectedStateIds.length > 0) {
+      const stateId = selectedStateIds[0];
+      const foundState = geoDataRes?.states?.slice(1).find((s: any[]) => s[0] === stateId);
+      if (foundState) {
+        const rawName = String(foundState[2] || foundState[3] || "Andhra Pradesh");
+        return rawName
+          .toLowerCase()
+          .split(" ")
+          .map((w: string) => w.charAt(0).toUpperCase() + w.slice(1))
+          .join(" ");
+      }
+    }
+    return "Andhra Pradesh";
+  };
+
   const displayedFarmlands = farmlands.slice(0, 6);
   const totalPages = Math.max(1, Math.ceil(totalCount / 6));
 
@@ -293,7 +303,7 @@ export default function MainListingsGrid() {
       <div className="block lg:hidden w-full py-10">
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 mb-6">
           <div className="flex justify-between items-center">
-            <h2 className="font-jakarta font-bold text-[20px] text-[#131600] m-0">Andhra Pradesh ({totalCount} Matches)</h2>
+            <h2 className="font-jakarta font-bold text-[20px] text-[#131600] m-0">{getStateTitle()} ({totalCount} Matches)</h2>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-[#0F2F4C]" />
               <div className="w-2 h-2 rounded-full bg-[#E1E3E4]" />
@@ -436,7 +446,7 @@ export default function MainListingsGrid() {
                 color: "#131600",
               }}
             >
-              Andhra Pradesh ({totalCount} Matches)
+              {getStateTitle()} ({totalCount} Matches)
             </motion.h2>
 
             {/* Indicator Dots on the right */}

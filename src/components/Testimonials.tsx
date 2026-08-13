@@ -53,10 +53,10 @@ export default function Testimonials() {
   const row2 = [...testimonials].reverse();
 
   return (
-    <section className="relative w-full bg-[#F8F9FA] overflow-hidden">
+    <section className="relative w-full bg-[#F8F9FA] overflow-hidden py-12 md:py-16">
 
       {/* Header */}
-      <div className="container mx-auto px-4 md:px-8 mb-12 md:mb-16 relative z-10">
+      <div className="container mx-auto max-w-[1440px] px-4 md:px-8 mb-12 md:mb-16 relative z-10">
 
         <h2 className="text-[34px] md:text-[48px] lg:text-[36px] leading-[1.08] tracking-[-0.04em] font-bold text-[#131600] font-jakarta text-center flex flex-wrap justify-center gap-x-3">
 
@@ -102,7 +102,7 @@ export default function Testimonials() {
           delay: 0.3,
         }}
         viewport={{ once: true }}
-        className="relative flex flex-col gap-5 md:gap-8 w-full"
+        className="relative flex flex-col gap-5 md:gap-8 w-full max-w-[1440px] mx-auto"
       >
 
         {/* Row 1 */}
@@ -186,7 +186,7 @@ export default function Testimonials() {
 
 function TestimonialCard({ t }: { t: any }) {
   return (
-    <div className="flex flex-col shrink-0 w-[290px] md:w-[360px] lg:w-[388px] h-[210px] md:h-[225px] lg:h-[235px] bg-white rounded-[24px] md:rounded-[32px] p-5 md:p-7 lg:p-[32px] gap-[16px] shadow-[0px_1px_2px_rgba(0,0,0,0.05)]">
+    <div className="flex flex-col shrink-0 w-[290px] md:w-[360px] lg:w-[388px] min-h-[210px] md:min-h-[225px] lg:min-h-[235px] h-auto bg-white rounded-[24px] md:rounded-[32px] p-5 md:p-7 lg:p-[32px] gap-[16px] shadow-[0px_1px_2px_rgba(0,0,0,0.05)]">
 
       {/* Stars */}
       <div className="flex gap-[4px]">
