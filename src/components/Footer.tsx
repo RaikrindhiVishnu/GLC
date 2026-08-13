@@ -77,7 +77,9 @@ export default function Footer() {
               Invest and Explore
             </h4>
             <ul className="flex flex-col gap-5">
-              {["Search Farmland", "Pool Buying", "Subscriptions"].map((item) => (
+              {["Search Farmland", "Pool Buying", "Subscriptions"]
+                .filter((item) => item !== "Pool Buying")
+                .map((item) => (
                 <li
                   key={item}
                   className="text-white text-[18px] font-medium font-jakarta cursor-pointer hover:opacity-70 transition-opacity"
@@ -98,7 +100,9 @@ export default function Footer() {
               Support and Security
             </h4>
             <ul className="flex flex-col gap-5">
-              {["Maintenance", "Verification", "Privacy Policy"].map((item) => (
+              {["Maintenance", "Verification", "Privacy Policy"]
+                .filter((item) => item !== "Maintenance")
+                .map((item) => (
                 <li
                   key={item}
                   onClick={() => {
@@ -187,7 +191,9 @@ export default function Footer() {
                     <Image src="/assets/common/Logo green land 1.svg" alt="Logo" fill className="object-contain" />
                   </div>
                   <ul className="flex flex-col gap-4">
-                    {["Search Farmland", "Pool Buying", "Subscriptions"].map((link) => (
+                    {["Search Farmland", "Pool Buying", "Subscriptions"]
+                      .filter((link) => link !== "Pool Buying")
+                      .map((link) => (
                       <li
                         key={link}
                         onClick={() => {
@@ -206,7 +212,9 @@ export default function Footer() {
 
               <div className="flex flex-col gap-[40px] w-[195px] h-[80px] mb-auto pt-[71px]">
                 <ul className="flex flex-col gap-4">
-                  {["Verification of Farmland", "Maintenance of Farmland", "Sell Your Land"].map((link) => (
+                  {["Verification of Farmland", "Maintenance of Farmland", "Sell Your Land"]
+                    .filter((link) => link !== "Maintenance of Farmland")
+                    .map((link) => (
                     <li
                       key={link}
                       onClick={() => {

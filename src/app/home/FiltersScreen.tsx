@@ -56,8 +56,10 @@ export default function FiltersScreen() {
   return (
     <section id="filters-section" className="w-full bg-transparent py-12 lg:py-[70px] overflow-hidden">
       <div className="w-full max-w-[1440px] mx-auto px-4 md:px-[60px]">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 lg:gap-[16px]">
-          {filterButtons.map((btn, i) => (
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4 lg:gap-[16px]">
+          {filterButtons
+            .filter((btn) => btn.id !== "pool-buying" && btn.id !== "maintenance-farmland")
+            .map((btn, i) => (
             <motion.button
               key={btn.id}
               initial={{ opacity: 0, filter: "blur(10px)", y: 20 }}
