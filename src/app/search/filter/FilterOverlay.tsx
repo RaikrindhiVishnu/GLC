@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useSearchContext } from "../SearchContext";
+import { useGetAllFarmlandsByStateIdQuery } from "../../../services/farmland";
 
 interface FilterOverlayProps {
   isOpen: boolean;
@@ -33,8 +34,54 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
   const [isViewAllOpen, setIsViewAllOpen] = useState(false);
   const [viewAllSearch, setViewAllSearch] = useState("");
 
-  const [priceRange, setPriceRange] = useState([10000000, 150000000]);
-  const [sizeRange, setSizeRange] = useState([10, 45]);
+  const [minPrice, setMinPrice] = useState(1000000); // Default min
+  const [maxPrice, setMaxPrice] = useState(150000000); // Default max
+  const [minSize, setMinSize] = useState(1);
+  const [maxSize, setMaxSize] = useState(100);
+
+  const [priceRange, setPriceRange] = useState([1000000, 150000000]);
+  const [sizeRange, setSizeRange] = useState([1, 100]);
+
+  const { data: farmlandRes } = useGetAllFarmlandsByStateIdQuery({
+    state_id: stateSearch ? [Number(stateSearch)] : undefined,
+    district_id: citySearch ? [Number(citySearch)] : undefined,
+    mandal_id: mandalSearch ? [Number(mandalSearch)] : undefined,
+  }, { skip: !isOpen });
+
+  useEffect(() => {
+    if (farmlandRes?.data && farmlandRes.data.length > 0) {
+      let currentMinPrice = Infinity;
+      let currentMaxPrice = -Infinity;
+      let currentMinSize = Infinity;
+      let currentMaxSize = -Infinity;
+
+      farmlandRes.data.forEach(farm => {
+        if (farm.price < currentMinPrice) currentMinPrice = farm.price;
+        if (farm.price > currentMaxPrice) currentMaxPrice = farm.price;
+        if (farm.acers !== undefined && farm.acers < currentMinSize) currentMinSize = farm.acers;
+        if (farm.acers !== undefined && farm.acers > currentMaxSize) currentMaxSize = farm.acers;
+      });
+
+      if (currentMinPrice !== Infinity) setMinPrice(currentMinPrice);
+      if (currentMaxPrice !== -Infinity) setMaxPrice(currentMaxPrice);
+      if (currentMinSize !== Infinity) setMinSize(Math.floor(currentMinSize));
+      if (currentMaxSize !== -Infinity) setMaxSize(Math.ceil(currentMaxSize));
+      
+      setPriceRange(prev => [
+        Math.max(currentMinPrice !== Infinity ? currentMinPrice : prev[0], minPrice),
+        Math.min(currentMaxPrice !== -Infinity ? currentMaxPrice : prev[1], maxPrice)
+      ]);
+      setSizeRange(prev => [
+        Math.max(currentMinSize !== Infinity ? Math.floor(currentMinSize) : prev[0], minSize),
+        Math.min(currentMaxSize !== -Infinity ? Math.ceil(currentMaxSize) : prev[1], maxSize)
+      ]);
+    } else {
+      setMinPrice(1000000);
+      setMaxPrice(150000000);
+      setMinSize(1);
+      setMaxSize(100);
+    }
+  }, [farmlandRes]);
 
   const handlePriceMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Math.min(Number(e.target.value), priceRange[1] - 1000000);
@@ -82,6 +129,9 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
   const states = geoData?.states?.slice(1) || [];
   const allDistricts = geoData?.districts?.slice(1) || [];
   const districts = allDistricts.filter(d => stateSearch ? Number(d[1]) === Number(stateSearch) : true);
+
+  const allMandals = geoData?.mandals?.slice(1) || [];
+  const mandals = allMandals.filter(m => citySearch ? (Number(m[1]) === Number(citySearch) || Number(m[2]) === Number(citySearch)) : true);
 
   // Extract master data
   const tags = masterData?.data?.tagResult || [];
@@ -406,7 +456,8 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
                 value={mandalSearch}
                 onChange={(v) => setMandalSearch(v)}
                 options={[
-                  { value: "", label: "All Mandals" }
+                  { value: "", label: "All Mandals" },
+                  ...mandals.map(m => ({ value: m[0], label: m[3] }))
                 ]}
                 placeholder="Select Mandal"
                 disabled={!citySearch && districts.length > 0}
@@ -461,12 +512,12 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
                 <div className="relative w-full h-8 flex items-center mb-4 mt-2">
                   <div style={{ height: "6px", background: "#E7E8E9", borderRadius: "9999px" }} className="absolute inset-x-0" />
                   <div style={{ height: "6px", background: "#2780C4", borderRadius: "9999px", 
-                    left: `${((priceRange[0] - 5000000) / 245000000) * 100}%`,
-                    right: `${100 - ((priceRange[1] - 5000000) / 245000000) * 100}%`
+                    left: `${((priceRange[0] - minPrice) / (maxPrice - minPrice || 1)) * 100}%`,
+                    right: `${100 - ((priceRange[1] - minPrice) / (maxPrice - minPrice || 1)) * 100}%`
                   }} className="absolute" />
                   
-                  <input type="range" min="5000000" max="250000000" step="1000000" value={priceRange[0]} onChange={handlePriceMinChange} className="absolute w-full appearance-none bg-transparent pointer-events-none" style={{ zIndex: 3, outline: 'none' }} />
-                  <input type="range" min="5000000" max="250000000" step="1000000" value={priceRange[1]} onChange={handlePriceMaxChange} className="absolute w-full appearance-none bg-transparent pointer-events-none" style={{ zIndex: 4, outline: 'none' }} />
+                  <input type="range" min={minPrice} max={maxPrice} step="1000000" value={priceRange[0]} onChange={handlePriceMinChange} className="absolute w-full appearance-none bg-transparent pointer-events-none" style={{ zIndex: 3, outline: 'none' }} />
+                  <input type="range" min={minPrice} max={maxPrice} step="1000000" value={priceRange[1]} onChange={handlePriceMaxChange} className="absolute w-full appearance-none bg-transparent pointer-events-none" style={{ zIndex: 4, outline: 'none' }} />
                   <style>{`
                     input[type=range]::-webkit-slider-thumb {
                       pointer-events: all;
@@ -523,12 +574,12 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
                 <div className="relative w-full h-8 flex items-center mb-4 mt-2">
                   <div style={{ height: "6px", background: "#E7E8E9", borderRadius: "9999px" }} className="absolute inset-x-0" />
                   <div style={{ height: "6px", background: "#2780C4", borderRadius: "9999px", 
-                    left: `${((sizeRange[0] - 1) / 99) * 100}%`,
-                    right: `${100 - ((sizeRange[1] - 1) / 99) * 100}%`
+                    left: `${((sizeRange[0] - minSize) / (maxSize - minSize || 1)) * 100}%`,
+                    right: `${100 - ((sizeRange[1] - minSize) / (maxSize - minSize || 1)) * 100}%`
                   }} className="absolute" />
                   
-                  <input type="range" min="1" max="100" step="1" value={sizeRange[0]} onChange={handleSizeMinChange} className="absolute w-full appearance-none bg-transparent pointer-events-none" style={{ zIndex: 3, outline: 'none' }} />
-                  <input type="range" min="1" max="100" step="1" value={sizeRange[1]} onChange={handleSizeMaxChange} className="absolute w-full appearance-none bg-transparent pointer-events-none" style={{ zIndex: 4, outline: 'none' }} />
+                  <input type="range" min={minSize} max={maxSize} step="1" value={sizeRange[0]} onChange={handleSizeMinChange} className="absolute w-full appearance-none bg-transparent pointer-events-none" style={{ zIndex: 3, outline: 'none' }} />
+                  <input type="range" min={minSize} max={maxSize} step="1" value={sizeRange[1]} onChange={handleSizeMaxChange} className="absolute w-full appearance-none bg-transparent pointer-events-none" style={{ zIndex: 4, outline: 'none' }} />
                 </div>
 
                 {/* Min/Max Value Pills */}
@@ -726,7 +777,12 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
                 ...filters,
                 state_id: stateSearch ? [Number(stateSearch)] : [],
                 district_id: citySearch ? [Number(citySearch)] : [],
-                tag_ids: selectedLeft
+                mandal_id: mandalSearch ? [Number(mandalSearch)] : [],
+                tag_ids: selectedLeft as any,
+                from_price: priceRange[0],
+                to_price: priceRange[1],
+                from_size: sizeRange[0],
+                to_size: sizeRange[1]
               });
               onClose();
             }}

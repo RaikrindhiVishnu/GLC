@@ -29,7 +29,14 @@ const specs = (areaProp: string, boreDepthProp: string, efficiencyProp: string, 
   {
     label: "SOIL QUALITY",
     value: soilQualityProp,
-    icon: <img src="/assets/search/Background (20).svg" alt="Soil Quality" width={48} height={48} />,
+    icon: (
+      <div style={{ width: "48px", height: "48px", background: "#CFE5FF", borderRadius: "32px", display: "flex", justifyContent: "center", alignItems: "center", flexShrink: 0 }}>
+        <svg width="18" height="19" viewBox="0 0 24 24" fill="none" stroke="#2780C4" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <polygon points="12 4 4 9 12 14 20 9 12 4"></polygon>
+          <polyline points="4 14 12 19 20 14"></polyline>
+        </svg>
+      </div>
+    ),
   },
 ];
 
@@ -63,7 +70,7 @@ export default function LandSpecificationsBento({
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: i * 0.08 }}
             style={{
-              background: item.label === "SOIL QUALITY" ? "url('/assets/compareassets/leaf.svg') center/cover no-repeat" : "#FFFFFF",
+              background: "#FFFFFF",
               boxShadow: "0px 1px 2px rgba(0,0,0,0.05)",
               borderRadius: "32px",
               padding: "20px",
@@ -73,7 +80,7 @@ export default function LandSpecificationsBento({
               alignItems: "flex-start",
               gap: "12px",
               minHeight: "130px",
-              color: item.label === "SOIL QUALITY" ? "#FFFFFF" : "inherit"
+              color: "inherit"
             }}
             className="lg:rounded-[48px] lg:p-6"
           >
@@ -81,8 +88,8 @@ export default function LandSpecificationsBento({
               {item.icon}
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 0, width: "100%" }}>
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1px", textTransform: "uppercase", color: item.label === "SOIL QUALITY" ? "rgba(255,255,255,0.7)" : "#45474C" }}>{item.label}</span>
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "18px", lineHeight: "28px", color: item.label === "SOIL QUALITY" ? "#FFFFFF" : "#0F2F4C" }}>{item.value}</span>
+              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1px", textTransform: "uppercase", color: "#45474C" }}>{item.label}</span>
+              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "18px", lineHeight: "28px", color: "#0F2F4C" }}>{item.value}</span>
             </div>
           </motion.div>
         ))}

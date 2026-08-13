@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { useGetVerificationLandsByUserIdQuery } from "../../../services/verification";
+import { useGetAllGeoMasterDataQuery } from "../../../services/master";
 import TrendingFeaturedSection from "../../search/TrendingFeaturedSection";
 
 export default function VerificationFarmlandsGrid() {
@@ -27,7 +28,24 @@ export default function VerificationFarmlandsGrid() {
     { skip: !mounted || !userId }
   );
 
-  const apiFarmlands = res?.data || [];
+  const apiFarmlands = (res?.data || []).filter((land: any) => land.is_active);
+  
+  const { data: geoDataRes } = useGetAllGeoMasterDataQuery();
+  const allDistricts = geoDataRes?.districts?.slice(1) || [];
+
+  const getDistrictName = (districtId: number) => {
+    if (!districtId) return "Unknown";
+    const district = allDistricts.find((d: any[]) => d[0] === districtId);
+    return district ? district[2] : `District ${districtId}`;
+  };
+
+  const formatPrice = (price: number) => {
+    if (!price) return "₹0.0 L";
+    if (price >= 10000000) {
+      return `₹${(price / 10000000).toFixed(1)} Cr`;
+    }
+    return `₹${(price / 100000).toFixed(1)} L`;
+  };
 
   // Pagination Logic
   const totalCount = apiFarmlands.length;
@@ -87,9 +105,6 @@ export default function VerificationFarmlandsGrid() {
 
         <div className="p-8 flex flex-col flex-1 min-h-0">
           <div className="flex flex-col gap-3">
-            <span className="font-jakarta font-bold text-[10px] bg-[#E7E8E9] text-[#45474C] w-fit px-3 py-1 rounded-full uppercase">
-              {land.views}
-            </span>
             <h3 className="m-0 font-jakarta font-bold text-[24px] text-[#131600] truncate">{land.name}</h3>
           </div>
 
@@ -196,8 +211,8 @@ export default function VerificationFarmlandsGrid() {
             return renderCard({
               id: land.farmland_id.toString(),
               name: land.farmland_code,
-              location: land.farmland_location?.district_id ? `District ${land.farmland_location.district_id}` : "Unknown",
-              price: `₹${(land.price / 10000000).toFixed(1)}Cr`,
+              location: getDistrictName(land.farmland_location?.district_id),
+              price: formatPrice(land.price),
               image: land.farmland_img,
               status: land.is_active ? "Active Verification" : "Pending",
               views: viewLabel,

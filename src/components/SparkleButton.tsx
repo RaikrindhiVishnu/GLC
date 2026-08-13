@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import AiCurationModal from "./AiCurationModal";
 
 const glassStyle: React.CSSProperties = {
@@ -21,6 +21,7 @@ const solidStyle: React.CSSProperties = {
 
 export default function SparkleButton() {
   const router = useRouter();
+  const pathname = usePathname();
   const [isGlass, setIsGlass] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -36,24 +37,23 @@ export default function SparkleButton() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const heroEl =
-        document.getElementById("hero-section") ||
-        document.getElementById("hero-screen") ||
-        document.getElementById("search-hero-screen") ||
-        document.querySelector('[id*="hero"]') ||
-        document.querySelector('[id*="Hero"]') ||
-        document.querySelector('[class*="hero"]') ||
-        document.querySelector('[class*="Hero"]') ||
-        document.querySelector("section") ||
-        (() => {
-          // Fallback to top-level large elements
-          const divs = Array.from(document.querySelectorAll("div"));
-          return divs.find(d => {
-            const rect = d.getBoundingClientRect();
-            // If it's tall and starts near the top, it's likely a hero
-            return rect.height > 300 && (rect.top + window.scrollY) <= 100;
-          });
-        })();
+      const candidates = [
+        ...Array.from(document.querySelectorAll('[id*="hero"]')),
+        ...Array.from(document.querySelectorAll('[id*="Hero"]')),
+        ...Array.from(document.querySelectorAll('[class*="hero"]')),
+        ...Array.from(document.querySelectorAll('[class*="Hero"]')),
+        ...Array.from(document.querySelectorAll("section"))
+      ];
+      
+      let heroEl = candidates.find(el => el && el.getBoundingClientRect().height > 0);
+
+      if (!heroEl) {
+        const divs = Array.from(document.querySelectorAll("div"));
+        heroEl = divs.find(d => {
+          const rect = d.getBoundingClientRect();
+          return rect.height > 300 && (rect.top + window.scrollY) <= 100;
+        });
+      }
 
       // If absolutely nothing matches, default to window innerHeight to assume a typical hero space
       const heroBottom = heroEl ? (heroEl.getBoundingClientRect().bottom + window.scrollY) : window.innerHeight;
@@ -82,7 +82,7 @@ export default function SparkleButton() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  if (isHidden) return null;
+  if (isHidden || pathname?.startsWith("/login")) return null;
 
   return (
     <>

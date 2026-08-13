@@ -2,12 +2,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import NotificationDropdown from "./NotificationDropdown";
 
 export type NavbarVariant = "landing" | "app";
-export type NavbarActive = "home" | "search" | "pricing" | "profile" | "documents" | "compareassets" | "comparepremium" | "none";
+export type NavbarActive = "home" | "search" | "pricing" | "profile" | "documents" | "compareassets" | "comparepremium" | "none" | "trending" | "yourlisting" | "Recommended" | "";
 
 type Props =
   | { variant?: "landing"; className?: string }
@@ -190,6 +190,7 @@ function AppNavbar({ active, className, forceScrolled }: { active?: NavbarActive
             </button>
           )}
 
+          {/*
           {active === "pricing" ? (
             <button style={{ ...ACTIVE_PILL_STYLE, background: currentActivePillBg, transition: "all 0.3s ease" }} className="w-[96px] md:w-[120px] h-[36px] md:h-[44px]" type="button">
               <ActiveLabel label="PRICING" />
@@ -207,6 +208,7 @@ function AppNavbar({ active, className, forceScrolled }: { active?: NavbarActive
               <Image src="/assets/home/HeroScreen/Vector.svg" alt="" width={20} height={18} style={{ filter: isScrolled ? darkBlueFilter : "none", transition: "filter 0.3s ease" }} />
             </button>
           )}
+          */}
 
           {active === "profile" ? (
             <button style={{ ...ACTIVE_PILL_STYLE, background: currentActivePillBg, transition: "all 0.3s ease" }} className="w-[96px] md:w-[120px] h-[36px] md:h-[44px]" type="button">

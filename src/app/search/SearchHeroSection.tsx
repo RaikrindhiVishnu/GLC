@@ -5,10 +5,18 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import FilterOverlay from "./filter/FilterOverlay";
 import Navbar from "@/components/Navbar";
+import { useSearchContext } from "./SearchContext";
 
 export default function SearchHeroSection() {
-  const [searchVal, setSearchVal] = useState("I am looking for a farm in Andhra Pradesh with a budget of ₹5Cr");
+  const { searchQuery, setSearchQuery } = useSearchContext();
+  const [localSearch, setLocalSearch] = useState(searchQuery || "");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+
+  const handleSearch = () => {
+    setSearchQuery(localSearch);
+    // Scroll to the listings grid
+    document.getElementById("listings-grid")?.scrollIntoView({ behavior: "smooth" });
+  };
 
   return (
     <section
@@ -81,13 +89,18 @@ export default function SearchHeroSection() {
           >
             <input
               type="text"
-              value={searchVal}
-              onChange={(e) => setSearchVal(e.target.value)}
+              value={localSearch}
+              onChange={(e) => setLocalSearch(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleSearch();
+                }
+              }}
               placeholder="Search Farmlands..."
               className="flex-1 bg-transparent text-[16px] font-medium leading-5.25 text-white placeholder:text-white focus:outline-none pl-3 md:pl-5 pr-2 py-2"
             />
             <button
-              onClick={() => setIsFilterOpen(true)}
+              onClick={handleSearch}
               className="relative flex h-10.5 w-10.5 min-w-10.5 items-center justify-center rounded-full bg-white hover:bg-gray-100 transition-colors shrink-0 cursor-pointer shadow-sm"
             >
               <Image src="/assets/home/HeroScreen/inside search.svg" alt="Search" width={18} height={18} />

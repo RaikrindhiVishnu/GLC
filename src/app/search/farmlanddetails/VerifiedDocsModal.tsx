@@ -240,64 +240,6 @@ export default function VerifiedDocsModal({ isOpen, onClose, farmlandId }: Verif
               <div className="hide-scroll" style={{ background: "#F3F4F5", borderRadius: "24px", width: "496px", padding: "8px", display: "flex", flexDirection: "column", gap: "8px", boxSizing: "border-box", flexShrink: 0 }}>
 
                 {(() => {
-                  const renderSubItem = (doc: { label: string, size: string }, idx: number) => (
-                    <div key={idx} style={{ width: "480px", minHeight: "96px", background: "#FFFFFF", borderRadius: "16px", display: "flex", alignItems: "center", padding: "16px 24px", boxSizing: "border-box", position: "relative" }}>
-                      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                        <img src="/assets/search/verified/Overlay (12).svg" alt="Document" width={38} height={38} />
-                      </div>
-                      <div style={{ display: "flex", flexDirection: "column", marginLeft: "16px", flex: 1, paddingRight: "120px" }}>
-                        <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0B1C30", lineHeight: "24px", whiteSpace: "pre-wrap" }}>
-                          {doc.label}
-                        </span>
-                        <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "16px", color: "#727782", lineHeight: "24px" }}>
-                          {doc.size}
-                        </span>
-                      </div>
-
-                      <button
-                        style={{ position: "absolute", right: "24px", width: "99px", height: "42px", background: "transparent", border: "1px solid rgba(39, 128, 196, 0.2)", borderRadius: "9999px", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}
-                      >
-                        <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", color: "#2780C4" }}>
-                          View
-                        </span>
-                      </button>
-                    </div>
-                  );
-
-                  if (activeCategory === "Legal Documents") {
-                    return [
-                      { label: "Land Document", size: "2.4 MB" },
-                      { label: "Pattadhar Passbook", size: "1.8 MB" },
-                      { label: "Link Document", size: "1.6 MB" },
-                      { label: "Kasara Pahani & Proceeding Copies", size: "2.1 MB" },
-                      { label: "Revenue Record", size: "1.7 MB" },
-                      { label: "Lease Agreement", size: "2.0 MB" }
-                    ].map(renderSubItem);
-                  } else if (activeCategory === "Land & Boundaries") {
-                    return [
-                      { label: "Field Measurement Book", size: "3.2 MB" },
-                      { label: "Survey Number Boundaries", size: "1.8 MB" }
-                    ].map(renderSubItem);
-                  } else if (activeCategory === "Permanent GIS\nBoundary Map") {
-                    return [
-                      { label: "Permanent GIS\nBoundary Map", size: "3.2 MB" },
-                      { label: "Soil Analysis Map", size: "2.1 MB" }
-                    ].map(renderSubItem);
-                  } else if (activeCategory === "Agriculture Report") {
-                    return [
-                      { label: "Local Agriculture Officer Report", size: "2.4 MB" },
-                      { label: "Last 5 years Crop Yielding Report", size: "2.4 MB" }
-                    ].map(renderSubItem);
-                  } else if (activeCategory === "Valuation") {
-                    return [
-                      { label: "Village Map or Naksha", size: "2.4 MB" },
-                      { label: "Sub-Register Value", size: "1.6 MB" },
-                      { label: "Valuator Report", size: "1.8 MB" },
-                      { label: "Legal Opinion Report", size: "1.7 MB" }
-                    ].map(renderSubItem);
-                  }
-
-                  // Default categories
                   const items = [
                     { label: "Legal Documents", btnText: "View Documents", icon: <img src="/assets/search/verified/Background (21).svg" alt="Legal Documents" width={38} height={38} /> },
                     { label: "Agriculture Report", btnText: "View Documents", icon: <img src="/assets/search/verified/Background (22).svg" alt="Agriculture Report" width={38} height={38} /> },
@@ -366,7 +308,7 @@ export default function VerifiedDocsModal({ isOpen, onClose, farmlandId }: Verif
                               {label.replace(/_/g, " ")}
                             </span>
                             <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "14px", color: isUploaded ? "#2780C4" : "#727782", lineHeight: "24px" }}>
-                              {isUploaded ? "Verified Document" : "Pending Verification"}
+                              {isUploaded ? (doc.file_size ? `${(Number(doc.file_size) / (1024 * 1024)).toFixed(1)} MB` : doc.size ? doc.size : "Verified Document") : "Pending Verification"}
                             </span>
                           </div>
 
@@ -378,7 +320,7 @@ export default function VerifiedDocsModal({ isOpen, onClose, farmlandId }: Verif
                             style={{ position: "absolute", right: "24px", width: "139px", height: "42px", background: "transparent", border: (isUploaded && docUrl) ? "1px solid rgba(39, 128, 196, 0.4)" : "1px solid rgba(197, 198, 205, 0.4)", borderRadius: "9999px", display: "flex", alignItems: "center", justifyContent: "center", cursor: (isUploaded && docUrl) ? "pointer" : "not-allowed", opacity: (isUploaded && docUrl) ? 1 : 0.5 }}
                           >
                             <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", color: (isUploaded && docUrl) ? "#2780C4" : "#727782" }}>
-                              View Document
+                              View
                             </span>
                           </button>
                         </div>

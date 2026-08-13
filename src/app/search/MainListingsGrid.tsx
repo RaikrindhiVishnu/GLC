@@ -137,7 +137,7 @@ const gridMatches = [
 
 export default function MainListingsGrid() {
   const router = useRouter();
-  const { filters, masterData } = useSearchContext();
+  const { filters, masterData, searchQuery } = useSearchContext();
   const [bookmarks, setBookmarks] = useState<Record<string, boolean>>({});
   const [userId, setUserId] = useState<number | null>(null);
 
@@ -191,8 +191,18 @@ export default function MainListingsGrid() {
     ? { ...filters, offset: currentPage * 6 } 
     : { state_id: [1], offset: currentPage * 6 };
   const { data: res, isLoading } = useGetAllFarmlandsByStateIdQuery(activeFilters);
-  const farmlands = res?.data || [];
-  const totalCount = res?.total_count || farmlands.length;
+  
+  let farmlands = res?.data || [];
+  if (searchQuery) {
+    const q = searchQuery.toLowerCase();
+    farmlands = farmlands.filter(farm => {
+      const codeMatch = farm.farmland_code?.toLowerCase().includes(q);
+      const locMatch = getLocationString(farm.farmland_locations?.district_id).toLowerCase().includes(q);
+      return codeMatch || locMatch;
+    });
+  }
+  
+  const totalCount = res?.total_count ? (searchQuery ? farmlands.length : res.total_count) : farmlands.length;
 
   const displayedFarmlands = farmlands.slice(0, 6);
   const totalPages = Math.max(1, Math.ceil(totalCount / 6));
@@ -272,6 +282,7 @@ export default function MainListingsGrid() {
 
   return (
     <motion.section
+      id="listings-grid"
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}

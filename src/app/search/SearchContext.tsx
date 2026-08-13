@@ -7,6 +7,8 @@ import { GetAllFarmlandsRequest } from "../../services/farmland";
 interface SearchContextType {
   filters: GetAllFarmlandsRequest;
   setFilters: React.Dispatch<React.SetStateAction<GetAllFarmlandsRequest>>;
+  searchQuery: string;
+  setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
   masterData: MasterDataResponse | null;
   geoData: GeoMasterDataResponse | null;
   isLoadingMasterData: boolean;
@@ -16,6 +18,7 @@ const SearchContext = createContext<SearchContextType | undefined>(undefined);
 
 export function SearchProvider({ children }: { children: React.ReactNode }) {
   const [filters, setFilters] = useState<GetAllFarmlandsRequest>({});
+  const [searchQuery, setSearchQuery] = useState("");
   const { data: masterDataRes, isLoading: isMasterLoading } = useGetAllMasterDataQuery();
   const { data: geoDataRes, isLoading: isGeoLoading } = useGetAllGeoMasterDataQuery();
 
@@ -28,6 +31,8 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
       value={{
         filters,
         setFilters,
+        searchQuery,
+        setSearchQuery,
         masterData,
         geoData,
         isLoadingMasterData,

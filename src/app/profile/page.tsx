@@ -66,6 +66,29 @@ export default function ProfileScreen() {
     window.location.replace("/landing");
   };
 
+  const handleShareProfile = async () => {
+    const profileUrl = window.location.href;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "My Green Land Capital Profile",
+          text: "Check out my profile on Green Land Capital!",
+          url: profileUrl,
+        });
+      } catch (err) {
+        console.error("Error sharing:", err);
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(profileUrl);
+        alert("Profile link copied to clipboard!");
+      } catch (err) {
+        console.error("Failed to copy:", err);
+        alert("Failed to copy profile link.");
+      }
+    }
+  };
+
   const [isPhoneVerified, setIsPhoneVerified] = useState(false);
   const [isAadhaarVerified, setIsAadhaarVerified] = useState(false);
   const [isPanVerified, setIsPanVerified] = useState(false);
@@ -356,7 +379,7 @@ export default function ProfileScreen() {
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="#FFFFFF"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" /></svg>
                   <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "14px", color: "#FFFFFF", letterSpacing: "0.5px", textTransform: "uppercase" }}>Edit Profile</span>
                 </button>
-                <button style={{ width: "46px", height: "46px", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", flexShrink: 0 }}>
+                <button onClick={handleShareProfile} style={{ width: "46px", height: "46px", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", flexShrink: 0 }}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" />
                     <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" /><line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
@@ -412,12 +435,8 @@ export default function ProfileScreen() {
               <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 500, fontSize: "13px", color: "#71717A" }}>{row.label}</span>
               <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                 <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "14px", color: "#0F2F4C" }}>{row.value}</span>
-                {row.type === "phone" && (
-                  isPhoneVerified ? (
+                {row.type === "phone" && isPhoneVerified && (
                     <span style={{ background: "#EFF6FF", color: "#2563EB", fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "9px", padding: "2px 6px", borderRadius: "9999px" }}>OTP VERIFIED</span>
-                  ) : (
-                    <button onClick={() => setIsPhoneVerified(true)} style={{ background: "#EFF6FF", color: "#2563EB", border: "none", cursor: "pointer", fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "9px", padding: "4px 8px", borderRadius: "9999px" }}>SEND OTP</button>
-                  )
                 )}
               </div>
             </div>
@@ -593,21 +612,21 @@ export default function ProfileScreen() {
           style={{ margin: "16px 16px 0" }}
         >
           <div style={{ padding: "0 16px 12px" }}>
-            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Active Investments</span>
+            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", letterSpacing: "1.2px", color: "#43474E", textTransform: "uppercase" }}>Active Investments</span>
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
             {boughtFarmlands.length > 0 ? boughtFarmlands.map((item, idx) => {
               const colors = ["#059669", "#D97706", "#2563EB", "#7C3AED"];
               const color = colors[idx % colors.length];
               return (
-                <div key={idx} onClick={() => router.push(`/profile/active-investment/${item.farmland_is}`)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", borderRadius: "24px", padding: "16px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0px 4px 15px rgba(0,0,0,0.02)" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-                    <div style={{ width: "42px", height: "42px", background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.04)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 2px 5px rgba(0,0,0,0.02)" }}>
+                <div key={idx} onClick={() => router.push(`/profile/active-investment/${item.farmland_is}`)} style={{ cursor: "pointer", width: "100%", background: "linear-gradient(107.62deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.3) 100%)", border: "1px solid rgba(255, 255, 255, 0.8)", boxShadow: "0px 8px 32px rgba(0, 0, 0, 0.05)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)", borderRadius: "24px", padding: "16px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "16px", minWidth: 0, flex: 1 }}>
+                    <div style={{ width: "54px", height: "56px", background: "rgba(255, 255, 255, 0.6)", border: "1px solid #FFFFFF", boxShadow: "inset 0px 2px 4px 1px #FFFFFF", backdropFilter: "blur(2px)", WebkitBackdropFilter: "blur(2px)", borderRadius: "16px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
                     </div>
-                    <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.farmland_code}</span>
-                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>{item.total_acers} Ac • ₹{item.price}</span>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "2px", minWidth: 0, flex: 1 }}>
+                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "18px", color: "#18181B", letterSpacing: "-0.45px" }}>{item.farmland_code}</span>
+                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "12px", color: "#71717A", letterSpacing: "0.3px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{item.mandal_id || "Medchal"} • ‹{(Number(item.price) / 100000).toFixed(1) || "12.5"}L • {item.total_acers || "0.5"} Ac</span>
                     </div>
                   </div>
                 </div>
@@ -626,17 +645,17 @@ export default function ProfileScreen() {
           style={{ margin: "16px 16px 0" }}
         >
           <div style={{ padding: "0 16px 12px" }}>
-            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Site Vists in queue</span>
+            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", letterSpacing: "1.2px", color: "#43474E", textTransform: "uppercase" }}>Site Vists in queue</span>
           </div>
           {(profileDetails?.upcoming_site_visits || []).map((item: any, idx: number) => (
-            <div key={idx} onClick={() => setIsSiteVisitQueueModalOpen(true)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", borderRadius: "24px", padding: "16px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0px 4px 15px rgba(0,0,0,0.02)" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-                <div style={{ width: "42px", height: "42px", background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.04)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 2px 5px rgba(0,0,0,0.02)" }}>
+            <div key={idx} onClick={() => setIsSiteVisitQueueModalOpen(true)} style={{ cursor: "pointer", width: "100%", background: "linear-gradient(107.62deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.3) 100%)", border: "1px solid rgba(255, 255, 255, 0.8)", boxShadow: "0px 8px 32px rgba(0, 0, 0, 0.05)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)", borderRadius: "24px", padding: "16px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "16px", minWidth: 0, flex: 1 }}>
+                <div style={{ width: "54px", height: "56px", background: "rgba(255, 255, 255, 0.6)", border: "1px solid #FFFFFF", boxShadow: "inset 0px 2px 4px 1px #FFFFFF", backdropFilter: "blur(2px)", WebkitBackdropFilter: "blur(2px)", borderRadius: "16px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={["#059669", "#D97706", "#2563EB", "#7C3AED"][idx % 4]} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
                 </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.farm_code}</span>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>{item.mandal_id ? "Mandal " + item.mandal_id : "Location pending"}{item.price ? " • ₹" + (Number(item.price) / 100000).toFixed(1) + "L" : ""}{item.acers ? " • " + item.acers + " Ac" : ""}</span>
+                <div style={{ display: "flex", flexDirection: "column", gap: "2px", minWidth: 0, flex: 1 }}>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "18px", color: "#18181B", letterSpacing: "-0.45px" }}>{item.farm_code}</span>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "12px", color: "#71717A", letterSpacing: "0.3px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{item.mandal_id || "Medchal"} • ‹{item.price ? (Number(item.price) / 100000).toFixed(1) : "12.5"}L • {item.acers || "0.5"} Ac</span>
                 </div>
               </div>
             </div>
@@ -651,17 +670,17 @@ export default function ProfileScreen() {
           style={{ margin: "16px 16px 0" }}
         >
           <div style={{ padding: "0 16px 12px" }}>
-            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Site Vists Completed</span>
+            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", letterSpacing: "1.2px", color: "#43474E", textTransform: "uppercase" }}>Site Vists Completed</span>
           </div>
           {(profileDetails?.completed_site_vists || []).map((item: any, idx: number) => (
-            <div key={idx} onClick={() => setIsSiteVisitModalOpen(true)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", borderRadius: "24px", padding: "16px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0px 4px 15px rgba(0,0,0,0.02)" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-                <div style={{ width: "42px", height: "42px", background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.04)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 2px 5px rgba(0,0,0,0.02)" }}>
+            <div key={idx} onClick={() => setIsSiteVisitModalOpen(true)} style={{ cursor: "pointer", width: "100%", background: "linear-gradient(107.62deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.3) 100%)", border: "1px solid rgba(255, 255, 255, 0.8)", boxShadow: "0px 8px 32px rgba(0, 0, 0, 0.05)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)", borderRadius: "24px", padding: "16px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "16px", minWidth: 0, flex: 1 }}>
+                <div style={{ width: "54px", height: "56px", background: "rgba(255, 255, 255, 0.6)", border: "1px solid #FFFFFF", boxShadow: "inset 0px 2px 4px 1px #FFFFFF", backdropFilter: "blur(2px)", WebkitBackdropFilter: "blur(2px)", borderRadius: "16px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={["#059669", "#D97706", "#2563EB", "#7C3AED"][idx % 4]} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
                 </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.farm_code}</span>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>{item.mandal_id ? "Mandal " + item.mandal_id : "Location pending"}{item.price ? " • ₹" + (Number(item.price) / 100000).toFixed(1) + "L" : ""}{item.acers ? " • " + item.acers + " Ac" : ""}</span>
+                <div style={{ display: "flex", flexDirection: "column", gap: "2px", minWidth: 0, flex: 1 }}>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "18px", color: "#18181B", letterSpacing: "-0.45px" }}>{item.farm_code}</span>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "12px", color: "#71717A", letterSpacing: "0.3px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{item.mandal_id || "Medchal"} • ‹{item.price ? (Number(item.price) / 100000).toFixed(1) : "12.5"}L • {item.acers || "0.5"} Ac</span>
                 </div>
               </div>
             </div>
@@ -676,22 +695,19 @@ export default function ProfileScreen() {
           style={{ margin: "16px 16px 0" }}
         >
           <div style={{ padding: "0 16px 12px" }}>
-            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Active Listing</span>
+            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", letterSpacing: "1.2px", color: "#43474E", textTransform: "uppercase" }}>Active Listing</span>
           </div>
           {(profileDetails?.user_listed_farmlands || []).map((item: any, idx: number) => (
             <div key={idx} style={{ width: "100%", background: "#FFFFFF", borderRadius: "24px", padding: "16px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0px 4px 15px rgba(0,0,0,0.02)" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-                <div style={{ width: "42px", height: "42px", background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.04)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 2px 5px rgba(0,0,0,0.02)" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "16px", minWidth: 0, flex: 1 }}>
+                <div style={{ width: "54px", height: "56px", background: "rgba(255, 255, 255, 0.6)", border: "1px solid #FFFFFF", boxShadow: "inset 0px 2px 4px 1px #FFFFFF", backdropFilter: "blur(2px)", WebkitBackdropFilter: "blur(2px)", borderRadius: "16px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={["#059669", "#D97706", "#2563EB", "#7C3AED"][idx % 4]} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
                 </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.farm_code}</span>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>
-                    {item.mandal_id ? "Mandal " + item.mandal_id : "Location pending"}
-                    {item.price ? " • ₹" + (Number(item.price) / 100000).toFixed(1) + "L" : ""}
-                    {item.acers ? " • " + item.acers + " Ac" : ""}
-                    {item.lat && item.long ? ` • Lat: ${item.lat}, Long: ${item.long}` : ""}
-                  </span>
+                <div style={{ display: "flex", flexDirection: "column", gap: "2px", minWidth: 0, flex: 1 }}>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "18px", color: "#18181B", letterSpacing: "-0.45px" }}>{item.farm_code}</span>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "12px", color: "#71717A", letterSpacing: "0.3px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                    {item.mandal_id || "Medchal"} • ‹{item.price ? (Number(item.price) / 100000).toFixed(1) : "12.5"}L • {item.acers || "0.5"} Ac
+                    </span>
                 </div>
               </div>
             </div>
@@ -706,18 +722,18 @@ export default function ProfileScreen() {
           style={{ margin: "16px 16px 40px" }}
         >
           <div style={{ padding: "0 16px 12px" }}>
-            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Active Deals In Queue</span>
+            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", letterSpacing: "1.2px", color: "#43474E", textTransform: "uppercase" }}>Active Deals In Queue</span>
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
             {(profileDetails?.user_purchased_lands_tracking || []).map((item: any, idx: number) => (
               <div key={idx} style={{ width: "100%", background: "#FFFFFF", borderRadius: "24px", padding: "16px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0px 4px 15px rgba(0,0,0,0.02)" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-                  <div style={{ width: "42px", height: "42px", background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.04)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 2px 5px rgba(0,0,0,0.02)" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "16px", minWidth: 0, flex: 1 }}>
+                  <div style={{ width: "54px", height: "56px", background: "rgba(255, 255, 255, 0.6)", border: "1px solid #FFFFFF", boxShadow: "inset 0px 2px 4px 1px #FFFFFF", backdropFilter: "blur(2px)", WebkitBackdropFilter: "blur(2px)", borderRadius: "16px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={["#059669", "#D97706", "#2563EB", "#7C3AED"][idx % 4]} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
                   </div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.farm_code}</span>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>{item.mandal_id ? "Mandal " + item.mandal_id : "Location pending"}{item.price ? " • ₹" + (Number(item.price) / 100000).toFixed(1) + "L" : ""}{item.acers ? " • " + item.acers + " Ac" : ""}</span>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "2px", minWidth: 0, flex: 1 }}>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "18px", color: "#18181B", letterSpacing: "-0.45px" }}>{item.farm_code}</span>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "12px", color: "#71717A", letterSpacing: "0.3px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{item.mandal_id || "Medchal"} • ‹{item.price ? (Number(item.price) / 100000).toFixed(1) : "12.5"}L • {item.acers || "0.5"} Ac</span>
                   </div>
                 </div>
               </div>
@@ -792,22 +808,15 @@ export default function ProfileScreen() {
 
             <div style={{ position: "absolute", top: "186px", left: "0px", right: "0px", display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center", gap: "12px", zIndex: 10, padding: "0 20px" }}>
               <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "45px", lineHeight: "57px", letterSpacing: "-0.04em", color: "#FFFFFF", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{fullName}</span>
-              <div style={{ width: "37px", height: "37px", borderRadius: "50%", background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 10.8824px 16.3235px -3.26471px rgba(0, 0, 0, 0.1), 0px 4.35294px 6.52941px -4.35294px rgba(0, 0, 0, 0.1)", flexShrink: 0 }}>
-                <svg width="18" height="15" viewBox="22 13 19 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M24.5586 24.4258L22.5586 14.1133L28.0586 18.8008L31.5586 13.1758L35.0586 18.8008L40.5586 14.1133L38.5586 24.4258H24.5586ZM38.5586 27.2383C38.5586 27.8008 38.1586 28.1758 37.5586 28.1758H25.5586C24.9586 28.1758 24.5586 27.8008 24.5586 27.2383V26.3008H38.5586V27.2383Z" fill="white" />
-                </svg>
-              </div>
             </div>
 
             <div style={{ position: "absolute", top: "284px", left: "35px", right: "35px", display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", zIndex: 10 }}>
-              <div style={{ height: "50px", background: "#2780C4", borderRadius: "20px", display: "flex", alignItems: "center", padding: "0 20px", boxShadow: "0px 4px 12px rgba(0,0,0,0.1)" }}>
-                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "17.6px", color: "#FFFFFF", letterSpacing: "-0.02em" }}>Silver Tier • 4 Unlocks Available</span>
-              </div>
+              <div />
               <button onClick={() => setIsEditModalOpen(true)} style={{ height: "50px", background: "#F8F9FA", borderRadius: "20px", border: "none", display: "flex", alignItems: "center", gap: "8px", padding: "0 18px", cursor: "pointer", transition: "opacity 0.2s ease" }} onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.85")} onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="#0F2F4C"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" /></svg>
                 <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "17.6px", color: "#0F2F4C", letterSpacing: "-0.04em" }}>Edit Profile</span>
               </button>
-              <button onClick={() => router.push("/profile")} style={{ width: "50px", height: "50px", background: "#F8F9FA", borderRadius: "50%", border: "none", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "opacity 0.2s ease" }} onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.85")} onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}>
+              <button onClick={handleShareProfile} style={{ width: "50px", height: "50px", background: "#F8F9FA", borderRadius: "50%", border: "none", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "opacity 0.2s ease" }} onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.85")} onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F2F4C" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" />
                   <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" /><line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
@@ -905,10 +914,8 @@ export default function ProfileScreen() {
                 <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "14px", color: "#71717A", width: "54px" }}>Mobile Number</span>
                 <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "8px" }}>
                   <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C", whiteSpace: "nowrap" }}>{phone}</span>
-                  {isPhoneVerified ? (
+                  {isPhoneVerified && (
                     <span style={{ background: "#EFF6FF", color: "#2563EB", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", padding: "4px 16px", borderRadius: "9999px", whiteSpace: "nowrap" }}>OTP VERIFIED</span>
-                  ) : (
-                    <button onClick={() => setIsPhoneVerified(true)} style={{ background: "#EFF6FF", color: "#2563EB", border: "none", cursor: "pointer", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", padding: "4px 16px", borderRadius: "9999px", whiteSpace: "nowrap" }}>SEND OTP</button>
                   )}
                 </div>
               </div>
@@ -1044,14 +1051,14 @@ export default function ProfileScreen() {
             </div>
             <div style={{ background: "#FFFFFF", borderRadius: "32px", boxShadow: "0px 1px 2px rgba(0,0,0,0.05)", width: "381px", display: "flex", flexDirection: "column" }}>
               <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: "20px 24px", cursor: "pointer" }} onClick={() => router.push("/home/supportcenter")}>
-                <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "16px", minWidth: 0, flex: 1 }}>
                   <div style={{ width: "18.33px", height: "16.65px", background: "#A1A1AA", display: "flex", alignItems: "center", justifyContent: "center", maskImage: "url('/assets/profile account/Container (15).svg')", maskSize: "contain", maskRepeat: "no-repeat", WebkitMaskImage: "url('/assets/profile account/Container (15).svg')", WebkitMaskSize: "contain", WebkitMaskRepeat: "no-repeat" }}></div>
                   <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C" }}>Support Centre</span>
                 </div>
                 <div style={{ width: "7.4px", height: "12px", background: "#D4D4D8", maskImage: "url('/assets/profile account/Icon (20).svg')", maskSize: "contain", maskRepeat: "no-repeat", WebkitMaskImage: "url('/assets/profile account/Icon (20).svg')", WebkitMaskSize: "contain", WebkitMaskRepeat: "no-repeat" }}></div>
               </div>
               <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: "20px 24px", borderTop: "1px solid #FAFAFA", cursor: "pointer" }} onClick={() => router.push("/profile/savedfarmlands")}>
-                <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "16px", minWidth: 0, flex: 1 }}>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A1A1AA" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
                   <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C" }}>Saved Farmlands</span>
                 </div>
@@ -1087,22 +1094,22 @@ export default function ProfileScreen() {
           {/* Active Investments */}
           <div style={{ display: "flex", flexDirection: "column", gap: "16px", width: "100%" }}>
             <div style={{ padding: "0 8px" }}>
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Active Investments</span>
+              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", letterSpacing: "1.2px", color: "#43474E", textTransform: "uppercase" }}>Active Investments</span>
             </div>
 
-            <div data-lenis-prevent="true" className="hover-scrollbar" style={{ display: "flex", flexDirection: "column", gap: "16px", width: "100%", maxHeight: "190px", overflowY: "auto", paddingBottom: "8px", paddingRight: "4px" }}>
+            <div data-lenis-prevent="true" className="hover-scrollbar" style={{ display: "flex", flexDirection: "column", gap: "16px", width: "100%", maxHeight: "250px", overflowY: "auto", paddingBottom: "8px", paddingRight: "4px" }}>
               {boughtFarmlands.length > 0 ? boughtFarmlands.map((item, idx) => {
                 const colors = ["#059669", "#D97706", "#2563EB", "#7C3AED"];
                 const color = colors[idx % colors.length];
                 return (
-                  <div key={idx} onClick={() => router.push(`/profile/active-investment/${item.farmland_is}`)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", borderRadius: "32px", padding: "20px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0px 4px 15px rgba(0,0,0,0.02)" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-                      <div style={{ width: "42px", height: "42px", background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.04)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 2px 5px rgba(0,0,0,0.02)" }}>
+                  <div key={idx} onClick={() => router.push(`/profile/active-investment/${item.farmland_is}`)} style={{ cursor: "pointer", width: "100%", background: "linear-gradient(107.62deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.3) 100%)", border: "1px solid rgba(255, 255, 255, 0.8)", boxShadow: "0px 8px 32px rgba(0, 0, 0, 0.05)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)", borderRadius: "40px", padding: "20px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "16px", minWidth: 0, flex: 1 }}>
+                      <div style={{ width: "54px", height: "56px", background: "rgba(255, 255, 255, 0.6)", border: "1px solid #FFFFFF", boxShadow: "inset 0px 2px 4px 1px #FFFFFF", backdropFilter: "blur(2px)", WebkitBackdropFilter: "blur(2px)", borderRadius: "16px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
                       </div>
-                      <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-                        <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.farmland_code}</span>
-                        <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>{item.total_acers} Ac • ₹{item.price}</span>
+                      <div style={{ display: "flex", flexDirection: "column", gap: "2px", minWidth: 0, flex: 1 }}>
+                        <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "18px", color: "#18181B", letterSpacing: "-0.45px" }}>{item.farmland_code}</span>
+                        <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "12px", color: "#71717A", letterSpacing: "0.3px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{item.mandal_id || "Medchal"} • ‹{(Number(item.price) / 100000).toFixed(1) || "12.5"}L • {item.total_acers || "0.5"} Ac</span>
                       </div>
                     </div>
                   </div>
@@ -1116,18 +1123,18 @@ export default function ProfileScreen() {
           {/* Site Visits in queue */}
           <div style={{ display: "flex", flexDirection: "column", gap: "16px", width: "100%" }}>
             <div style={{ padding: "0 8px" }}>
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Site Vists in queue</span>
+              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", letterSpacing: "1.2px", color: "#43474E", textTransform: "uppercase" }}>Site Vists in queue</span>
             </div>
-            <div data-lenis-prevent="true" className="hover-scrollbar" style={{ display: "flex", flexDirection: "column", gap: "16px", width: "100%", maxHeight: "95px", overflowY: "auto", paddingBottom: "8px", paddingRight: "4px" }}>
+            <div data-lenis-prevent="true" className="hover-scrollbar" style={{ display: "flex", flexDirection: "column", gap: "16px", width: "100%", maxHeight: "98px", overflowY: "auto", paddingBottom: "8px", paddingRight: "4px" }}>
               {(profileDetails?.upcoming_site_visits || []).map((item: any, idx: number) => (
-                <div key={idx} onClick={() => setIsSiteVisitQueueModalOpen(true)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", borderRadius: "32px", padding: "20px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0px 4px 15px rgba(0,0,0,0.02)" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-                  <div style={{ width: "42px", height: "42px", background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.04)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 2px 5px rgba(0,0,0,0.02)" }}>
+                <div key={idx} onClick={() => setIsSiteVisitQueueModalOpen(true)} style={{ cursor: "pointer", width: "100%", background: "linear-gradient(107.62deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.3) 100%)", border: "1px solid rgba(255, 255, 255, 0.8)", boxShadow: "0px 8px 32px rgba(0, 0, 0, 0.05)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)", borderRadius: "40px", padding: "20px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "16px", minWidth: 0, flex: 1 }}>
+                  <div style={{ width: "54px", height: "56px", background: "rgba(255, 255, 255, 0.6)", border: "1px solid #FFFFFF", boxShadow: "inset 0px 2px 4px 1px #FFFFFF", backdropFilter: "blur(2px)", WebkitBackdropFilter: "blur(2px)", borderRadius: "16px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={["#059669", "#D97706", "#2563EB", "#7C3AED"][idx % 4]} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
                   </div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.farm_code}</span>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>{item.mandal_id ? "Mandal " + item.mandal_id : "Location pending"}{item.price ? " • ₹" + (Number(item.price) / 100000).toFixed(1) + "L" : ""}{item.acers ? " • " + item.acers + " Ac" : ""}</span>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "2px", minWidth: 0, flex: 1 }}>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "18px", color: "#18181B", letterSpacing: "-0.45px" }}>{item.farm_code}</span>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "12px", color: "#71717A", letterSpacing: "0.3px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{item.mandal_id || "Medchal"} • ‹{item.price ? (Number(item.price) / 100000).toFixed(1) : "12.5"}L • {item.acers || "0.5"} Ac</span>
                   </div>
                 </div>
               </div>
@@ -1138,18 +1145,18 @@ export default function ProfileScreen() {
           {/* Site Visits Completed */}
           <div style={{ display: "flex", flexDirection: "column", gap: "16px", width: "100%" }}>
             <div style={{ padding: "0 8px" }}>
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Site Vists Completed</span>
+              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", letterSpacing: "1.2px", color: "#43474E", textTransform: "uppercase" }}>Site Vists Completed</span>
             </div>
-            <div data-lenis-prevent="true" className="hover-scrollbar" style={{ display: "flex", flexDirection: "column", gap: "16px", width: "100%", maxHeight: "95px", overflowY: "auto", paddingBottom: "8px", paddingRight: "4px" }}>
+            <div data-lenis-prevent="true" className="hover-scrollbar" style={{ display: "flex", flexDirection: "column", gap: "16px", width: "100%", maxHeight: "98px", overflowY: "auto", paddingBottom: "8px", paddingRight: "4px" }}>
               {(profileDetails?.completed_site_vists || []).map((item: any, idx: number) => (
-                <div key={idx} onClick={() => setIsSiteVisitModalOpen(true)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", borderRadius: "32px", padding: "20px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0px 4px 15px rgba(0,0,0,0.02)" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-                  <div style={{ width: "42px", height: "42px", background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.04)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 2px 5px rgba(0,0,0,0.02)" }}>
+                <div key={idx} onClick={() => setIsSiteVisitModalOpen(true)} style={{ cursor: "pointer", width: "100%", background: "linear-gradient(107.62deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.3) 100%)", border: "1px solid rgba(255, 255, 255, 0.8)", boxShadow: "0px 8px 32px rgba(0, 0, 0, 0.05)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)", borderRadius: "40px", padding: "20px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "16px", minWidth: 0, flex: 1 }}>
+                  <div style={{ width: "54px", height: "56px", background: "rgba(255, 255, 255, 0.6)", border: "1px solid #FFFFFF", boxShadow: "inset 0px 2px 4px 1px #FFFFFF", backdropFilter: "blur(2px)", WebkitBackdropFilter: "blur(2px)", borderRadius: "16px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={["#059669", "#D97706", "#2563EB", "#7C3AED"][idx % 4]} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
                   </div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.farm_code}</span>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>{item.mandal_id ? "Mandal " + item.mandal_id : "Location pending"}{item.price ? " • ₹" + (Number(item.price) / 100000).toFixed(1) + "L" : ""}{item.acers ? " • " + item.acers + " Ac" : ""}</span>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "2px", minWidth: 0, flex: 1 }}>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "18px", color: "#18181B", letterSpacing: "-0.45px" }}>{item.farm_code}</span>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "12px", color: "#71717A", letterSpacing: "0.3px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{item.mandal_id || "Medchal"} • ‹{item.price ? (Number(item.price) / 100000).toFixed(1) : "12.5"}L • {item.acers || "0.5"} Ac</span>
                   </div>
                 </div>
               </div>
@@ -1160,22 +1167,19 @@ export default function ProfileScreen() {
           {/* Active Listing */}
           <div style={{ display: "flex", flexDirection: "column", gap: "16px", width: "100%" }}>
             <div style={{ padding: "0 8px" }}>
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Active Listing</span>
+              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", letterSpacing: "1.2px", color: "#43474E", textTransform: "uppercase" }}>Active Listing</span>
             </div>
-            <div data-lenis-prevent="true" className="hover-scrollbar" style={{ display: "flex", flexDirection: "column", gap: "16px", width: "100%", maxHeight: "95px", overflowY: "auto", paddingBottom: "8px", paddingRight: "4px" }}>
+            <div data-lenis-prevent="true" className="hover-scrollbar" style={{ display: "flex", flexDirection: "column", gap: "16px", width: "100%", maxHeight: "98px", overflowY: "auto", paddingBottom: "8px", paddingRight: "4px" }}>
               {(profileDetails?.user_listed_farmlands || []).map((item: any, idx: number) => (
-                <div key={idx} onClick={() => router.push(`/profile/active-listing/${item.farm_id}`)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", borderRadius: "32px", padding: "20px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0px 4px 15px rgba(0,0,0,0.02)" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-                  <div style={{ width: "42px", height: "42px", background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.04)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 2px 5px rgba(0,0,0,0.02)" }}>
+                <div key={idx} onClick={() => router.push(`/profile/active-listing/${item.farm_id}`)} style={{ cursor: "pointer", width: "100%", background: "linear-gradient(107.62deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.3) 100%)", border: "1px solid rgba(255, 255, 255, 0.8)", boxShadow: "0px 8px 32px rgba(0, 0, 0, 0.05)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)", borderRadius: "40px", padding: "20px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "16px", minWidth: 0, flex: 1 }}>
+                  <div style={{ width: "54px", height: "56px", background: "rgba(255, 255, 255, 0.6)", border: "1px solid #FFFFFF", boxShadow: "inset 0px 2px 4px 1px #FFFFFF", backdropFilter: "blur(2px)", WebkitBackdropFilter: "blur(2px)", borderRadius: "16px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={["#059669", "#D97706", "#2563EB", "#7C3AED"][idx % 4]} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
                   </div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.farm_code}</span>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>
-                      {item.mandal_id ? "Mandal " + item.mandal_id : "Location pending"}
-                      {item.price ? " • ₹" + (Number(item.price) / 100000).toFixed(1) + "L" : ""}
-                      {item.acers ? " • " + item.acers + " Ac" : ""}
-                      {item.lat && item.long ? ` • Lat: ${item.lat}, Long: ${item.long}` : ""}
+                  <div style={{ display: "flex", flexDirection: "column", gap: "2px", minWidth: 0, flex: 1 }}>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "18px", color: "#18181B", letterSpacing: "-0.45px" }}>{item.farm_code}</span>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "12px", color: "#71717A", letterSpacing: "0.3px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                      {item.mandal_id || "Medchal"} • ‹{item.price ? (Number(item.price) / 100000).toFixed(1) : "12.5"}L • {item.acers || "0.5"} Ac
                     </span>
                   </div>
                 </div>
@@ -1187,18 +1191,18 @@ export default function ProfileScreen() {
           {/* Active Deals In Queue */}
           <div style={{ display: "flex", flexDirection: "column", gap: "16px", width: "100%" }}>
             <div style={{ padding: "0 8px" }}>
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1.2px", color: "#71717A", textTransform: "uppercase" }}>Active Deals In Queue</span>
+              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", letterSpacing: "1.2px", color: "#43474E", textTransform: "uppercase" }}>Active Deals In Queue</span>
             </div>
-            <div data-lenis-prevent="true" className="hover-scrollbar" style={{ display: "flex", flexDirection: "column", gap: "16px", width: "100%", maxHeight: "190px", overflowY: "auto", paddingBottom: "8px", paddingRight: "4px" }}>
+            <div data-lenis-prevent="true" className="hover-scrollbar" style={{ display: "flex", flexDirection: "column", gap: "16px", width: "100%", maxHeight: "250px", overflowY: "auto", paddingBottom: "8px", paddingRight: "4px" }}>
               {(profileDetails?.user_purchased_lands_tracking || []).map((item: any, idx: number) => (
-                <div key={idx} onClick={() => router.push(`/profile/active-deals/${item.farm_id || item.farmland_id}`)} style={{ cursor: "pointer", width: "100%", background: "#FFFFFF", borderRadius: "32px", padding: "20px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0px 4px 15px rgba(0,0,0,0.02)" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-                  <div style={{ width: "42px", height: "42px", background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.04)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 2px 5px rgba(0,0,0,0.02)" }}>
+                <div key={idx} onClick={() => router.push(`/profile/active-deals/${item.farm_id || item.farmland_id}`)} style={{ cursor: "pointer", width: "100%", background: "linear-gradient(107.62deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.3) 100%)", border: "1px solid rgba(255, 255, 255, 0.8)", boxShadow: "0px 8px 32px rgba(0, 0, 0, 0.05)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)", borderRadius: "40px", padding: "20px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "16px", minWidth: 0, flex: 1 }}>
+                  <div style={{ width: "54px", height: "56px", background: "rgba(255, 255, 255, 0.6)", border: "1px solid #FFFFFF", boxShadow: "inset 0px 2px 4px 1px #FFFFFF", backdropFilter: "blur(2px)", WebkitBackdropFilter: "blur(2px)", borderRadius: "16px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={["#059669", "#D97706", "#2563EB", "#7C3AED"][idx % 4]} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 22l10-10" /></svg>
                   </div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "15px", color: "#18181B", letterSpacing: "-0.2px" }}>{item.farm_code}</span>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "10px", color: "#71717A", letterSpacing: "0.2px" }}>{item.mandal_id ? "Mandal " + item.mandal_id : "Location pending"}{item.price ? " • ₹" + (Number(item.price) / 100000).toFixed(1) + "L" : ""}{item.acers ? " • " + item.acers + " Ac" : ""}</span>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "2px", minWidth: 0, flex: 1 }}>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "18px", color: "#18181B", letterSpacing: "-0.45px" }}>{item.farm_code}</span>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "12px", color: "#71717A", letterSpacing: "0.3px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{item.mandal_id || "Medchal"} • ‹{item.price ? (Number(item.price) / 100000).toFixed(1) : "12.5"}L • {item.acers || "0.5"} Ac</span>
                   </div>
                 </div>
               </div>

@@ -209,7 +209,10 @@ export default function SiteVisitCompletedModal({
               {/* Cards */}
               <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "20px", width: "100%" }}>
                 {/* Geo Nav Card */}
-                <div style={{
+                <div 
+                  onClick={() => window.open("https://maps.google.com/?q=17.3850,78.4867", "_blank")}
+                  className="hover:opacity-90 transition-opacity"
+                  style={{
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "space-between",

@@ -13,7 +13,14 @@ export default function PopularGrid() {
   const { data: geoDataRes } = useGetAllGeoMasterDataQuery();
   const { data: masterData } = useGetAllMasterDataQuery();
   
-  const farmlands = res?.data || [];
+  const defaultFarmlands = [
+    { farmland_id: "glc-sos-01", farmland_code: "GLC SOS 01", fallback_location: "VIZAG, A.P.", land_description: "Prime editorial land parcel featuring rich soil biodiversity and vintage irrigation architecture.", farmland_img: "/assets/home/PopularFarmlands/glc1.svg", price: 15000000 },
+    { farmland_id: "glc-sos-02", farmland_code: "GLC SOS 02", fallback_location: "TANUKU, A.P.", land_description: "Prime editorial land parcel featuring rich soil biodiversity and vintage irrigation architecture.", farmland_img: "/assets/home/PopularFarmlands/glc2.svg", price: 12000000 },
+    { farmland_id: "glc-sos-03", farmland_code: "GLC SOS 03", fallback_location: "BHIMAVARAM, A.P.", land_description: "Prime editorial land parcel featuring rich soil biodiversity and vintage irrigation architecture.", farmland_img: "/assets/home/PopularFarmlands/glcsos3.svg", price: 18000000 },
+    { farmland_id: "glc-sos-04", farmland_code: "GLC SOS 04", fallback_location: "RAJAHMUNDRY, A.P.", land_description: "Prime editorial land parcel featuring rich soil biodiversity and vintage irrigation architecture.", farmland_img: "/assets/home/PopularFarmlands/glc1.svg", price: 21000000 },
+    { farmland_id: "glc-sos-05", farmland_code: "GLC SOS 05", fallback_location: "VIZAG, A.P.", land_description: "Prime editorial land parcel featuring rich soil biodiversity and vintage irrigation architecture.", farmland_img: "/assets/home/PopularFarmlands/glc2.svg", price: 14000000 },
+  ];
+  const farmlands = res?.data && res.data.length > 0 ? res.data : defaultFarmlands;
 
   // Helper to get formatted location string
   const getLocationDetails = (districtId?: number) => {
@@ -42,7 +49,7 @@ export default function PopularGrid() {
   }, [farmlands, currentPage]);
 
   const renderCard = (farm: any, i: number) => {
-    const { fullStr } = getLocationDetails(farm.farmland_district_id || farm.location_details?.district_id);
+    const locationStr = farm.fallback_location || getLocationDetails(farm.farmland_district_id || farm.location_details?.district_id).fullStr;
     let imgUrl = farm.farmland_image || farm.farmland_img;
     if (imgUrl === "null" || imgUrl?.toLowerCase().endsWith('.pdf')) {
       imgUrl = "";
@@ -84,7 +91,7 @@ export default function PopularGrid() {
         title={farm.farmland_code}
         description={farm.land_description || "A highly sought-after farmland listing."}
         price={`₹${formattedPrice}`}
-        location={fullStr}
+        location={locationStr}
         tagText={displayTag}
         imageUrl={imgUrl}
         reverseLayout={isReverse}

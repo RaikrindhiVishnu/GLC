@@ -10,12 +10,18 @@ interface FacilitiesCultivationProps {
   currentCrop?: string;
   potentialCrop?: string;
   facilitiesData?: GetFacilitiesByFarmlandIdResponse;
+  railwayFallback?: string;
+  airportFallback?: string;
+  highwayFallback?: string;
 }
 
 export default function FacilitiesCultivation({
   currentCrop = "Mango Grove",
   potentialCrop = "Superfood Berry Clusters",
   facilitiesData,
+  railwayFallback = "Not specified",
+  airportFallback = "Not specified",
+  highwayFallback = "Not specified",
 }: FacilitiesCultivationProps) {
   const { data: masterDataRes } = useGetAllMasterDataQuery();
   const masterData = masterDataRes?.data;
@@ -40,9 +46,14 @@ export default function FacilitiesCultivation({
     return getCropDesc(cropsData) || "Not specified";
   };
 
-  const cropsThatCanBeGrown = parseCrops(facilitiesData?.crops_that_can_be_grown);
-  const currentCultivationDesc = parseCrops(facilitiesData?.current_cultivation);
-  const futureCropsSuggestions = parseCrops(facilitiesData?.future_crops_suggetions);
+  const getParsedValue = (val: any) => {
+    const parsed = parseCrops(val);
+    return parsed !== "Not specified" ? parsed : null;
+  };
+
+  const cropsThatCanBeGrown = getParsedValue(facilitiesData?.crops_that_can_be_grown) || potentialCrop;
+  const currentCultivationDesc = getParsedValue(facilitiesData?.current_cultivation) || currentCrop;
+  const futureCropsSuggestions = getParsedValue(facilitiesData?.future_crops_suggetions) || potentialCrop;
 
   return (
     <div className="flex flex-col sm:flex-row gap-4 lg:gap-6 w-full">
@@ -62,9 +73,9 @@ export default function FacilitiesCultivation({
 
         <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
           {[
-            { label: "Railway Station", value: getDistanceDesc(facilitiesData?.railway?.distance_id) || "Not specified" },
-            { label: "Domestic Airport", value: getDistanceDesc(facilitiesData?.airport?.distance_id) || "Not specified" },
-            { label: "Highway Access", value: facilitiesData?.road_appoarch?.road_width ? `${facilitiesData.road_appoarch.road_width}m` : "Not specified" },
+            { label: "Railway Station", value: getDistanceDesc(facilitiesData?.railway?.distance_id) || railwayFallback },
+            { label: "Domestic Airport", value: getDistanceDesc(facilitiesData?.airport?.distance_id) || airportFallback },
+            { label: "Highway Access", value: facilitiesData?.road_appoarch?.road_width ? `${facilitiesData.road_appoarch.road_width}m` : highwayFallback },
           ].map((item, i) => (
             <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingBottom: i < 2 ? "14px" : 0, borderBottom: i < 2 ? "1px solid #E1E3E4" : "none" }}>
               <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "15px", color: "#45474C" }}>{item.label}</span>

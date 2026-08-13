@@ -52,6 +52,11 @@ export default function LoginPage() {
         localStorage.setItem("userId", extractedUserId.toString());
       }
 
+      if (res.is_first_login === 1) {
+        router.push(`/login/reset-password?email=${encodeURIComponent(email)}`);
+        return;
+      }
+
       // Redirect to home page
       router.push("/home");
     } catch (err: any) {
@@ -110,10 +115,13 @@ export default function LoginPage() {
         <div className="w-px h-5 bg-[#EFEFEF] shrink-0" />
         <input
           type="email"
+          name="email_dummy_autofill_prevent"
+          id="email_dummy_autofill_prevent"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Email Address or Investor ID"
           className="flex-1 bg-transparent text-[14px] text-[#434343] placeholder:text-[#8C8C8C] focus:outline-none font-jakarta cursor-text"
+          autoComplete="new-password"
         />
       </motion.div>
 
@@ -128,10 +136,13 @@ export default function LoginPage() {
         <div className="w-px h-5 bg-[#EFEFEF] shrink-0" />
         <input
           type={showPassword ? "text" : "password"}
+          name="password_dummy_autofill_prevent"
+          id="password_dummy_autofill_prevent"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
           className="flex-1 bg-transparent text-[14px] text-[#434343] placeholder:text-[#BDBDBD] focus:outline-none font-jakarta cursor-text"
+          autoComplete="new-password"
         />
         <button onClick={() => setShowPassword(s => !s)} className="shrink-0 [-webkit-tap-highlight-color:transparent] cursor-pointer hover:opacity-70">
           {showPassword ? (

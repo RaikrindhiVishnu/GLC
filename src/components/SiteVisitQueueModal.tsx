@@ -198,7 +198,10 @@ export default function SiteVisitQueueModal({
               {/* Cards */}
               <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "20px", width: "100%" }}>
                 {/* Geo Nav Card */}
-                <div style={{
+                <div 
+                  onClick={() => window.open("https://maps.google.com/?q=17.3850,78.4867", "_blank")}
+                  className="hover:opacity-90 transition-opacity"
+                  style={{
                   display: "flex", flexDirection: "column", justifyContent: "space-between",
                   padding: "28px", flex: "1 1 260px", minHeight: "180px",
                   background: "rgba(253,253,253,0.78)", border: "1px solid #C4C6CF",

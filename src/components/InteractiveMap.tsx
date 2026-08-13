@@ -54,6 +54,16 @@ export default function InteractiveMap({ onLocationChange, onPolygonChange, onFu
     }
   };
 
+  const handleCurrentLocation = (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    if (mapInstanceRef.current) {
+      mapInstanceRef.current.locate({ setView: true, maxZoom: 16 });
+    }
+  };
+
   useEffect(() => {
     window.dispatchEvent(new CustomEvent("mapFullscreenChange", { detail: isFullscreen }));
     if (typeof document !== 'undefined') {
@@ -105,9 +115,19 @@ export default function InteractiveMap({ onLocationChange, onPolygonChange, onFu
       }
     }, 250);
 
-    map.on("click", () => {
+    map.on("click", (e: any) => {
       if (mapClickCbRef.current) {
         mapClickCbRef.current();
+      }
+      if (!viewOnly) {
+        if (markerRef.current && drawnItemsRef.current) {
+          drawnItemsRef.current.removeLayer(markerRef.current);
+        }
+        const latlng = e.latlng;
+        markerRef.current = L.marker(latlng).addTo(drawnItemsRef.current as L.FeatureGroup);
+        if (locationCbRef.current) {
+          locationCbRef.current({ lat: latlng.lat, lng: latlng.lng });
+        }
       }
     });
 
@@ -129,6 +149,17 @@ export default function InteractiveMap({ onLocationChange, onPolygonChange, onFu
         keepResult: true,
       });
       map.addControl(searchControl);
+
+      map.on("geosearch/showlocation", (result: any) => {
+        if (markerRef.current && drawnItemsRef.current) {
+          drawnItemsRef.current.removeLayer(markerRef.current);
+        }
+        const latlng = { lat: result.location.y, lng: result.location.x };
+        markerRef.current = L.marker([latlng.lat, latlng.lng]).addTo(drawnItemsRef.current as L.FeatureGroup);
+        if (locationCbRef.current) {
+          locationCbRef.current(latlng);
+        }
+      });
     }
 
     const drawnItems = new L.FeatureGroup();
@@ -168,7 +199,7 @@ export default function InteractiveMap({ onLocationChange, onPolygonChange, onFu
       }
 
       if (latlngs.length > 0) {
-        polygonLayerRef.current = L.polygon(latlngs, { color: '#2780C4', weight: 3.84, fillColor: '#2780C4', fillOpacity: 0.1 }).addTo(drawnItems);
+        polygonLayerRef.current = L.polygon(latlngs, { color: '#EA4335', weight: 6, dashArray: '10, 10', fillColor: '#EA4335', fillOpacity: 0.25 }).addTo(drawnItems);
         const bounds = polygonLayerRef.current.getBounds();
         // Delay fitBounds so it fires after the map finishes its initial render
         setTimeout(() => {
@@ -181,9 +212,9 @@ export default function InteractiveMap({ onLocationChange, onPolygonChange, onFu
 
     if (!viewOnly) {
       const drawControl = new L.Control.Draw({
-        edit: { featureGroup: drawnItems },
+        edit: { featureGroup: drawnItems, edit: false, remove: true },
         draw: {
-          polygon: { allowIntersection: false, showArea: true, shapeOptions: { color: '#004A78', weight: 3 } },
+          polygon: { allowIntersection: false, showArea: true, shapeOptions: { color: '#EA4335', weight: 6, dashArray: '10, 10', fillColor: '#EA4335', fillOpacity: 0.25 } },
           polyline: false,
           rectangle: false,
           circle: false,
@@ -329,9 +360,80 @@ export default function InteractiveMap({ onLocationChange, onPolygonChange, onFu
         .leaflet-control-geosearch.bar a.reset:hover {
           background: #E2E8F0 !important;
         }
+        .leaflet-draw-toolbar {
+          margin-top: 16px !important;
+          margin-left: 16px !important;
+        }
+        .leaflet-draw-toolbar a {
+          width: 44px !important;
+          height: 44px !important;
+          line-height: 44px !important;
+          background-color: white !important;
+          border-radius: 8px !important;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+          border: none !important;
+          margin-bottom: 8px !important;
+        }
+        .leaflet-draw-toolbar a.leaflet-draw-draw-marker {
+          background-image: url('data:image/svg+xml;utf8,<svg width="24" height="24" viewBox="0 0 24 24" fill="%23EA4335" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" stroke="%23FFFFFF" stroke-width="0.5"/></svg>') !important;
+          background-size: 24px 24px !important;
+          background-position: center !important;
+          background-repeat: no-repeat !important;
+        }
+        .leaflet-draw-toolbar a.leaflet-draw-draw-polygon {
+          background-image: url('data:image/svg+xml;utf8,<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%232780C4" stroke-width="2.5" stroke-dasharray="4,4" xmlns="http://www.w3.org/2000/svg"><path d="M4 12L12 4L20 12L12 20L4 12Z" /></svg>') !important;
+          background-size: 24px 24px !important;
+          background-position: center !important;
+          background-repeat: no-repeat !important;
+        }
+        .leaflet-draw-toolbar a.leaflet-draw-edit-edit {
+          display: none !important;
+        }
+        .leaflet-draw-toolbar a.leaflet-draw-edit-remove {
+          background-image: url('data:image/svg+xml;utf8,<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%230F2F4C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M3 6H21M19 6V20C19 21 18 22 17 22H7C6 22 5 21 5 20V6M8 6V4C8 3 9 2 10 2H14C15 2 16 3 16 4V6M10 11V17M14 11V17"/></svg>') !important;
+          background-size: 20px 20px !important;
+          background-position: center !important;
+          background-repeat: no-repeat !important;
+        }
+        .leaflet-draw-actions {
+          left: 50px !important;
+        }
+        .leaflet-bar {
+          border: none !important;
+          box-shadow: none !important;
+        }
       `}</style>
       <div style={mapContainerStyles}>
         <div ref={mapRef} style={{ width: "100%", height: "100%", zIndex: 0, borderRadius: "inherit" }} />
+        {!viewOnly && (
+          <button
+            onClick={handleCurrentLocation}
+            type="button"
+            style={{
+              position: "absolute",
+              bottom: hideFullscreenButton ? "16px" : "64px",
+              right: "16px",
+              zIndex: 1000,
+              background: "white",
+              border: "none",
+              borderRadius: "8px",
+              width: "40px",
+              height: "40px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.15)"
+            }}
+            title="My Location"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F2F4C" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="3" />
+              <path d="M12 2v2M12 20v2M2 12h2M20 12h2" />
+              <circle cx="12" cy="12" r="8" />
+            </svg>
+          </button>
+        )}
         {!hideFullscreenButton && (
           <button
             onClick={toggleFullscreen}

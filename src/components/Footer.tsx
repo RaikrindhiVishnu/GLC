@@ -100,6 +100,12 @@ export default function Footer() {
                   onClick={() => {
                     if (item === "Maintenance") router.push("/home/maintenance");
                     else if (item === "Verification") router.push("/home/verification");
+                    else if (item === "Privacy Policy") {
+                      const token = localStorage.getItem("token");
+                      if (!token) {
+                        router.push("/login/register");
+                      }
+                    }
                   }}
                   className="text-white text-[18px] font-medium font-jakarta cursor-pointer hover:opacity-70 transition-opacity"
                 >
@@ -238,7 +244,23 @@ export default function Footer() {
             </p>
             <ul className="flex flex-row gap-[32px]">
               {["Privacy Policy", "Terms of Service", "Investor Relations", "Contact"].map((link) => (
-                <li key={link} className="text-white text-[12px] uppercase tracking-[1.2px] font-jakarta cursor-pointer hover:opacity-100 opacity-80 transition-opacity font-normal leading-[16px]">
+                <li 
+                  key={link} 
+                  onClick={() => {
+                    if (link === "Investor Relations" || link === "Contact" || link === "Terms of Service" || link === "Privacy Policy") {
+                      const token = localStorage.getItem("token");
+                      if (!token) {
+                        router.push("/login/register");
+                      } else {
+                        // Future: route to investor relations page
+                        if (link === "Contact") {
+                          router.push("/home/supportcenter");
+                        }
+                      }
+                    }
+                  }}
+                  className="text-white text-[12px] uppercase tracking-[1.2px] font-jakarta cursor-pointer hover:opacity-100 opacity-80 transition-opacity font-normal leading-[16px]"
+                >
                   {link}
                 </li>
               ))}

@@ -42,7 +42,7 @@ export default function YourListingGrid() {
     return `₹${price}`;
   };
 
-  const farmlands = uploadData?.data || [];
+  const farmlands = (uploadData?.data || []).filter((farm: any) => farm.is_active || (farm.master_milestone_stage_id && farm.master_milestone_stage_id > 1));
 
   // Pagination logic
   const itemsPerPage = 6;

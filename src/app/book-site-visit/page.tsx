@@ -9,20 +9,23 @@ import VisitConfirmedModal from "./VisitConfirmedModal";
 import { useCreateSiteVisitMutation } from "@/services/siteVisits";
 
 export default function BookSiteVisit() {
-  const dates = [
-    { day: "Mon", date: "16" },
-    { day: "Tue", date: "17" },
-    { day: "Wed", date: "18" },
-    { day: "Thu", date: "19" },
-    { day: "Fri", date: "20" },
-  ];
+  const [baseDate, setBaseDate] = useState<Date>(new Date());
+  const [selectedFullDate, setSelectedFullDate] = useState<Date>(new Date());
+  const dateInputRef = React.useRef<HTMLInputElement>(null);
 
-  const times = [
-    "09:00 AM", "10:00 AM", "11:00 AM",
-    "01:00 PM", "02:00 PM", "05:00 PM"
-  ];
+  const dates = Array.from({ length: 5 }).map((_, i) => {
+    const d = new Date(baseDate);
+    d.setDate(d.getDate() + i);
+    return {
+      full: d,
+      day: d.toLocaleDateString('en-US', { weekday: 'short' }),
+      date: d.getDate().toString(),
+      monthYear: d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+    };
+  });
 
-  const [selectedDate, setSelectedDate] = useState("17");
+  const displayedMonthYear = dates[0].monthYear;
+
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [selectedHour, setSelectedHour] = useState(10);
@@ -54,7 +57,7 @@ export default function BookSiteVisit() {
       if (selectedAmPm === "AM" && selectedHour === 12) hour24 = 0;
       
       const visits_time = `${formatNumber(hour24)}:${formatNumber(selectedMinute)}:00`;
-      const visits_date = `2026-10-${formatNumber(Number(selectedDate))}`; 
+      const visits_date = `${selectedFullDate.getFullYear()}-${formatNumber(selectedFullDate.getMonth() + 1)}-${formatNumber(selectedFullDate.getDate())}`; 
       
       await createSiteVisit({
         user_id: userId || 1, 
@@ -262,28 +265,50 @@ export default function BookSiteVisit() {
                     color: "#74777F",
                     textTransform: "uppercase"
                   }}>SELECT DATE</span>
-                  <div className="flex items-center gap-[12px]">
+                  <div className="flex items-center gap-[12px] relative">
                     <span style={{
                       fontFamily: "'Plus Jakarta Sans', sans-serif",
                       fontWeight: 600,
                       fontSize: "16px",
                       color: "#002045"
-                    }}>October 2023</span>
-                    <button style={{
-                      width: "40px", height: "40px", background: "#E9E7EB", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", border: "none", cursor: "pointer"
-                    }}>
-                      <svg width="18" height="20" viewBox="0 0 24 24" fill="none" stroke="#002045" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                    </button>
+                    }}>{displayedMonthYear}</span>
+                    <div className="relative">
+                      <input 
+                        type="date"
+                        ref={dateInputRef}
+                        min={new Date().toISOString().split('T')[0]}
+                        style={{
+                          position: 'absolute',
+                          opacity: 0,
+                          width: '100%',
+                          height: '100%',
+                          cursor: 'pointer',
+                          zIndex: 2
+                        }}
+                        onChange={(e) => {
+                          if (e.target.value) {
+                            const newDate = new Date(e.target.value);
+                            setBaseDate(newDate);
+                            setSelectedFullDate(newDate);
+                          }
+                        }}
+                      />
+                      <button style={{
+                        width: "40px", height: "40px", background: "#E9E7EB", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", border: "none", cursor: "pointer", position: "relative", zIndex: 1
+                      }}>
+                        <svg width="18" height="20" viewBox="0 0 24 24" fill="none" stroke="#002045" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                      </button>
+                    </div>
                   </div>
                 </div>
 
                 <div className="flex gap-[16px] overflow-x-auto pb-[16px] hide-scroll" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                   {dates.map((d, i) => {
-                    const isActive = selectedDate === d.date;
+                    const isActive = selectedFullDate.toDateString() === d.full.toDateString();
                     return (
                       <button 
                         key={i}
-                        onClick={() => setSelectedDate(d.date)}
+                        onClick={() => setSelectedFullDate(d.full)}
                         style={{
                           minWidth: "76px",
                           height: "96px",

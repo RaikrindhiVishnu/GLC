@@ -4,14 +4,34 @@ import React from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { useGetAllTopSellingLocationsQuery } from "../../services/home";
+import { useGetAllTopSellingLocationsQuery, useGetFarmlandByTagAndStateQuery } from "../../services/home";
+import { useGetAllGeoMasterDataQuery } from "../../services/master";
 
 export default function TrendingLocations() {
   const router = useRouter();
-  const { data: res, isLoading } = useGetAllTopSellingLocationsQuery({ state_id: 1 });
+  const { data: res, isLoading: isLocLoading } = useGetAllTopSellingLocationsQuery({ state_id: 1 });
+  const { data: farmlandsRes, isLoading: isFarmLoading } = useGetFarmlandByTagAndStateQuery({ tag_ids: [1, 2, 3], state_id: 1 });
+  const { data: geoDataRes } = useGetAllGeoMasterDataQuery();
   
+  const isLoading = isLocLoading || isFarmLoading;
+  
+  const farmlands = farmlandsRes?.data || [];
+  
+  const getLocationDetails = (districtId?: number) => {
+    if (!districtId || !geoDataRes?.districts) return { districtName: "Unknown" };
+    const district = geoDataRes.districts.slice(1).find((d: any) => d[0] === districtId);
+    if (!district) return { districtName: "Unknown" };
+    return { districtName: String(district[3]) };
+  };
+
   const locations = res?.data && res.data.length > 0 
-    ? res.data.map((loc) => {
+    ? res.data.filter((loc: any) => {
+        // Only keep location if there is at least one farmland in it
+        return farmlands.some((f: any) => {
+          const { districtName } = getLocationDetails(f.farmland_district_id || f.location_details?.district_id);
+          return districtName.trim().toLowerCase() === loc.district_name.trim().toLowerCase();
+        });
+      }).map((loc: any) => {
         const hasValidImg = loc.district_img && (loc.district_img.startsWith('/') || loc.district_img.startsWith('http'));
         return {
           id: loc.district_id.toString(),

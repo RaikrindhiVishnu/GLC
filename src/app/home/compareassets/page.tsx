@@ -275,150 +275,7 @@ function CompareAssetsContent() {
       <div className="hidden lg:block">
 
         {/* ─── 1. FULL WIDTH HERO SCREEN BANNER LAYER ─── */}
-        <section style={{ position: "relative", width: "100%", height: "100vh", background: "linear-gradient(0deg, rgba(0,0,0,0.35), rgba(0,0,0,0.35))", overflow: "hidden", flexShrink: 0 }}>
-          <img src="/assets/compareassets/hero.svg" alt="Compare Assets Hero Backdrop" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0 }} onError={(e) => { e.currentTarget.src = "/assets/pricing/hero.svg"; }} />
-
-          {/* Top Header Controls Shell */}
-          <div style={{ position: "absolute", top: 0, left: 0, right: 0, zIndex: 20, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 60px", height: "110px" }}>
-            <div style={{ display: "flex", alignItems: "center", cursor: "pointer", flexShrink: 0 }} onClick={() => router.push("/home")}>
-              <Image src="/assets/common/Logo green land 1.svg" alt="Green Land Capital Brand Logo" width={150} height={64} style={{ objectFit: "contain" }} />
-            </div>
-          </div>
-        </section>
-
-        {/* Mobile Comparison Content */}
-        <section className="w-full px-4 py-10 flex flex-col gap-8 box-border" style={{ paddingBottom: "100px" }}>
-
-          {/* Asset header cards */}
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} viewport={{ once: true }} className="flex gap-3">
-            <div style={{ flex: 1, background: "#FFFFFF", borderRadius: "20px", padding: "16px", boxShadow: "0px 1px 2px rgba(0,0,0,0.05)", display: "flex", flexDirection: "column", gap: "6px", alignItems: "center" }}>
-              <div style={{ width: "48px", height: "48px", borderRadius: "8px", overflow: "hidden", position: "relative" }}>
-                <Image src="/assets/compareassets/image2.1.svg" alt="GLC SOS 01" fill style={{ objectFit: "cover" }} />
-              </div>
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "15px", color: "#0F2F4C", textTransform: "capitalize", textAlign: "center" }}>{farmCode1}</span>
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "12px", color: "#45474C", textAlign: "center" }}>{price1} | {acres1}</span>
-            </div>
-            <div style={{ flex: 1, background: "#FFFFFF", borderRadius: "20px", padding: "16px", boxShadow: "0px 1px 2px rgba(0,0,0,0.05)", display: "flex", flexDirection: "column", gap: "6px", alignItems: "center" }}>
-              <div style={{ width: "48px", height: "48px", borderRadius: "8px", overflow: "hidden", position: "relative" }}>
-                <Image src="/assets/compareassets/image2.2.svg" alt="GLC SOS 02" fill style={{ objectFit: "cover" }} />
-              </div>
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "15px", color: "#0F2F4C", textTransform: "capitalize", textAlign: "center" }}>{farmCode2}</span>
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "12px", color: "#45474C", textAlign: "center" }}>{price2} | {acres2}</span>
-            </div>
-          </motion.div>
-
-          {/* Key Features */}
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} viewport={{ once: true }} className="flex flex-col gap-3">
-            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <Image src="/assets/compareassets/keyfeatures.svg" alt="Key Features" width={20} height={20} />
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C", textTransform: "uppercase" }}>Key Features</span>
-            </div>
-            {KEY_FEATURES.map((row, i) => (
-              <motion.div key={row.label} initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: i * 0.08 }} viewport={{ once: true }} style={{ background: "#FFFFFF", borderRadius: "20px", padding: "16px", boxShadow: "0px 1px 2px rgba(0,0,0,0.05)" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px" }}>
-                  <div style={{ width: "36px", height: "36px", borderRadius: "9999px", background: "#0F2F4C", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                    <Image src={`/assets/compareassets/${row.icon}`} alt={row.label} width={16} height={16} />
-                  </div>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "11px", color: "#2780C4", textTransform: "uppercase", letterSpacing: "0.5px" }}>{row.label}</span>
-                </div>
-                <div style={{ display: "flex", gap: "8px" }}>
-                  <div style={{ flex: 1, background: "#F3F4F5", borderRadius: "12px", padding: "12px" }}>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "9px", color: "#45474C", textTransform: "uppercase", letterSpacing: "0.5px", display: "block", marginBottom: "4px" }}>SOS 01</span>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "13px", color: "#0F2F4C" }}>{row.a}</span>
-                  </div>
-                  <div style={{ flex: 1, background: "#F3F4F5", borderRadius: "12px", padding: "12px" }}>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "9px", color: "#45474C", textTransform: "uppercase", letterSpacing: "0.5px", display: "block", marginBottom: "4px" }}>SOS 02</span>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "13px", color: "#0F2F4C" }}>{row.b}</span>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-
-          {/* Connectivity */}
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} viewport={{ once: true }} className="flex flex-col gap-3">
-            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <Image src="/assets/compareassets/connectivity.svg" alt="Connectivity" width={22} height={21} />
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C", textTransform: "uppercase" }}>Connectivity</span>
-            </div>
-            {CONNECTIVITY.map((row, i) => (
-              <motion.div key={row.label} initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: i * 0.08 }} viewport={{ once: true }} style={{ background: "#FFFFFF", borderRadius: "20px", padding: "16px", boxShadow: "0px 1px 2px rgba(0,0,0,0.05)" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px" }}>
-                  <div style={{ width: "36px", height: "36px", borderRadius: "9999px", background: "#0F2F4C", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                    <Image src={`/assets/compareassets/${row.icon}`} alt={row.label} width={16} height={16} />
-                  </div>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "11px", color: "#2780C4", textTransform: "uppercase", letterSpacing: "0.5px" }}>{row.label}</span>
-                </div>
-                <div style={{ display: "flex", gap: "8px" }}>
-                  <div style={{ flex: 1, background: "#F3F4F5", borderRadius: "12px", padding: "12px" }}>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "9px", color: "#45474C", textTransform: "uppercase", display: "block", marginBottom: "4px" }}>SOS 01</span>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "13px", color: "#0F2F4C" }}>{row.a}</span>
-                  </div>
-                  <div style={{ flex: 1, background: "#F3F4F5", borderRadius: "12px", padding: "12px" }}>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "9px", color: "#45474C", textTransform: "uppercase", display: "block", marginBottom: "4px" }}>SOS 02</span>
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "13px", color: "#0F2F4C" }}>{row.b}</span>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-
-          {/* Cultivation */}
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} viewport={{ once: true }} className="flex flex-col gap-3">
-            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <Image src="/assets/compareassets/cultivation.svg" alt="Cultivation" width={18} height={20} />
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C", textTransform: "uppercase" }}>Cultivation</span>
-            </div>
-            {CULTIVATION.map((asset, i) => (
-              <motion.div key={asset.id} initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: i * 0.1 }} viewport={{ once: true }} style={{ background: "#FFFFFF", borderRadius: "20px", padding: "20px", boxShadow: "0px 1px 2px rgba(0,0,0,0.05)", display: "flex", flexDirection: "column", gap: "14px" }}>
-                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "11px", color: "#2780C4", textTransform: "uppercase", letterSpacing: "0.5px" }}>{asset.id}</span>
-                <div>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", color: "#45474C", textTransform: "uppercase", letterSpacing: "0.8px" }}>SOIL COMPOSITION</span>
-                  <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "18px", color: "#0F2F4C", marginTop: "4px" }}>{asset.soil}</div>
-                  <p style={{ margin: "4px 0 0", fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "13px", color: "#45474C", lineHeight: 1.5 }}>{asset.soilDesc}</p>
-                </div>
-                <div style={{ borderTop: "1px solid rgba(197,198,205,0.2)", paddingTop: "12px" }}>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", color: "#45474C", textTransform: "uppercase" }}>CURRENT</span>
-                  <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "4px" }}>
-                    <Image src={`/assets/compareassets/${asset.currentIcon}`} alt="indicator" width={14} height={14} />
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "13px", color: "#0F2F4C" }}>{asset.current}</span>
-                  </div>
-                </div>
-                <div style={{ borderTop: "1px solid rgba(197,198,205,0.2)", paddingTop: "12px" }}>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", color: "#45474C", textTransform: "uppercase" }}>POTENTIAL</span>
-                  <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "4px" }}>
-                    <Image src={`/assets/compareassets/${asset.potentialIcon}`} alt="indicator" width={14} height={14} />
-                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "13px", color: "#0F2F4C" }}>{asset.potential}</span>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-
-        </section>
-
-        {/* Fixed bottom select banner */}
-        <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 50, display: "flex", gap: "10px", padding: "12px 16px", background: "rgba(255,255,255,0.97)", borderTop: "1px solid #EDEEEF", backdropFilter: "blur(8px)", boxSizing: "border-box" }}>
-          <button onClick={() => router.push("/home/resale")} style={{ flex: 1, height: "48px", background: "#FFFFFF", borderRadius: "9999px", border: "1px solid #2780C4", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", color: "#2780C4", cursor: "pointer", textTransform: "uppercase" }}>
-            SELECT {farmCode1}
-          </button>
-          <button onClick={() => router.push("/home/resale")} style={{ flex: 1, height: "48px", background: "#FFFFFF", borderRadius: "9999px", border: "1px solid #2780C4", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", color: "#2780C4", cursor: "pointer", textTransform: "uppercase" }}>
-            SELECT {farmCode2}
-          </button>
-        </div>
-
-        {/* CTA + Footer for mobile */}
-        <CTA />
-        <Footer />
-      </div>
-
-      {/* ═══════════════════════════════════════
-          DESKTOP TREE
-      ═══════════════════════════════════════ */}
-      <div className="hidden lg:block">
-
-        {/* ─── 1. FULL WIDTH HERO SCREEN BANNER LAYER ─── */}
-        <section style={{ position: "relative", width: "100%", height: "100vh", background: "linear-gradient(0deg, rgba(0,0,0,0.35), rgba(0,0,0,0.35))", overflow: "hidden", flexShrink: 0 }}>
+        <section id="hero-section" style={{ position: "relative", width: "100%", height: "100vh", background: "linear-gradient(0deg, rgba(0,0,0,0.35), rgba(0,0,0,0.35))", overflow: "hidden", flexShrink: 0 }}>
           <img src="/assets/compareassets/hero.svg" alt="Compare Assets Hero Backdrop" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0 }} onError={(e) => { e.currentTarget.src = "/assets/pricing/hero.svg"; }} />
 
           {/* Top Header Controls Shell */}
@@ -427,6 +284,12 @@ function CompareAssetsContent() {
               <Image src="/assets/common/Logo green land 1.svg" alt="Green Land Capital Brand Logo" width={150} height={64} style={{ objectFit: "contain" }} />
             </div>
             <div style={{ display: "flex", flexDirection: "row", alignItems: "center", padding: "10px 14px", gap: "8px", height: "68px", background: "rgba(255,255,255,0.1)", boxShadow: "0px 8px 6px rgba(0,0,0,0.05), inset 3px 4px 2px -3px rgba(255,255,255,0.55), inset 0px -1px 1px rgba(255,255,255,0.25), inset 0px 1px 1px rgba(255,255,255,0.25)", backdropFilter: "blur(50px)", WebkitBackdropFilter: "blur(50px)", borderRadius: "100px", flexShrink: 0 }}>
+              <button onClick={() => router.push("/home")} style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", width: "48px", height: "48px", borderRadius: "100px", background: "transparent", border: "none", cursor: "pointer", transition: "transform 0.2s ease" }} onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")} onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                  <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+              </button>
               <button onClick={() => router.push("/search")} style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", width: "48px", height: "48px", borderRadius: "100px", background: "transparent", border: "none", cursor: "pointer", transition: "transform 0.2s ease" }} onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")} onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}>
                 <Image src="/assets/home/HeroScreen/search.svg" alt="Search" width={22} height={22} />
               </button>
@@ -498,15 +361,15 @@ function CompareAssetsContent() {
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: "38px", width: "100%", zIndex: 1 }}>
               {KEY_FEATURES.map((row) => (
-                <div key={row.label} style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", position: "relative", height: "84px" }}>
-                  <div style={{ flex: 1, height: "84px", background: "#FFFFFF", boxShadow: "0px 1px 2px rgba(0,0,0,0.05)", borderRadius: "32px", padding: "16px 24px", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-end", boxSizing: "border-box", marginRight: "28px" }}>
+                <div key={row.label} style={{ display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", width: "100%", position: "relative", minHeight: "132px", gap: "244px" }}>
+                  <div style={{ width: "256px", minHeight: "108px", background: "#FFFFFF", boxShadow: "0px 1px 2px rgba(0,0,0,0.05)", borderRadius: "32px", padding: "24px", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-end", boxSizing: "border-box" }}>
                     <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 900, fontSize: "12px", color: "#2780C4", textTransform: "uppercase" }}>{row.label}</span>
                     <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C", marginTop: "4px" }}>{row.a}</span>
                   </div>
                   <div style={{ width: "56px", height: "56px", borderRadius: "9999px", background: "#0F2F4C", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 10px 15px -3px rgba(9,20,38,0.2)", position: "absolute", left: "50%", transform: "translateX(-50%)" }}>
                     <Image src={`/assets/compareassets/${row.icon}`} alt={row.label} width={20} height={20} />
                   </div>
-                  <div style={{ flex: 1, height: "84px", background: "#FFFFFF", boxShadow: "0px 1px 2px rgba(0,0,0,0.05)", borderRadius: "32px", padding: "16px 24px", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", boxSizing: "border-box", marginLeft: "28px" }}>
+                  <div style={{ width: "256px", minHeight: "108px", background: "#FFFFFF", boxShadow: "0px 1px 2px rgba(0,0,0,0.05)", borderRadius: "32px", padding: "24px", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", boxSizing: "border-box" }}>
                     <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "12px", color: "#2780C4", textTransform: "uppercase" }}>{row.label}</span>
                     <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C", marginTop: "4px" }}>{row.b}</span>
                   </div>
@@ -524,15 +387,15 @@ function CompareAssetsContent() {
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: "38px", width: "100%", zIndex: 1 }}>
               {CONNECTIVITY.map((row) => (
-                <div key={row.label} style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", position: "relative", height: "84px" }}>
-                  <div style={{ flex: 1, height: "84px", background: "#FFFFFF", boxShadow: "0px 1px 2px rgba(0,0,0,0.05)", borderRadius: "24px", padding: "16px 24px", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-end", boxSizing: "border-box", marginRight: "28px" }}>
+                <div key={row.label} style={{ display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", width: "100%", position: "relative", minHeight: "132px", gap: "244px" }}>
+                  <div style={{ width: "256px", minHeight: "108px", background: "#FFFFFF", boxShadow: "0px 1px 2px rgba(0,0,0,0.05)", borderRadius: "24px", padding: "24px", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-end", boxSizing: "border-box" }}>
                     <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "12px", color: "#2780C4", textTransform: "uppercase" }}>{row.labelA || row.label}</span>
                     <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C", marginTop: "4px" }}>{row.a}</span>
                   </div>
                   <div style={{ width: "56px", height: "56px", borderRadius: "9999px", background: "#0F2F4C", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0px 10px 15px -3px rgba(9,20,38,0.2)", position: "absolute", left: "50%", transform: "translateX(-50%)" }}>
                     <Image src={`/assets/compareassets/${row.icon}`} alt={row.label} width={20} height={20} />
                   </div>
-                  <div style={{ flex: 1, height: "84px", background: "#FFFFFF", boxShadow: "0px 1px 2px rgba(0,0,0,0.05)", borderRadius: "24px", padding: "16px 24px", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", boxSizing: "border-box", marginLeft: "28px" }}>
+                  <div style={{ width: "256px", minHeight: "108px", background: "#FFFFFF", boxShadow: "0px 1px 2px rgba(0,0,0,0.05)", borderRadius: "24px", padding: "24px", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", boxSizing: "border-box" }}>
                     <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "12px", color: "#2780C4", textTransform: "uppercase" }}>{row.labelB || row.label}</span>
                     <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C", marginTop: "4px" }}>{row.b}</span>
                   </div>
@@ -578,8 +441,8 @@ function CompareAssetsContent() {
 
           {/* ─── STICKY BOTTOM SELECTION CONTROLS BANNER ─── */}
           <div style={{ boxSizing: "border-box", display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", width: "1216px", padding: "16px 24px", background: "rgba(255,255,255,0.95)", borderTop: "1px solid rgba(197,198,205,0.2)", borderRadius: "24px", boxShadow: "0px -10px 40px rgba(0,0,0,0.03)", gap: "48px", marginTop: "40px" }}>
-            <button onClick={() => router.push("/home/resale")} style={{ flex: 1, height: "52px", background: "#FFFFFF", borderRadius: "9999px", border: "1px solid #2780C4", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", letterSpacing: "0.35px", color: "#2780C4", cursor: "pointer", textTransform: "uppercase" }} onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.7")} onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}>SELECT {farmCode1}</button>
-            <button onClick={() => router.push("/home/resale")} style={{ flex: 1, height: "52px", background: "#FFFFFF", borderRadius: "9999px", border: "1px solid #2780C4", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", letterSpacing: "0.35px", color: "#2780C4", cursor: "pointer", textTransform: "uppercase" }} onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.7")} onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}>SELECT {farmCode2}</button>
+            <button onClick={() => router.push(`/search/farmlanddetails?id=${id1}`)} style={{ flex: 1, height: "52px", background: "#FFFFFF", borderRadius: "9999px", border: "1px solid #2780C4", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", letterSpacing: "0.35px", color: "#2780C4", cursor: "pointer", textTransform: "uppercase" }} onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.7")} onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}>SELECT {farmCode1}</button>
+            <button onClick={() => router.push(`/search/farmlanddetails?id=${id2}`)} style={{ flex: 1, height: "52px", background: "#FFFFFF", borderRadius: "9999px", border: "1px solid #2780C4", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", letterSpacing: "0.35px", color: "#2780C4", cursor: "pointer", textTransform: "uppercase" }} onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.7")} onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}>SELECT {farmCode2}</button>
           </div>
 
         </section>

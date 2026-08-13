@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CTA from "@/components/CTA";
 import { useSearchParams } from "next/navigation";
@@ -9,7 +10,7 @@ import { useGetTrackingForUserUploadedFarmlandQuery } from "@/services/user";
 import MapWrapper from "@/components/MapWrapper";
 import { s3Service } from "@/services/s3";
 
-export default function TrackingPage() {
+function TrackingContent() {
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
   const [withdrawStep, setWithdrawStep] = useState(1);
   const [showReasonSelect, setShowReasonSelect] = useState(false);
@@ -115,6 +116,7 @@ export default function TrackingPage() {
 
   return (
     <div style={{ width: "100%", background: "#F8F9FA", position: "relative", minHeight: "100vh" }}>
+      <Navbar variant="app" active="none" />
 
       {/* ─── 1. CINEMATIC HERO ─── */}
       <section style={{ position: "relative", width: "100%", height: "100vh", display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
@@ -125,7 +127,6 @@ export default function TrackingPage() {
             src={heroImgUrl}
             alt="Hero Background"
             style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center" }}
-            crossOrigin="anonymous"
           />
         </div>
         <div style={{ position: "absolute", inset: 0, zIndex: 1, background: "linear-gradient(0deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 0) 100%)" }} />
@@ -149,7 +150,11 @@ export default function TrackingPage() {
         <div className="flex flex-col lg:flex-row gap-10">
 
           {/* Left Column: 4-Tier Pipeline Tracker */}
-          <div className="flex-1" style={{ background: "#FFFFFF", border: "1px solid rgba(197, 198, 205, 0.15)", boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)", borderRadius: "32px", padding: "40px", boxSizing: "border-box", position: "relative" }}>
+          <div className="flex-1" style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+            <h2 style={{ margin: 0, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "40px", color: "#002045", letterSpacing: "-1px" }}>
+              Listing Status
+            </h2>
+            <div style={{ background: "#FFFFFF", border: "1px solid rgba(197, 198, 205, 0.15)", boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)", borderRadius: "32px", padding: "40px", boxSizing: "border-box", position: "relative" }}>
 
             <div style={{ display: "flex", flexDirection: "column", position: "relative", maxWidth: "600px" }}>
 
@@ -205,9 +210,10 @@ export default function TrackingPage() {
 
             </div>
           </div>
+        </div>
 
-          {/* Right Column: Context Card */}
-          <div className="w-full lg:w-[384px]" style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+        {/* Right Column: Context Card */}
+          <div className="w-full lg:w-[384px]" style={{ display: "flex", flexDirection: "column", gap: "20px", marginTop: "64px" }}>
             <div style={{ background: "#FFFFFF", border: "1px solid rgba(197, 198, 205, 0.15)", boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)", borderRadius: "32px", padding: "32px", boxSizing: "border-box" }}>
 
               {/* Map View */}
@@ -550,5 +556,13 @@ export default function TrackingPage() {
       )}
 
     </div>
+  );
+}
+
+export default function TrackingPage() {
+  return (
+    <React.Suspense fallback={<div style={{ width: "100%", minHeight: "100vh", background: "#F8F9FA" }} />}>
+      <TrackingContent />
+    </React.Suspense>
   );
 }

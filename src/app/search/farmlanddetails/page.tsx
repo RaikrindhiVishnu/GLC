@@ -268,9 +268,9 @@ function InnerFarmlandDetailsView() {
             <MediaHub
               primaryImage={heroBg}
               title={title}
-              lat={farmlandDetailData?.location_details?.lat}
-              long={farmlandDetailData?.location_details?.long}
-              polygon={farmlandDetailData?.polygon}
+              lat={farmlandDetailData?.location_details?.lat || "17.385044"}
+              long={farmlandDetailData?.location_details?.long || "78.486671"}
+              polygon={farmlandDetailData?.polygon || "[{\"type\":\"Polygon\",\"coordinates\":[[[78.486671,17.385044],[78.488671,17.385044],[78.488671,17.387044],[78.486671,17.387044],[78.486671,17.385044]]]}]"}
             />
             <LandSpecificationsBento
               areaProp={acreage}
@@ -298,6 +298,9 @@ function InnerFarmlandDetailsView() {
               currentCrop={activeLand.currentVegetation}
               potentialCrop={activeLand.potentialVegetation}
               facilitiesData={facilitiesData}
+              railwayFallback={activeLand.nearestCity.left}
+              airportFallback={activeLand.transitAccess.left}
+              highwayFallback={activeLand.lastMile.left}
             />
           </div>
           {/* Right Sidebar */}

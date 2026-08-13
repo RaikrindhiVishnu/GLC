@@ -8,10 +8,12 @@ import Navbar from "@/components/Navbar";
 
 export default function VerificationHero({ 
   title = "Verification of Farmland", 
-  subtitle = "Track the real-time progress of your asset through our rigorous 4-tier legal, agronomy, and intelligence audit pipeline" 
+  subtitle = "Track the real-time progress of your asset through our rigorous 4-tier legal, agronomy, and intelligence audit pipeline",
+  showBackButton = false
 }: { 
   title?: string; 
   subtitle?: string; 
+  showBackButton?: boolean;
 }) {
   const router = useRouter();
   const scalerRef = useRef<HTMLDivElement>(null);
@@ -44,6 +46,14 @@ export default function VerificationHero({
         <div style={{ position: "relative", zIndex: 10 }}>
           <Navbar variant="app" active="search" />
         </div>
+        {showBackButton && (
+          <button 
+            onClick={() => router.back()}
+            style={{ position: "absolute", top: "85px", left: "20px", zIndex: 20, background: "rgba(255,255,255,0.1)", backdropFilter: "blur(20px)", borderRadius: "50%", width: "40px", height: "40px", display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid rgba(255,255,255,0.2)", color: "white", cursor: "pointer" }}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          </button>
+        )}
         <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "calc(80vh - 72px)", padding: "32px 20px 48px", textAlign: "center" }}>
           <motion.h1
             initial={{ opacity: 0, filter: "blur(8px)", y: 15 }}
@@ -76,6 +86,18 @@ export default function VerificationHero({
               <div style={{ position: "absolute", width: "150px", height: "64px", left: "60px", top: "24px", cursor: "pointer", pointerEvents: "auto", display: "flex", alignItems: "center" }} onClick={() => router.push("/home")}>
                 <Image src="/assets/common/Logo green land 1.svg" alt="Green Land Capital" width={150} height={64} style={{ objectFit: "contain" }} />
               </div>
+              
+              {showBackButton && (
+                <button 
+                  onClick={() => router.back()} 
+                  style={{ position: "absolute", width: "52px", height: "52px", left: "60px", top: "110px", background: "rgba(255,255,255,0.1)", backdropFilter: "blur(62.67px)", borderRadius: "50%", border: "1px solid rgba(255,255,255,0.2)", boxShadow: "0px 10px 7.5px rgba(0,0,0,0.05)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "auto", color: "white", transition: "transform 0.2s" }}
+                  onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")} 
+                  onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                >
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                </button>
+              )}
+
               <div style={{ boxSizing: "border-box", display: "flex", flexDirection: "row", alignItems: "center", padding: "10px", gap: "10px", position: "absolute", width: "242px", height: "68px", left: "calc(50% - 121px)", top: "25px", background: "rgba(255,255,255,0.1)", boxShadow: "0px 8px 6px rgba(0,0,0,0.05), inset 3px 4px 2px -3px rgba(255,255,255,0.55), inset 0px -1px 1px rgba(255,255,255,0.25)", backdropFilter: "blur(50px)", borderRadius: "100px", pointerEvents: "auto", justifyContent: "space-between" }}>
                 {[
                   { icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>, route: "/home" },

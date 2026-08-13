@@ -22,15 +22,15 @@ export default function OnboardForm() {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
-    dob: new Date().toISOString().split('T')[0],
+    dob: "",
     countryCode: "+91",
     phoneNumber: "",
     price: "",
     lat: "",
     long: "",
-    acers: "1",
+    acers: "",
     polygon: [] as any[],
-    country: "1",
+    country: "",
     state: "",
     district: "",
     mandal: "",
@@ -58,20 +58,44 @@ export default function OnboardForm() {
     const last_name = formData.lastName.trim();
 
     if (!frist_name) newErrors.firstName = "Required";
+    else if (!/^[a-zA-Z\s]+$/.test(frist_name)) newErrors.firstName = "Invalid name";
+
     if (!last_name) newErrors.lastName = "Required";
+    else if (!/^[a-zA-Z\s]+$/.test(last_name)) newErrors.lastName = "Invalid name";
+
     if (!formData.dob) newErrors.dob = "Required";
-    if (!formData.phoneNumber.trim()) newErrors.phoneNumber = "Required";
-    if (!formData.lat || !formData.long) {
-      newErrors.map = "Required";
-      alert("Please drop a GPS pin on the map to locate your land.");
+    else {
+      const dobDate = new Date(formData.dob);
+      if (isNaN(dobDate.getTime())) newErrors.dob = "Invalid date";
+      else if (dobDate > new Date()) newErrors.dob = "Future dates not allowed";
     }
+
+    if (!formData.phoneNumber.trim()) newErrors.phoneNumber = "Required";
+    else if (!/^\d{10}$/.test(formData.phoneNumber.replace(/\D/g, ''))) newErrors.phoneNumber = "Invalid phone number";
+
+    if (formData.price) {
+      const p = Number(formData.price);
+      if (isNaN(p) || p < 0) newErrors.price = "Invalid price";
+    }
+
     if (!formData.acers) newErrors.acers = "Required";
+    else {
+      const a = Number(formData.acers);
+      if (isNaN(a) || a <= 0) newErrors.acers = "Invalid acres";
+    }
+
     if (!formData.state) newErrors.state = "Required";
     if (!formData.district) newErrors.district = "Required";
     if (!formData.mandal) newErrors.mandal = "Required";
 
+    if (!formData.lat || !formData.long) {
+      newErrors.map = "Required";
+      alert("Please drop a GPS pin on the map to locate your land.");
+    }
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
+      alert("Please fix the highlighted errors before submitting.");
       return;
     }
 
@@ -97,8 +121,8 @@ export default function OnboardForm() {
       milestone_status_id: 1,
       acers: Number(formData.acers) || 1,
       price: Number(formData.price) || 0,
-      per_acer_value: 100000,
-      per_acre_value: 100000,
+      per_acer_value: (Number(formData.price) || 0) / (Number(formData.acers) || 1),
+      per_acre_value: (Number(formData.price) || 0) / (Number(formData.acers) || 1),
       polygon: formData.polygon && Array.isArray(formData.polygon) && formData.polygon.length > 0 
         ? ["polygon", ...formData.polygon.flatMap((p: any) => [p.lat.toString(), p.lng.toString()])] 
         : undefined,
@@ -160,7 +184,7 @@ export default function OnboardForm() {
             )}
           </div>
 
-          {/* Upload Section */}
+          {/* Upload Section (Hidden for now as requested)
           <div className="w-full bg-white rounded-[48px] p-8 shadow-[0px_4px_20px_rgba(26,54,93,0.05)] flex flex-col lg:flex-row gap-8 items-center h-[205px]">
             <div className="w-[72px] h-[78px] bg-[#D6E3FF] rounded-2xl flex items-center justify-center flex-shrink-0">
               <svg width="24" height="30" viewBox="0 0 24 24" fill="none" stroke="#002045" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
@@ -173,6 +197,7 @@ export default function OnboardForm() {
               </button>
             </div>
           </div>
+          */}
         </div>
 
         {/* Right Column: Forms */}
@@ -225,7 +250,8 @@ export default function OnboardForm() {
               <div className="flex flex-col gap-1 flex-1">
                 <label className="font-jakarta font-bold text-[10px] leading-[15px] tracking-[1px] text-[#45474C] uppercase ml-1">COUNTRY</label>
                 <div className="relative">
-                  <select name="country" value={formData.country} onChange={handleInputChange} className="w-full bg-[#F3F4F5] rounded-[16px] px-6 py-3 font-jakarta font-normal text-[16px] leading-[20px] text-[#191C1D] outline-none h-[48px] appearance-none cursor-pointer">
+                  <select name="country" value={formData.country} onChange={handleInputChange} className={`w-full bg-[#F3F4F5] rounded-[16px] px-6 py-3 font-jakarta font-normal text-[14px] leading-[18px] text-[#191C1D] outline-none h-[48px] appearance-none cursor-pointer ${errors.country ? 'border-[2px] border-[#FF3B30]' : ''}`}>
+                    <option value="" disabled>Select Country</option>
                     <option value="1">India</option>
                   </select>
                   <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">

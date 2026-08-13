@@ -142,7 +142,10 @@ export default function VisitConfirmedModal({ isOpen, onClose }: VisitConfirmedM
               <div className="w-full mt-[40px] mb-[32px]" style={{ borderTop: "2px dashed #C4C6CF" }} />
 
               {/* Contact Support */}
-              <div className="flex items-center gap-4 cursor-pointer hover:opacity-80 transition-opacity">
+              <div 
+                onClick={() => window.location.href = '/home/supportcenter'}
+                className="flex items-center gap-4 cursor-pointer hover:opacity-80 transition-opacity"
+              >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="#0061A5">
                   <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                 </svg>
@@ -154,7 +157,9 @@ export default function VisitConfirmedModal({ isOpen, onClose }: VisitConfirmedM
             </div>
 
             {/* Geo Navigation Card */}
-            <div className="flex items-center justify-between w-[544px] mt-[40px]" style={{
+            <div 
+              onClick={() => window.open("https://maps.google.com/?q=17.3850,78.4867", "_blank")}
+              className="flex items-center justify-between w-[544px] mt-[40px] hover:opacity-90 transition-opacity" style={{
               background: "#FAF9FD",
               border: "1px solid rgba(196, 198, 207, 0.3)",
               borderRadius: "16px",

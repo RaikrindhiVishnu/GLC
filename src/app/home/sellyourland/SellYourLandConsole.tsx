@@ -65,6 +65,10 @@ export default function SellYourLandConsole() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+    
+    if (name === "contactNumber" && value !== "" && !/^\d+$/.test(value)) return;
+    if ((name === "acreage" || name === "baseValuation") && value !== "" && !/^\d*\.?\d*$/.test(value)) return;
+
     setFormData((prev) => ({ ...prev, [name]: value }));
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
@@ -79,15 +83,45 @@ export default function SellYourLandConsole() {
   const handleFinalAuditTrigger = async () => {
     // Form Validations
     const newErrors: Record<string, string> = {};
-    if (!formData.fullName.trim()) newErrors.fullName = "Please enter the Full Name.";
-    if (!formData.contactNumber.trim()) newErrors.contactNumber = "Please enter the Contact Number.";
-    if (!formData.email.trim()) newErrors.email = "Please enter the Email Address.";
+    if (!formData.fullName.trim()) {
+      newErrors.fullName = "Please enter the Full Name.";
+    } else if (!/^[a-zA-Z\s]+$/.test(formData.fullName.trim())) {
+      newErrors.fullName = "Invalid name format. Only alphabets are allowed.";
+    }
+
+    if (!formData.contactNumber.trim()) {
+      newErrors.contactNumber = "Please enter the Contact Number.";
+    } else if (!/^\d{10}$/.test(formData.contactNumber.replace(/\D/g, ''))) {
+      newErrors.contactNumber = "Please enter a valid 10-digit contact number.";
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = "Please enter the Email Address.";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
+      newErrors.email = "Please enter a valid email address.";
+    }
+
     if (!formData.region) newErrors.region = "Please select a Region (State).";
     if (!formData.district) newErrors.district = "Please select a District.";
     if (!formData.mandal) newErrors.mandal = "Please select a Mandal.";
-    if (!formData.acreage) newErrors.acreage = "Please enter the Total Acreage.";
-    if (!formData.baseValuation) newErrors.baseValuation = "Please enter the Base Valuation.";
-    if (!formData.description.trim()) newErrors.description = "Please enter the Land Description.";
+    
+    if (!formData.acreage) {
+      newErrors.acreage = "Please enter the Total Acreage.";
+    } else if (isNaN(Number(formData.acreage)) || Number(formData.acreage) <= 0) {
+      newErrors.acreage = "Please enter a valid positive number for acreage.";
+    }
+
+    if (!formData.baseValuation) {
+      newErrors.baseValuation = "Please enter the Quoted Price (Base Valuation).";
+    } else if (isNaN(Number(formData.baseValuation)) || Number(formData.baseValuation) <= 0) {
+      newErrors.baseValuation = "Please enter a valid positive amount.";
+    }
+
+    if (!formData.description.trim()) {
+      newErrors.description = "Please enter the Land Description.";
+    } else if (formData.description.trim().length < 10) {
+      newErrors.description = "Land Description must be at least 10 characters long.";
+    }
     
     // Map Validations
     if (!formData.lat || !formData.lng) newErrors.map = "Please drop a pin on the map.";
@@ -148,7 +182,7 @@ export default function SellYourLandConsole() {
           ? ["polygon", ...formData.polygon.flatMap((p: any) => [p.lat.toString(), p.lng.toString()])] 
           : undefined,
         gallery_images: galleryImageUrls.length > 0 ? galleryImageUrls : undefined,
-        master_milestone_stage_id: 2,
+        master_milestone_stage_id: 1,
         master_milestone_stage_status_id: 1,
         per_acer_value: (Number(formData.baseValuation) / (Number(formData.acreage) || 1)).toString()
       };
@@ -325,6 +359,7 @@ export default function SellYourLandConsole() {
               <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                 <label style={labelStyle("fullName")}>FULL LEGAL NAME</label>
                 <input type="text" name="fullName" placeholder="Executive Name" value={formData.fullName} onChange={handleInputChange} style={getInputStyle("fullName")} />
+                {errors.fullName && <span style={{ color: "#FF3B30", fontSize: "12px", fontFamily: "'Plus Jakarta Sans', sans-serif", paddingLeft: "4px" }}>{errors.fullName}</span>}
               </div>
 
               {/* CODE + CONTACT NUMBER */}
@@ -336,6 +371,7 @@ export default function SellYourLandConsole() {
                 <div style={{ display: "flex", flexDirection: "column", gap: "8px", flex: 1 }}>
                   <label style={labelStyle("contactNumber")}>CONTACT NUMBER</label>
                   <input type="text" name="contactNumber" placeholder="000 000 0000" value={formData.contactNumber} onChange={handleInputChange} style={getInputStyle("contactNumber")} />
+                  {errors.contactNumber && <span style={{ color: "#FF3B30", fontSize: "12px", fontFamily: "'Plus Jakarta Sans', sans-serif", paddingLeft: "4px" }}>{errors.contactNumber}</span>}
                 </div>
               </div>
 
@@ -343,6 +379,7 @@ export default function SellYourLandConsole() {
               <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                 <label style={labelStyle("email")}>CORPORATE EMAIL</label>
                 <input type="email" name="email" placeholder="name@corporation.com" value={formData.email} onChange={handleInputChange} style={getInputStyle("email")} />
+                {errors.email && <span style={{ color: "#FF3B30", fontSize: "12px", fontFamily: "'Plus Jakarta Sans', sans-serif", paddingLeft: "4px" }}>{errors.email}</span>}
               </div>
             </div>
             <button type="submit" style={{ display: "none" }} />
@@ -454,6 +491,7 @@ export default function SellYourLandConsole() {
                       />
                       <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: "16px", color: "#0F2F4C" }}>Acres</span>
                     </div>
+                    {errors.acreage && <span style={{ color: "#FF3B30", fontSize: "12px", fontFamily: "'Plus Jakarta Sans', sans-serif", marginTop: "4px" }}>{errors.acreage}</span>}
                   </div>
                   {/* Price Row */}
                   <div style={{ display: "flex", flexDirection: "column", padding: "20px", gap: "4px", background: errors.baseValuation ? "rgba(255, 59, 48, 0.05)" : "transparent" }}>
@@ -471,6 +509,7 @@ export default function SellYourLandConsole() {
                         style={{ flex: 1, border: "none", outline: "none", background: "transparent", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "20px", color: errors.baseValuation ? "#FF3B30" : "#131600" }} 
                       />
                     </div>
+                    {errors.baseValuation && <span style={{ color: "#FF3B30", fontSize: "12px", fontFamily: "'Plus Jakarta Sans', sans-serif", marginTop: "4px" }}>{errors.baseValuation}</span>}
                   </div>
                 </div>
               </div>
@@ -502,6 +541,7 @@ export default function SellYourLandConsole() {
                     placeholder="Enter Description..." 
                     style={{ width: "100%", flex: 1, minHeight: "122px", background: "transparent", border: "none", outline: "none", resize: "none", fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "16px", lineHeight: "24px", color: "#131600" }} 
                   />
+                  {errors.description && <span style={{ color: "#FF3B30", fontSize: "12px", fontFamily: "'Plus Jakarta Sans', sans-serif", marginTop: "8px" }}>{errors.description}</span>}
                 </div>
               </div>
             </div>
@@ -571,80 +611,7 @@ export default function SellYourLandConsole() {
               </div>
             </div>
 
-            {/* 2. Property Photographs Section */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "16px", width: "100%" }}>
-              <h3 style={{ margin: 0, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "clamp(20px, 3vw, 24px)", lineHeight: "1.33", color: "#131600" }}>
-                Property Photographs (Optional)
-              </h3>
-              <div style={{ 
-                background: "#FFFFFF", 
-                boxShadow: "0px 8px 30px rgba(0, 0, 0, 0.04)", 
-                borderRadius: "clamp(24px, 4vw, 48px)", 
-                padding: "clamp(20px, 3vw, 37px) clamp(16px, 3vw, 24px) clamp(30px, 5vw, 67px)",
-                display: "flex",
-                flexDirection: "column",
-                gap: "clamp(24px, 4vw, 37px)",
-                width: "100%",
-                boxSizing: "border-box"
-              }}>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-[clamp(16px,3vw,33px)] w-full max-w-[884px]">
-                  {propertyPhotos.map((photo, index) => (
-                    <div key={index} style={{ 
-                      width: "100%", aspectRatio: "1/1",
-                      borderRadius: "33.33%", overflow: "hidden", position: "relative"
-                    }}>
-                      <img 
-                        src={URL.createObjectURL(photo)} 
-                        alt={`Property Photo ${index + 1}`} 
-                        style={{ width: "100%", height: "100%", objectFit: "cover" }} 
-                      />
-                      <button
-                        onClick={() => setPropertyPhotos(prev => prev.filter((_, i) => i !== index))}
-                        style={{ position: "absolute", top: "8px", right: "8px", background: "rgba(0,0,0,0.5)", border: "none", borderRadius: "50%", width: "24px", height: "24px", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}
-                      >
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                          <line x1="18" y1="6" x2="6" y2="18"></line>
-                          <line x1="6" y1="6" x2="18" y2="18"></line>
-                        </svg>
-                      </button>
-                    </div>
-                  ))}
-                  {/* Upload Button */}
-                  <label 
-                    onClick={() => document.getElementById('propertyPhotosUpload')?.click()}
-                    style={{ 
-                      width: "100%", aspectRatio: "1/1",
-                      borderRadius: "33.33%", 
-                      background: "#F1F3FA",
-                      border: errors.propertyPhotos ? "2px dashed #FF3B30" : "clamp(2px, 0.4vw, 4.1px) dashed rgba(192, 199, 210, 0.4)",
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                      cursor: "pointer", boxSizing: "border-box"
-                    }}>
-                    <input 
-                      type="file" 
-                      id="propertyPhotosUpload"
-                      accept="image/*" 
-                      multiple 
-                      onChange={(e) => {
-                        if (e.target.files && e.target.files.length > 0) {
-                          const newFiles = Array.from(e.target.files);
-                          setPropertyPhotos(prev => [...prev, ...newFiles]);
-                          setErrors(prev => ({...prev, propertyPhotos: ""}));
-                        }
-                      }} 
-                      style={{ display: "none" }} 
-                    />
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#181C20" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                      <line x1="12" y1="5" x2="12" y2="19"></line>
-                      <line x1="5" y1="12" x2="19" y2="12"></line>
-                    </svg>
-                  </label>
-                </div>
-                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "clamp(18px, 2.5vw, 24px)", lineHeight: "1.25", color: "rgba(64, 71, 80, 0.8)", paddingLeft: "clamp(2px, 1vw, 7px)", maxWidth: "800px" }}>
-                  Upload high-quality images of the terrain, soil texture, and water sources.
-                </span>
-              </div>
-            </div>
+
 
           </div>
         </div>
@@ -653,32 +620,6 @@ export default function SellYourLandConsole() {
       {/* ─── 4. PHASE 03 & SUBMISSION ─── */}
       <div className="flex flex-col lg:flex-row gap-6 w-full items-stretch">
 
-        {/* Left: Legal docs */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
-          className="w-full lg:w-80"
-          style={{ boxSizing: "border-box", display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "flex-start", padding: "40px", background: "#FFFFFF", border: "1px solid rgba(197,198,205,0.1)", boxShadow: "0px 1px 2px rgba(0,0,0,0.05)", borderRadius: "48px" }}
-        >
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "12px" }}>
-            <h3 style={{ margin: 0, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "20px", lineHeight: "28px", letterSpacing: "-0.5px", textTransform: "uppercase", color: "#0F2F4C" }}>
-              PHASE 03: LEGAL DOCS
-            </h3>
-            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "14px", lineHeight: "23px", color: "#45474C" }}>
-              Please upload your primary 7/12 extract and Sale Deeds for instant OCR verification.
-            </span>
-          </div>
-          <div style={{ paddingTop: "32px", width: "100%" }}>
-            <button
-              onClick={() => router.push("/home/sellyourland")}
-              style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", padding: "16px 0", width: "100%", height: "60px", border: "2px solid #0F2F4C", borderRadius: "48px", background: "transparent", cursor: "pointer" }}
-            >
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C" }}>UPLOAD DOCUMENTS</span>
-            </button>
-          </div>
-        </motion.div>
 
         {/* Right: Institutional audit trigger */}
         <motion.div

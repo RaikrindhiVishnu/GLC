@@ -19,6 +19,7 @@ export default function RegisterPage() {
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [searchQuery, setSearchQuery] = useState("");
   const [preferredState, setPreferredState] = useState("");
   const [selectedCountry, setSelectedCountry] = useState({
@@ -41,10 +42,20 @@ export default function RegisterPage() {
   }, [countries, searchQuery]);
 
   const handleCreateAccount = async () => {
-    if (!email) {
-      setError("Please enter your email address.");
+    const newErrors: Record<string, string> = {};
+    if (!firstName.trim()) newErrors.firstName = "First name is required.";
+    if (!lastName.trim()) newErrors.lastName = "Last name is required.";
+    if (!email.trim()) newErrors.email = "Email is required.";
+    if (!phone.trim()) newErrors.phone = "Mobile number is required.";
+    if (!preferredState) newErrors.state = "Preferred Investment State is required.";
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      setError("Please fill all mandatory fields.");
       return;
     }
+    
+    setErrors({});
     setError("");
     setLoading(true);
     try {
@@ -116,36 +127,46 @@ export default function RegisterPage() {
         transition={{ duration: 0.6, delay: 0.4 }}
         className="flex flex-col sm:flex-row gap-2 mb-2 lg:mb-3"
       >
-        <div className="flex-1 bg-white border border-[#F0F0F0] rounded-full h-[46px] lg:h-[50px] flex items-center px-4 gap-2 focus-within:border-[#2780C4] focus-within:ring-1 focus-within:ring-[#2780C4]/20 transition-all cursor-text shadow-sm">
+        <div className={`flex-1 bg-white border ${errors.firstName ? 'border-red-500' : 'border-[#F0F0F0]'} rounded-full h-[46px] lg:h-[50px] flex items-center px-4 gap-2 focus-within:border-[#2780C4] focus-within:ring-1 focus-within:ring-[#2780C4]/20 transition-all cursor-text shadow-sm`}>
           <Image src="/assets/login/hugeicons_profile.svg" alt="First Name" width={20} height={20} className="shrink-0" />
           <div className="w-px h-4 bg-[#F0F0F0]" />
           <input 
             type="text" 
             placeholder="Enter First Name" 
             value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
+            onChange={(e) => {
+              setFirstName(e.target.value);
+              if (errors.firstName) setErrors(prev => ({ ...prev, firstName: "" }));
+            }}
             className="flex-1 bg-transparent text-[13px] lg:text-[14px] placeholder:text-[#BDBDBD] focus:outline-none font-jakarta min-w-0 cursor-text" 
           />
         </div>
-        <div className="flex-1 bg-white border border-[#F0F0F0] rounded-full h-[46px] lg:h-[50px] flex items-center px-4 gap-2 focus-within:border-[#2780C4] focus-within:ring-1 focus-within:ring-[#2780C4]/20 transition-all cursor-text shadow-sm">
+        <div className={`flex-1 bg-white border ${errors.lastName ? 'border-red-500' : 'border-[#F0F0F0]'} rounded-full h-[46px] lg:h-[50px] flex items-center px-4 gap-2 focus-within:border-[#2780C4] focus-within:ring-1 focus-within:ring-[#2780C4]/20 transition-all cursor-text shadow-sm`}>
           <Image src="/assets/login/hugeicons_profile.svg" alt="Last Name" width={20} height={20} className="shrink-0" />
           <div className="w-px h-4 bg-[#F0F0F0]" />
           <input 
             type="text" 
             placeholder="Enter Last Name" 
             value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
+            onChange={(e) => {
+              setLastName(e.target.value);
+              if (errors.lastName) setErrors(prev => ({ ...prev, lastName: "" }));
+            }}
             className="flex-1 bg-transparent text-[13px] lg:text-[14px] placeholder:text-[#BDBDBD] focus:outline-none font-jakarta min-w-0 cursor-text" 
           />
         </div>
       </motion.div>
+      <div className="flex gap-2 mb-2 lg:mb-3 px-4">
+        <div className="flex-1 text-red-500 text-[11px] font-jakarta">{errors.firstName}</div>
+        <div className="flex-1 text-red-500 text-[11px] font-jakarta">{errors.lastName}</div>
+      </div>
 
       {/* Email */}
       <motion.div
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.5 }}
-        className="mb-2 lg:mb-3 bg-white border border-[#F0F0F0] rounded-full h-[46px] lg:h-[50px] flex items-center px-4 gap-2 focus-within:border-[#2780C4] focus-within:ring-1 focus-within:ring-[#2780C4]/20 transition-all cursor-text shadow-sm"
+        className={`mb-1 bg-white border ${errors.email ? 'border-red-500' : 'border-[#F0F0F0]'} rounded-full h-[46px] lg:h-[50px] flex items-center px-4 gap-2 focus-within:border-[#2780C4] focus-within:ring-1 focus-within:ring-[#2780C4]/20 transition-all cursor-text shadow-sm`}
       >
         <Image src="/assets/login/hugeicons_mail-02.svg" alt="Email" width={20} height={20} className="shrink-0" />
         <div className="w-px h-4 bg-[#F0F0F0]" />
@@ -153,10 +174,14 @@ export default function RegisterPage() {
           type="email" 
           placeholder="Enter Mail ID" 
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            if (errors.email) setErrors(prev => ({ ...prev, email: "" }));
+          }}
           className="flex-1 bg-transparent text-[13px] lg:text-[14px] placeholder:text-[#BDBDBD] focus:outline-none font-jakarta cursor-text" 
         />
       </motion.div>
+      {errors.email && <div className="text-red-500 text-[11px] font-jakarta mb-2 lg:mb-3 px-4">{errors.email}</div>}
 
       {/* Mobile Number Split Layout */}
       <motion.div
@@ -178,12 +203,15 @@ export default function RegisterPage() {
         </button>
 
         {/* Right Pill: Input */}
-        <div className="flex-1 bg-white border border-[#F0F0F0] rounded-full h-[46px] lg:h-[50px] flex items-center px-4 gap-2 focus-within:border-[#2780C4] focus-within:ring-1 focus-within:ring-[#2780C4]/20 transition-all cursor-text shadow-sm">
+        <div className={`flex-1 bg-white border ${errors.phone ? 'border-red-500' : 'border-[#F0F0F0]'} rounded-full h-[46px] lg:h-[50px] flex items-center px-4 gap-2 focus-within:border-[#2780C4] focus-within:ring-1 focus-within:ring-[#2780C4]/20 transition-all cursor-text shadow-sm`}>
           <input 
             type="tel" 
             placeholder="Enter Mobile Number" 
             value={phone}
-            onChange={(e) => setPhone(e.target.value.replace(/\D/g, ''))}
+            onChange={(e) => {
+              setPhone(e.target.value.replace(/\D/g, ''));
+              if (errors.phone) setErrors(prev => ({ ...prev, phone: "" }));
+            }}
             className="flex-1 bg-transparent text-[13px] lg:text-[14px] placeholder:text-[#BDBDBD] focus:outline-none font-jakarta cursor-text" 
           />
         </div>
@@ -215,15 +243,16 @@ export default function RegisterPage() {
           </>
         )}
       </motion.div>
+      {errors.phone && <div className="text-red-500 text-[11px] font-jakarta mb-5 lg:mb-6 pl-[80px]">{errors.phone}</div>}
 
       {/* Preferred Investment State */}
       <motion.div
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.65 }}
-        className="mb-5 lg:mb-6 relative"
+        className="mb-1 relative"
       >
-        <div className={`w-full bg-[#FEFEFE] border-[2px] ${isStateDropdownOpen ? 'border-[#2780C4] ring-1 ring-[#2780C4]/20' : 'border-[#F8F8F8]'} rounded-[30px] h-[64px] flex items-center px-6 gap-2 transition-all shadow-sm relative`}>
+        <div className={`w-full bg-[#FEFEFE] border-[2px] ${errors.state ? 'border-red-500' : isStateDropdownOpen ? 'border-[#2780C4] ring-1 ring-[#2780C4]/20' : 'border-[#F8F8F8]'} rounded-[30px] h-[64px] flex items-center px-6 gap-2 transition-all shadow-sm relative`}>
           <button
             type="button"
             onClick={() => setIsStateDropdownOpen(!isStateDropdownOpen)}
@@ -247,7 +276,11 @@ export default function RegisterPage() {
                     <button
                       key={state}
                       type="button"
-                      onClick={() => { setPreferredState(state); setIsStateDropdownOpen(false); }}
+                      onClick={() => { 
+                        setPreferredState(state); 
+                        setIsStateDropdownOpen(false); 
+                        if (errors.state) setErrors(prev => ({ ...prev, state: "" }));
+                      }}
                       className={`w-full flex items-center px-6 py-3 hover:bg-[#EEF6FF] transition-all text-left font-jakarta text-[14px] ${preferredState === state ? "text-[#2780C4] font-semibold bg-[#F5F9FF]" : "text-[#434343] font-medium"}`}
                     >
                       {state}
@@ -259,6 +292,7 @@ export default function RegisterPage() {
           )}
         </div>
       </motion.div>
+      {errors.state && <div className="text-red-500 text-[11px] font-jakarta mb-5 lg:mb-6 px-4">{errors.state}</div>}
 
       {error && (
         <motion.p 

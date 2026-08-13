@@ -61,6 +61,17 @@ export default function StickySidebarRight({
             Compare Asset
           </button>
           <button
+            onClick={() => {
+              if (navigator.share) {
+                navigator.share({
+                  title: title,
+                  url: window.location.href,
+                }).catch(console.error);
+              } else {
+                navigator.clipboard.writeText(window.location.href);
+                alert("Link copied to clipboard!");
+              }
+            }}
             style={{ width: "100%", height: "56px", background: "transparent", border: "1px solid #C5C6CD", borderRadius: "48px", color: "#45474C", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", cursor: "pointer" }}
           >
             Share Details

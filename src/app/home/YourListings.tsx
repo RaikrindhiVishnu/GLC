@@ -4,7 +4,6 @@ import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { useGetUserUploadedFarmlandsQuery } from "../../services/upload";
 import { s3Service } from "../../services/s3";
 
 export default function YourListings() {
@@ -12,23 +11,128 @@ export default function YourListings() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [mounted, setMounted] = useState(false);
-  const [userId, setUserId] = useState<number>(0);
 
   useEffect(() => {
     setMounted(true);
-    const storedUserId = typeof window !== "undefined" ? localStorage.getItem("userId") : null;
-    if (storedUserId) {
-      setUserId(parseInt(storedUserId, 10));
-    }
   }, []);
 
-  const { data: res, isLoading: isQueryLoading } = useGetUserUploadedFarmlandsQuery(
-    { userId },
-    { skip: !mounted || userId === 0 }
-  );
+  const fdata = [
+    {
+        "farmland_id": 77,
+        "farm_code": "FL26070034",
+        "farmland_img": null,
+        "valuation": "38900.00",
+        "location_details": { "country_id": 1, "state_id": 1, "district_id": 1, "mandal_id": 1 }
+    },
+    {
+        "farmland_id": 78,
+        "farm_code": "FL26070035",
+        "farmland_img": null,
+        "valuation": "2901800.00",
+        "location_details": { "country_id": 1, "state_id": 1, "district_id": 1, "mandal_id": 1 }
+    },
+    {
+        "farmland_id": 86,
+        "farm_code": "FL26070043",
+        "farmland_img": "farmlands/1/land_images/c6b3da2a98cf6138ce540c2b2e2bc726b6636bc6_(1).jpg",
+        "valuation": "1000000.00",
+        "location_details": { "country_id": 1, "state_id": 1, "district_id": 5, "mandal_id": 96 }
+    },
+    {
+        "farmland_id": 87,
+        "farm_code": "FL26070044",
+        "farmland_img": "farmlands/1/land_images/c6b3da2a98cf6138ce540c2b2e2bc726b6636bc6_(1).jpg",
+        "valuation": "2000000.00",
+        "location_details": { "country_id": 1, "state_id": 1, "district_id": 3, "mandal_id": 26 }
+    },
+    {
+        "farmland_id": 88,
+        "farm_code": "FL26070045",
+        "farmland_img": null,
+        "valuation": "199000.00",
+        "location_details": { "country_id": 0, "state_id": 0, "district_id": 0, "mandal_id": 0 }
+    },
+    {
+        "farmland_id": 89,
+        "farm_code": "FL26070046",
+        "farmland_img": null,
+        "valuation": "89402.00",
+        "location_details": { "country_id": 0, "state_id": 0, "district_id": 0, "mandal_id": 0 }
+    },
+    {
+        "farmland_id": 90,
+        "farm_code": "FL26070047",
+        "farmland_img": null,
+        "valuation": "3848802.00",
+        "location_details": { "country_id": 0, "state_id": 0, "district_id": 0, "mandal_id": 0 }
+    },
+    {
+        "farmland_id": 91,
+        "farm_code": "FL26070048",
+        "farmland_img": null,
+        "valuation": "657380.00",
+        "location_details": { "country_id": 0, "state_id": 0, "district_id": 0, "mandal_id": 0 }
+    },
+    {
+        "farmland_id": 95,
+        "farm_code": "FL26070052",
+        "farmland_img": null,
+        "valuation": "50000.00",
+        "location_details": { "country_id": 1, "state_id": 1, "district_id": 3, "mandal_id": 120 }
+    },
+    {
+        "farmland_id": 97,
+        "farm_code": "FL26070054",
+        "farmland_img": null,
+        "valuation": "400000.00",
+        "location_details": { "country_id": 1, "state_id": 1, "district_id": 3, "mandal_id": 38 }
+    },
+    {
+        "farmland_id": 98,
+        "farm_code": "FL26070055",
+        "farmland_img": null,
+        "valuation": "2000000.00",
+        "location_details": { "country_id": 1, "state_id": 1, "district_id": 2, "mandal_id": 22 }
+    },
+    {
+        "farmland_id": 99,
+        "farm_code": "FL26070056",
+        "farmland_img": null,
+        "valuation": "100000.00",
+        "location_details": { "country_id": 1, "state_id": 1, "district_id": 12, "mandal_id": 165 }
+    },
+    {
+        "farmland_id": 100,
+        "farm_code": "FL26070057",
+        "farmland_img": null,
+        "valuation": "100000.00",
+        "location_details": { "country_id": 1, "state_id": 1, "district_id": 5, "mandal_id": 96 }
+    },
+    {
+        "farmland_id": 101,
+        "farm_code": "FL26070058",
+        "farmland_img": null,
+        "valuation": "100000.00",
+        "location_details": { "country_id": 1, "state_id": 1, "district_id": 5, "mandal_id": 96 }
+    },
+    {
+        "farmland_id": 102,
+        "farm_code": "FL26070059",
+        "farmland_img": null,
+        "valuation": "2000000.00",
+        "location_details": { "country_id": 1, "state_id": 1, "district_id": 6, "mandal_id": 161 }
+    },
+    {
+        "farmland_id": 513,
+        "farm_code": "FL26080386",
+        "farmland_img": "farmlands/513/land_images/cover_images/1786598161607.jpg",
+        "valuation": "2000000.00",
+        "location_details": { "country_id": 1, "state_id": 1, "district_id": 3, "mandal_id": 26 }
+    }
+  ];
 
-  const isLoading = !mounted || isQueryLoading;
-  const listings = res?.data || [];
+  const isLoading = !mounted;
+  const listings = fdata;
 
   // Drag scroll states
   const [isDragging, setIsDragging] = useState(false);
@@ -186,6 +290,7 @@ export default function YourListings() {
                         src={finalUrl}
                         alt={item.farm_code}
                         fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         className="object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                     );

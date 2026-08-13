@@ -1,10 +1,24 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 
 export default function Newsletter() {
+  const [email, setEmail] = useState("");
+  const [subscribed, setSubscribed] = useState(false);
+
+  const handleSubscribe = () => {
+    if (email && email.includes("@")) {
+      setSubscribed(true);
+      setTimeout(() => setSubscribed(false), 3000);
+      setEmail("");
+    } else {
+      alert("Please enter a valid email address.");
+    }
+  };
+
   return (
-    <section className="relative w-full bg-transparent py-8 md:py-12 lg:py-16 overflow-hidden">
+    <section className="relative w-full bg-transparent py-8 md:py-12 lg:py-16 overflow-hidden z-50 pointer-events-auto">
 
       <div className="w-full px-4 md:px-[60px]">
 
@@ -88,13 +102,29 @@ export default function Newsletter() {
               delay: 0.8,
             }}
             viewport={{ once: true }}
-            className="mt-6 flex flex-row justify-center items-start pt-6 gap-4 w-full"
+            className="mt-6 flex flex-col md:flex-row justify-center items-center pt-6 gap-4 w-full"
           >
-            <button
-              className="flex flex-col justify-center items-center py-[16px] px-[40px] h-[56px] bg-[#2780C4] rounded-full text-white font-jakarta font-bold text-[16px] leading-[24px] cursor-pointer hover:bg-[#1a66a3] transition-colors"
-            >
-              Subscribe
-            </button>
+            {subscribed ? (
+              <div className="flex items-center justify-center py-[16px] px-[40px] h-[56px] bg-[#00A15D] rounded-full text-white font-jakarta font-bold text-[16px]">
+                Subscribed Successfully!
+              </div>
+            ) : (
+              <>
+                <input
+                  type="email"
+                  placeholder="Enter your email address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full md:w-[320px] h-[56px] px-6 rounded-full bg-white/10 border border-white/20 text-white placeholder-white/50 outline-none focus:border-[#2780C4] transition-colors font-jakarta"
+                />
+                <button
+                  onClick={handleSubscribe}
+                  className="flex flex-col justify-center items-center py-[16px] px-[40px] h-[56px] bg-[#2780C4] rounded-full text-white font-jakarta font-bold text-[16px] leading-[24px] cursor-pointer hover:bg-[#1a66a3] transition-colors"
+                >
+                  Subscribe
+                </button>
+              </>
+            )}
           </motion.div>
 
         </motion.div>

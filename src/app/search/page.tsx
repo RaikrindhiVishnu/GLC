@@ -13,14 +13,16 @@ import { SearchProvider } from "./SearchContext";
 
 export default function SearchScreen() {
   return (
-    <main style={{ minHeight: "100vh", background: "#FFFFFF", display: "flex", flexDirection: "column" }}>
-      <SearchHeroSection />
-      <CategoriesFilterTabs />
-      <MainListingsGrid />
-      <SuggestedMatchesRow />
-      <TrendingFeaturedSection />
-      <CTA />
-      <Footer />
-    </main>
+    <SearchProvider>
+      <main style={{ minHeight: "100vh", background: "#FFFFFF", display: "flex", flexDirection: "column" }}>
+        <SearchHeroSection />
+        <CategoriesFilterTabs />
+        <MainListingsGrid />
+        <SuggestedMatchesRow />
+        <TrendingFeaturedSection />
+        <CTA />
+        <Footer />
+      </main>
+    </SearchProvider>
   );
 }

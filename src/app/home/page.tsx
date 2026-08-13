@@ -32,11 +32,11 @@ export default function UserHomePage() {
       <Recommended />
       <SustainableYieldsBanner />
       <PlatformStats />
-      <PoolInvestments />
+      {/* <PoolInvestments /> */}
       <CompareAssets />
       <DocumentUnlocks />
       <Testimonials />
-      <Newsletter />
+      {/* <Newsletter /> */}
       <CTA />
       <Footer />
     </main>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSearchContext } from "../../SearchContext";
 import { motion } from "framer-motion";
+import { useGetAllFarmlandsByStateIdQuery } from "../../../../services/farmland";
 
 interface FilterPropertiesModalProps {
   isOpen: boolean;
@@ -30,9 +31,55 @@ export default function FilterPropertiesModal({
   const allDistricts = geoData?.districts?.slice(1) || [];
   const districts = allDistricts.filter(d => stateSearch ? Number(d[1]) === Number(stateSearch) : true);
 
+  const [minPrice, setMinPrice] = useState(1000000); // Default min
+  const [maxPrice, setMaxPrice] = useState(150000000); // Default max
+  const [minSize, setMinSize] = useState(1);
+  const [maxSize, setMaxSize] = useState(100);
+
   // Double slider range state
-  const [priceRange, setPriceRange] = useState<[number, number]>([10000000, 150000000]);
-  const [sizeRange, setSizeRange] = useState<[number, number]>([10, 45]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([1000000, 150000000]);
+  const [sizeRange, setSizeRange] = useState<[number, number]>([1, 100]);
+
+  const { data: farmlandRes } = useGetAllFarmlandsByStateIdQuery({
+    state_id: stateSearch ? [Number(stateSearch)] : undefined,
+    district_id: citySearch ? [Number(citySearch)] : undefined,
+    mandal_id: mandalSearch ? [Number(mandalSearch)] : undefined,
+  }, { skip: !isOpen });
+
+  useEffect(() => {
+    if (farmlandRes?.data && farmlandRes.data.length > 0) {
+      let currentMinPrice = Infinity;
+      let currentMaxPrice = -Infinity;
+      let currentMinSize = Infinity;
+      let currentMaxSize = -Infinity;
+
+      farmlandRes.data.forEach(farm => {
+        if (farm.price < currentMinPrice) currentMinPrice = farm.price;
+        if (farm.price > currentMaxPrice) currentMaxPrice = farm.price;
+        if (farm.acers !== undefined && farm.acers < currentMinSize) currentMinSize = farm.acers;
+        if (farm.acers !== undefined && farm.acers > currentMaxSize) currentMaxSize = farm.acers;
+      });
+
+      if (currentMinPrice !== Infinity) setMinPrice(currentMinPrice);
+      if (currentMaxPrice !== -Infinity) setMaxPrice(currentMaxPrice);
+      if (currentMinSize !== Infinity) setMinSize(Math.floor(currentMinSize));
+      if (currentMaxSize !== -Infinity) setMaxSize(Math.ceil(currentMaxSize));
+      
+      setPriceRange(prev => [
+        Math.max(currentMinPrice !== Infinity ? currentMinPrice : prev[0], minPrice),
+        Math.min(currentMaxPrice !== -Infinity ? currentMaxPrice : prev[1], maxPrice)
+      ]);
+      setSizeRange(prev => [
+        Math.max(currentMinSize !== Infinity ? Math.floor(currentMinSize) : prev[0], minSize),
+        Math.min(currentMaxSize !== -Infinity ? Math.ceil(currentMaxSize) : prev[1], maxSize)
+      ]);
+    } else {
+      setMinPrice(1000000);
+      setMaxPrice(150000000);
+      setMinSize(1);
+      setMaxSize(100);
+    }
+  }, [farmlandRes]);
 
   const handlePriceMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = parseInt(e.target.value);
@@ -517,12 +564,12 @@ export default function FilterPropertiesModal({
                 <div className="relative w-full h-8 flex items-center mb-4 mt-2">
                   <div style={{ height: "6px", background: "#E7E8E9", borderRadius: "9999px" }} className="absolute inset-x-0" />
                   <div style={{ height: "6px", background: "#2780C4", borderRadius: "9999px", 
-                    left: `${((priceRange[0] - 5000000) / 245000000) * 100}%`,
-                    right: `${100 - ((priceRange[1] - 5000000) / 245000000) * 100}%`
+                    left: `${((priceRange[0] - minPrice) / (maxPrice - minPrice || 1)) * 100}%`,
+                    right: `${100 - ((priceRange[1] - minPrice) / (maxPrice - minPrice || 1)) * 100}%`
                   }} className="absolute" />
                   
-                  <input type="range" min="5000000" max="250000000" step="1000000" value={priceRange[0]} onChange={handlePriceMinChange} className="absolute w-full appearance-none bg-transparent pointer-events-none" style={{ zIndex: 3, outline: 'none' }} />
-                  <input type="range" min="5000000" max="250000000" step="1000000" value={priceRange[1]} onChange={handlePriceMaxChange} className="absolute w-full appearance-none bg-transparent pointer-events-none" style={{ zIndex: 4, outline: 'none' }} />
+                  <input type="range" min={minPrice} max={maxPrice} step="1000000" value={priceRange[0]} onChange={handlePriceMinChange} className="absolute w-full appearance-none bg-transparent pointer-events-none" style={{ zIndex: 3, outline: 'none' }} />
+                  <input type="range" min={minPrice} max={maxPrice} step="1000000" value={priceRange[1]} onChange={handlePriceMaxChange} className="absolute w-full appearance-none bg-transparent pointer-events-none" style={{ zIndex: 4, outline: 'none' }} />
                   <style>{`
                     input[type=range]::-webkit-slider-thumb {
                       pointer-events: all;
@@ -579,12 +626,12 @@ export default function FilterPropertiesModal({
                 <div className="relative w-full h-8 flex items-center mb-4 mt-2">
                   <div style={{ height: "6px", background: "#E7E8E9", borderRadius: "9999px" }} className="absolute inset-x-0" />
                   <div style={{ height: "6px", background: "#2780C4", borderRadius: "9999px", 
-                    left: `${((sizeRange[0] - 1) / 99) * 100}%`,
-                    right: `${100 - ((sizeRange[1] - 1) / 99) * 100}%`
+                    left: `${((sizeRange[0] - minSize) / (maxSize - minSize || 1)) * 100}%`,
+                    right: `${100 - ((sizeRange[1] - minSize) / (maxSize - minSize || 1)) * 100}%`
                   }} className="absolute" />
                   
-                  <input type="range" min="1" max="100" step="1" value={sizeRange[0]} onChange={handleSizeMinChange} className="absolute w-full appearance-none bg-transparent pointer-events-none" style={{ zIndex: 3, outline: 'none' }} />
-                  <input type="range" min="1" max="100" step="1" value={sizeRange[1]} onChange={handleSizeMaxChange} className="absolute w-full appearance-none bg-transparent pointer-events-none" style={{ zIndex: 4, outline: 'none' }} />
+                  <input type="range" min={minSize} max={maxSize} step="1" value={sizeRange[0]} onChange={handleSizeMinChange} className="absolute w-full appearance-none bg-transparent pointer-events-none" style={{ zIndex: 3, outline: 'none' }} />
+                  <input type="range" min={minSize} max={maxSize} step="1" value={sizeRange[1]} onChange={handleSizeMaxChange} className="absolute w-full appearance-none bg-transparent pointer-events-none" style={{ zIndex: 4, outline: 'none' }} />
                 </div>
 
                 {/* Min/Max Value Pills */}

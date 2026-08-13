@@ -188,6 +188,7 @@ export interface GetAllFarmlandsResponse {
     farmland_id: number;
     farmland_code: string;
     price: number;
+    acers?: number;
     tag_ids: number[];
     farmland_image: string;
     farmland_locations: {
