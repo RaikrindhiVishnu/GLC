@@ -1,8 +1,8 @@
 {
   "build": {
     "env": {
-      "NEXT_PUBLIC_AUTH_API_URL": "https://eq3tqsvcw7.execute-api.ap-south-1.amazonaws.com",
-      "NEXT_PUBLIC_API_URL": "https://blkzmtts30.execute-api.ap-south-1.amazonaws.com"
+      "NEXT_PUBLIC_AUTH_API_URL": "https://nwzcuof4c0.execute-api.ap-south-1.amazonaws.com",
+      "NEXT_PUBLIC_API_URL": "https://fhhhzb3bih.execute-api.ap-south-1.amazonaws.com"
     }
   }
 }
