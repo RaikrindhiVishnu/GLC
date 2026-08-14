@@ -48,6 +48,11 @@ export interface BoughtFarmland {
     district_id: number;
     mandal_id: number;
   };
+  land_specifications?: {
+    total_acers?: number;
+    borewell?: number;
+    soil_type?: string;
+  };
 }
 
 export interface GetUserBoughtFarmlandsRequest {

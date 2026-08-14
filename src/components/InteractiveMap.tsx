@@ -219,7 +219,7 @@ export default function InteractiveMap({ onLocationChange, onPolygonChange, onFu
           rectangle: false,
           circle: false,
           circlemarker: false,
-          marker: true
+          marker: true as any
         }
       });
       map.addControl(drawControl);
@@ -251,7 +251,7 @@ export default function InteractiveMap({ onLocationChange, onPolygonChange, onFu
 
         const latlngs = layer.getLatLngs()[0];
         if (polygonCbRef.current) {
-          polygonCbRef.current(latlngs.map((ll: any) => ({ lat: ll.lat, lng: ll.lng })));
+          polygonCbRef.current((latlngs as any[]).map((ll: any) => ({ lat: ll.lat, lng: ll.lng })));
         }
       }
     });
@@ -265,7 +265,7 @@ export default function InteractiveMap({ onLocationChange, onPolygonChange, onFu
         }
         if (layer instanceof L.Polygon) {
           const latlngs = layer.getLatLngs()[0];
-          if (polygonCbRef.current) polygonCbRef.current(latlngs.map((ll: any) => ({ lat: ll.lat, lng: ll.lng })));
+          if (polygonCbRef.current) polygonCbRef.current((latlngs as any[]).map((ll: any) => ({ lat: ll.lat, lng: ll.lng })));
         }
       });
     });

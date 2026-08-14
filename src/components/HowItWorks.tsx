@@ -1,11 +1,24 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { useState } from "react";
 
 export default function HowItWorks() {
+  const router = useRouter();
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
+
+  const handleNav = (targetPath: string = "/login") => {
+    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const isLoggedIn = Boolean(token && token !== "null" && token !== "undefined" && token.trim() !== "");
+    if (!isLoggedIn) {
+      router.push("/login");
+    } else {
+      router.push(targetPath);
+    }
+  };
+
   return (
     <section className="relative w-full bg-white py-16 lg:py-32 overflow-hidden">
       <div className="container mx-auto max-w-[1440px] px-6 lg:px-16">
@@ -119,6 +132,7 @@ export default function HowItWorks() {
 
               {/* Card 1 */}
               <div 
+                onClick={() => handleNav("/login")}
                 className="flex gap-4 w-full cursor-pointer"
                 style={{ flexDirection: hoveredCard === 1 ? 'column-reverse' : 'column' }}
                 onMouseEnter={() => setHoveredCard(1)}
@@ -170,6 +184,7 @@ export default function HowItWorks() {
 
               {/* Card 2 */}
               <div 
+                onClick={() => handleNav("/search")}
                 className="flex gap-4 w-full cursor-pointer"
                 style={{ flexDirection: hoveredCard === 2 ? 'column-reverse' : 'column' }}
                 onMouseEnter={() => setHoveredCard(2)}
@@ -222,6 +237,7 @@ export default function HowItWorks() {
 
               {/* Card 3 */}
               <div 
+                onClick={() => handleNav("/home")}
                 className="flex gap-4 w-full cursor-pointer"
                 style={{ flexDirection: hoveredCard === 3 ? 'column-reverse' : 'column' }}
                 onMouseEnter={() => setHoveredCard(3)}

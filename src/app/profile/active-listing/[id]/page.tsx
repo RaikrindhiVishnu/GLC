@@ -62,7 +62,7 @@ export default function ActiveListingPage() {
     }
   }
 
-  const acreage = farmlandData?.land_specifications?.total_acers || farmlandData?.acers || 10;
+  const acreage = farmlandData?.land_specifications?.total_acers || (farmlandData as any)?.acers || 10;
 
   const isValidUrl = (url: string | undefined | null) => {
     if (!url || url === "null" || url === "") return false;
@@ -72,7 +72,7 @@ export default function ActiveListingPage() {
   };
 
   const heroImgUrl = isValidUrl(farmlandData?.farmland_img) 
-    ? farmlandData.farmland_img 
+    ? (farmlandData?.farmland_img || "") 
     : "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1920&q=80";
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -164,7 +164,7 @@ export default function ActiveListingPage() {
             <span style={{
               fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "60px",
               lineHeight: "60px", letterSpacing: "-1.5px", color: "#FFFFFF",
-            }}>{farmlandData?.farm_code || farmlandData?.farmland_code || `GLC SOS 0${farmlandId}`}</span>
+            }}>{(farmlandData as any)?.farm_code || farmlandData?.farmland_code || `GLC SOS 0${farmlandId}`}</span>
           </div>
         </div>
       </div>

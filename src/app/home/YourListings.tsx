@@ -316,7 +316,7 @@ export default function YourListings() {
 
               {/* Price */}
               <p className="w-full m-0 mb-4 font-jakarta font-normal text-[13px] lg:text-[14px] leading-[20px] text-[#0F2F4C] pointer-events-none">
-                {item.valuation ? `₹${(item.valuation / 100000).toFixed(1)} Lakhs` : "Price on Request"}
+                {item.valuation ? `₹${(Number(item.valuation) / 100000).toFixed(1)} Lakhs` : "Price on Request"}
               </p>
 
               {/* Button */}

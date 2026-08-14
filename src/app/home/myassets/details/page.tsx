@@ -13,7 +13,7 @@ export default function MyAssetsDetailedPage() {
   const searchParams = useSearchParams();
   const farmlandId = 35; // Hardcoded to 35 as per backend request (was Number(searchParams.get("id")) || 1)
   const { data: res, isLoading } = useGetFarmlandByIdQuery({ farmland_id: farmlandId });
-  const farmland = res && res.success !== false ? res : null;
+  const farmland = Array.isArray(res) ? res[0] : res;
 
   if (isLoading) {
     return (

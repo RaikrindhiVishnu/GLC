@@ -233,8 +233,8 @@ function InnerFarmlandDetailsView() {
   let locationSubtitle = activeLand.locationSubtitle;
   if (farmlandDetailData?.location_details && masterData) {
     const loc = farmlandDetailData.location_details;
-    const district = masterData.districtResult?.find((d: any) => d.id === loc.district_id)?.district_name;
-    const state = masterData.stateResult?.find((s: any) => s.id === loc.state_id)?.state_name;
+    const district = (masterData as any).districtResult?.find((d: any) => d.id === loc.district_id)?.district_name;
+    const state = (masterData as any).stateResult?.find((s: any) => s.id === loc.state_id)?.state_name;
     if (district && state) {
       locationSubtitle = `${district}, ${state}`;
     }
@@ -284,14 +284,14 @@ function InnerFarmlandDetailsView() {
               efficiencyProp={
                 facilitiesData?.water?.is_ground_water
                   ? "Ground Water Available"
-                  : (farmlandDetailData?.land_specifications?.is_ground_water
+                  : ((farmlandDetailData?.land_specifications as any)?.is_ground_water
                     ? "Ground Water Available"
                     : "Unknown")
               }
               soilQualityProp={
                 soilDesc ||
-                (farmlandDetailData?.land_specifications?.soil_type && masterData?.soilTypeResult?.find((s: any) => s.id === farmlandDetailData.land_specifications.soil_type)?.description) ||
-                (farmlandDetailData?.land_specifications?.soil_type === 0 ? "Unknown" : activeLand.soilComposition.title)
+                (farmlandDetailData?.land_specifications?.soil_type && (masterData as any)?.soilTypeResult?.find((s: any) => String(s.id) === String(farmlandDetailData?.land_specifications?.soil_type))?.description) ||
+                (String(farmlandDetailData?.land_specifications?.soil_type) === "0" ? "Unknown" : activeLand.soilComposition.title)
               }
             />
             <FacilitiesCultivation

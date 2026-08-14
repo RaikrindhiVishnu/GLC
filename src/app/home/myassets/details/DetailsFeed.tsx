@@ -13,7 +13,7 @@ export default function DetailsFeed({ farmland }: { farmland: FarmlandDetailResp
 
   // Fetch Legal Documents
   const { data: legalDocsRes, isLoading: legalLoading } = useGetAllLegalDocumentsByFarmlandIdQuery(
-    { farmlandId: farmland?.id || 101 },
+    { farmlandId: farmland?.farmland_id || 101 },
     { skip: selectedTab !== "legal" }
   );
 

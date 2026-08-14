@@ -409,9 +409,11 @@ export default function ProfileScreen() {
               <p style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 400, fontSize: "13px", color: "rgba(255,255,255,0.55)", margin: "0 0 20px" }}>Direct access to premium agricultural yields</p>
 
               {/* View Wallet History */}
+              {/*
               <button onClick={() => setIsWalletHistoryModalOpen(true)} style={{ width: "100%", height: "50px", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "14px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "15px", color: "#FFFFFF" }}>View Wallet History</span>
               </button>
+              */}
             </div>
           </motion.div>
         </div>{/* end padding wrapper */}
@@ -626,7 +628,7 @@ export default function ProfileScreen() {
                     </div>
                     <div style={{ display: "flex", flexDirection: "column", gap: "2px", minWidth: 0, flex: 1 }}>
                       <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "18px", color: "#18181B", letterSpacing: "-0.45px" }}>{item.farmland_code}</span>
-                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "12px", color: "#71717A", letterSpacing: "0.3px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{item.mandal_id || "Medchal"} • ‹{(Number(item.price) / 100000).toFixed(1) || "12.5"}L • {item.total_acers || "0.5"} Ac</span>
+                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "12px", color: "#71717A", letterSpacing: "0.3px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{(item as any).mandal_id || "Medchal"} • ‹{(Number(item.price) / 100000).toFixed(1) || "12.5"}L • {item.total_acers || "0.5"} Ac</span>
                     </div>
                   </div>
                 </div>
@@ -832,6 +834,7 @@ export default function ProfileScreen() {
               <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "60px", lineHeight: "60px", letterSpacing: "-3px", color: "#FFFFFF" }}>{formattedAssets}</span>
             </div>
 
+            {/*
             <div style={{ position: "absolute", top: "574px", left: "48px", display: "flex", flexDirection: "row", gap: "16px", zIndex: 10 }}>
               <button onClick={() => setIsWalletHistoryModalOpen(true)} style={{ height: "46px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: "32px", padding: "0 24px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", transition: "background 0.2s ease" }} onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.15)")} onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.05)")}>
                 <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", color: "#FFFFFF" }}>Wallet History</span>
@@ -840,6 +843,7 @@ export default function ProfileScreen() {
                 <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", color: "#FFFFFF" }}>Manage Subscription</span>
               </button>
             </div>
+            */}
           </div>
         </motion.div>
 
@@ -1109,7 +1113,7 @@ export default function ProfileScreen() {
                       </div>
                       <div style={{ display: "flex", flexDirection: "column", gap: "2px", minWidth: 0, flex: 1 }}>
                         <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "18px", color: "#18181B", letterSpacing: "-0.45px" }}>{item.farmland_code}</span>
-                        <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "12px", color: "#71717A", letterSpacing: "0.3px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{item.mandal_id || "Medchal"} • ‹{(Number(item.price) / 100000).toFixed(1) || "12.5"}L • {item.total_acers || "0.5"} Ac</span>
+                        <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, fontSize: "12px", color: "#71717A", letterSpacing: "0.3px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{(item as any).mandal_id || "Medchal"} • ‹{(Number(item.price) / 100000).toFixed(1) || "12.5"}L • {item.total_acers || "0.5"} Ac</span>
                       </div>
                     </div>
                   </div>

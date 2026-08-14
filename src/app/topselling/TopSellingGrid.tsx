@@ -74,7 +74,7 @@ export default function TopSellingGrid() {
   const filteredFarmlands = useMemo(() => {
     if (!activeTab || activeTab.toUpperCase() === "ALL") return farmlands;
     return farmlands.filter(f => {
-      const { districtName } = getLocationDetails(f.farmland_district_id || f.location_details?.district_id);
+      const { districtName } = getLocationDetails(f.farmland_district_id || (f as any).location_details?.district_id);
       return districtName.trim().toLowerCase() === activeTab.trim().toLowerCase();
     });
   }, [farmlands, activeTab, geoDataRes]);

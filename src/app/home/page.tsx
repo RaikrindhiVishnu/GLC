@@ -26,7 +26,7 @@ export default function UserHomePage() {
       <FiltersScreen />
       <TrendingLocations />
       <PopularFarmlands />
-      <UnlockedDocs />
+      {/* <UnlockedDocs /> */}
       <YourListings />
       <TrendingFarmlands />
       <Recommended />
@@ -34,7 +34,7 @@ export default function UserHomePage() {
       <PlatformStats />
       {/* <PoolInvestments /> */}
       <CompareAssets />
-      <DocumentUnlocks />
+      {/* <DocumentUnlocks /> */}
       <Testimonials />
       {/* <Newsletter /> */}
       <CTA />

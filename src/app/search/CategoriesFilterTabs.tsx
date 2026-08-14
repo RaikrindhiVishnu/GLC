@@ -19,7 +19,7 @@ export default function CategoriesFilterTabs() {
         id: `state-${stateId}`,
         label: stateName,
         weight: 700,
-        onDismiss: () => setFilters({ ...filters, state_id: [] })
+        onDismiss: () => setFilters({ ...filters, state_id: [], district_id: [], mandal_id: [] })
       });
     }
 
@@ -31,7 +31,19 @@ export default function CategoriesFilterTabs() {
         id: `district-${districtId}`,
         label: districtName,
         weight: 500,
-        onDismiss: () => setFilters({ ...filters, district_id: [] })
+        onDismiss: () => setFilters({ ...filters, district_id: [], mandal_id: [] })
+      });
+    }
+
+    // Mandal
+    if (filters.mandal_id && filters.mandal_id.length > 0) {
+      const mandalId = filters.mandal_id[0];
+      const mandalName = geoData?.mandals?.slice(1)?.find(m => m[0] === mandalId)?.[3] || `Mandal ${mandalId}`;
+      chips.push({
+        id: `mandal-${mandalId}`,
+        label: mandalName,
+        weight: 500,
+        onDismiss: () => setFilters({ ...filters, mandal_id: [] })
       });
     }
 

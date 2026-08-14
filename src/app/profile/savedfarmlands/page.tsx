@@ -119,7 +119,7 @@ export default function SavedFarmlandsPage() {
     setProperties(prev => prev.filter(item => item.id !== id));
     
     try {
-      await removeFarmland({ user_id: userId, farm_land_id: parseInt(id) }).unwrap();
+      await removeFarmland({ user_id: userId || 0, farm_land_id: parseInt(id) }).unwrap();
       refetch();
     } catch (error) {
       console.error("Failed to unsave farmland", error);

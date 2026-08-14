@@ -53,7 +53,7 @@ export default function FacilitiesCultivation({
 
   const cropsThatCanBeGrown = getParsedValue(facilitiesData?.crops_that_can_be_grown) || potentialCrop;
   const currentCultivationDesc = getParsedValue(facilitiesData?.current_cultivation) || currentCrop;
-  const futureCropsSuggestions = getParsedValue(facilitiesData?.future_crops_suggetions) || potentialCrop;
+  const futureCropsSuggestions = getParsedValue((facilitiesData as any)?.future_crops_suggetions) || potentialCrop;
 
   return (
     <div className="flex flex-col sm:flex-row gap-4 lg:gap-6 w-full">

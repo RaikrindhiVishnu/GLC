@@ -58,7 +58,7 @@ export default function FiltersScreen() {
       <div className="w-full max-w-[1440px] mx-auto px-4 md:px-[60px]">
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4 lg:gap-[16px]">
           {filterButtons
-            .filter((btn) => btn.id !== "pool-buying" && btn.id !== "maintenance-farmland")
+            .filter((btn) => btn.id !== "pool-buying" && btn.id !== "maintenance-farmland" && btn.id !== "my-assets")
             .map((btn, i) => (
             <motion.button
               key={btn.id}

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { useSearchContext } from "../SearchContext";
 import { useGetAllFarmlandsByStateIdQuery } from "../../../services/farmland";
@@ -11,6 +12,8 @@ interface FilterOverlayProps {
 }
 
 export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
+  const router = useRouter();
+  const pathname = usePathname();
   const { filters, setFilters, masterData, geoData } = useSearchContext();
 
   const [stateSearch, setStateSearch] = useState<number | "">("");
@@ -110,7 +113,8 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
     if (isOpen) {
       setStateSearch(filters.state_id?.[0] || "");
       setCitySearch(filters.district_id?.[0] || "");
-      setSelectedLeft(filters.tag_ids || []);
+      setMandalSearch(filters.mandal_id?.[0] || "");
+      setSelectedLeft((filters.tag_ids || []).map(String));
       document.body.style.overflow = "hidden";
       document.documentElement.style.overflow = "hidden";
     } else {
@@ -419,7 +423,7 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
               
               <CustomDropdown 
                 value={stateSearch}
-                onChange={(v) => { setStateSearch(v); setCitySearch(""); }}
+                onChange={(v) => { setStateSearch(v); setCitySearch(""); setMandalSearch(""); }}
                 options={[
                   { value: "", label: "All States" },
                   ...states.map(s => ({ value: s[0], label: s[3] }))
@@ -429,14 +433,14 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
                 onToggle={() => setOpenDropdown(openDropdown === "state" ? null : "state")}
                 icon={
                   <svg width="16" height="20" viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M8 10C8.55 10 9.02083 9.80417 9.4125 9.4125C9.80417 9.02083 10 8.55 10 8C10 7.45 9.80417 6.97917 9.4125 6.5875C9.02083 6.19583 8.55 6 8 6C7.45 6 6.97917 6.19583 6.5875 6.5875C6.19583 6.97917 6 7.45 6 8C6 8.55 6.19583 9.02083 6.5875 9.4125C6.97917 9.80417 7.45 10 8 10ZM8 17.35C10.0333 15.4833 11.5417 13.7875 12.525 12.2625C13.5083 10.7375 14 9.38333 14 8.2C14 6.38333 13.4208 4.89583 12.2625 3.7375C11.1042 2.57917 9.68333 2 8 2C6.31667 2 4.89583 2.57917 3.7375 3.7375C2.57917 4.89583 2 6.38333 2 8.2C2 9.38333 2.49167 10.7375 3.475 12.2625C4.45833 13.7875 5.96667 15.4833 8 17.35ZM8 20C5.31667 17.7167 3.3125 15.5958 1.9875 13.6375C0.6625 11.6792 0 9.86667 0 8.2C0 5.7 0.804167 3.70833 2.4125 2.225C4.02083 0.741667 5.88333 0 8 0C10.1167 0 11.9792 0.741667 13.5875 2.225C15.1958 3.70833 16 5.7 16 8.2C16 9.86667 15.3375 11.6792 14.0125 13.6375C12.6875 15.5958 10.6833 17.7167 8 20Z" fill="#75777D"/>
+                    <path d="M8 10C8.55 10 9.02083 9.80417 9.4125 9.4125C9.80417 9.02083 10 8.55 10 8C10 7.45 9.80417 6.97917 9.4125 6.5875C9.02083 6.19583 8.55 6 8 6C7.45 6 6.97917 6.19583 6.5875 6.5875C6.19583 6.97917 6 7.45 6 8C6 8.55 6.19583 9.02083 6.5875 9.4125C6.97917 9.80417 7.45 10 8 10ZM8 17.35C10.0333 15.4833 11.5417 13.7875 12.525 12.2625C13.5083 10.7375 14 9.38333 14 8.2C14 6.38333 13.4208 4.89583 12.2625 3.7375C11.1042 2.57917 9.68333 2 8 2C6.31667 2 4.89583 2.57917 3.7375 3.7375C2.57917 4.89583 2 6.38333 2 8.2C2 9.38333 2.49167 10.7375 3.475 12.2625C4.45833 13.7875 5.96667 15.4833 8 20ZM8 20C5.31667 17.7167 3.3125 15.5958 1.9875 13.6375C0.6625 11.6792 0 9.86667 0 8.2C0 5.7 0.804167 3.70833 2.4125 2.225C4.02083 0.741667 5.88333 0 8 0C10.1167 0 11.9792 0.741667 13.5875 2.225C15.1958 3.70833 16 5.7 16 8.2C16 9.86667 15.3375 11.6792 14.0125 13.6375C12.6875 15.5958 10.6833 17.7167 8 20Z" fill="#75777D"/>
                   </svg>
                 }
               />
 
               <CustomDropdown 
                 value={citySearch}
-                onChange={(v) => setCitySearch(v)}
+                onChange={(v) => { setCitySearch(v); setMandalSearch(""); }}
                 options={[
                   { value: "", label: "All Districts" },
                   ...districts.map(d => ({ value: d[0], label: d[3] }))
@@ -773,18 +777,50 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
         >
           <button
             onClick={() => {
-              setFilters({
-                ...filters,
-                state_id: stateSearch ? [Number(stateSearch)] : [],
-                district_id: citySearch ? [Number(citySearch)] : [],
-                mandal_id: mandalSearch ? [Number(mandalSearch)] : [],
-                tag_ids: selectedLeft as any,
-                from_price: priceRange[0],
-                to_price: priceRange[1],
-                from_size: sizeRange[0],
-                to_size: sizeRange[1]
-              });
+              let resolvedStateId = stateSearch ? [Number(stateSearch)] : [];
+              let resolvedDistrictId = citySearch ? [Number(citySearch)] : [];
+              let resolvedMandalId = mandalSearch ? [Number(mandalSearch)] : [];
+
+              // Auto-resolve state_id if district is selected
+              if (resolvedDistrictId.length > 0 && resolvedStateId.length === 0) {
+                const dist = allDistricts.find((d: any[]) => Number(d[0]) === resolvedDistrictId[0]);
+                if (dist && dist[1]) {
+                  resolvedStateId = [Number(dist[1])];
+                }
+              }
+
+              // Auto-resolve district_id & state_id if mandal is selected
+              if (resolvedMandalId.length > 0) {
+                const mand = allMandals.find((m: any[]) => Number(m[0]) === resolvedMandalId[0]);
+                if (mand) {
+                  if (resolvedDistrictId.length === 0 && mand[1]) {
+                    resolvedDistrictId = [Number(mand[1])];
+                  }
+                  if (resolvedStateId.length === 0 && mand[2]) {
+                    resolvedStateId = [Number(mand[2])];
+                  }
+                }
+              }
+
+              const newFilters: any = {};
+              if (resolvedStateId.length > 0) newFilters.state_id = resolvedStateId;
+              if (resolvedDistrictId.length > 0) newFilters.district_id = resolvedDistrictId;
+              if (resolvedMandalId.length > 0) newFilters.mandal_id = resolvedMandalId;
+              if (selectedLeft.length > 0) newFilters.tag_ids = selectedLeft.map(Number);
+              
+              // Only apply price bounds if user adjusted the price slider
+              if (priceRange[0] > minPrice) newFilters.from_price = priceRange[0];
+              if (priceRange[1] < maxPrice) newFilters.to_price = priceRange[1];
+
+              // Only apply size bounds if user adjusted the size slider
+              if (sizeRange[0] > minSize) newFilters.from_size = sizeRange[0];
+              if (sizeRange[1] < maxSize) newFilters.to_size = sizeRange[1];
+
+              setFilters(newFilters);
               onClose();
+              if (pathname !== "/search") {
+                router.push("/search");
+              }
             }}
             style={{
               background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)",

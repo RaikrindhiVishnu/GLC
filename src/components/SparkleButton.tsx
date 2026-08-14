@@ -82,12 +82,41 @@ export default function SparkleButton() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const checkIsAuthenticated = (): boolean => {
+    if (typeof window === "undefined") return false;
+    const token = localStorage.getItem("token");
+    if (!token || token === "null" || token === "undefined" || token.trim() === "") {
+      return false;
+    }
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      if (!payload.exp || payload.exp * 1000 > Date.now()) {
+        return true;
+      }
+      const refreshToken = localStorage.getItem("refreshToken");
+      if (refreshToken && refreshToken !== "null" && refreshToken !== "undefined") {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  };
+
+  const handleSparkleClick = () => {
+    if (!checkIsAuthenticated()) {
+      router.push("/login");
+      return;
+    }
+    setIsModalOpen(true);
+  };
+
   if (isHidden || pathname?.startsWith("/login")) return null;
 
   return (
     <>
       <button
-        onClick={() => setIsModalOpen(true)}
+        onClick={handleSparkleClick}
         className="fixed bottom-8 right-6 md:right-[60px] z-50 flex items-center justify-center rounded-full transition-all duration-500 cursor-pointer shrink-0"
         style={isGlass ? { ...glassStyle, width: '52px', height: '52px' } : { ...solidStyle, width: '52px', height: '52px' }}
         onMouseEnter={() => setIsHovered(true)}
@@ -107,7 +136,11 @@ export default function SparkleButton() {
           onClose={() => setIsModalOpen(false)}
           onGenerate={() => {
             setIsModalOpen(false);
-            router.push("/home/ai-generated-farmlands");
+            if (!checkIsAuthenticated()) {
+              router.push("/login");
+            } else {
+              router.push("/home/ai-generated-farmlands");
+            }
           }}
         />
       )}

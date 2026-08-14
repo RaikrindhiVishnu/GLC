@@ -11,6 +11,16 @@ const DESIGN_HEIGHT = 899;
 export default function Footer() {
   const router = useRouter();
 
+  const handleFooterNav = (targetPath: string) => {
+    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const isLoggedIn = Boolean(token && token !== "null" && token !== "undefined" && token.trim() !== "");
+    if (!isLoggedIn) {
+      router.push("/login");
+    } else {
+      router.push(targetPath);
+    }
+  };
+
   const dots = [
     { left: 241, top: 194, img: "/assets/stats/person1.1.svg" },
     { left: 581, top: 181, img: "/assets/stats/person1.2.svg" },
@@ -84,9 +94,9 @@ export default function Footer() {
                   key={item}
                   className="text-white text-[18px] font-medium font-jakarta cursor-pointer hover:opacity-70 transition-opacity"
                   onClick={() => {
-                    if (item === "Search Farmland") router.push("/search");
-                    else if (item === "Subscriptions") router.push("/pricing");
-                    else if (item === "Pool Buying") router.push("/pool-buying");
+                    if (item === "Search Farmland") handleFooterNav("/search");
+                    else if (item === "Subscriptions") handleFooterNav("/pricing");
+                    else if (item === "Pool Buying") handleFooterNav("/pool-buying");
                   }}
                 >
                   {item}
@@ -106,8 +116,8 @@ export default function Footer() {
                 <li
                   key={item}
                   onClick={() => {
-                    if (item === "Maintenance") router.push("/home/maintenance");
-                    else if (item === "Verification") router.push("/home/verification");
+                    if (item === "Maintenance") handleFooterNav("/home/maintenance");
+                    else if (item === "Verification") handleFooterNav("/home/verification");
                     else if (item === "Privacy Policy") {
                       const token = localStorage.getItem("token");
                       if (!token) {
@@ -197,9 +207,9 @@ export default function Footer() {
                       <li
                         key={link}
                         onClick={() => {
-                          if (link === "Search Farmland") router.push("/search");
-                          else if (link === "Subscriptions") router.push("/pricing");
-                          else if (link === "Pool Buying") router.push("/pool-buying");
+                          if (link === "Search Farmland") handleFooterNav("/search");
+                          else if (link === "Subscriptions") handleFooterNav("/pricing");
+                          else if (link === "Pool Buying") handleFooterNav("/pool-buying");
                         }}
                         className="text-white text-[16px] font-semibold font-jakarta whitespace-nowrap leading-[100%] cursor-pointer hover:opacity-70 transition-opacity"
                       >
@@ -218,9 +228,9 @@ export default function Footer() {
                     <li
                       key={link}
                       onClick={() => {
-                        if (link === "Verification of Farmland") router.push("/home/verification");
-                        else if (link === "Maintenance of Farmland") router.push("/home/maintenance");
-                        else if (link === "Sell Your Land") router.push("/home/sellyourland");
+                        if (link === "Verification of Farmland") handleFooterNav("/home/verification");
+                        else if (link === "Maintenance of Farmland") handleFooterNav("/home/maintenance");
+                        else if (link === "Sell Your Land") handleFooterNav("/home/sellyourland");
                       }}
                       className="text-white text-[16px] font-semibold font-jakarta whitespace-nowrap leading-[100%] cursor-pointer hover:opacity-70 transition-opacity"
                     >

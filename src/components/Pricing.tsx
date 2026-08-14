@@ -1,8 +1,21 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 
 export default function Pricing() {
+  const router = useRouter();
+
+  const handleSelectPlan = () => {
+    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const isLoggedIn = Boolean(token && token !== "null" && token !== "undefined" && token.trim() !== "");
+    if (!isLoggedIn) {
+      router.push("/login");
+    } else {
+      router.push("/pricing");
+    }
+  };
+
   const tiers = [
     {
       name: "Starter",
@@ -196,7 +209,8 @@ export default function Pricing() {
 
                   {tier.highlight ? (
                     <button
-                      className="w-full h-[54px] rounded-full text-[17px] font-semibold text-white flex items-center justify-center"
+                      onClick={handleSelectPlan}
+                      className="w-full h-[54px] rounded-full text-[17px] font-semibold text-white flex items-center justify-center cursor-pointer"
                       style={{
                         background:
                           "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)",
@@ -205,7 +219,10 @@ export default function Pricing() {
                       Select Plan
                     </button>
                   ) : (
-                    <button className="w-full h-[54px] rounded-full border border-[#2780C4] bg-[#AED6EF1A] text-[17px] font-semibold text-[#2780C4] flex items-center justify-center">
+                    <button
+                      onClick={handleSelectPlan}
+                      className="w-full h-[54px] rounded-full border border-[#2780C4] bg-[#AED6EF1A] text-[17px] font-semibold text-[#2780C4] flex items-center justify-center cursor-pointer"
+                    >
                       Select Plan
                     </button>
                   )}
@@ -346,6 +363,7 @@ export default function Pricing() {
 
                   {tier.highlight ? (
                     <button
+                      onClick={handleSelectPlan}
                       className="w-[380px] h-[52px] rounded-[30px] text-[18px] font-semibold text-white transition-all shadow-lg flex items-center justify-center cursor-pointer"
                       style={{
                         background:
@@ -355,7 +373,10 @@ export default function Pricing() {
                       Select Plan
                     </button>
                   ) : (
-                    <button className="w-[240px] h-[52px] rounded-[30px] border border-[#2780C4] bg-[#AED6EF1A] text-[18px] font-semibold text-[#2780C4] transition-all hover:bg-[#2780C4] hover:text-white flex items-center justify-center cursor-pointer">
+                    <button
+                      onClick={handleSelectPlan}
+                      className="w-[240px] h-[52px] rounded-[30px] border border-[#2780C4] bg-[#AED6EF1A] text-[18px] font-semibold text-[#2780C4] transition-all hover:bg-[#2780C4] hover:text-white flex items-center justify-center cursor-pointer"
+                    >
                       Select Plan
                     </button>
                   )}

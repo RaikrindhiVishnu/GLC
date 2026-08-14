@@ -1,9 +1,22 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 
 export default function Hero() {
+  const router = useRouter();
+
+  const handleSearchClick = () => {
+    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const isLoggedIn = Boolean(token && token !== "null" && token !== "undefined" && token.trim() !== "");
+    if (!isLoggedIn) {
+      router.push("/login");
+    } else {
+      router.push("/search");
+    }
+  };
+
   return (
     <section id="hero-section" className="relative flex h-[80vh] md:h-screen min-h-[500px] md:min-h-[640px] w-full flex-col items-center justify-center overflow-hidden">
       {/* Background Video with Overlay */}
@@ -58,16 +71,19 @@ export default function Hero() {
           initial={{ opacity: 0, y: 25 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.7 }}
-          className="glass-search mt-[36px] flex h-[64px] w-full max-w-[560px] items-center gap-3 rounded-[100px] px-[12px] py-[8px]"
+          onClick={handleSearchClick}
+          className="glass-search mt-[36px] flex h-[64px] w-full max-w-[560px] items-center gap-3 rounded-[100px] px-[12px] py-[8px] cursor-pointer"
         >
           <div className="flex flex-1 items-center px-[16px]">
             <input
               type="text"
               placeholder="Search Investments..."
-              className="w-full bg-transparent text-[16px] font-medium leading-[21px] text-white placeholder:text-white focus:outline-none"
+              readOnly
+              onClick={handleSearchClick}
+              className="w-full bg-transparent text-[16px] font-medium leading-[21px] text-white placeholder:text-white focus:outline-none cursor-pointer"
             />
           </div>
-          <button className="flex h-[42px] min-w-[42px] items-center justify-center rounded-full bg-white cursor-pointer hover:bg-gray-100 transition-colors">
+          <button onClick={handleSearchClick} className="flex h-[42px] min-w-[42px] items-center justify-center rounded-full bg-white cursor-pointer hover:bg-gray-100 transition-colors">
             <Image
               src="/assets/hero/search.svg"
               alt="Filter"

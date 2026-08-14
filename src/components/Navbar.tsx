@@ -232,6 +232,7 @@ function AppNavbar({ active, className, forceScrolled }: { active?: NavbarActive
 
       {/* Desktop Utility Group (hidden on mobile) */}
       <div className="hidden md:flex items-center gap-3 shrink-0">
+        {/*
         <button
           type="button"
           onClick={() => router.push("/home/unlockeddocuments")}
@@ -259,6 +260,7 @@ function AppNavbar({ active, className, forceScrolled }: { active?: NavbarActive
             }}
           />
         </button>
+        */}
 
         <div style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
           <button
@@ -445,7 +447,7 @@ function AppNavbar({ active, className, forceScrolled }: { active?: NavbarActive
                 </svg>
               ),
             },
-          ].map((item, i) => {
+          ].filter(item => item.activeKey !== "documents").map((item, i) => {
             const isActive = active === item.activeKey;
             const itemColor = isActive
               ? "#FFFFFF"
