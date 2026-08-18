@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { useSearchContext } from "./SearchContext";
@@ -143,13 +143,15 @@ export default function MainListingsGrid() {
     }
   }, []);
 
+  const savedQueryArg = useMemo(() => ({ user_id: userId || 0, offset: 0 }), [userId]);
   const { data: savedFarmlandsData } = useGetAllSavedFarmlandsByUserIdQuery(
-    { user_id: userId || 0, offset: 0 },
+    savedQueryArg,
     { skip: !userId }
   );
 
+  const uploadQueryArg = useMemo(() => ({ userId: userId || 0 }), [userId]);
   const { data: uploadData } = useGetUserUploadedFarmlandsQuery(
-    { userId: userId || 0 },
+    uploadQueryArg,
     { skip: !userId }
   );
 
@@ -159,7 +161,17 @@ export default function MainListingsGrid() {
       savedFarmlandsData.forEach((item: any) => {
         initialBookmarks[item.farm_land_id] = true;
       });
-      setBookmarks(prev => ({ ...prev, ...initialBookmarks }));
+      setBookmarks(prev => {
+        const keysNew = Object.keys(initialBookmarks);
+        const keysPrev = Object.keys(prev);
+        const hasChange = keysNew.length !== keysPrev.length || 
+                          keysNew.some(k => !prev[k]) || 
+                          keysPrev.some(k => !initialBookmarks[k]);
+        if (hasChange) {
+          return { ...prev, ...initialBookmarks };
+        }
+        return prev;
+      });
     }
   }, [savedFarmlandsData]);
 
@@ -180,7 +192,7 @@ export default function MainListingsGrid() {
 
   const [currentPage, setCurrentPage] = useState(0);
 
-  const buildActiveFilters = () => {
+  const activeFilters = useMemo(() => {
     const payload: any = { offset: currentPage * 6 };
     if (filters.state_id && Array.isArray(filters.state_id) && filters.state_id.length > 0) {
       // Since all farmlands belong to Andhra Pradesh (State ID 1), omit state_id restriction for State 1 so all 40 AP farmlands are fetched
@@ -203,9 +215,8 @@ export default function MainListingsGrid() {
     if (filters.to_size !== undefined && filters.to_size < 100) payload.to_size = filters.to_size;
 
     return payload;
-  };
+  }, [currentPage, filters]);
 
-  const activeFilters = buildActiveFilters();
   const { data: res, isLoading } = useGetAllFarmlandsByStateIdQuery(activeFilters);
 
   let farmlands = res?.data || [];

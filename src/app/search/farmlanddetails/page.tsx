@@ -178,8 +178,10 @@ function InnerFarmlandDetailsView() {
   const activeLand = farmlandRegistry[rawId] || farmlandRegistry["match-1"];
 
   const numericId = parseInt(rawId.replace(/\D/g, "")) || 101;
-  const { data: facilitiesData, isLoading: isFacilitiesLoading } = useGetFacilitiesByFarmlandIdQuery({ farmland_id: numericId });
-  const { data: farmlandDetailDataRaw, isLoading: isFarmlandLoading } = useGetFarmlandByIdQuery({ farmland_id: numericId });
+  const farmlandQueryArg = React.useMemo(() => ({ farmland_id: numericId }), [numericId]);
+
+  const { data: facilitiesData, isLoading: isFacilitiesLoading } = useGetFacilitiesByFarmlandIdQuery(farmlandQueryArg);
+  const { data: farmlandDetailDataRaw, isLoading: isFarmlandLoading } = useGetFarmlandByIdQuery(farmlandQueryArg);
   const farmlandDetailData = Array.isArray(farmlandDetailDataRaw)
     ? farmlandDetailDataRaw[0]
     : farmlandDetailDataRaw;
@@ -195,8 +197,10 @@ function InnerFarmlandDetailsView() {
     }
   }, []);
 
+  const uploadQueryArg = React.useMemo(() => ({ userId: currentUserId }), [currentUserId]);
+
   const { data: uploadData, isLoading: isUploadDataLoading } = useGetUserUploadedFarmlandsQuery(
-    { userId: currentUserId },
+    uploadQueryArg,
     { skip: currentUserId === 0 }
   );
 

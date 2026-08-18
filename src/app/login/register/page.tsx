@@ -221,7 +221,18 @@ export default function RegisterPage() {
           <>
             <div className="fixed inset-0 z-40" onClick={() => setIsDropdownOpen(false)} />
             <div className="absolute top-[55px] left-0 w-[260px] bg-white rounded-lg shadow-[0_15px_40px_rgba(0,0,0,0.12)] border border-[#EBEBEB] z-50 overflow-hidden animate-in fade-in zoom-in duration-200">
-              <div className="max-h-[160px] overflow-y-auto custom-scrollbar py-1.5">
+              {/* Search Bar Input */}
+              <div className="p-2 border-b border-[#F0F0F0] bg-[#FAFAFA]">
+                <input
+                  type="text"
+                  placeholder="Search Country..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  autoFocus
+                  className="w-full px-3 py-1.5 text-[13px] text-[#434343] bg-white border border-[#EBEBEB] rounded-md focus:outline-none focus:border-[#2780C4] focus:ring-1 focus:ring-[#2780C4]/15 font-jakarta cursor-text"
+                />
+              </div>
+              <div data-lenis-prevent className="max-h-[160px] overflow-y-auto custom-scrollbar py-1.5">
                 {filteredCountries.length > 0 ? (
                   filteredCountries.map((c: any) => (
                     <button

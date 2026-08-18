@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -16,13 +16,13 @@ import WalletHistoryModal from "@/components/WalletHistoryModal";
 import SignOutModal from "@/components/SignOutModal";
 import { s3Service } from "../../services/s3";
 import { authService } from "../../services/auth";
-
+ 
 export default function ProfileScreen() {
   const router = useRouter();
-
+ 
   const [userId, setUserId] = useState<number | null>(null);
   const [mounted, setMounted] = useState(false);
-
+ 
   useEffect(() => {
     setMounted(true);
     const storedUserId = localStorage.getItem("userId");
@@ -30,14 +30,16 @@ export default function ProfileScreen() {
       setUserId(parseInt(storedUserId, 10));
     }
   }, []);
+ 
+  const userQueryArg = useMemo(() => ({ user_id: userId || 0 }), [userId]);
 
   const { data: userDetailsResponse, isLoading, refetch } = useGetUserDetailsByIdQuery(
-    { user_id: userId || 0 },
+    userQueryArg,
     { skip: !mounted || !userId }
   );
-
+ 
   const { data: profileDetailsResponse } = useGetUserProfileDetailsByIdQuery(
-    { user_id: userId || 0 },
+    userQueryArg,
     { skip: !mounted || !userId }
   );
   const profileDetails = profileDetailsResponse;

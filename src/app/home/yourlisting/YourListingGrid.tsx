@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useGetUserUploadedFarmlandsQuery } from "@/services/upload";
 import { useGetAllGeoMasterDataQuery } from "@/services/master";
 import { s3Service } from "@/services/s3";
@@ -145,8 +145,10 @@ export default function YourListingGrid() {
     }
   }, []);
 
+  const uploadQueryArg = useMemo(() => ({ userId: userId }), [userId]);
+
   const { data: uploadData, isLoading } = useGetUserUploadedFarmlandsQuery(
-    { userId: userId },
+    uploadQueryArg,
     { skip: userId === 0 }
   );
 

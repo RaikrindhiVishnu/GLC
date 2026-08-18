@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
@@ -22,8 +22,9 @@ export default function YourListings() {
     }
   }, []);
 
+  const queryArg = useMemo(() => ({ userId: userId || 0 }), [userId]);
   const { data: uploadData, isLoading: isQueryLoading } = useGetUserUploadedFarmlandsQuery(
-    { userId: userId || 0 },
+    queryArg,
     { skip: !mounted || !userId }
   );
 
@@ -40,9 +41,11 @@ export default function YourListings() {
   const [imageUrls, setImageUrls] = useState<Record<number, string>>({});
 
   useEffect(() => {
+    const data = uploadData?.data;
+    if (!data || data.length === 0) return;
     const fetchUrls = async () => {
       const newUrls: Record<number, string> = {};
-      for (const item of listings) {
+      for (const item of data) {
         const url = item.farmland_image || item.farmland_img;
         if (!url || url === "null" || url === "" || url.toLowerCase().endsWith('.pdf')) {
           continue;
@@ -65,10 +68,8 @@ export default function YourListings() {
       setImageUrls(newUrls);
     };
 
-    if (listings.length > 0) {
-      fetchUrls();
-    }
-  }, [listings]);
+    fetchUrls();
+  }, [uploadData?.data]);
 
   // Click-and-drag scrolling handlers
   const handleMouseDown = (e: React.MouseEvent) => {
