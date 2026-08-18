@@ -31,6 +31,17 @@ export default function MainWealthFeed() {
   const isLoading = !mounted || isQueryLoading;
   const boughtFarmlands = res?.data || [];
 
+  const totalAssetValue = boughtFarmlands.reduce((acc, curr) => acc + (Number(curr.price) || 0), 0);
+  const totalAcres = boughtFarmlands.reduce((acc, curr) => acc + (Number(curr.land_specifications?.total_acers) || 0), 0);
+  const activeYieldsCount = boughtFarmlands.filter(card => card.is_active === 1).length;
+
+  const formatAssetValue = (val: number) => {
+    if (val === 0) return "₹0";
+    if (val >= 10000000) return `₹${(val / 10000000).toFixed(2)} Cr`;
+    if (val >= 100000) return `₹${(val / 100000).toFixed(2)} L`;
+    return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(val);
+  };
+
   return (
     <div style={{ boxSizing: "border-box", display: "flex", flexDirection: "column", gap: "48px", width: "100%" }}>
       {/* ─── WEALTH HEADER ─── */}
@@ -43,7 +54,7 @@ export default function MainWealthFeed() {
           style={{ margin: 0, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "36px", lineHeight: "40px", letterSpacing: "-1.2px", color: "#0F2F4C" }}
           className="lg:text-[48px] lg:leading-12"
         >
-          Total Asset Value: ₹1.85 Cr
+          Total Asset Value: {formatAssetValue(totalAssetValue)}
         </motion.h2>
 
         <motion.div
@@ -54,8 +65,8 @@ export default function MainWealthFeed() {
           style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "12px", flexWrap: "wrap" }}
         >
           {[
-            { icon: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#45474C" strokeWidth="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>, label: "Total Holdings: 12.5 Acres" },
-            { icon: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#45474C" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>, label: "Active Yields: 2 Properties" },
+            { icon: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#45474C" strokeWidth="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>, label: `Total Holdings: ${totalAcres.toFixed(1)} Acres` },
+            { icon: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#45474C" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>, label: `Active Yields: ${activeYieldsCount} ${activeYieldsCount === 1 ? 'Property' : 'Properties'}` },
           ].map((badge) => (
             <div key={badge.label} style={{ display: "flex", flexDirection: "row", alignItems: "center", padding: "8px 20px", gap: "8px", background: "#E7E8E9", borderRadius: "9999px" }}>
               {badge.icon}

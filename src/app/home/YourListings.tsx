@@ -5,134 +5,30 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { s3Service } from "../../services/s3";
+import { useGetUserUploadedFarmlandsQuery } from "../../services/upload";
 
 export default function YourListings() {
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [mounted, setMounted] = useState(false);
+  const [userId, setUserId] = useState<number | null>(null);
 
   useEffect(() => {
     setMounted(true);
+    const storedUserId = localStorage.getItem("userId");
+    if (storedUserId) {
+      setUserId(parseInt(storedUserId, 10));
+    }
   }, []);
 
-  const fdata = [
-    {
-        "farmland_id": 77,
-        "farm_code": "FL26070034",
-        "farmland_img": null,
-        "valuation": "38900.00",
-        "location_details": { "country_id": 1, "state_id": 1, "district_id": 1, "mandal_id": 1 }
-    },
-    {
-        "farmland_id": 78,
-        "farm_code": "FL26070035",
-        "farmland_img": null,
-        "valuation": "2901800.00",
-        "location_details": { "country_id": 1, "state_id": 1, "district_id": 1, "mandal_id": 1 }
-    },
-    {
-        "farmland_id": 86,
-        "farm_code": "FL26070043",
-        "farmland_img": "farmlands/1/land_images/c6b3da2a98cf6138ce540c2b2e2bc726b6636bc6_(1).jpg",
-        "valuation": "1000000.00",
-        "location_details": { "country_id": 1, "state_id": 1, "district_id": 5, "mandal_id": 96 }
-    },
-    {
-        "farmland_id": 87,
-        "farm_code": "FL26070044",
-        "farmland_img": "farmlands/1/land_images/c6b3da2a98cf6138ce540c2b2e2bc726b6636bc6_(1).jpg",
-        "valuation": "2000000.00",
-        "location_details": { "country_id": 1, "state_id": 1, "district_id": 3, "mandal_id": 26 }
-    },
-    {
-        "farmland_id": 88,
-        "farm_code": "FL26070045",
-        "farmland_img": null,
-        "valuation": "199000.00",
-        "location_details": { "country_id": 0, "state_id": 0, "district_id": 0, "mandal_id": 0 }
-    },
-    {
-        "farmland_id": 89,
-        "farm_code": "FL26070046",
-        "farmland_img": null,
-        "valuation": "89402.00",
-        "location_details": { "country_id": 0, "state_id": 0, "district_id": 0, "mandal_id": 0 }
-    },
-    {
-        "farmland_id": 90,
-        "farm_code": "FL26070047",
-        "farmland_img": null,
-        "valuation": "3848802.00",
-        "location_details": { "country_id": 0, "state_id": 0, "district_id": 0, "mandal_id": 0 }
-    },
-    {
-        "farmland_id": 91,
-        "farm_code": "FL26070048",
-        "farmland_img": null,
-        "valuation": "657380.00",
-        "location_details": { "country_id": 0, "state_id": 0, "district_id": 0, "mandal_id": 0 }
-    },
-    {
-        "farmland_id": 95,
-        "farm_code": "FL26070052",
-        "farmland_img": null,
-        "valuation": "50000.00",
-        "location_details": { "country_id": 1, "state_id": 1, "district_id": 3, "mandal_id": 120 }
-    },
-    {
-        "farmland_id": 97,
-        "farm_code": "FL26070054",
-        "farmland_img": null,
-        "valuation": "400000.00",
-        "location_details": { "country_id": 1, "state_id": 1, "district_id": 3, "mandal_id": 38 }
-    },
-    {
-        "farmland_id": 98,
-        "farm_code": "FL26070055",
-        "farmland_img": null,
-        "valuation": "2000000.00",
-        "location_details": { "country_id": 1, "state_id": 1, "district_id": 2, "mandal_id": 22 }
-    },
-    {
-        "farmland_id": 99,
-        "farm_code": "FL26070056",
-        "farmland_img": null,
-        "valuation": "100000.00",
-        "location_details": { "country_id": 1, "state_id": 1, "district_id": 12, "mandal_id": 165 }
-    },
-    {
-        "farmland_id": 100,
-        "farm_code": "FL26070057",
-        "farmland_img": null,
-        "valuation": "100000.00",
-        "location_details": { "country_id": 1, "state_id": 1, "district_id": 5, "mandal_id": 96 }
-    },
-    {
-        "farmland_id": 101,
-        "farm_code": "FL26070058",
-        "farmland_img": null,
-        "valuation": "100000.00",
-        "location_details": { "country_id": 1, "state_id": 1, "district_id": 5, "mandal_id": 96 }
-    },
-    {
-        "farmland_id": 102,
-        "farm_code": "FL26070059",
-        "farmland_img": null,
-        "valuation": "2000000.00",
-        "location_details": { "country_id": 1, "state_id": 1, "district_id": 6, "mandal_id": 161 }
-    },
-    {
-        "farmland_id": 513,
-        "farm_code": "FL26080386",
-        "farmland_img": "farmlands/513/land_images/cover_images/1786598161607.jpg",
-        "valuation": "2000000.00",
-        "location_details": { "country_id": 1, "state_id": 1, "district_id": 3, "mandal_id": 26 }
-    }
-  ];
+  const { data: uploadData, isLoading: isQueryLoading } = useGetUserUploadedFarmlandsQuery(
+    { userId: userId || 0 },
+    { skip: !mounted || !userId }
+  );
 
-  const isLoading = !mounted;
-  const listings = fdata;
+  const listings = uploadData?.data || [];
+  const isLoading = !mounted || isQueryLoading;
 
   // Drag scroll states
   const [isDragging, setIsDragging] = useState(false);
@@ -147,7 +43,7 @@ export default function YourListings() {
     const fetchUrls = async () => {
       const newUrls: Record<number, string> = {};
       for (const item of listings) {
-        const url = item.farmland_img;
+        const url = item.farmland_image || item.farmland_img;
         if (!url || url === "null" || url === "" || url.toLowerCase().endsWith('.pdf')) {
           continue;
         }
@@ -215,7 +111,7 @@ export default function YourListings() {
       <div className="w-full max-w-[1440px] mx-auto px-4 md:px-[60px] mb-6 lg:mb-8">
         <div className="flex justify-between items-center w-full">
           <h2 className="font-jakarta font-extrabold text-[20px] md:text-[24px] leading-[1.2] text-[#0F2F4C] m-0 flex gap-x-[6px]">
-            {"Your Listings".split(" ").map((word, i) => (
+            {`Your Listings (${listings.length})`.split(" ").map((word, i) => (
               <motion.span
                 key={i}
                 initial={{ opacity: 0, filter: "blur(8px)" }}
@@ -273,7 +169,7 @@ export default function YourListings() {
               <div className="relative w-full aspect-[1.25] rounded-[15px] overflow-hidden mb-4 shrink-0 pointer-events-none bg-[#F4F4F5] flex items-center justify-center">
                 {(() => {
                   const resolvedUrl = imageUrls[item.farmland_id];
-                  const url = item.farmland_img;
+                  const url = item.farmland_image || item.farmland_img;
                   let finalUrl = null;
 
                   if (resolvedUrl) {

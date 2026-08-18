@@ -84,7 +84,7 @@ export default function CompareAssets() {
     { skip: !mounted }
   );
 
-  let displayData = defaultComparisonData;
+  let displayData: typeof defaultComparisonData = [];
   if (res?.data && res.data.length > 0) {
     const pairs = [];
     for (let i = 0; i < res.data.length; i += 2) {
@@ -199,6 +199,10 @@ export default function CompareAssets() {
         {isLoading ? (
           <div className="flex justify-center items-center w-full min-h-[500px]">
             <span className="font-jakarta text-[#0F2F4C]">Loading comparisons...</span>
+          </div>
+        ) : displayData.length === 0 ? (
+          <div className="flex justify-center items-center w-full min-h-[500px]">
+            <span className="font-jakarta text-[#0F2F4C]">No assets to compare.</span>
           </div>
         ) : displayData.map((comp, i) => (
           <motion.div

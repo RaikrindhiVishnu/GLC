@@ -94,7 +94,7 @@ export default function PopularFarmlands() {
     { skip: !mounted }
   );
 
-  const apiFarmlands = res?.data && res.data.length > 0 
+  const apiFarmlands = res?.data
     ? res.data.map((item: any, idx: number) => {
         const hasValidImg = item.farmland_img && (item.farmland_img.startsWith('/') || item.farmland_img.startsWith('http') || item.farmland_img.startsWith('data:')) && !item.farmland_img.toLowerCase().endsWith('.pdf');
         return {
@@ -105,7 +105,7 @@ export default function PopularFarmlands() {
           img: hasValidImg ? item.farmland_img : `/assets/home/PopularFarmlands/glc${(idx % 2) + 1}.svg`
         };
       })
-    : defaultFarmlands;
+    : [];
 
   // Drag scroll states
   const [isDragging, setIsDragging] = useState(false);
@@ -192,6 +192,10 @@ export default function PopularFarmlands() {
         {isLoading ? (
           <div className="flex justify-center items-center w-full h-[260px]">
             <span className="font-jakarta text-[#0F2F4C]">Loading popular properties...</span>
+          </div>
+        ) : apiFarmlands.length === 0 ? (
+          <div className="flex justify-center items-center w-full h-[260px]">
+            <span className="font-jakarta text-[#0F2F4C]">No popular properties found.</span>
           </div>
         ) : apiFarmlands.map((land, i) => (
           <motion.div

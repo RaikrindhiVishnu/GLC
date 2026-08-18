@@ -13,14 +13,7 @@ export default function PopularGrid() {
   const { data: geoDataRes } = useGetAllGeoMasterDataQuery();
   const { data: masterData } = useGetAllMasterDataQuery();
   
-  const defaultFarmlands = [
-    { farmland_id: "glc-sos-01", farmland_code: "GLC SOS 01", fallback_location: "VIZAG, A.P.", land_description: "Prime editorial land parcel featuring rich soil biodiversity and vintage irrigation architecture.", farmland_img: "/assets/home/PopularFarmlands/glc1.svg", price: 15000000 },
-    { farmland_id: "glc-sos-02", farmland_code: "GLC SOS 02", fallback_location: "TANUKU, A.P.", land_description: "Prime editorial land parcel featuring rich soil biodiversity and vintage irrigation architecture.", farmland_img: "/assets/home/PopularFarmlands/glc2.svg", price: 12000000 },
-    { farmland_id: "glc-sos-03", farmland_code: "GLC SOS 03", fallback_location: "BHIMAVARAM, A.P.", land_description: "Prime editorial land parcel featuring rich soil biodiversity and vintage irrigation architecture.", farmland_img: "/assets/home/PopularFarmlands/glcsos3.svg", price: 18000000 },
-    { farmland_id: "glc-sos-04", farmland_code: "GLC SOS 04", fallback_location: "RAJAHMUNDRY, A.P.", land_description: "Prime editorial land parcel featuring rich soil biodiversity and vintage irrigation architecture.", farmland_img: "/assets/home/PopularFarmlands/glc1.svg", price: 21000000 },
-    { farmland_id: "glc-sos-05", farmland_code: "GLC SOS 05", fallback_location: "VIZAG, A.P.", land_description: "Prime editorial land parcel featuring rich soil biodiversity and vintage irrigation architecture.", farmland_img: "/assets/home/PopularFarmlands/glc2.svg", price: 14000000 },
-  ];
-  const farmlands = res?.data && res.data.length > 0 ? res.data : defaultFarmlands;
+  const farmlands = res?.data || [];
 
   // Helper to get formatted location string
   const getLocationDetails = (districtId?: number) => {
