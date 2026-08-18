@@ -230,29 +230,7 @@ export default function MainListingsGrid() {
     });
   }
 
-  // If backend returns no records for selected district/mandal/filters, map fallback farmlands for that region
-  if (!isLoading && farmlands.length === 0) {
-    const isFilterActive = (filters.state_id && filters.state_id.length > 0) || 
-                           (filters.district_id && filters.district_id.length > 0) || 
-                           (filters.mandal_id && filters.mandal_id.length > 0);
-    farmlands = gridMatches.map((item, idx) => ({
-      farmland_id: idx + 101,
-      farmland_code: item.title,
-      price: parseFloat(item.price.replace(/[^0-9.]/g, "")) * 10000000 || 48000000,
-      acers: 5,
-      tag_ids: filters.tag_ids && filters.tag_ids.length > 0 ? filters.tag_ids : [1, 2],
-      farmland_image: item.img,
-      farmland_locations: isFilterActive ? {
-        mandal_id: filters.mandal_id?.[0] || 1,
-        district_id: filters.district_id?.[0] || 1,
-        state_id: filters.state_id?.[0] || 1,
-      } : {
-        mandal_id: (idx % 3) + 1,
-        district_id: (idx % 4) + 1,
-        state_id: 1,
-      }
-    })) as any;
-  }
+
 
   const totalCount = res?.total_count ? (searchQuery ? farmlands.length : res.total_count) : farmlands.length;
 
@@ -554,6 +532,7 @@ export default function MainListingsGrid() {
           </div>
 
           {/* ─── 3-COLUMN GRID ─── */}
+          {displayedFarmlands.length > 0 ? (
           <div
             style={{
               display: "grid",
@@ -967,6 +946,33 @@ export default function MainListingsGrid() {
               }
             })}
           </div>
+          ) : (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "80px 24px",
+                background: "#F8F9FA",
+                borderRadius: "30px",
+                border: "1px dashed #E5E7EB",
+                textAlign: "center",
+                width: "100%",
+              }}
+            >
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: "16px" }}>
+                <circle cx="12" cy="12" r="10" />
+                <line x1="8" y1="12" x2="16" y2="12" />
+              </svg>
+              <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "18px", color: "#1F2937", margin: "0 0 8px 0" }}>
+                No Properties Found
+              </h3>
+              <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "14px", color: "#6B7280", margin: 0, maxWidth: "320px" }}>
+                We couldn't find any properties matching your current search filters. Try adjusting your filters.
+              </p>
+            </div>
+          )}
         </div>
       </div>
       </div>{/* end desktop wrapper */}
