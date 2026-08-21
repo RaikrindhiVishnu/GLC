@@ -4,6 +4,7 @@ import React, { useMemo } from "react";
 import TrendingCard from "../home/trendingfarmlands/TrendingCard";
 import { useGetFarmlandByTagAndStateQuery } from "../../services/home";
 import { useGetAllGeoMasterDataQuery, useGetAllMasterDataQuery } from "../../services/master";
+import { mapTagIdsToNames } from "../../utils/tagMapper";
 
 export default function RecommendedGrid() {
   const [currentPage, setCurrentPage] = React.useState(0);
@@ -51,16 +52,9 @@ export default function RecommendedGrid() {
     const rawPrice = farm.price || farm.per_acer_value || 0;
     const formattedPrice = Number(rawPrice).toLocaleString('en-IN');
     
-    // Map tag
-    let displayTag = "Recommended Listing";
     const tagsArr = farm.farmland_tag_ids || farm.tag_ids;
-    if (Array.isArray(tagsArr) && tagsArr.length > 0) {
-      const tagsList = masterData?.data?.tagResult || (masterData as any)?.tagResult || [];
-      const found = tagsList.find((t: any) => t.id === Number(tagsArr[0]) || t.tag_id === Number(tagsArr[0]));
-      if (found) {
-        displayTag = found.description || found.name || found.tag_name || displayTag;
-      }
-    }
+    let displayTags = mapTagIdsToNames(tagsArr, masterData);
+    let displayTag = displayTags.length > 0 ? displayTags[0] : "Recommended Listing";
     
     // Determine layout based on column
     const colIndex = i % 3;
@@ -84,7 +78,7 @@ export default function RecommendedGrid() {
         description={farm.land_description || "A beautiful farmland listing."}
         price={`₹${formattedPrice}`}
         location={fullStr}
-        tagText={displayTag}
+        tags={displayTags}
         imageUrl={imgUrl}
         reverseLayout={isReverse}
         imageHeight={imgHeight}

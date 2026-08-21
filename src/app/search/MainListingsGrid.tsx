@@ -13,6 +13,8 @@ import {
 import { useGetAllGeoMasterDataQuery } from "../../services/master";
 import { useGetUserUploadedFarmlandsQuery } from "../../services/upload";
 import { s3Service } from "@/services/s3";
+import TagGroup from "../../components/TagGroup";
+import { mapTagIdsToNames } from "../../utils/tagMapper";
 
 // Helper component to resolve S3 images for search cards
 const S3ResolvedImage = ({ imageUrl, alt }: { imageUrl: string; alt: string }) => {
@@ -42,17 +44,24 @@ const S3ResolvedImage = ({ imageUrl, alt }: { imageUrl: string; alt: string }) =
     return () => { isMounted = false; };
   }, [imageUrl]);
 
-  const fallbackImg = "/assets/search/image2.1.svg";
+  if (!resolved) {
+    return (
+      <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "#F4F4F5" }}>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#A1A1AA" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: "8px" }}>
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+          <circle cx="8.5" cy="8.5" r="1.5" />
+          <polyline points="21 15 16 10 5 21" />
+        </svg>
+        <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: "#A1A1AA", fontSize: "12px", fontWeight: 500 }}>No Image</span>
+      </div>
+    );
+  }
 
   return (
     <img 
-      src={resolved || fallbackImg} 
+      src={resolved} 
       alt={alt} 
-      onError={(e) => { 
-        if (e.currentTarget.src !== fallbackImg) {
-          e.currentTarget.src = fallbackImg; 
-        }
-      }}
+      onError={() => setResolved(null)}
       style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} 
     />
   );
@@ -389,12 +398,7 @@ export default function MainListingsGrid() {
             } else if (typeof item.tag_ids === 'string') {
               try { parsedTags = JSON.parse(item.tag_ids); } catch (e) {}
             }
-            const mappedTags = parsedTags.map((id: any) => {
-              const numId = Number(id);
-              const tagsList = masterData?.data?.tagResult || (masterData as any)?.tagResult || [];
-              const found = tagsList.find((t: any) => t.id === numId || t.tag_id === numId);
-              return found ? (found.description || found.name || found.tag_name) : `Tag ${numId}`;
-            });
+            const mappedTags = mapTagIdsToNames(parsedTags, masterData);
             return (
               <motion.div
                 key={`mob-${item.farmland_id}`}
@@ -417,32 +421,26 @@ export default function MainListingsGrid() {
                 }}
               >
                 <div style={{ position: "relative", width: "100%", height: "160px" }}>
-                  <img 
-                    src={item.farmland_image || "/assets/search/image2.1.svg"} 
+                  <S3ResolvedImage 
+                    imageUrl={item.farmland_image || ""} 
                     alt={item.farmland_code} 
-                    onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = "/assets/search/image2.1.svg" }}
-                    style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} 
                   />
-                  {mappedTags[0] && (
-                    <div style={{ position: "absolute", top: "12px", left: "12px", background: "rgba(255, 255, 255, 0.9)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)", padding: "4px 10px", borderRadius: "9999px", border: "1px solid rgba(255, 255, 255, 0.3)", zIndex: 5, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "9px", color: "#0F2F4C", textAlign: "center" }}>{mappedTags[0]}</span>
+                  {mappedTags.length > 0 && (
+                    <div style={{ position: "absolute", top: "12px", left: "12px", zIndex: 5 }}>
+                      <TagGroup tags={mappedTags} theme="light" />
                     </div>
                   )}
                   <button
                     onClick={(e) => toggleBookmark(item.farmland_id.toString(), e)}
                     style={{ position: "absolute", top: "12px", right: "12px", width: "34px", height: "34px", background: "#FFFFFF", borderRadius: "9999px", border: "none", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", boxShadow: "0px 4px 10px rgba(0,0,0,0.08)" }}
                   >
-                    <svg width="16" height="14" viewBox="0 0 24 24" fill={isBookmarked ? "#2780C4" : "none"} stroke="#2780C4" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                    <svg width="16" height="14" viewBox="0 0 22 20" fill={isBookmarked ? "#2780C4" : "none"} stroke="#2780C4" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M6.5 1C3.4625 1 1 3.4625 1 6.5C1 12 7.5 17 11 18.163C14.5 17 21 12 21 6.5C21 3.4625 18.5375 1 15.5 1C13.64 1 11.995 1.9235 11 3.337C10.4928 2.61469 9.81897 2.0252 9.03568 1.61841C8.25238 1.21162 7.38263 0.999502 6.5 1Z" />
                     </svg>
                   </button>
                 </div>
                 <div style={{ padding: "16px", display: "flex", flexDirection: "column", gap: "6px" }}>
-                  <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", minHeight: "20px" }}>
-                    {(mappedTags.length > 1 ? mappedTags.slice(1) : mappedTags).map((t: string, idx: number) => (
-                      <span key={idx} style={{ padding: "3px 8px", background: "#E7E8E9", borderRadius: "9999px", fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "9px", color: "#45474C", textTransform: "uppercase", textAlign: "center", display: "flex", alignItems: "center", justifyContent: "center" }}>{t}</span>
-                    ))}
-                  </div>
+                  {/* Tags are rendered on the image for mobile */}
                   <h3 style={{ margin: 0, fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 700, fontSize: "16px", lineHeight: "22px", color: "#131600" }}>{item.farmland_code}</h3>
                   <p style={{ margin: 0, fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 400, fontSize: "12px", lineHeight: "18px", color: "#45474C" }}>High-yield farmland ready for investment.</p>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "10px", marginTop: "4px", borderTop: "1px solid #EDEEEF" }}>
@@ -550,12 +548,7 @@ export default function MainListingsGrid() {
               } else if (typeof item.tag_ids === 'string') {
                 try { parsedTags = JSON.parse(item.tag_ids); } catch (e) {}
               }
-              const mappedTags = parsedTags.map((id: any) => {
-                const numId = Number(id);
-                const tagsList = masterData?.data?.tagResult || (masterData as any)?.tagResult || [];
-                const found = tagsList.find((t: any) => t.id === numId || t.tag_id === numId);
-                return found ? (found.description || found.name || found.tag_name) : `Tag ${numId}`;
-              });
+              const mappedTags = mapTagIdsToNames(parsedTags, masterData);
               
               // Exact Figma layout by column index (0 = Left, 1 = Middle, 2 = Right)
               const colIndex = index % 3;
@@ -608,28 +601,10 @@ export default function MainListingsGrid() {
                         alt={item.farmland_code} 
                       />
 
-                      {/* Image Tag (White Pill) */}
-                      {mappedTags[0] && (
-                        <div
-                          style={{
-                            position: "absolute",
-                            top: "24px",
-                            left: "24px",
-                            background: "rgba(255, 255, 255, 0.9)",
-                            backdropFilter: "blur(4px)",
-                            WebkitBackdropFilter: "blur(4px)",
-                            padding: "6px 16px",
-                            borderRadius: "9999px",
-                            border: "1px solid rgba(255, 255, 255, 0.3)",
-                            zIndex: 5,
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                          }}
-                        >
-                          <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", color: "#0F2F4C", textAlign: "center" }}>
-                            {mappedTags[0]}
-                          </span>
+                      {/* Image Tag */}
+                      {mappedTags.length > 0 && (
+                        <div style={{ position: "absolute", top: "24px", left: "24px", zIndex: 5 }}>
+                          <TagGroup tags={mappedTags} theme="light" />
                         </div>
                       )}
 
@@ -655,8 +630,8 @@ export default function MainListingsGrid() {
                           zIndex: 5,
                         }}
                       >
-                        <svg width="20" height="18" viewBox="0 0 24 24" fill={isBookmarked ? "#2780C4" : "none"} stroke="#2780C4" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        <svg width="20" height="18" viewBox="0 0 22 20" fill={isBookmarked ? "#2780C4" : "none"} stroke="#2780C4" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M6.5 1C3.4625 1 1 3.4625 1 6.5C1 12 7.5 17 11 18.163C14.5 17 21 12 21 6.5C21 3.4625 18.5375 1 15.5 1C13.64 1 11.995 1.9235 11 3.337C10.4928 2.61469 9.81897 2.0252 9.03568 1.61841C8.25238 1.21162 7.38263 0.999502 6.5 1Z"></path>
                         </svg>
                       </button>
                     </div>
@@ -664,36 +639,10 @@ export default function MainListingsGrid() {
                     {/* Bottom Content Box with exactly 32px padding */}
                     <div style={{ padding: "32px", display: "flex", flexDirection: "column", flex: 1, justifyItems: "flex-start", boxSizing: "border-box" }}>
                       <div style={{ display: "flex", flexDirection: "column" }}>
-                        {/* Tags */}
-                        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", minHeight: "23px" }}>
-                          {(mappedTags.length > 1 ? mappedTags.slice(1) : mappedTags).map((t: string, idx: number) => (
-                            <span
-                              key={idx}
-                              style={{
-                                padding: "4px 12px",
-                                background: "#E7E8E9",
-                                borderRadius: "9999px",
-                                fontFamily: "'Plus Jakarta Sans', sans-serif",
-                                fontWeight: 700,
-                                fontSize: "10px",
-                                lineHeight: "15px",
-                                color: "#45474C",
-                                textTransform: "uppercase",
-                                textAlign: "center",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                              }}
-                            >
-                              {t}
-                            </span>
-                          ))}
-                        </div>
-
                         {/* Title */}
                         <h3
                           style={{
-                            margin: "12px 0 0 0",
+                            margin: "0 0 0 0",
                             fontFamily: "'Plus Jakarta Sans', sans-serif",
                             fontWeight: 700,
                             fontSize: "24px",
@@ -791,30 +740,11 @@ export default function MainListingsGrid() {
                     {/* Top Content Box */}
                     <div style={{ padding: "32px", display: "flex", flexDirection: "column", flex: 1, justifyContent: "space-between", boxSizing: "border-box" }}>
                       <div style={{ display: "flex", flexDirection: "column" }}>
-                        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", minHeight: "23px" }}>
-                          {(mappedTags.length > 1 ? mappedTags.slice(1) : mappedTags).map((t: string, idx: number) => (
-                            <span
-                              key={idx}
-                              style={{
-                                padding: "4px 12px",
-                                background: "#E7E8E9",
-                                borderRadius: "9999px",
-                                fontFamily: "'Plus Jakarta Sans', sans-serif",
-                                fontWeight: 700,
-                                fontSize: "10px",
-                                lineHeight: "15px",
-                                color: "#45474C",
-                                textTransform: "uppercase",
-                                textAlign: "center",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                              }}
-                            >
-                              {t}
-                            </span>
-                          ))}
-                        </div>
+                        {mappedTags.length > 0 && (
+                          <div style={{ marginBottom: "12px" }}>
+                            <TagGroup tags={mappedTags} theme="dark" />
+                          </div>
+                        )}
 
                         <h3
                           style={{
@@ -888,30 +818,7 @@ export default function MainListingsGrid() {
                         alt={item.farmland_code} 
                       />
 
-                      {/* Image Tag (White Pill) */}
-                      {mappedTags[0] && (
-                        <div
-                          style={{
-                            position: "absolute",
-                            bottom: "24px",
-                            left: "24px",
-                            background: "rgba(255, 255, 255, 0.9)",
-                            backdropFilter: "blur(4px)",
-                            WebkitBackdropFilter: "blur(4px)",
-                            padding: "6px 16px",
-                            borderRadius: "9999px",
-                            border: "1px solid rgba(255, 255, 255, 0.3)",
-                            zIndex: 5,
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                          }}
-                        >
-                          <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", color: "#0F2F4C", textAlign: "center" }}>
-                            {mappedTags[0]}
-                          </span>
-                        </div>
-                      )}
+                      {/* Image Tag placeholder for text-top layout, tags are rendered in top block */}
 
 
                       {/* Floating Heart Button at Bottom Right */}
@@ -936,8 +843,8 @@ export default function MainListingsGrid() {
                           zIndex: 5,
                         }}
                       >
-                        <svg width="20" height="18" viewBox="0 0 24 24" fill={isBookmarked ? "#2780C4" : "none"} stroke="#2780C4" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        <svg width="20" height="18" viewBox="0 0 22 20" fill={isBookmarked ? "#2780C4" : "none"} stroke="#2780C4" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M6.5 1C3.4625 1 1 3.4625 1 6.5C1 12 7.5 17 11 18.163C14.5 17 21 12 21 6.5C21 3.4625 18.5375 1 15.5 1C13.64 1 11.995 1.9235 11 3.337C10.4928 2.61469 9.81897 2.0252 9.03568 1.61841C8.25238 1.21162 7.38263 0.999502 6.5 1Z"></path>
                         </svg>
                       </button>
                     </div>

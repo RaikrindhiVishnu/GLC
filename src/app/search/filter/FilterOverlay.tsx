@@ -16,11 +16,17 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
   const pathname = usePathname();
   const { filters, setFilters, masterData, geoData } = useSearchContext();
 
+  const toTitleCase = (str: string) => {
+    if (!str) return '';
+    return str.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  };
+
+  const [countrySearch, setCountrySearch] = useState<number | "">("");
   const [stateSearch, setStateSearch] = useState<number | "">("");
   const [citySearch, setCitySearch] = useState<number | "">("");
   const [mandalSearch, setMandalSearch] = useState<number | "">("");
-  
-  const [openDropdown, setOpenDropdown] = useState<"state" | "city" | "mandal" | null>(null);
+
+  const [openDropdown, setOpenDropdown] = useState<"country" | "state" | "city" | "mandal" | null>(null);
 
   useEffect(() => {
     const handleClickOutside = () => setOpenDropdown(null);
@@ -69,7 +75,7 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
       if (currentMaxPrice !== -Infinity) setMaxPrice(currentMaxPrice);
       if (currentMinSize !== Infinity) setMinSize(Math.floor(currentMinSize));
       if (currentMaxSize !== -Infinity) setMaxSize(Math.ceil(currentMaxSize));
-      
+
       setPriceRange(prev => [
         Math.max(currentMinPrice !== Infinity ? currentMinPrice : prev[0], minPrice),
         Math.min(currentMaxPrice !== -Infinity ? currentMaxPrice : prev[1], maxPrice)
@@ -130,6 +136,7 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
   if (!isOpen) return null;
 
   // Extract arrays from geoData (skipping header row)
+  const countries = geoData?.countries?.slice(1) || [];
   const states = geoData?.states?.slice(1) || [];
   const allDistricts = geoData?.districts?.slice(1) || [];
   const districts = allDistricts.filter(d => stateSearch ? Number(d[1]) === Number(stateSearch) : true);
@@ -213,16 +220,16 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
     }
   };
 
-  const CustomDropdown = ({ 
-    value, onChange, options, placeholder, disabled, icon, isOpen, onToggle 
-  }: { 
-    value: any, onChange: (v: any) => void, options: {value: any, label: string}[], placeholder: string, disabled?: boolean, icon: React.ReactNode, isOpen: boolean, onToggle: () => void 
+  const CustomDropdown = ({
+    value, onChange, options, placeholder, disabled, icon, isOpen, onToggle
+  }: {
+    value: any, onChange: (v: any) => void, options: { value: any, label: string }[], placeholder: string, disabled?: boolean, icon: React.ReactNode, isOpen: boolean, onToggle: () => void
   }) => {
     const selectedOption = options.find(o => o.value === value);
     const displayLabel = selectedOption ? selectedOption.label : placeholder;
 
     return (
-      <div 
+      <div
         style={{ height: "57px", background: "#FFFFFF", border: "1px solid rgba(197, 198, 205, 0.3)", borderRadius: "9999px", boxSizing: "border-box", opacity: disabled ? 0.5 : 1 }}
         className={`flex-1 flex items-center relative pl-12 pr-4 ${disabled ? "cursor-not-allowed" : "cursor-pointer"}`}
         onClick={(e) => {
@@ -241,12 +248,12 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
         </svg>
 
         {isOpen && !disabled && (
-          <div 
+          <div
             className="absolute left-0 right-0 bg-white shadow-xl z-50 overflow-y-auto"
-            style={{ 
-              top: "64px", 
-              borderRadius: "24px", 
-              maxHeight: "260px", 
+            style={{
+              top: "64px",
+              borderRadius: "24px",
+              maxHeight: "260px",
               padding: "8px",
               border: "1px solid rgba(197, 198, 205, 0.4)",
               boxShadow: "0px 20px 40px -10px rgba(9, 20, 38, 0.15)"
@@ -254,7 +261,7 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
             onClick={(e) => e.stopPropagation()}
           >
             {options.map((opt) => (
-              <div 
+              <div
                 key={opt.value}
                 onClick={() => {
                   onChange(opt.value);
@@ -274,7 +281,7 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
 
   return (
     /* Modal Overlay Backdrop */
-    <div 
+    <div
       style={{
         position: "fixed" as const,
         inset: 0,
@@ -289,7 +296,7 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
       data-lenis-prevent
     >
       {/* Main Modal Container mapped fluidly to fit perfectly inside the viewport without external page scroll */}
-      <div 
+      <div
         style={{
           background: "#F3F4F5",
           boxShadow: "0px 40px 80px -20px rgba(9, 20, 38, 0.15)",
@@ -303,7 +310,7 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
         data-lenis-prevent
       >
         {/* ─── HEADER SECTION (Fixed slice height 66px docked cleanly at top) ─── */}
-        <div 
+        <div
           style={{
             position: "absolute" as const,
             height: "66px",
@@ -340,7 +347,7 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
           </button>
 
           {/* Heading 1: Title */}
-          <span 
+          <span
             style={{
               fontFamily: "'Plus Jakarta Sans', sans-serif",
               fontWeight: 800,
@@ -389,7 +396,7 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
         </div>
 
         {/* ─── SCROLLABLE MATRIX CONTENT (Anchored natively between Header and Action Console to dynamically prevent overlap) ─── */}
-        <div 
+        <div
           style={{
             position: "absolute" as const,
             top: "66px", // Directly underneath the 66px tall Header Section
@@ -405,7 +412,7 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
 
           {/* 1. LOCATION SECTION */}
           <div className="w-full flex flex-col gap-4 box-border">
-            <span 
+            <span
               style={{
                 fontFamily: "'Plus Jakarta Sans', sans-serif",
                 fontWeight: 700,
@@ -419,59 +426,56 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
             </span>
 
             {/* Responsive side-by-side inputs row stackable on mobile */}
-            <div className="w-full flex flex-col md:flex-row gap-4 box-border justify-between relative z-40">
-              
-              <CustomDropdown 
+            <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 box-border relative z-40">
+
+              <CustomDropdown
+                value={countrySearch}
+                onChange={(v) => { setCountrySearch(v); setStateSearch(""); setCitySearch(""); setMandalSearch(""); }}
+                options={[
+                  { value: "", label: "Select Country" },
+                  ...countries.map(c => ({ value: c[0], label: c[2] || c[1] }))
+                ]}
+                placeholder="Select Country"
+                isOpen={openDropdown === "country"}
+                onToggle={() => setOpenDropdown(openDropdown === "country" ? null : "country")}
+              />
+
+              <CustomDropdown
                 value={stateSearch}
                 onChange={(v) => { setStateSearch(v); setCitySearch(""); setMandalSearch(""); }}
                 options={[
-                  { value: "", label: "All States" },
-                  ...states.map(s => ({ value: s[0], label: s[3] }))
+                  { value: "", label: "Select State" },
+                  ...states.map(s => ({ value: s[0], label: toTitleCase(s[3]) }))
                 ]}
                 placeholder="Select State"
                 isOpen={openDropdown === "state"}
                 onToggle={() => setOpenDropdown(openDropdown === "state" ? null : "state")}
-                icon={
-                  <svg width="16" height="20" viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M8 10C8.55 10 9.02083 9.80417 9.4125 9.4125C9.80417 9.02083 10 8.55 10 8C10 7.45 9.80417 6.97917 9.4125 6.5875C9.02083 6.19583 8.55 6 8 6C7.45 6 6.97917 6.19583 6.5875 6.5875C6.19583 6.97917 6 7.45 6 8C6 8.55 6.19583 9.02083 6.5875 9.4125C6.97917 9.80417 7.45 10 8 10ZM8 17.35C10.0333 15.4833 11.5417 13.7875 12.525 12.2625C13.5083 10.7375 14 9.38333 14 8.2C14 6.38333 13.4208 4.89583 12.2625 3.7375C11.1042 2.57917 9.68333 2 8 2C6.31667 2 4.89583 2.57917 3.7375 3.7375C2.57917 4.89583 2 6.38333 2 8.2C2 9.38333 2.49167 10.7375 3.475 12.2625C4.45833 13.7875 5.96667 15.4833 8 20ZM8 20C5.31667 17.7167 3.3125 15.5958 1.9875 13.6375C0.6625 11.6792 0 9.86667 0 8.2C0 5.7 0.804167 3.70833 2.4125 2.225C4.02083 0.741667 5.88333 0 8 0C10.1167 0 11.9792 0.741667 13.5875 2.225C15.1958 3.70833 16 5.7 16 8.2C16 9.86667 15.3375 11.6792 14.0125 13.6375C12.6875 15.5958 10.6833 17.7167 8 20Z" fill="#75777D"/>
-                  </svg>
-                }
               />
 
-              <CustomDropdown 
+              <CustomDropdown
                 value={citySearch}
                 onChange={(v) => { setCitySearch(v); setMandalSearch(""); }}
                 options={[
-                  { value: "", label: "All Districts" },
-                  ...districts.map(d => ({ value: d[0], label: d[3] }))
+                  { value: "", label: "Select District" },
+                  ...districts.map(d => ({ value: d[0], label: toTitleCase(d[3]) }))
                 ]}
                 placeholder="Select District"
                 disabled={!stateSearch && states.length > 0}
                 isOpen={openDropdown === "city"}
                 onToggle={() => setOpenDropdown(openDropdown === "city" ? null : "city")}
-                icon={
-                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 18L6 15.9L1.35 17.7C1.01667 17.8333 0.708333 17.7958 0.425 17.5875C0.141667 17.3792 0 17.1 0 16.75V2.75C0 2.53333 0.0625 2.34167 0.1875 2.175C0.3125 2.00833 0.483333 1.88333 0.7 1.8L6 0L12 2.1L16.65 0.3C16.9833 0.166667 17.2917 0.204167 17.575 0.4125C17.8583 0.620833 18 0.9 18 1.25V15.25C18 15.4667 17.9375 15.6583 17.8125 15.825C17.6875 15.9917 17.5167 16.1167 17.3 16.2L12 18ZM11 15.55V3.85L7 2.45V14.15L11 15.55ZM13 15.55L16 14.55V2.7L13 3.85V15.55ZM2 15.3L5 14.15V2.45L2 3.45V15.3ZM13 3.85V15.55V3.85ZM5 2.45V14.15V2.45Z" fill="#75777D"/>
-                  </svg>
-                }
               />
 
-              <CustomDropdown 
+              <CustomDropdown
                 value={mandalSearch}
                 onChange={(v) => setMandalSearch(v)}
                 options={[
-                  { value: "", label: "All Mandals" },
-                  ...mandals.map(m => ({ value: m[0], label: m[3] }))
+                  { value: "", label: "Select Mandal" },
+                  ...mandals.map(m => ({ value: m[0], label: toTitleCase(m[3]) }))
                 ]}
                 placeholder="Select Mandal"
                 disabled={!citySearch && districts.length > 0}
                 isOpen={openDropdown === "mandal"}
                 onToggle={() => setOpenDropdown(openDropdown === "mandal" ? null : "mandal")}
-                icon={
-                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 18L6 15.9L1.35 17.7C1.01667 17.8333 0.708333 17.7958 0.425 17.5875C0.141667 17.3792 0 17.1 0 16.75V2.75C0 2.53333 0.0625 2.34167 0.1875 2.175C0.3125 2.00833 0.483333 1.88333 0.7 1.8L6 0L12 2.1L16.65 0.3C16.9833 0.166667 17.2917 0.204167 17.575 0.4125C17.8583 0.620833 18 0.9 18 1.25V15.25C18 15.4667 17.9375 15.6583 17.8125 15.825C17.6875 15.9917 17.5167 16.1167 17.3 16.2L12 18ZM11 15.55V3.85L7 2.45V14.15L11 15.55ZM13 15.55L16 14.55V2.7L13 3.85V15.55ZM2 15.3L5 14.15V2.45L2 3.45V15.3ZM13 3.85V15.55V3.85ZM5 2.45V14.15V2.45Z" fill="#75777D"/>
-                  </svg>
-                }
               />
 
             </div>
@@ -479,7 +483,7 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
 
           {/* 2. INVESTMENT & SCALE SECTION */}
           <div className="w-full flex flex-col gap-4 box-border">
-            <span 
+            <span
               style={{
                 fontFamily: "'Plus Jakarta Sans', sans-serif",
                 fontWeight: 700,
@@ -493,7 +497,7 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
             </span>
 
             {/* Master White Track Container perfectly wrapping */}
-            <div 
+            <div
               style={{
                 background: "#FFFFFF",
                 borderRadius: "32px",
@@ -515,11 +519,12 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
                 {/* Track visual block */}
                 <div className="relative w-full h-8 flex items-center mb-4 mt-2">
                   <div style={{ height: "6px", background: "#E7E8E9", borderRadius: "9999px" }} className="absolute inset-x-0" />
-                  <div style={{ height: "6px", background: "#2780C4", borderRadius: "9999px", 
+                  <div style={{
+                    height: "6px", background: "#2780C4", borderRadius: "9999px",
                     left: `${((priceRange[0] - minPrice) / (maxPrice - minPrice || 1)) * 100}%`,
                     right: `${100 - ((priceRange[1] - minPrice) / (maxPrice - minPrice || 1)) * 100}%`
                   }} className="absolute" />
-                  
+
                   <input type="range" min={minPrice} max={maxPrice} step="1000000" value={priceRange[0]} onChange={handlePriceMinChange} className="absolute w-full appearance-none bg-transparent pointer-events-none" style={{ zIndex: 3, outline: 'none' }} />
                   <input type="range" min={minPrice} max={maxPrice} step="1000000" value={priceRange[1]} onChange={handlePriceMaxChange} className="absolute w-full appearance-none bg-transparent pointer-events-none" style={{ zIndex: 4, outline: 'none' }} />
                   <style>{`
@@ -577,11 +582,12 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
                 {/* Track visual block */}
                 <div className="relative w-full h-8 flex items-center mb-4 mt-2">
                   <div style={{ height: "6px", background: "#E7E8E9", borderRadius: "9999px" }} className="absolute inset-x-0" />
-                  <div style={{ height: "6px", background: "#2780C4", borderRadius: "9999px", 
+                  <div style={{
+                    height: "6px", background: "#2780C4", borderRadius: "9999px",
                     left: `${((sizeRange[0] - minSize) / (maxSize - minSize || 1)) * 100}%`,
                     right: `${100 - ((sizeRange[1] - minSize) / (maxSize - minSize || 1)) * 100}%`
                   }} className="absolute" />
-                  
+
                   <input type="range" min={minSize} max={maxSize} step="1" value={sizeRange[0]} onChange={handleSizeMinChange} className="absolute w-full appearance-none bg-transparent pointer-events-none" style={{ zIndex: 3, outline: 'none' }} />
                   <input type="range" min={minSize} max={maxSize} step="1" value={sizeRange[1]} onChange={handleSizeMaxChange} className="absolute w-full appearance-none bg-transparent pointer-events-none" style={{ zIndex: 4, outline: 'none' }} />
                 </div>
@@ -617,7 +623,7 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
 
           {/* 3. CURATED COLLECTIONS SELECTION GRID */}
           <div className="w-full flex flex-col gap-5 box-border flex-shrink-0">
-            
+
             <div className="w-full flex flex-col md:flex-row gap-8 justify-between">
               {/* Left Curated Section block */}
               <div className="w-full md:w-[384px] flex flex-col gap-[14px]">
@@ -629,24 +635,24 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
                   {collectionsList.map((item: string, i: number) => {
                     const isSelected = selectedLeft.includes(item as any);
                     return (
-                    <motion.button
-                      key={item}
-                      initial={{ opacity: 0, filter: "blur(8px)" }}
-                      animate={{ opacity: 1, filter: "blur(0px)" }}
-                      transition={{ duration: 0.4, delay: i * 0.07 }}
-                      onClick={() => toggleLeft(item)}
-                      style={{
-                        height: "40px",
-                        padding: "0 20px",
-                        background: isSelected ? "#0F2F4C" : "#E7E8E9",
-                        color: isSelected ? "#FFFFFF" : "#45474C",
-                        borderRadius: "9999px", border: "none", fontFamily: "'Plus Jakarta Sans'", fontWeight: 600, cursor: "pointer",
-                        boxShadow: isSelected ? "0px 4px 8px rgba(15, 47, 76, 0.2)" : "none",
-                      }}
-                      className="text-[14px] flex items-center justify-center shrink-0"
-                    >
-                      {item}
-                    </motion.button>
+                      <motion.button
+                        key={item}
+                        initial={{ opacity: 0, filter: "blur(8px)" }}
+                        animate={{ opacity: 1, filter: "blur(0px)" }}
+                        transition={{ duration: 0.4, delay: i * 0.07 }}
+                        onClick={() => toggleLeft(item)}
+                        style={{
+                          height: "40px",
+                          padding: "0 20px",
+                          background: isSelected ? "#0F2F4C" : "#E7E8E9",
+                          color: isSelected ? "#FFFFFF" : "#45474C",
+                          borderRadius: "9999px", border: "none", fontFamily: "'Plus Jakarta Sans'", fontWeight: 600, cursor: "pointer",
+                          boxShadow: isSelected ? "0px 4px 8px rgba(15, 47, 76, 0.2)" : "none",
+                        }}
+                        className="text-[14px] flex items-center justify-center shrink-0"
+                      >
+                        {item}
+                      </motion.button>
                     );
                   })}
                 </div>
@@ -662,25 +668,25 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
                   {attributesList.map((attr, i: number) => {
                     const isSelected = selectedRight.includes(attr.name as any);
                     return (
-                    <motion.button
-                      key={attr.name}
-                      initial={{ opacity: 0, filter: "blur(8px)" }}
-                      animate={{ opacity: 1, filter: "blur(0px)" }}
-                      transition={{ duration: 0.4, delay: i * 0.07 }}
-                      onClick={() => toggleRight(attr.name)}
-                      style={{
-                        height: "40px",
-                        padding: "0 20px",
-                        background: isSelected ? "#0F2F4C" : "#E7E8E9",
-                        color: isSelected ? "#FFFFFF" : "#45474C",
-                        borderRadius: "9999px", border: "none", cursor: "pointer",
-                        boxShadow: isSelected ? "0px 4px 8px rgba(15, 47, 76, 0.2)" : "none",
-                      }}
-                      className="text-[14px] flex items-center justify-center gap-[8px] font-semibold font-jakarta shrink-0"
-                    >
-                      {renderAttributeIcon(attr.icon, isSelected)}
-                      <span>{attr.name}</span>
-                    </motion.button>
+                      <motion.button
+                        key={attr.name}
+                        initial={{ opacity: 0, filter: "blur(8px)" }}
+                        animate={{ opacity: 1, filter: "blur(0px)" }}
+                        transition={{ duration: 0.4, delay: i * 0.07 }}
+                        onClick={() => toggleRight(attr.name)}
+                        style={{
+                          height: "40px",
+                          padding: "0 20px",
+                          background: isSelected ? "#0F2F4C" : "#E7E8E9",
+                          color: isSelected ? "#FFFFFF" : "#45474C",
+                          borderRadius: "9999px", border: "none", cursor: "pointer",
+                          boxShadow: isSelected ? "0px 4px 8px rgba(15, 47, 76, 0.2)" : "none",
+                        }}
+                        className="text-[14px] flex items-center justify-center gap-[8px] font-semibold font-jakarta shrink-0"
+                      >
+                        {renderAttributeIcon(attr.icon, isSelected)}
+                        <span>{attr.name}</span>
+                      </motion.button>
                     );
                   })}
                 </div>
@@ -724,9 +730,9 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
 
             {/* iOS Box Frame */}
             <div style={{ background: "#FFFFFF", border: "1px solid rgba(197, 198, 205, 0.1)", borderRadius: "32px" }} className="w-full flex flex-col box-border overflow-hidden">
-              
+
               {/* Row 1 */}
-              <div 
+              <div
                 onClick={() => setOrganicCert(!organicCert)}
                 style={{ borderBottom: "1px solid rgba(197, 198, 205, 0.15)" }}
                 className="w-full py-4 px-4 md:px-6 flex justify-between items-center cursor-pointer box-border"
@@ -738,7 +744,7 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
                 </div>
 
                 {/* Switch visual rendering */}
-                <div 
+                <div
                   style={{
                     background: organicCert ? "linear-gradient(135deg, #ADFF2F 0%, #8FD91F 100%)" : "#E7E8E9",
                     boxShadow: organicCert ? "0px 4px 12px rgba(173, 255, 47, 0.4)" : "none",
@@ -758,7 +764,7 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
         </div>
 
         {/* ─── ACTION CONSOLE (STICKY FOOTER bounding strictly inside bottom container edge) ─── */}
-        <div 
+        <div
           style={{
             position: "absolute" as const,
             height: "133px",
@@ -807,7 +813,7 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
               if (resolvedDistrictId.length > 0) newFilters.district_id = resolvedDistrictId;
               if (resolvedMandalId.length > 0) newFilters.mandal_id = resolvedMandalId;
               if (selectedLeft.length > 0) newFilters.tag_ids = selectedLeft.map(Number);
-              
+
               // Only apply price bounds if user adjusted the price slider
               if (priceRange[0] > minPrice) newFilters.from_price = priceRange[0];
               if (priceRange[1] < maxPrice) newFilters.to_price = priceRange[1];
@@ -831,7 +837,7 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
             }}
             className="w-full max-w-[400px] h-[50px] md:h-[57px] flex items-center justify-center"
           >
-            <span 
+            <span
               style={{
                 fontFamily: "'Plus Jakarta Sans', sans-serif",
                 fontWeight: 700,

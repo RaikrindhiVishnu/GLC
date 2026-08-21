@@ -4,13 +4,15 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { s3Service } from "../../../services/s3";
+import TagGroup from "../../../components/TagGroup";
 
 interface TrendingCardProps {
   title: string;
   description: string;
   price: string;
   location: string;
-  tagText: string;
+  tagText?: string;
+  tags?: string[];
   imageUrl: string;
   id?: string;
   linkDestination?: string;
@@ -26,6 +28,7 @@ export default function TrendingCard({
   price,
   location,
   tagText,
+  tags,
   imageUrl,
   id = "1",
   linkDestination,
@@ -68,6 +71,7 @@ export default function TrendingCard({
   };
 
   const displayUrl = resolvedImageUrl;
+  const tagsToDisplay = tags && tags.length > 0 ? tags : (tagText ? [tagText] : []);
 
   return (
     <div 
@@ -80,6 +84,11 @@ export default function TrendingCard({
         className={`relative w-full flex flex-col items-center justify-center bg-[#F4F4F5]`}
         style={{ height: imageHeight ? imageHeight : (reverseLayout ? '373px' : '320px'), flexShrink: 0 }}
       >
+        {!reverseLayout && tagsToDisplay.length > 0 && (
+          <div className="absolute top-6 left-6 z-20">
+            <TagGroup tags={tagsToDisplay} theme="light" />
+          </div>
+        )}
         {displayUrl ? (
           <img
             src={displayUrl}
@@ -104,8 +113,8 @@ export default function TrendingCard({
             onClick={handleLike}
             className={`absolute right-6 ${reverseLayout ? 'bottom-6' : 'top-6'} w-12 h-12 bg-white/90 backdrop-blur-md rounded-full flex items-center justify-center shadow-sm hover:scale-105 transition-transform z-10 border-none cursor-pointer`}
           >
-            <svg width="20" height="18" viewBox="0 0 24 24" fill={isLiked ? "#2780C4" : "none"} stroke="#2780C4" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="transition-colors duration-200">
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            <svg width="20" height="18" viewBox="0 0 22 20" fill={isLiked ? "#2780C4" : "none"} stroke="#2780C4" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="transition-colors duration-200">
+              <path d="M6.5 1C3.4625 1 1 3.4625 1 6.5C1 12 7.5 17 11 18.163C14.5 17 21 12 21 6.5C21 3.4625 18.5375 1 15.5 1C13.64 1 11.995 1.9235 11 3.337C10.4928 2.61469 9.81897 2.0252 9.03568 1.61841C8.25238 1.21162 7.38263 0.999502 6.5 1Z"></path>
             </svg>
           </button>
         )}
@@ -114,12 +123,10 @@ export default function TrendingCard({
       {/* Bottom Content Section */}
       <div className="p-8 flex flex-col items-center text-center gap-4">
 
-        {/* Tag Pill */}
-        <div className="bg-[#E7E8E9] rounded-full px-4 py-1.5 w-fit">
-          <span className="font-jakarta font-bold text-[10px] leading-[15px] uppercase text-[#45474C]">
-            {tagText}
-          </span>
-        </div>
+        {/* Tag Pill - only show here if reverseLayout is true */}
+        {reverseLayout && tagsToDisplay.length > 0 && (
+          <TagGroup tags={tagsToDisplay} theme="dark" />
+        )}
 
         {/* Title */}
         <h3 className="font-jakarta font-bold text-[24px] leading-[32px] text-[#131600]">

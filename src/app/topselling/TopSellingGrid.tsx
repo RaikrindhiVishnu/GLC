@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import TrendingCard from "../home/trendingfarmlands/TrendingCard";
 import { useGetFarmlandByTagAndStateQuery, useGetAllTopSellingLocationsQuery } from "../../services/home";
 import { useGetAllGeoMasterDataQuery, useGetAllMasterDataQuery } from "../../services/master";
+import { mapTagIdsToNames } from "../../utils/tagMapper";
 
 export default function TopSellingGrid() {
   const searchParams = useSearchParams();
@@ -99,16 +100,8 @@ export default function TopSellingGrid() {
     const rawPrice = farm.price || farm.per_acer_value || 0;
     const formattedPrice = Number(rawPrice).toLocaleString('en-IN');
 
-    // Map tag
-    let displayTag = "Trending Listing";
     const tagsArr = farm.farmland_tag_ids || farm.tag_ids;
-    if (Array.isArray(tagsArr) && tagsArr.length > 0) {
-      const tagsList = masterData?.data?.tagResult || (masterData as any)?.tagResult || [];
-      const found = tagsList.find((t: any) => t.id === Number(tagsArr[0]) || t.tag_id === Number(tagsArr[0]));
-      if (found) {
-        displayTag = found.description || found.name || found.tag_name || displayTag;
-      }
-    }
+    let displayTags: string[] = mapTagIdsToNames(tagsArr, masterData);
 
     // Determine layout based on column
     const colIndex = i % 3;
@@ -132,7 +125,7 @@ export default function TopSellingGrid() {
         description={farm.land_description || "A beautiful farmland listing."}
         price={`₹${formattedPrice}`}
         location={fullStr}
-        tagText={displayTag}
+        tags={displayTags}
         imageUrl={imgUrl}
         reverseLayout={isReverse}
         imageHeight={imgHeight}

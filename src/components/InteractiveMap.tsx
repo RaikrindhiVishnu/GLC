@@ -17,9 +17,13 @@ interface InteractiveMapProps {
   viewOnly?: boolean;
   onMapClick?: () => void;
   hideFullscreenButton?: boolean;
+  polygonColor?: string;
+  polygonFillColor?: string;
+  polygonDashArray?: string;
+  polygonWeight?: number;
 }
 
-export default function InteractiveMap({ onLocationChange, onPolygonChange, onFullscreenChange, initialLocation, initialPolygon, viewOnly, onMapClick, hideFullscreenButton }: InteractiveMapProps) {
+export default function InteractiveMap({ onLocationChange, onPolygonChange, onFullscreenChange, initialLocation, initialPolygon, viewOnly, onMapClick, hideFullscreenButton, polygonColor = '#EA4335', polygonFillColor = '#EA4335', polygonDashArray = '10, 10', polygonWeight = 6 }: InteractiveMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
@@ -103,7 +107,17 @@ export default function InteractiveMap({ onLocationChange, onPolygonChange, onFu
 
     // Increased maxZoom for drawing fine details
     const initialCenter = initialLocation ? [initialLocation.lat, initialLocation.lng] as L.LatLngTuple : [17.3850, 78.4867] as L.LatLngTuple;
-    const map = L.map(mapRef.current, { attributionControl: false, zoomControl: !viewOnly, maxZoom: 22 }).setView(initialCenter, initialLocation ? 16 : 12);
+    const map = L.map(mapRef.current, { 
+      attributionControl: false, 
+      zoomControl: !viewOnly,
+      maxZoom: 22,
+      dragging: !viewOnly,
+      touchZoom: !viewOnly,
+      doubleClickZoom: !viewOnly,
+      scrollWheelZoom: !viewOnly,
+      boxZoom: !viewOnly,
+      keyboard: !viewOnly
+    }).setView(initialCenter, initialLocation ? 16 : 12);
     mapInstanceRef.current = map;
 
     setTimeout(() => {
@@ -199,12 +213,12 @@ export default function InteractiveMap({ onLocationChange, onPolygonChange, onFu
       }
 
       if (latlngs.length > 0) {
-        polygonLayerRef.current = L.polygon(latlngs, { color: '#EA4335', weight: 6, dashArray: '10, 10', fillColor: '#EA4335', fillOpacity: 0.25 }).addTo(drawnItems);
+        polygonLayerRef.current = L.polygon(latlngs, { color: polygonColor, weight: polygonWeight, dashArray: polygonDashArray || undefined, fillColor: polygonFillColor, fillOpacity: 0.25 }).addTo(drawnItems);
         const bounds = polygonLayerRef.current.getBounds();
         // Delay fitBounds so it fires after the map finishes its initial render
         setTimeout(() => {
           if (mapInstanceRef.current && bounds.isValid()) {
-            mapInstanceRef.current.fitBounds(bounds, { padding: [30, 30], maxZoom: 18 });
+            mapInstanceRef.current.fitBounds(bounds, { padding: [10, 10], maxZoom: 21 });
           }
         }, 300);
       }

@@ -4,6 +4,7 @@ import React, { useMemo } from "react";
 import TrendingCard from "./TrendingCard";
 import { useGetFarmlandByTagAndStateQuery } from "../../../services/home";
 import { useGetAllGeoMasterDataQuery, useGetAllMasterDataQuery } from "../../../services/master";
+import { mapTagIdsToNames } from "../../../utils/tagMapper";
 
 export default function TrendingGrid() {
   const [currentPage, setCurrentPage] = React.useState(0);
@@ -53,15 +54,8 @@ export default function TrendingGrid() {
     const formattedPrice = Number(rawPrice).toLocaleString('en-IN');
     
     // Map tag
-    let displayTag = "Trending Listing";
     const tagsArr = farm.farmland_tag_ids || farm.tag_ids;
-    if (Array.isArray(tagsArr) && tagsArr.length > 0) {
-      const tagsList = masterData?.data?.tagResult || (masterData as any)?.tagResult || [];
-      const found = tagsList.find((t: any) => t.id === Number(tagsArr[0]) || t.tag_id === Number(tagsArr[0]));
-      if (found) {
-        displayTag = found.description || found.name || found.tag_name || displayTag;
-      }
-    }
+    let displayTags: string[] = mapTagIdsToNames(tagsArr, masterData);
     
     // Determine layout based on column
     const colIndex = i % 3;
@@ -85,7 +79,7 @@ export default function TrendingGrid() {
         description={farm.land_description || "A beautiful farmland listing."}
         price={`₹${formattedPrice}`}
         location={fullStr}
-        tagText={displayTag}
+        tags={displayTags}
         imageUrl={imgUrl}
         reverseLayout={isReverse}
         imageHeight={imgHeight}

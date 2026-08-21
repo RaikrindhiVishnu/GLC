@@ -19,6 +19,10 @@ interface MapWrapperProps {
   initialPolygon?: { lat: number; lng: number }[];
   viewOnly?: boolean;
   onMapClick?: () => void;
+  polygonColor?: string;
+  polygonFillColor?: string;
+  polygonDashArray?: string;
+  polygonWeight?: number;
 }
 
 export default function MapWrapper(props: MapWrapperProps) {

@@ -86,7 +86,6 @@ function CompareAssetsContent() {
         b: data2.hospital?.distance_id ? `Hospital (${data2.hospital.distance_id}km)` : "Emergency (8km)" 
       },
     ];
-
   const CULTIVATION = [
     { 
       id: farmCode1, 
@@ -405,44 +404,49 @@ function CompareAssetsContent() {
           </div>
 
           {/* ─── SECTION 3: CULTIVATION ─── */}
-          <div style={{ display: "flex", flexDirection: "column", width: "1216px", gap: "32px", marginTop: "26px" }}>
-            <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "12px", padding: "0 8px" }}>
-              <Image src="/assets/compareassets/cultivation.svg" alt="Cultivation Icon" width={18} height={20} />
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "24px", lineHeight: "32px", color: "#0F2F4C", textTransform: "uppercase" }}>Cultivation</span>
+          <div style={{ display: "flex", flexDirection: "column", width: "1216px", gap: "32px", marginTop: "40px" }}>
+            <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "12px", padding: "0 16px" }}>
+              <div style={{ width: "24px", height: "23px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <Image src="/assets/compareassets/connectivity.svg" alt="Cultivation Icon" width={24} height={23} />
+              </div>
+              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "24px", lineHeight: "16px", color: "#0F2F4C", textTransform: "uppercase", letterSpacing: "1.2px" }}>Cultivation</span>
             </div>
-            <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", gap: "24px", width: "100%" }}>
-              {CULTIVATION.map((asset, i) => (
-                <div key={i} style={{ boxSizing: "border-box", display: "flex", flexDirection: "column", padding: "40px", gap: "24px", width: "596px", background: "#FFFFFF", borderRadius: "32px", boxShadow: "0px 12px 40px rgba(0,31,63,0.04)" }}>
-                  <div style={{ display: "flex", flexDirection: "column", gap: "24px", width: "512px" }}>
-                    <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", color: "#45474C", textTransform: "uppercase" }}>SOIL COMPOSITION</span>
-                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "24px", lineHeight: "32px", color: "#0F2F4C" }}>{asset.soil}</span>
-                      <p style={{ margin: 0, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 400, fontSize: "16px", lineHeight: "26px", color: "#45474C" }}>{asset.soilDesc}</p>
-                    </div>
-                    <div style={{ borderTop: "1px solid rgba(197,198,205,0.15)", paddingTop: "24px", display: "flex", flexDirection: "column", gap: "8px" }}>
-                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", color: "#45474C", textTransform: "uppercase" }}>CURRENT VEGETATION</span>
-                      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                        <Image src={`/assets/compareassets/${asset.currentIcon}`} alt="indicator" width={17} height={17} />
-                        <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#0F2F4C" }}>{asset.current}</span>
-                      </div>
-                    </div>
-                    <div style={{ borderTop: "1px solid rgba(197,198,205,0.15)", paddingTop: "24px", display: "flex", flexDirection: "column", gap: "8px" }}>
-                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "12px", color: "#45474C", textTransform: "uppercase" }}>POTENTIAL VEGETATION</span>
-                      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                        <Image src={`/assets/compareassets/${asset.potentialIcon}`} alt="indicator" width={17} height={17} />
-                        <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: "#45474C" }}>{asset.potential}</span>
-                      </div>
-                    </div>
+            
+            <div style={{ display: "flex", flexDirection: "column", width: "1216px", gap: "64px", position: "relative" }}>
+              {/* Vertical Divider */}
+              <div style={{ position: "absolute", width: "1px", left: "calc(50% - 0.5px)", top: "-32px", bottom: "-32px", background: "#C5C6CD", zIndex: 0 }}></div>
+
+              {[
+                { labelA: "CURRENT", labelB: "CURRENT", a: data1.current_cultivation || "Mango", b: data2.current_cultivation || "Barren", icon: "Background (43).svg" },
+                { labelA: "POTENTIAL", labelB: "POTENTIAL", a: data1.crops_that_can_be_grown?.length ? `Crop Type ${data1.crops_that_can_be_grown[0]}` : "Sandalwood", b: data2.crops_that_can_be_grown?.length ? `Crop Type ${data2.crops_that_can_be_grown[0]}` : "Rice/Wheat", icon: "Background (42).svg" },
+                { labelA: "SOIL", labelB: "SOIL", a: data1.soil?.type_id ? `Soil Type ${data1.soil.type_id}` : "Red Laterite", b: data2.soil?.type_id ? `Soil Type ${data2.soil.type_id}` : "Black Cotton", icon: "Background (41).svg" }
+              ].map((row, i) => (
+                <div key={i} style={{ display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", width: "100%", position: "relative", minHeight: "108px", gap: "244px" }}>
+                  {/* Left Box */}
+                  <div style={{ width: "256px", minHeight: "108px", background: "#FFFFFF", boxShadow: "0px 1px 2px rgba(0,0,0,0.05)", borderRadius: "32px", padding: "24px", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-end", boxSizing: "border-box", zIndex: 1 }}>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "12px", lineHeight: "16px", color: "#2780C4", textTransform: "uppercase" }}>{row.labelA}</span>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", lineHeight: "24px", color: "#0F2F4C", marginTop: "4px", textAlign: "right" }}>{row.a}</span>
+                  </div>
+
+                  {/* Center Icon */}
+                  <div style={{ width: "80px", height: "80px", display: "flex", alignItems: "center", justifyContent: "center", position: "absolute", left: "50%", transform: "translateX(-50%)", zIndex: 2 }}>
+                    <Image src={`/assets/compareassets/${row.icon}`} alt={row.labelA} width={80} height={80} />
+                  </div>
+
+                  {/* Right Box */}
+                  <div style={{ width: "256px", minHeight: "108px", background: "#FFFFFF", boxShadow: "0px 1px 2px rgba(0,0,0,0.05)", borderRadius: "32px", padding: "24px", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", boxSizing: "border-box", zIndex: 1 }}>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "12px", lineHeight: "16px", color: "#2780C4", textTransform: "uppercase" }}>{row.labelB}</span>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "16px", lineHeight: "24px", color: "#0F2F4C", marginTop: "4px", textAlign: "left" }}>{row.b}</span>
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* ─── STICKY BOTTOM SELECTION CONTROLS BANNER ─── */}
-          <div style={{ boxSizing: "border-box", display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", width: "1216px", padding: "16px 24px", background: "rgba(255,255,255,0.95)", borderTop: "1px solid rgba(197,198,205,0.2)", borderRadius: "24px", boxShadow: "0px -10px 40px rgba(0,0,0,0.03)", gap: "48px", marginTop: "40px" }}>
-            <button onClick={() => router.push(`/search/farmlanddetails?id=${id1}`)} style={{ flex: 1, height: "52px", background: "#FFFFFF", borderRadius: "9999px", border: "1px solid #2780C4", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", letterSpacing: "0.35px", color: "#2780C4", cursor: "pointer", textTransform: "uppercase" }} onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.7")} onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}>SELECT {farmCode1}</button>
-            <button onClick={() => router.push(`/search/farmlanddetails?id=${id2}`)} style={{ flex: 1, height: "52px", background: "#FFFFFF", borderRadius: "9999px", border: "1px solid #2780C4", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", letterSpacing: "0.35px", color: "#2780C4", cursor: "pointer", textTransform: "uppercase" }} onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.7")} onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}>SELECT {farmCode2}</button>
+          {/* ─── BOTTOM SELECTION CONTROLS ─── */}
+          <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", width: "1216px", padding: "0 24px", gap: "48px", marginTop: "40px" }}>
+            <button onClick={() => router.push(`/search/farmlanddetails?id=${id1}`)} style={{ flex: 1, height: "57px", background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)", borderRadius: "9999px", border: "none", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", lineHeight: "20px", letterSpacing: "0.35px", color: "#FFFFFF", cursor: "pointer", textTransform: "uppercase" }} onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")} onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}>SELECT {farmCode1}</button>
+            <button onClick={() => router.push(`/search/farmlanddetails?id=${id2}`)} style={{ flex: 1, height: "57px", background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)", borderRadius: "9999px", border: "none", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", lineHeight: "20px", letterSpacing: "0.35px", color: "#FFFFFF", cursor: "pointer", textTransform: "uppercase" }} onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")} onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}>SELECT {farmCode2}</button>
           </div>
 
         </section>

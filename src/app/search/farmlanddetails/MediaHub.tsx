@@ -129,61 +129,34 @@ export default function MediaHub({ primaryImage, title, lat, long, polygon }: Me
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          style={{ position: "relative", flex: 1, height: "220px", background: "#0F2F4C", borderRadius: "32px", padding: "24px", boxSizing: "border-box", display: "flex", flexDirection: "column", justifyContent: "space-between", overflow: "hidden", isolation: "isolate" }}
+          style={{ position: "relative", flex: 1, height: "220px", background: "#191C1D", borderRadius: "32px", padding: "16px 24px", boxSizing: "border-box", display: "flex", flexDirection: "column", overflow: "hidden", isolation: "isolate" }}
           className="lg:h-64 lg:rounded-[48px]"
         >
-          {parsedPolygon && parsedPolygon.length > 0 && (() => {
-            const lats = parsedPolygon.map((p: any) => p.lat);
-            const lngs = parsedPolygon.map((p: any) => p.lng);
-            const minLat = Math.min(...lats), maxLat = Math.max(...lats);
-            const minLng = Math.min(...lngs), maxLng = Math.max(...lngs);
-            const W = 360, H = 260, PAD = 52;
-            const latRange = maxLat - minLat || 0.001;
-            const lngRange = maxLng - minLng || 0.001;
-            const scale = Math.min((W - PAD*2) / lngRange, (H - PAD*2) / latRange) * 0.80;
-            const cx = W / 2, cy = H / 2;
-            const avgLat = (minLat + maxLat) / 2, avgLng = (minLng + maxLng) / 2;
-            const pts = parsedPolygon.map((p: any) => {
-              const x = cx + (p.lng - avgLng) * scale;
-              const y = cy - (p.lat - avgLat) * scale;
-              return `${x},${y}`;
-            }).join(' ');
-            return (
-              <div style={{ position: "absolute", inset: 0, zIndex: 0, borderRadius: "inherit", overflow: "hidden" }}>
-                <div style={{ position: "absolute", inset: 0, background: "rgba(15, 18, 20, 0.95)", borderRadius: "inherit" }} />
-                <svg width="100%" height="100%" style={{ position: "absolute", inset: 0, opacity: 0.18 }}>
-                  <defs>
-                    <pattern id="tg" width="36" height="36" patternUnits="userSpaceOnUse">
-                      <path d="M 36 0 L 0 0 0 36" fill="none" stroke="#FFFFFF" strokeWidth="0.4"/>
-                    </pattern>
-                  </defs>
-                  <rect width="100%" height="100%" fill="url(#tg)" />
-                  <ellipse cx="50%" cy="62%" rx="38%" ry="22%" fill="none" stroke="#FFFFFF" strokeWidth="0.7" opacity="0.5"/>
-                  <ellipse cx="50%" cy="62%" rx="48%" ry="30%" fill="none" stroke="#FFFFFF" strokeWidth="0.5" opacity="0.3"/>
-                  <ellipse cx="48%" cy="56%" rx="26%" ry="14%" fill="none" stroke="#FFFFFF" strokeWidth="0.6" opacity="0.4"/>
-                  <line x1="0" y1="44%" x2="100%" y2="41%" stroke="#FFFFFF" strokeWidth="0.4" opacity="0.2"/>
-                  <line x1="0" y1="60%" x2="100%" y2="64%" stroke="#FFFFFF" strokeWidth="0.4" opacity="0.2"/>
-                </svg>
-                <svg width="100%" height="100%" viewBox={`0 0 ${W} ${H}`} style={{ position: "absolute", inset: 0 }}>
-                  <defs>
-                    <filter id="pglow">
-                      <feGaussianBlur stdDeviation="5" result="blur"/>
-                      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-                    </filter>
-                  </defs>
-                  <polygon points={pts} fill="rgba(39,128,196,0.1)" stroke="#2780C4" strokeWidth="3.84" strokeLinejoin="round" filter="url(#pglow)" />
-                </svg>
+          <div style={{ position: "relative", zIndex: 3, display: "flex", justifyContent: "space-between", alignItems: "center", pointerEvents: "none", marginBottom: "16px" }}>
+            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "18px", color: "#FFFFFF" }}>GIS Topology</span>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2780C4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            </div>
+          </div>
+          <div style={{ position: "absolute", top: "57px", left: 0, right: 0, bottom: 0, zIndex: 0, borderRadius: "0 0 32px 32px", overflow: "hidden" }}>
+            {(mapLocation || (parsedPolygon && parsedPolygon.length > 0)) ? (
+              <MapWrapper
+                viewOnly
+                initialLocation={mapLocation}
+                initialPolygon={parsedPolygon}
+                polygonColor="#2780C4"
+                polygonFillColor="#2780C4"
+                polygonDashArray=""
+                polygonWeight={3}
+              />
+            ) : (
+              <div style={{ width: "100%", height: "100%", background: "#191C1D", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "sans-serif", color: "#8C94A1", fontSize: "12px" }}>
+                Map Data Unavailable
               </div>
-            );
-          })()}
-          <div style={{ position: "relative", zIndex: 1, display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-            <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "10px", letterSpacing: "1px", textTransform: "uppercase", color: "#CFE5FF" }}>GIS TOPOLOGY</span>
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "18px", color: "#FFFFFF" }}>Parcel Outline</span>
-            </div>
-            <div style={{ width: "20px", height: "20px", background: "#2780C4", borderRadius: "4px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="3"><polyline points="20 6 9 17 4 12" /></svg>
-            </div>
+            )}
           </div>
         </motion.div>
 
