@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import FarmlandCardSkeleton from "@/components/ui/FarmlandCardSkeleton";
 import { useRouter } from "next/navigation";
 import { MapPin } from "lucide-react";
 
@@ -190,9 +191,11 @@ export default function PopularFarmlands() {
         `}} />
 
         {isLoading ? (
-          <div className="flex justify-center items-center w-full h-[260px]">
-            <span className="font-jakarta text-[#0F2F4C]">Loading popular properties...</span>
-          </div>
+          <>
+            {Array.from({ length: 3 }).map((_, i) => (
+              <FarmlandCardSkeleton key={i} variant="horizontal" />
+            ))}
+          </>
         ) : apiFarmlands.length === 0 ? (
           <div className="flex justify-center items-center w-full h-[260px]">
             <span className="font-jakarta text-[#0F2F4C]">No popular properties found.</span>

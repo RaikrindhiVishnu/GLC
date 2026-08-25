@@ -6,6 +6,7 @@ import TrendingCard from "../home/trendingfarmlands/TrendingCard";
 import { useGetFarmlandByTagAndStateQuery, useGetAllTopSellingLocationsQuery } from "../../services/home";
 import { useGetAllGeoMasterDataQuery, useGetAllMasterDataQuery } from "../../services/master";
 import { mapTagIdsToNames } from "../../utils/tagMapper";
+import FarmlandCardSkeleton from "@/components/ui/FarmlandCardSkeleton";
 
 export default function TopSellingGrid() {
   const searchParams = useSearchParams();
@@ -176,8 +177,10 @@ export default function TopSellingGrid() {
 
       {/* Masonry Layout: 3 Columns */}
       {isLoading ? (
-        <div className="flex justify-center items-center w-full h-[260px]">
-          <span className="font-jakarta text-[#0F2F4C]">Loading trending properties...</span>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start w-full">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <FarmlandCardSkeleton key={i} variant="vertical" />
+          ))}
         </div>
       ) : filteredFarmlands.length === 0 ? (
         <div className="flex justify-center items-center w-full h-[260px]">

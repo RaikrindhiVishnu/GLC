@@ -84,6 +84,7 @@ export interface Farmland {
   farmland_img?: string;
   farmland_mandal_id?: number;
   farmland_district_id?: number;
+  farmland_tag_ids?: number[];
 }
 
 export interface GetFarmlandByTagAndStateRequest {

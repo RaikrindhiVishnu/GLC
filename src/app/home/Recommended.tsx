@@ -3,11 +3,19 @@
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import FarmlandCardSkeleton from "@/components/ui/FarmlandCardSkeleton";
 import { useRouter } from "next/navigation";
 import { MapPin } from "lucide-react";
 import { useGetFarmlandByTagAndStateQuery } from "../../services/home";
 import { useGetUserDetailsByIdQuery } from "../../services/user";
 import { useGetAllGeoMasterDataQuery } from "../../services/master";
+
+const TAG_MAP: Record<number, string> = {
+  1: "GLC Recommended",
+  2: "Most Popular",
+  3: "Trending",
+  4: "GLC Exclusive"
+};
 
 export default function Recommended() {
   const router = useRouter();
@@ -89,10 +97,7 @@ export default function Recommended() {
     router.push(`/search/farmlanddetails?id=match-${id}`);
   };
 
-  const getTagText = (index: number) => {
-    const tags = ["Most Bookmarked", "Most Popular", "Most Viewed", "Hot Deals"];
-    return tags[index % tags.length];
-  };
+
 
   return (
     <section id="recommended-farmlands" className="w-full bg-transparent py-12 lg:py-[70px] overflow-hidden">
@@ -117,7 +122,7 @@ export default function Recommended() {
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUpOrLeave}
           onMouseLeave={handleMouseUpOrLeave}
-          className={`flex gap-4 md:gap-[32px] w-full overflow-x-auto pb-8 hide-scrollbar select-none ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
+          className={`flex gap-4 md:gap-[32px] w-full overflow-x-auto pb-[180px] -mb-[148px] hide-scrollbar select-none ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
         >
         <style dangerouslySetInnerHTML={{
           __html: `
@@ -126,9 +131,11 @@ export default function Recommended() {
         `}} />
 
         {isLoading ? (
-          <div className="flex justify-center items-center w-full h-[367px]">
-            <span className="font-jakarta text-[#0F2F4C]">Loading recommended properties...</span>
-          </div>
+          <>
+            {Array.from({ length: 3 }).map((_, i) => (
+              <FarmlandCardSkeleton key={i} variant="vertical" />
+            ))}
+          </>
         ) : farmlands.length === 0 ? (
           <div className="flex justify-center items-center w-full h-[367px]">
             <span className="font-jakarta text-[#0F2F4C]">No recommended properties found.</span>
@@ -142,13 +149,13 @@ export default function Recommended() {
               transition={{ duration: 0.6, delay: i * 0.1 }}
               viewport={{ once: true }}
               onClick={(e: React.MouseEvent) => handleCardClick(e, String(item.farmland_id))}
-              className="flex flex-col w-[300px] sm:w-[362px] min-h-[367px] h-auto shrink-0 bg-white rounded-[29px] overflow-hidden cursor-pointer group pointer-events-auto"
+              className="flex flex-col w-[300px] sm:w-[362px] min-h-[367px] h-auto shrink-0 bg-white rounded-[29px] cursor-pointer group pointer-events-auto"
               style={{
                 boxShadow: "0px 7.32697px 9.15871px -5.49523px rgba(0, 0, 0, 0.1)"
               }}
             >
               {/* Top Image Area */}
-              <div className="relative w-full h-[234px] shrink-0 pointer-events-none">
+              <div className="relative w-full h-[234px] shrink-0 pointer-events-none overflow-hidden rounded-t-[29px]">
                 <Image
                   src={
                     (() => {
@@ -167,7 +174,7 @@ export default function Recommended() {
               </div>
 
               {/* Bottom Content Area */}
-              <div className="flex flex-col pt-[17px] pl-[16px] pr-[16px] pb-[20px] min-h-[132.54px] h-auto pointer-events-none">
+              <div className="flex flex-col pt-[17px] pl-[16px] pr-[16px] pb-[20px] min-h-[132.54px] h-auto pointer-events-auto">
                 <h3 className="m-0 font-jakarta font-extrabold text-[24px] leading-[28px] text-[#001F3F]">
                   {item.farmland_code}
                 </h3>
@@ -179,11 +186,49 @@ export default function Recommended() {
                   </span>
                 </div>
 
-                <div className="mt-[10px] bg-white/95 border-[0.6px] border-[#CACDD4] rounded-[8px] h-[26px] px-[12px] flex items-center shadow-sm w-max">
-                  <span className="font-jakarta font-medium text-[12px] leading-[15px] tracking-[0.5px] capitalize text-[#091426]">
-                    {getTagText(i)}
-                  </span>
-                </div>
+                {(() => {
+                  const tagIds = item.farmland_tag_ids || [];
+                  const firstTagId = tagIds[0];
+                  const firstTagLabel = firstTagId && TAG_MAP[firstTagId] ? TAG_MAP[firstTagId] : null;
+                  const extraCount = tagIds.length > 1 ? tagIds.length - 1 : 0;
+                  
+                  if (!firstTagLabel) return null;
+
+                  return (
+                    <div className="relative flex items-center gap-[4px] mt-[10px] w-fit pointer-events-auto">
+                      <div className="bg-white/95 border-[0.6px] border-[#CACDD4] rounded-[8px] h-[26px] px-[12px] flex items-center shadow-sm w-max pointer-events-none">
+                        <span className="font-jakarta font-medium text-[12px] leading-[15px] tracking-[0.5px] capitalize text-[#091426]">
+                          {firstTagLabel}
+                        </span>
+                      </div>
+
+                      {/* Extra Tags Badge */}
+                      {extraCount > 0 && (
+                        <div 
+                          className="group/badge cursor-pointer bg-white/95 border-[0.6px] border-[#CACDD4] rounded-[8px] h-[26px] px-[8px] flex items-center shadow-sm hover:bg-gray-100 transition-colors pointer-events-auto relative z-50"
+                        >
+                          <span className="font-jakarta font-bold text-[11px] text-[#475569]">
+                            +{extraCount}
+                          </span>
+
+                          {/* Dropdown Menu (Hover Tooltip) */}
+                          <div 
+                            className="hidden group-hover/badge:flex absolute top-full left-[10px] mt-[8px] bg-white rounded-[16px] shadow-[0px_8px_24px_rgba(0,0,0,0.12)] p-[12px] z-50 flex-col gap-[8px] min-w-[140px] cursor-default"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            {tagIds.slice(1).map((tagId: number) => (
+                              <div key={tagId} className="bg-[#F4F6F8] rounded-full px-[16px] py-[8px] flex items-center justify-center transition-colors hover:bg-[#E2E8F0]">
+                                <span className="font-jakarta font-semibold text-[12px] text-[#001F3F] whitespace-nowrap">
+                                  {TAG_MAP[tagId] || `Tag ${tagId}`}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()}
               </div>
 
             </motion.div>

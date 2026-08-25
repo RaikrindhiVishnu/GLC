@@ -15,6 +15,7 @@ import { useGetUserUploadedFarmlandsQuery } from "../../services/upload";
 import { s3Service } from "@/services/s3";
 import TagGroup from "../../components/TagGroup";
 import { mapTagIdsToNames } from "../../utils/tagMapper";
+import FarmlandCardSkeleton from "@/components/ui/FarmlandCardSkeleton";
 
 // Helper component to resolve S3 images for search cards
 const S3ResolvedImage = ({ imageUrl, alt }: { imageUrl: string; alt: string }) => {
@@ -388,7 +389,15 @@ export default function MainListingsGrid() {
           className="flex gap-4 w-full overflow-x-auto pb-4 pl-4 sm:pl-6 pr-4 sm:pr-6"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
-          {displayedFarmlands.map((item, i) => {
+          {isLoading ? (
+            Array.from({ length: 3 }).map((_, i) => (
+              <FarmlandCardSkeleton key={i} variant="horizontal" />
+            ))
+          ) : displayedFarmlands.length === 0 ? (
+            <div className="flex justify-center items-center w-full h-[260px]">
+              <span className="font-jakarta text-[#0F2F4C]">No properties found.</span>
+            </div>
+          ) : displayedFarmlands.map((item, i) => {
             const isBookmarked = !!bookmarks[item.farmland_id];
             
             // Map tag IDs to names
@@ -530,7 +539,21 @@ export default function MainListingsGrid() {
           </div>
 
           {/* ─── 3-COLUMN GRID ─── */}
-          {displayedFarmlands.length > 0 ? (
+          {isLoading ? (
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(3, 1fr)",
+                gap: "32px",
+                boxSizing: "border-box",
+                alignItems: "start",
+              }}
+            >
+              {Array.from({ length: 6 }).map((_, i) => (
+                <FarmlandCardSkeleton key={i} variant="vertical" />
+              ))}
+            </div>
+          ) : displayedFarmlands.length > 0 ? (
           <div
             style={{
               display: "grid",

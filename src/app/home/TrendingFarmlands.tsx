@@ -3,10 +3,18 @@
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import FarmlandCardSkeleton from "@/components/ui/FarmlandCardSkeleton";
 import { useRouter } from "next/navigation";
 import { MapPin } from "lucide-react";
 import { useGetFarmlandByTagAndStateQuery } from "../../services/home";
 import { useGetAllGeoMasterDataQuery } from "../../services/master";
+
+const TAG_MAP: Record<number, string> = {
+  1: "GLC Recommended",
+  2: "Most Popular",
+  3: "Trending",
+  4: "GLC Exclusive"
+};
 
 export default function TrendingFarmlands() {
   const router = useRouter();
@@ -103,7 +111,7 @@ export default function TrendingFarmlands() {
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUpOrLeave}
           onMouseLeave={handleMouseUpOrLeave}
-          className={`flex gap-4 md:gap-6 lg:gap-[30px] w-full overflow-x-auto pb-4 hide-scrollbar select-none ${isDragging ? "cursor-grabbing" : "cursor-grab"
+          className={`flex gap-4 md:gap-6 lg:gap-[30px] w-full overflow-x-auto pb-[180px] -mb-[164px] hide-scrollbar select-none ${isDragging ? "cursor-grabbing" : "cursor-grab"
             }`}
         >
         <style dangerouslySetInnerHTML={{
@@ -113,9 +121,11 @@ export default function TrendingFarmlands() {
         `}} />
 
         {isLoading ? (
-          <div className="flex justify-center items-center w-full h-[260px]">
-            <span className="font-jakarta text-[#0F2F4C]">Loading trending properties...</span>
-          </div>
+          <>
+            {Array.from({ length: 3 }).map((_, i) => (
+              <FarmlandCardSkeleton key={i} variant="horizontal" />
+            ))}
+          </>
         ) : farmlands.length === 0 ? (
           <div className="flex justify-center items-center w-full h-[260px]">
             <span className="font-jakarta text-[#0F2F4C]">No trending properties found.</span>
@@ -129,10 +139,10 @@ export default function TrendingFarmlands() {
               transition={{ duration: 0.6, delay: i * 0.1 }}
               viewport={{ once: true }}
               onClick={(e) => handleCardClick(e, item.farmland_id.toString())}
-              className="flex flex-col sm:flex-row w-[280px] sm:w-[450px] lg:w-[511px] h-auto sm:min-h-[200px] lg:min-h-[261px] shrink-0 bg-white shadow-[0px_11px_38px_rgba(0,31,63,0.04)] rounded-[24px] lg:rounded-[45px] overflow-hidden cursor-pointer box-border group pointer-events-auto"
+              className="flex flex-col sm:flex-row w-[280px] sm:w-[450px] lg:w-[511px] h-auto sm:min-h-[200px] lg:min-h-[261px] shrink-0 bg-white shadow-[0px_11px_38px_rgba(0,31,63,0.04)] rounded-[24px] lg:rounded-[45px] cursor-pointer box-border group pointer-events-auto"
             >
               {/* Left Side: Image */}
-              <div className="relative w-full h-[180px] sm:w-[180px] lg:w-[205px] sm:h-full shrink-0 pointer-events-none">
+              <div className="relative w-full h-[180px] sm:w-[180px] lg:w-[205px] sm:h-full shrink-0 pointer-events-none overflow-hidden rounded-t-[24px] sm:rounded-t-none sm:rounded-l-[24px] lg:rounded-l-[45px]">
                 <Image
                   src={
                     (() => {
@@ -154,28 +164,70 @@ export default function TrendingFarmlands() {
                 <div className="flex flex-col gap-[8px]">
 
                   {/* Tag */}
-                  <div
-                    style={{ background: i % 2 === 0 ? "rgba(0, 31, 63, 0.1)" : "rgba(207, 102, 103, 0.1)" }}
-                    className="inline-flex items-center px-[11px] py-[4px] gap-[8px] rounded-full w-fit pointer-events-none"
-                  >
-                    {i % 2 !== 0 ? (
-                      /* Red Label: Bookmark Icon */
-                      <svg width="9" height="10" viewBox="0 0 10 12" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
-                        <path d="M1 1H9V11L5 8.5L1 11V1Z" fill="#CF6667" stroke="#CF6667" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    ) : (
-                      /* Grey Label: Star Icon */
-                      <svg width="10" height="10" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
-                        <path d="M6 1L7.5 4.5H11L8.2 6.5L9.5 10L6 7.8L2.5 10L3.8 6.5L1 4.5H4.5L6 1Z" fill="#001F3F" />
-                      </svg>
-                    )}
-                    <span
-                      style={{ color: i % 2 === 0 ? "#001F3F" : "#CF6667" }}
-                      className="font-jakarta font-bold text-[9.5px] leading-[14px] tracking-[0.95px] uppercase"
-                    >
-                      {i % 2 === 0 ? "HIGH YIELD 2025" : "MOST BOOKMARKED"}
-                    </span>
-                  </div>
+                  {(() => {
+                    const tagIds = item.farmland_tag_ids || [];
+                    const firstTagId = tagIds[0];
+                    const firstTagLabel = firstTagId && TAG_MAP[firstTagId] ? TAG_MAP[firstTagId] : null;
+                    const extraCount = tagIds.length > 1 ? tagIds.length - 1 : 0;
+                    
+                    if (!firstTagLabel) return null;
+                    
+                    const isEven = i % 2 === 0;
+                    const bgColor = isEven ? "rgba(0, 31, 63, 0.1)" : "rgba(207, 102, 103, 0.1)";
+                    const fgColor = isEven ? "#001F3F" : "#CF6667";
+
+                    return (
+                      <div className="relative flex items-center gap-[4px] w-fit">
+                        <div
+                          style={{ background: bgColor }}
+                          className="inline-flex items-center px-[11px] py-[4px] gap-[8px] rounded-full pointer-events-none"
+                        >
+                          {!isEven ? (
+                            /* Red Label: Bookmark Icon */
+                            <svg width="9" height="10" viewBox="0 0 10 12" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
+                              <path d="M1 1H9V11L5 8.5L1 11V1Z" fill="#CF6667" stroke="#CF6667" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                          ) : (
+                            /* Grey Label: Star Icon */
+                            <svg width="10" height="10" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
+                              <path d="M6 1L7.5 4.5H11L8.2 6.5L9.5 10L6 7.8L2.5 10L3.8 6.5L1 4.5H4.5L6 1Z" fill="#001F3F" />
+                            </svg>
+                          )}
+                          <span
+                            style={{ color: fgColor }}
+                            className="font-jakarta font-bold text-[9.5px] leading-[14px] tracking-[0.95px] uppercase"
+                          >
+                            {firstTagLabel}
+                          </span>
+                        </div>
+
+                        {/* Extra Tags Badge (Hover Tooltip) */}
+                        {extraCount > 0 && (
+                          <div 
+                            className="group/badge cursor-pointer inline-flex items-center justify-center px-[6px] py-[4px] rounded-full bg-[#F1F5F9] hover:bg-[#E2E8F0] transition-colors border border-[#E2E8F0] pointer-events-auto relative z-50"
+                          >
+                            <span className="font-jakarta font-bold text-[9.5px] leading-[14px] text-[#475569]">
+                              +{extraCount}
+                            </span>
+
+                            {/* Dropdown Menu */}
+                            <div 
+                              className="hidden group-hover/badge:flex absolute top-full left-[10px] mt-[8px] bg-white rounded-[16px] shadow-[0px_8px_24px_rgba(0,0,0,0.12)] p-[12px] z-50 flex-col gap-[8px] min-w-[140px]"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              {tagIds.slice(1).map((tagId: number) => (
+                                <div key={tagId} className="bg-[#F4F6F8] rounded-full px-[16px] py-[8px] flex items-center justify-center transition-colors hover:bg-[#E2E8F0]">
+                                  <span className="font-jakarta font-semibold text-[12px] text-[#001F3F] whitespace-nowrap">
+                                    {TAG_MAP[tagId] || `Tag ${tagId}`}
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })()}
 
                   {/* Title */}
                   <h3 className="m-0 font-jakarta font-extrabold text-[20px] lg:text-[24px] lg:leading-[28px] text-[#001F3F] pt-[8px] pointer-events-none">

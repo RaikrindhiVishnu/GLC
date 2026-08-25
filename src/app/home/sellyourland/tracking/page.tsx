@@ -32,15 +32,17 @@ function TrackingContent() {
 
   const farmlandData = farmlandResponse?.[0];
 
+  const trackingData = Array.isArray(trackingResponse) ? trackingResponse[0] : trackingResponse;
+
   const getStageStatus = (stageId: number) => {
-    if (!trackingResponse?.stages) return 0;
-    const stage = trackingResponse.stages.find((s: any) => s.milestone_stage_id === stageId);
+    if (!trackingData?.stages) return 0;
+    const stage = trackingData.stages.find((s: any) => s.milestone_stage_id === stageId);
     return stage ? stage.milestone_status_id : 0;
   };
 
   const getStatusText = () => {
-    if (!trackingResponse?.farmland_status_id) return "Under CCS Review";
-    const sid = trackingResponse.farmland_status_id;
+    if (!trackingData?.farmland_status_id) return "Under CCS Review";
+    const sid = trackingData.farmland_status_id;
     if (sid === 1) return "Under CCS Review";
     if (sid === 2) return "Approved";
     if (sid === 3) return "Rejected";
@@ -67,7 +69,7 @@ function TrackingContent() {
     }
   }
 
-  const acreage = farmlandData?.land_specifications?.total_acers || 10;
+  const acreage = farmlandData?.land_specifications?.total_acers || trackingData?.acers || 10;
 
   useEffect(() => {
     if (showWithdrawModal) {
@@ -88,7 +90,7 @@ function TrackingContent() {
   useEffect(() => {
     let isMounted = true;
     const fetchImage = async () => {
-      const rawImage = farmlandData?.farmland_img;
+      const rawImage = farmlandData?.farmland_img || trackingData?.farmland_img || trackingData?.cover_image_url;
       if (!rawImage || rawImage === "null" || rawImage === "") {
         if (isMounted) setResolvedHeroImgUrl(null);
         return;
@@ -106,11 +108,11 @@ function TrackingContent() {
         console.warn("Could not generate presigned URL for Tracking Hero:", rawImage);
       }
     };
-    if (farmlandData) {
+    if (farmlandData || trackingData) {
       fetchImage();
     }
     return () => { isMounted = false; };
-  }, [farmlandData?.farmland_img]);
+  }, [farmlandData?.farmland_img, trackingData]);
 
   const heroImgUrl = resolvedHeroImgUrl || "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=2000&auto=format&fit=crop";
 
@@ -127,6 +129,9 @@ function TrackingContent() {
             src={heroImgUrl}
             alt="Hero Background"
             style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center" }}
+            onError={(e) => {
+              e.currentTarget.src = "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=2000&auto=format&fit=crop";
+            }}
           />
         </div>
         <div style={{ position: "absolute", inset: 0, zIndex: 1, background: "linear-gradient(0deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 0) 100%)" }} />
@@ -139,7 +144,7 @@ function TrackingContent() {
           </div>
 
           <h1 style={{ margin: 0, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: "clamp(32px, 5vw, 60px)", letterSpacing: "-1.5px", color: "#FFFFFF" }}>
-            {farmlandData?.farmland_code || "GLC Processing..."}
+            {farmlandData?.farmland_code || trackingData?.farm_code || trackingData?.farmland_code || "GLC Processing..."}
           </h1>
         </div>
       </section>

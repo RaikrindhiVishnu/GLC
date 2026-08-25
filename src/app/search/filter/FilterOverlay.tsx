@@ -218,61 +218,114 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
       default:
         return null;
     }
-  };
-
-  const CustomDropdown = ({
+  };  const CustomDropdown = ({
     value, onChange, options, placeholder, disabled, icon, isOpen, onToggle
   }: {
-    value: any, onChange: (v: any) => void, options: { value: any, label: string }[], placeholder: string, disabled?: boolean, icon: React.ReactNode, isOpen: boolean, onToggle: () => void
+    value: any, onChange: (v: any) => void, options: { value: any, label: string }[], placeholder: string, disabled?: boolean, icon?: React.ReactNode, isOpen: boolean, onToggle: () => void
   }) => {
     const selectedOption = options.find(o => o.value === value);
     const displayLabel = selectedOption ? selectedOption.label : placeholder;
 
     return (
-      <div
-        style={{ height: "57px", background: "#FFFFFF", border: "1px solid rgba(197, 198, 205, 0.3)", borderRadius: "9999px", boxSizing: "border-box", opacity: disabled ? 0.5 : 1 }}
-        className={`flex-1 flex items-center relative pl-12 pr-4 ${disabled ? "cursor-not-allowed" : "cursor-pointer"}`}
-        onClick={(e) => {
-          e.stopPropagation();
-          if (!disabled) onToggle();
-        }}
-      >
-        <div className="absolute left-4 flex items-center justify-center">
-          {icon}
+      <div className={`relative w-full ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}>
+        <div
+          style={{
+            height: "66px",
+            background: "#FFFFFF",
+            border: "1.16px solid rgba(197, 198, 205, 0.3)",
+            borderRadius: isOpen ? "18.57px 18.57px 0px 0px" : "18.57px",
+            boxSizing: "border-box",
+          }}
+          className="flex items-center px-[29px]"
+          onClick={(e) => {
+            e.stopPropagation();
+            if (!disabled) onToggle();
+          }}
+        >
+          {icon && (
+            <div className="mr-3 flex items-center justify-center">
+              {icon}
+            </div>
+          )}
+          <div
+            style={{
+              fontFamily: "'Plus Jakarta Sans', sans-serif",
+              fontWeight: 400,
+              fontSize: "16.25px",
+              color: "#0F2F4C",
+            }}
+            className="w-full truncate"
+          >
+            {displayLabel}
+          </div>
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#0F2F4C"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            style={{ opacity: 0.6, transform: isOpen ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}
+            className="shrink-0 ml-2"
+          >
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
         </div>
-        <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500, color: value ? "#0F2F4C" : "#75777D" }} className="w-full text-sm md:text-base pr-8 truncate">
-          {displayLabel}
-        </div>
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#75777D" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute right-4 pointer-events-none">
-          <polyline points={isOpen ? "18 15 12 9 6 15" : "6 9 12 15 18 9"}></polyline>
-        </svg>
 
         {isOpen && !disabled && (
           <div
-            className="absolute left-0 right-0 bg-white shadow-xl z-50 overflow-y-auto"
+            className="absolute left-0 right-0 bg-white z-50 overflow-y-auto"
             style={{
-              top: "64px",
-              borderRadius: "24px",
-              maxHeight: "260px",
-              padding: "8px",
-              border: "1px solid rgba(197, 198, 205, 0.4)",
-              boxShadow: "0px 20px 40px -10px rgba(9, 20, 38, 0.15)"
+              top: "65px",
+              borderRadius: "0px 0px 18.57px 18.57px",
+              maxHeight: "263px",
+              border: "1.16px solid rgba(197, 198, 205, 0.3)",
+              borderTop: "none",
+              boxShadow: "0px 23.2px 29px -5.8px rgba(0, 0, 0, 0.1), 0px 9.3px 11.6px -7px rgba(0, 0, 0, 0.1)",
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            {options.map((opt) => (
-              <div
-                key={opt.value}
-                onClick={() => {
-                  onChange(opt.value);
-                  onToggle(); // close after selection
-                }}
-                style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
-                className={`px-4 py-3 cursor-pointer text-sm transition-colors duration-150 rounded-xl ${opt.value === value ? 'bg-[#EEF6FF] text-[#2780C4] font-semibold' : 'text-[#45474C] hover:bg-[#EEF6FF] hover:text-[#2780C4] font-medium'}`}
-              >
-                {opt.label}
-              </div>
-            ))}
+            {options.map((opt, i) => {
+              const isSelected = opt.value === value;
+              return (
+                <div
+                  key={opt.value}
+                  onClick={() => {
+                    onChange(opt.value);
+                    onToggle();
+                  }}
+                  style={{
+                    height: "52.24px",
+                    background: isSelected ? "rgba(42, 48, 8, 0.05)" : "#FFFFFF",
+                    borderBottom: i === options.length - 1 ? "none" : "1.16px solid rgba(197, 198, 205, 0.3)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    padding: "0 18.57px",
+                  }}
+                  className="cursor-pointer hover:bg-gray-50 transition-colors"
+                >
+                  <span
+                    style={{
+                      fontFamily: "'Plus Jakarta Sans', sans-serif",
+                      fontWeight: 400,
+                      fontSize: "14px",
+                      color: isSelected ? "#0F2F4C" : "#191C1D",
+                    }}
+                  >
+                    {opt.label}
+                  </span>
+                  {isSelected && (
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="12" cy="12" r="11.61" fill="#2780C4"/>
+                      <path d="M7 12L10.5 15.5L17 9" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  )}
+                </div>
+              );
+            })}
           </div>
         )}
       </div>

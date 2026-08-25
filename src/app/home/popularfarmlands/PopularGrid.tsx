@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useMemo } from "react";
+import FarmlandCardSkeleton from "@/components/ui/FarmlandCardSkeleton";
 import TrendingCard from "../trendingfarmlands/TrendingCard";
 import { useGetFarmlandByTagAndStateQuery } from "../../../services/home";
 import { useGetAllGeoMasterDataQuery, useGetAllMasterDataQuery } from "../../../services/master";
@@ -115,9 +116,11 @@ export default function PopularGrid() {
       {/* CSS Grid Layout: 3 Columns */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start w-full min-h-[648px]">
         {isLoading ? (
-          <div className="col-span-1 md:col-span-3 flex justify-center items-center py-20">
-            <span className="font-jakarta text-[#0F2F4C]">Loading popular properties...</span>
-          </div>
+          <>
+            {Array.from({ length: 3 }).map((_, i) => (
+              <FarmlandCardSkeleton key={i} variant="horizontal" />
+            ))}
+          </>
         ) : paginatedFarmlands.length > 0 ? (
           paginatedFarmlands.map((farm, i) => renderCard(farm, i))
         ) : (

@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useMemo } from "react";
+import { useRouter } from "next/navigation";
+import FarmlandCardSkeleton from "@/components/ui/FarmlandCardSkeleton";
 import TrendingCard from "../home/trendingfarmlands/TrendingCard";
 import { useGetFarmlandByTagAndStateQuery } from "../../services/home";
 import { useGetAllGeoMasterDataQuery, useGetAllMasterDataQuery } from "../../services/master";
@@ -113,8 +115,10 @@ export default function RecommendedGrid() {
 
       {/* Masonry Layout: 3 Columns (Grid Row-by-Row) */}
       {isLoading ? (
-        <div className="flex justify-center items-center w-full h-[260px]">
-          <span className="font-jakarta text-[#0F2F4C]">Loading recommended properties...</span>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start w-full">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <FarmlandCardSkeleton key={i} variant="vertical" />
+          ))}
         </div>
       ) : farmlands.length === 0 ? (
         <div className="flex justify-center items-center w-full h-[260px]">
