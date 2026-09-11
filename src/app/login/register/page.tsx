@@ -115,7 +115,7 @@ export default function RegisterPage() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.3 }}
-        className="text-[13px] lg:text-[14px] text-[#B8B8B8] font-jakarta mb-5 lg:mb-6"
+        className="text-[13px] lg:text-[14px] text-[#B8B8B8] font-jakarta mb-6"
       >
         Green Land Capital Asset Verification.
       </motion.p>
@@ -125,9 +125,9 @@ export default function RegisterPage() {
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.4 }}
-        className="flex flex-col sm:flex-row gap-2 mb-2 lg:mb-3"
+        className="flex flex-col sm:flex-row gap-3 lg:gap-4 mb-4"
       >
-        <div className={`flex-1 bg-white border ${errors.firstName ? 'border-red-500' : 'border-[#F0F0F0]'} rounded-full h-[46px] lg:h-[50px] flex items-center px-4 gap-2 focus-within:border-[#2780C4] focus-within:ring-1 focus-within:ring-[#2780C4]/20 transition-all cursor-text shadow-sm`}>
+        <div className={`flex-1 bg-white border ${errors.firstName ? 'border-red-500' : 'border-[#F0F0F0]'} rounded-[32px] h-[56px] lg:h-[64px] flex items-center px-5 gap-3 focus-within:border-[#2780C4] focus-within:ring-1 focus-within:ring-[#2780C4]/20 transition-all cursor-text shadow-sm`}>
           <Image src="/assets/login/hugeicons_profile.svg" alt="First Name" width={20} height={20} className="shrink-0" />
           <div className="w-px h-4 bg-[#F0F0F0]" />
           <input 
@@ -141,7 +141,7 @@ export default function RegisterPage() {
             className="flex-1 bg-transparent text-[13px] lg:text-[14px] placeholder:text-[#BDBDBD] focus:outline-none font-jakarta min-w-0 cursor-text" 
           />
         </div>
-        <div className={`flex-1 bg-white border ${errors.lastName ? 'border-red-500' : 'border-[#F0F0F0]'} rounded-full h-[46px] lg:h-[50px] flex items-center px-4 gap-2 focus-within:border-[#2780C4] focus-within:ring-1 focus-within:ring-[#2780C4]/20 transition-all cursor-text shadow-sm`}>
+        <div className={`flex-1 bg-white border ${errors.lastName ? 'border-red-500' : 'border-[#F0F0F0]'} rounded-[32px] h-[56px] lg:h-[64px] flex items-center px-5 gap-3 focus-within:border-[#2780C4] focus-within:ring-1 focus-within:ring-[#2780C4]/20 transition-all cursor-text shadow-sm`}>
           <Image src="/assets/login/hugeicons_profile.svg" alt="Last Name" width={20} height={20} className="shrink-0" />
           <div className="w-px h-4 bg-[#F0F0F0]" />
           <input 
@@ -156,7 +156,7 @@ export default function RegisterPage() {
           />
         </div>
       </motion.div>
-      <div className="flex gap-2 mb-2 lg:mb-3 px-4">
+      <div className="flex gap-3 lg:gap-4 -mt-3 mb-4 px-5">
         <div className="flex-1 text-red-500 text-[11px] font-jakarta">{errors.firstName}</div>
         <div className="flex-1 text-red-500 text-[11px] font-jakarta">{errors.lastName}</div>
       </div>
@@ -166,7 +166,7 @@ export default function RegisterPage() {
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.5 }}
-        className={`mb-1 bg-white border ${errors.email ? 'border-red-500' : 'border-[#F0F0F0]'} rounded-full h-[46px] lg:h-[50px] flex items-center px-4 gap-2 focus-within:border-[#2780C4] focus-within:ring-1 focus-within:ring-[#2780C4]/20 transition-all cursor-text shadow-sm`}
+        className={`mb-4 bg-white border ${errors.email ? 'border-red-500' : 'border-[#F0F0F0]'} rounded-[32px] h-[56px] lg:h-[64px] flex items-center px-5 gap-3 focus-within:border-[#2780C4] focus-within:ring-1 focus-within:ring-[#2780C4]/20 transition-all cursor-text shadow-sm`}
       >
         <Image src="/assets/login/hugeicons_mail-02.svg" alt="Email" width={20} height={20} className="shrink-0" />
         <div className="w-px h-4 bg-[#F0F0F0]" />
@@ -181,20 +181,20 @@ export default function RegisterPage() {
           className="flex-1 bg-transparent text-[13px] lg:text-[14px] placeholder:text-[#BDBDBD] focus:outline-none font-jakarta cursor-text" 
         />
       </motion.div>
-      {errors.email && <div className="text-red-500 text-[11px] font-jakarta mb-2 lg:mb-3 px-4">{errors.email}</div>}
+      {errors.email && <div className="text-red-500 text-[11px] font-jakarta -mt-3 mb-4 px-5">{errors.email}</div>}
 
       {/* Mobile Number Split Layout */}
       <motion.div
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.6 }}
-        className="relative mb-5 lg:mb-6 flex gap-2 group"
+        className="relative mb-4 flex gap-3 lg:gap-4 group"
       >
         {/* Left Pill: Flag + Chevron */}
         <button
           type="button"
           onClick={() => { setIsDropdownOpen(!isDropdownOpen); setSearchQuery(""); }}
-          className="bg-white border border-[#F0F0F0] rounded-full h-[46px] lg:h-[50px] flex items-center justify-center px-4 gap-2 hover:bg-[#F8F8F8] transition-all shrink-0 shadow-sm [-webkit-tap-highlight-color:transparent]"
+          className="bg-white border border-[#F0F0F0] rounded-[32px] h-[56px] lg:h-[64px] flex items-center justify-center px-5 gap-2 hover:bg-[#F8F8F8] transition-all shrink-0 shadow-sm [-webkit-tap-highlight-color:transparent]"
         >
           <img src={selectedCountry.flags.png} alt={selectedCountry.name} className="w-[20px] h-[14px] object-cover rounded-sm shadow-sm" />
           <svg className={`w-3 h-3 text-[#BDBDBD] transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -203,7 +203,7 @@ export default function RegisterPage() {
         </button>
 
         {/* Right Pill: Input */}
-        <div className={`flex-1 bg-white border ${errors.phone ? 'border-red-500' : 'border-[#F0F0F0]'} rounded-full h-[46px] lg:h-[50px] flex items-center px-4 gap-2 focus-within:border-[#2780C4] focus-within:ring-1 focus-within:ring-[#2780C4]/20 transition-all cursor-text shadow-sm`}>
+        <div className={`flex-1 bg-white border ${errors.phone ? 'border-red-500' : 'border-[#F0F0F0]'} rounded-[32px] h-[56px] lg:h-[64px] flex items-center px-5 gap-3 focus-within:border-[#2780C4] focus-within:ring-1 focus-within:ring-[#2780C4]/20 transition-all cursor-text shadow-sm`}>
           <input 
             type="tel" 
             placeholder="Enter Mobile Number" 
@@ -254,16 +254,16 @@ export default function RegisterPage() {
           </>
         )}
       </motion.div>
-      {errors.phone && <div className="text-red-500 text-[11px] font-jakarta mb-5 lg:mb-6 pl-[80px]">{errors.phone}</div>}
+      {errors.phone && <div className="text-red-500 text-[11px] font-jakarta -mt-3 mb-4 pl-[90px]">{errors.phone}</div>}
 
       {/* Preferred Investment State */}
       <motion.div
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.65 }}
-        className="mb-1 relative"
+        className="mb-4 relative"
       >
-        <div className={`w-full bg-[#FEFEFE] border-[2px] ${errors.state ? 'border-red-500' : isStateDropdownOpen ? 'border-[#2780C4] ring-1 ring-[#2780C4]/20' : 'border-[#F8F8F8]'} rounded-[30px] h-[64px] flex items-center px-6 gap-2 transition-all shadow-sm relative`}>
+        <div className={`w-full bg-[#FEFEFE] border-[2px] ${errors.state ? 'border-red-500' : isStateDropdownOpen ? 'border-[#2780C4] ring-1 ring-[#2780C4]/20' : 'border-[#F8F8F8]'} rounded-[32px] h-[56px] lg:h-[64px] flex items-center px-6 gap-2 transition-all shadow-sm relative`}>
           <button
             type="button"
             onClick={() => setIsStateDropdownOpen(!isStateDropdownOpen)}
@@ -303,7 +303,7 @@ export default function RegisterPage() {
           )}
         </div>
       </motion.div>
-      {errors.state && <div className="text-red-500 text-[11px] font-jakarta mb-5 lg:mb-6 px-4">{errors.state}</div>}
+      {errors.state && <div className="text-red-500 text-[11px] font-jakarta -mt-3 mb-4 px-6">{errors.state}</div>}
 
       {error && (
         <motion.p 
@@ -322,7 +322,7 @@ export default function RegisterPage() {
         transition={{ duration: 0.6, delay: 0.7 }}
         onClick={handleCreateAccount}
         disabled={loading}
-        className="w-full h-[48px] lg:h-[52px] rounded-full text-[15px] lg:text-[16px] font-bold text-white font-jakarta [-webkit-tap-highlight-color:transparent] transition-all cursor-pointer disabled:opacity-70 mt-2 shadow-[0_8px_20px_rgba(39,128,196,0.2)]"
+        className="w-full h-[56px] lg:h-[64px] rounded-[32px] text-[15px] lg:text-[16px] font-bold text-white font-jakarta [-webkit-tap-highlight-color:transparent] transition-all cursor-pointer disabled:opacity-70 mt-2 shadow-[0_8px_20px_rgba(39,128,196,0.2)]"
         style={{ background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)", border: "1px solid #43B6CD" }}
       >
         {loading ? "Sending OTP..." : "Sign-Up"}

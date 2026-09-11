@@ -121,30 +121,32 @@ export default function TrendingCard({
       </div>
 
       {/* Bottom Content Section */}
-      <div className="p-8 flex flex-col items-center text-center gap-4">
+      <div className="p-8 flex flex-col items-start text-left flex-grow">
+        
+        <div className="flex flex-col items-start gap-4 mb-4">
+          {/* Tag Pill - only show here if reverseLayout is true */}
+          {reverseLayout && tagsToDisplay.length > 0 && (
+            <TagGroup tags={tagsToDisplay} theme="dark" />
+          )}
 
-        {/* Tag Pill - only show here if reverseLayout is true */}
-        {reverseLayout && tagsToDisplay.length > 0 && (
-          <TagGroup tags={tagsToDisplay} theme="dark" />
-        )}
+          {/* Title */}
+          <h3 className="m-0 font-jakarta font-bold text-[24px] leading-[32px] text-[#131600]">
+            {title}
+          </h3>
 
-        {/* Title */}
-        <h3 className="font-jakarta font-bold text-[24px] leading-[32px] text-[#131600]">
-          {title}
-        </h3>
-
-        {/* Description */}
-        <p className="font-jakarta font-normal text-[16px] leading-[24px] text-[#45474C] line-clamp-3">
-          {description}
-        </p>
+          {/* Description */}
+          <p className="m-0 font-jakarta font-normal text-[16px] leading-[24px] text-[#45474C] line-clamp-3">
+            {description}
+          </p>
+        </div>
 
         {/* Footer row */}
-        <div className="flex flex-col items-center justify-center w-full mt-4 gap-4">
-          <div className="flex flex-col items-center gap-[3.5px]">
+        <div className="flex flex-row items-end justify-between w-full mt-auto">
+          <div className="flex flex-col items-start gap-[3.5px]">
             <span className="font-jakarta font-bold text-[18px] leading-[28px] text-[#111827]">
               {price}
             </span>
-            <div className="flex items-center justify-center gap-1">
+            <div className="flex items-center gap-1">
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                 <path d="M6 0C3.79086 0 2 1.79086 2 4C2 7 6 12 6 12C6 12 10 7 10 4C10 1.79086 8.20914 0 6 0ZM6 5.5C5.17157 5.5 4.5 4.82843 4.5 4C4.5 3.17157 5.17157 2.5 6 2.5C6.82843 2.5 7.5 3.17157 7.5 4C7.5 4.82843 6.82843 5.5 6 5.5Z" fill="#6B7280" />
               </svg>
@@ -156,7 +158,7 @@ export default function TrendingCard({
 
           <button
             onClick={() => router.push(linkDestination ? linkDestination : `/search/farmlanddetails?id=match-${id}`)}
-            className="font-jakarta font-bold text-[14px] leading-[20px] text-[#00629E] hover:underline bg-transparent border-none cursor-pointer"
+            className="font-jakarta font-bold text-[14px] leading-[20px] text-[#00629E] hover:underline bg-transparent border-none cursor-pointer pb-1"
           >
             View Details
           </button>

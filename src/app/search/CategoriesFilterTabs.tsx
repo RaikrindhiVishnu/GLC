@@ -88,7 +88,7 @@ export default function CategoriesFilterTabs() {
           scrollbarWidth: "none",
           msOverflowStyle: "none",
         }}
-        className="px-4 sm:px-6 lg:px-15 py-2.5"
+        className="px-4 sm:px-6 lg:px-6 py-2.5"
       >
         {activeChips.map((chip, i) => (
           <motion.div

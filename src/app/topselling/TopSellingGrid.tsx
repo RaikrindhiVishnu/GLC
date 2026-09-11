@@ -114,8 +114,8 @@ export default function TopSellingGrid() {
       imgHeight = "373px"; // Middle column
       cHeight = "648px";
     } else if (colIndex === 2) {
-      imgHeight = "390px"; // Right column
-      cHeight = "640px";
+      imgHeight = "384px"; // Right column
+      cHeight = "634px";
     }
 
     return (
@@ -137,7 +137,7 @@ export default function TopSellingGrid() {
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 sm:px-8 mt-12 mb-24 z-20">
+    <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-[24px] mt-12 mb-24 z-20">
 
       {/* Location Tabs */}
       <div className="flex flex-row gap-3 overflow-x-auto hide-scrollbar mb-8 pb-2">

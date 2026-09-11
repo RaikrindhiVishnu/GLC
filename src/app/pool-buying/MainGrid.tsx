@@ -115,7 +115,7 @@ function PoolCard({ pool, delay }: { pool: typeof pools[0]; delay: number }) {
 
 export default function MainGrid({ onSelectPool }: MainGridProps) {
   return (
-    <section style={{ width: "100%", maxWidth: "1280px", margin: "60px auto 80px", padding: "0 16px", boxSizing: "border-box" }} className="lg:px-8 lg:mt-24 lg:mb-24">
+    <section style={{ width: "100%", maxWidth: "1440px", margin: "60px auto 80px", padding: "0 16px", boxSizing: "border-box" }} className="lg:px-[24px] lg:mt-24 lg:mb-24">
       <motion.h2
         initial={{ opacity: 0, filter: "blur(8px)" }}
         whileInView={{ opacity: 1, filter: "blur(0px)" }}

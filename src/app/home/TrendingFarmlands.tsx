@@ -8,12 +8,55 @@ import { useRouter } from "next/navigation";
 import { MapPin } from "lucide-react";
 import { useGetFarmlandByTagAndStateQuery } from "../../services/home";
 import { useGetAllGeoMasterDataQuery } from "../../services/master";
+import { s3Service } from "../../services/s3";
 
 const TAG_MAP: Record<number, string> = {
   1: "GLC Recommended",
   2: "Most Popular",
   3: "Trending",
   4: "GLC Exclusive"
+};
+
+const ResolvedImage = ({ imageUrl, alt, className }: { imageUrl: string; alt: string; className?: string }) => {
+  const [resolved, setResolved] = useState<string | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchImg = async () => {
+      if (!imageUrl || imageUrl === "null" || imageUrl === "") {
+        if (isMounted) setResolved(null);
+        return;
+      }
+      if (imageUrl.startsWith("http") || imageUrl.startsWith("data:") || imageUrl.startsWith("/")) {
+        if (isMounted) setResolved(imageUrl);
+        return;
+      }
+      try {
+        const res = await s3Service.generateUrl({ key: imageUrl, filename: imageUrl, folderPath: '' });
+        if (isMounted && res.url) {
+          setResolved(res.url);
+        }
+      } catch (e) {
+        if (isMounted) setResolved(null);
+      }
+    };
+    fetchImg();
+    return () => { isMounted = false; };
+  }, [imageUrl]);
+
+  if (!resolved) {
+    return (
+      <div className={`w-full h-full bg-[#F4F4F5] flex flex-col items-center justify-center ${className || ""}`}>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#A1A1AA" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: "8px" }}>
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+          <circle cx="8.5" cy="8.5" r="1.5" />
+          <polyline points="21 15 16 10 5 21" />
+        </svg>
+      </div>
+    );
+  }
+
+  return <Image src={resolved} alt={alt} fill className={className} onError={() => setResolved(null)} />;
 };
 
 export default function TrendingFarmlands() {
@@ -82,7 +125,7 @@ export default function TrendingFarmlands() {
     <section id="trending-farmlands" className="w-full bg-transparent py-12 lg:py-[70px] overflow-hidden">
 
       {/* Section Header Wrapper (Constrained to Page Margin) */}
-      <div className="w-full max-w-[1440px] mx-auto px-4 md:px-[60px] mb-6 lg:mb-8">
+      <div className="w-full max-w-[1440px] mx-auto px-4 md:px-[24px] mb-6 lg:mb-8">
         <div className="flex justify-between items-center w-full">
           <h2 className="font-jakarta font-extrabold text-[20px] md:text-[24px] leading-[1.2] text-[#0F2F4C] m-0 flex gap-x-[6px]">
             {"Trending Farmlands".split(" ").map((word, i) => (
@@ -104,7 +147,7 @@ export default function TrendingFarmlands() {
       </div>
 
       {/* Cards Scrollable Container (Free Drag-to-Scroll + Asymmetric Offset Layout) */}
-      <div className="w-full max-w-[1440px] mx-auto px-4 md:px-[60px]">
+      <div className="w-full max-w-[1440px] mx-auto px-4 md:px-[24px]">
         <div
           ref={containerRef}
           onMouseDown={handleMouseDown}
@@ -143,18 +186,9 @@ export default function TrendingFarmlands() {
             >
               {/* Left Side: Image */}
               <div className="relative w-full h-[180px] sm:w-[180px] lg:w-[205px] sm:h-full shrink-0 pointer-events-none overflow-hidden rounded-t-[24px] sm:rounded-t-none sm:rounded-l-[24px] lg:rounded-l-[45px]">
-                <Image
-                  src={
-                    (() => {
-                      const url = item.farmland_img;
-                      if (!url || url === "null" || url === "") return `/assets/home/TrendingFarmlands/glcsos0${(i % 3) + 1}.svg`;
-                      if (url.toLowerCase().endsWith('.pdf')) return `/assets/home/TrendingFarmlands/glcsos0${(i % 3) + 1}.svg`;
-                      if (url.startsWith("http") || url.startsWith("data:") || url.startsWith("/")) return url;
-                      return `/assets/home/TrendingFarmlands/glcsos0${(i % 3) + 1}.svg`;
-                    })()
-                  }
+                <ResolvedImage
+                  imageUrl={item.farmland_img}
                   alt={item.farmland_code}
-                  fill
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               </div>
@@ -241,11 +275,16 @@ export default function TrendingFarmlands() {
                 </div>
 
                 {/* Footer */}
-                <div className="flex items-center pt-[20px] lg:pt-[28px] mt-[12px] lg:mt-[16px] border-t border-[#EDEEEF] gap-[8px] pointer-events-none w-full">
-                  <MapPin size={14} color="#64748B" className="shrink-0" />
-                  <span className="font-jakarta font-bold text-[10px] lg:text-[11px] lg:leading-[15px] tracking-[0.3px] uppercase text-[#64748B]">
-                    {getLocationString(item.farmland_district_id)}
-                  </span>
+                <div className="flex items-center justify-between pt-[20px] lg:pt-[28px] mt-[12px] lg:mt-[16px] border-t border-[#EDEEEF] pointer-events-none w-full">
+                  <div className="flex items-center gap-[8px]">
+                    <MapPin size={14} color="#64748B" className="shrink-0" />
+                    <span className="font-jakarta font-bold text-[10px] lg:text-[11px] lg:leading-[15px] tracking-[0.3px] uppercase text-[#64748B]">
+                      {getLocationString(item.farmland_district_id)}
+                    </span>
+                  </div>
+                  <div className="font-jakarta font-bold text-[14px] lg:text-[16px] text-[#001F3F]">
+                    ₹{Number(item.price || item.per_acer_value || 0).toLocaleString('en-IN')}
+                  </div>
                 </div>
               </div>
             </motion.div>

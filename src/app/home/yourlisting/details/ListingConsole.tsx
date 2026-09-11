@@ -24,7 +24,7 @@ export default function ListingConsole() {
 
   return (
     <>
-      <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-[80px] mb-[120px]">
+      <div className="relative w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-[24px] mt-[80px] mb-[120px]">
         
         {/* Header section (Performance Analytics - Market Pulse) */}
         <div className="flex flex-col gap-4 mb-8">

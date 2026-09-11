@@ -14,7 +14,7 @@ export default function RecommendedHero() {
       />
 
       {/* Content */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-8 flex flex-col items-center gap-6 mt-[64px]">
+      <div className="relative z-10 w-full max-w-[1440px] mx-auto px-[24px] flex flex-col items-center gap-6 mt-[64px]">
         <motion.h1
           initial={{ opacity: 0, filter: "blur(8px)", y: 15 }}
           animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}

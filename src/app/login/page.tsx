@@ -25,18 +25,18 @@ export default function LoginPage() {
     try {
       // 1. Check if the user exists and is approved
       const statusRes = await authService.checkLoginStatus({ emailAddress: email });
-      
+
       if (statusRes.user_exists !== 1) {
         throw new Error("Account does not exist. Please sign up.");
       }
-      
+
       if (statusRes.user_registration_status_code !== "APPRVD") {
         throw new Error(`Account is not approved yet (${statusRes.user_registration_status_description})`);
       }
 
       // 2. Proceed to actual login
       const res = await authService.login({ login_id: email, password });
-      
+
       // Save tokens and user info to localStorage
       const extractedToken = res.token || (res as any).data?.token;
       if (extractedToken) {
@@ -46,7 +46,7 @@ export default function LoginPage() {
       if (extractedRefreshToken) {
         localStorage.setItem("refreshToken", extractedRefreshToken);
       }
-      
+
       const extractedUserId = res.id || (res as any).userId || (res as any).data?.id || (res as any).data?.userId;
       if (extractedUserId) {
         localStorage.setItem("userId", extractedUserId.toString());
@@ -162,24 +162,24 @@ export default function LoginPage() {
       >
         <label className="flex items-center gap-2.5 cursor-pointer group">
           <div className="relative w-5 h-5 rounded flex items-center justify-center transition-all bg-[#F7F8F8] border border-[#D3DEEA] group-hover:border-[#2780C4]">
-             <input type="checkbox" className="peer absolute opacity-0 w-full h-full cursor-pointer" defaultChecked />
-             <div className="absolute inset-0 rounded bg-[radial-gradient(50%_50%_at_50%_50%,#2780C4_0%,#164573_100%)] opacity-0 peer-checked:opacity-100 transition-opacity" />
-             <svg className="w-3.5 h-3.5 text-white opacity-0 peer-checked:opacity-100 z-10 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
-               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-             </svg>
+            <input type="checkbox" className="peer absolute opacity-0 w-full h-full cursor-pointer" defaultChecked />
+            <div className="absolute inset-0 rounded bg-[radial-gradient(50%_50%_at_50%_50%,#2780C4_0%,#164573_100%)] opacity-0 peer-checked:opacity-100 transition-opacity" />
+            <svg className="w-3.5 h-3.5 text-white opacity-0 peer-checked:opacity-100 z-10 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
           </div>
           <span className="text-[14px] text-[#353535] font-jakarta font-medium cursor-pointer">Remember me</span>
         </label>
-        
+
         <Link prefetch={false} href="/login/forgot-password" className="text-[14px] text-[#353535] underline underline-offset-2 hover:text-[#2780C4] transition-colors font-jakarta">
           Forgot Password?
         </Link>
       </motion.div>
 
       {error && (
-        <motion.p 
-          initial={{ opacity: 0 }} 
-          animate={{ opacity: 1 }} 
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           className="text-red-500 text-[13px] font-jakarta mb-3 text-center"
         >
           {error}

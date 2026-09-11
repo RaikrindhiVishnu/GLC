@@ -138,7 +138,7 @@ export default function OnboardForm() {
   };
 
   return (
-    <section className="w-full max-w-[1248px] mx-auto px-4 lg:px-8 pt-16 pb-32 box-border flex flex-col items-start bg-[#F8F9FA]">
+    <section className="w-full max-w-[1440px] mx-auto px-4 lg:px-[24px] pt-16 pb-32 box-border flex flex-col items-start bg-[#F8F9FA]">
       <div className="w-full mb-12 flex flex-col gap-[15px]">
         <h1 className="m-0 font-jakarta font-extrabold text-[48px] leading-[48px] tracking-[-1.2px] text-[#0F2F4C]">
           Onboard your Asset

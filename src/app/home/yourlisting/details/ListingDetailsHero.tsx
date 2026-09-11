@@ -97,7 +97,7 @@ export default function ListingDetailsHero() {
       )}
 
       {/* Content Container */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full pointer-events-none">
+      <div className="relative z-10 w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-[24px] h-full pointer-events-none">
 
         {/* Left Side: Title & Badge */}
         <div className="absolute left-8 lg:left-4 bottom-[120px] flex flex-col gap-4 pointer-events-auto">

@@ -49,7 +49,7 @@ export default function TrendingLocations() {
     <section id="trending-locations" className="w-full bg-transparent py-12 lg:py-[70px] overflow-hidden">
 
       {/* Header — constrained to page margin */}
-      <div className="w-full max-w-[1440px] mx-auto px-4 md:px-[60px] mb-6 lg:mb-8">
+      <div className="w-full max-w-[1440px] mx-auto px-4 md:px-[24px] mb-6 lg:mb-8">
         <div
           className="flex justify-between items-center w-full cursor-pointer group"
           onClick={() => router.push("/topselling")}
@@ -74,7 +74,7 @@ export default function TrendingLocations() {
       </div>
 
       {/* Cards — full-width scroll container matching PopularFarmlands layout */}
-      <div className="w-full max-w-[1440px] mx-auto px-4 md:px-[60px]">
+      <div className="w-full max-w-[1440px] mx-auto px-4 md:px-[24px]">
         <div className="flex gap-6.5 lg:gap-6 w-full overflow-x-auto pb-4 hide-scrollbar">
           <style dangerouslySetInnerHTML={{
             __html: `
