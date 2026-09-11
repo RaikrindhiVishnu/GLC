@@ -89,8 +89,9 @@ export default function TrendingFeaturedSection() {
   useEffect(() => {
     function update() {
       const vw = window.innerWidth;
-      const targetWidth = 1360;
-      const currentScale = vw < targetWidth ? vw / targetWidth : 1;
+      const effectiveVw = vw > 1440 ? 1440 : vw;
+      const currentScale = (effectiveVw - 48) / 1184;
+      
       if (scalerRef.current) {
         scalerRef.current.style.transform = `scale(${currentScale})`;
       }

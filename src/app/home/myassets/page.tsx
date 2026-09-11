@@ -22,7 +22,7 @@ export default function MyAssetsPage() {
     >
       <MyAssetsHero />
 
-      <section className="w-full max-w-7xl px-4 lg:px-8 pt-16 lg:pt-24 pb-12 box-border" style={{ zIndex: 10 }}>
+      <section className="w-full max-w-[1440px] px-4 lg:px-[24px] pt-16 lg:pt-24 pb-12 box-border" style={{ zIndex: 10 }}>
         <MainWealthFeed />
       </section>
 

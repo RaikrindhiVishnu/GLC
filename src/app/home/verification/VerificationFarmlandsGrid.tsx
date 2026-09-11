@@ -160,7 +160,7 @@ export default function VerificationFarmlandsGrid() {
   };
 
   return (
-    <section className="w-full max-w-[1248px] mx-auto px-4 lg:px-8 py-16 lg:py-24 box-border flex flex-col items-center bg-[#F8F9FA]">
+    <section className="w-full max-w-[1440px] mx-auto px-4 lg:px-[24px] py-16 lg:py-24 box-border flex flex-col items-center bg-[#F8F9FA]">
       {/* Header */}
       <div className="flex flex-row justify-between items-center w-full mb-12">
         <h2 className="m-0 font-jakarta font-bold text-[24px] lg:text-[24px] text-[#131600]">

@@ -63,10 +63,10 @@ export default function MyAssetsDetailedPage() {
     >
       <DetailsHero farmland={farmland} />
 
-      <div className="w-full max-w-7xl px-4 lg:px-8 py-16 lg:py-24 flex flex-col gap-16 lg:gap-24 box-border">
+      <div className="w-full max-w-[1440px] px-4 lg:px-[24px] py-16 lg:py-24 flex flex-col gap-16 lg:gap-24 box-border">
         
         {/* NEW SECTION START */}
-        <div className="flex flex-col lg:flex-row items-start mx-auto w-full max-w-[1184px]" style={{ gap: '48px' }}>
+        <div className="flex flex-col lg:flex-row items-start mx-auto w-full max-w-[1440px]" style={{ gap: '48px' }}>
           {/* Left Column (70%) */}
           <div className="flex flex-col items-start w-full lg:w-[795.2px]" style={{ gap: '48px' }}>
              <GISAndConnectivityMap 

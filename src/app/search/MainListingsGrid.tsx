@@ -297,8 +297,8 @@ export default function MainListingsGrid() {
   useEffect(() => {
     function update() {
       const vw = window.innerWidth;
-      const targetWidth = 1260;
-      const currentScale = vw < targetWidth ? vw / targetWidth : 1;
+      const effectiveVw = vw > 1440 ? 1440 : vw;
+      const currentScale = (effectiveVw - 48) / 1184; // Scale up to fit 1440px with 24px padding on each side
       
       const rowCount = Math.ceil(displayedFarmlands.length / 3);
       // Header is ~40px, each row is max 636px, gap is 32px
@@ -375,7 +375,7 @@ export default function MainListingsGrid() {
     >
       {/* ─── MOBILE LAYOUT (< lg) ─── */}
       <div className="block lg:hidden w-full py-10">
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 mb-6">
+        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-[24px] mb-6">
           <div className="flex justify-between items-center">
             <h2 className="font-jakarta font-bold text-[20px] text-[#131600] m-0">{getStateTitle()} ({totalCount} Matches)</h2>
             <div className="flex items-center gap-2">

@@ -22,8 +22,8 @@ export default function OrganicFarmingSetupPage() {
 
 
       {/* ─── MAIN CONTENT CANVAS WORKBENCH (Responsive Console matching absolute Figma layout tokens) ─── */}
-      <section className="w-full max-w-[1600px] mx-auto px-4 sm:px-12 py-16 md:py-28 relative z-30 box-border flex-grow">
-        <div className="w-full flex flex-col lg:flex-row items-stretch gap-8 justify-center max-w-[1280px] mx-auto">
+      <section className="w-full max-w-[1600px] mx-auto px-4 sm:px-[24px] py-16 md:py-28 relative z-30 box-border flex-grow">
+        <div className="w-full flex flex-col lg:flex-row items-stretch gap-8 justify-center max-w-[1440px] mx-auto">
           
           {/* ─── SECTION 1: LEFT PANEL - 55% VISUAL ANCHOR (Width: 633.59px, Height: 904px) ─── */}
           <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }} viewport={{ once: true }} className="w-full lg:w-[633.59px] shrink-0 flex flex-col">

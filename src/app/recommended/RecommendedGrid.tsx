@@ -91,7 +91,7 @@ export default function RecommendedGrid() {
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 sm:px-8 mt-12 mb-24 z-20">
+    <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-[24px] mt-12 mb-24 z-20">
       {/* Header section */}
       <div className="flex flex-row justify-between items-center mb-8">
         <h2 className="font-jakarta font-bold text-[24px] leading-[32px] text-[#131600]">

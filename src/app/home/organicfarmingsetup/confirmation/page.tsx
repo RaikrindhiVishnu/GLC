@@ -22,7 +22,7 @@ function OrganicFarmingSetupConfirmationContent() {
 
 
       {/* ─── MAIN CONFIRMATION CANVAS AREA ─── */}
-      <section className="w-full max-w-[1280px] mx-auto px-4 sm:px-12 py-16 md:py-24 relative z-30 box-border flex-grow flex flex-col items-center">
+      <section className="w-full max-w-[1440px] mx-auto px-4 sm:px-[24px] py-16 md:py-24 relative z-30 box-border flex-grow flex flex-col items-center">
         
         {/* ─── SECTION 1: HERO CONFIRMATION STATEMENT ─── */}
         <div className="w-full max-w-[896px] flex flex-col items-center gap-4 mb-16 box-border">

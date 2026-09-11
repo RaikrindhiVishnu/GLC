@@ -267,7 +267,7 @@ export default function SellYourLandConsole() {
   });
 
   return (
-    <section className="w-full max-w-7xl mx-auto px-4 lg:px-8 py-16 lg:py-24 box-border flex flex-col gap-12">
+    <section className="w-full max-w-[1440px] mx-auto px-4 lg:px-[24px] py-16 lg:py-24 box-border flex flex-col gap-12">
 
       {/* ─── 1. CONSOLE HEADER ─── */}
       <motion.div
@@ -405,7 +405,7 @@ export default function SellYourLandConsole() {
 
 
           {/* ─── NEW MEDIA UPLOAD SECTIONS ─── */}
-          <div className="w-full max-w-[1184px] mx-auto flex flex-col gap-12 lg:gap-[48px]">
+          <div className="w-full max-w-[1440px] mx-auto flex flex-col gap-12 lg:gap-[48px]">
 
             {/* Location Section */}
             <div style={{ display: "flex", flexDirection: "column", gap: "16px", width: "100%" }}>

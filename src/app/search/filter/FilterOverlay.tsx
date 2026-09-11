@@ -40,16 +40,19 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
   const [organicCert, setOrganicCert] = useState(false);
   const [waterRights, setWaterRights] = useState(false);
 
-  const [isViewAllOpen, setIsViewAllOpen] = useState(false);
+  const [viewAllType, setViewAllType] = useState<"actions" | "attributes" | null>(null);
   const [viewAllSearch, setViewAllSearch] = useState("");
+  const isViewAllOpen = viewAllType !== null;
+  const [electricityPhase, setElectricityPhase] = useState<string | null>(null);
+  const showElectricityCondition = viewAllType === "attributes" && selectedRight.includes("Electricity") && !electricityPhase;
 
-  const [minPrice, setMinPrice] = useState(1000000); // Default min
+  const [minPrice, setMinPrice] = useState(0); // Default min
   const [maxPrice, setMaxPrice] = useState(150000000); // Default max
-  const [minSize, setMinSize] = useState(1);
+  const [minSize, setMinSize] = useState(0);
   const [maxSize, setMaxSize] = useState(100);
 
-  const [priceRange, setPriceRange] = useState([1000000, 150000000]);
-  const [sizeRange, setSizeRange] = useState([1, 100]);
+  const [priceRange, setPriceRange] = useState([0, 0]);
+  const [sizeRange, setSizeRange] = useState([0, 0]);
 
   const { data: farmlandRes } = useGetAllFarmlandsByStateIdQuery({
     state_id: stateSearch ? [Number(stateSearch)] : undefined,
@@ -71,23 +74,23 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
         if (farm.acers !== undefined && farm.acers > currentMaxSize) currentMaxSize = farm.acers;
       });
 
-      if (currentMinPrice !== Infinity) setMinPrice(currentMinPrice);
+      if (currentMinPrice !== Infinity) setMinPrice(0);
       if (currentMaxPrice !== -Infinity) setMaxPrice(currentMaxPrice);
-      if (currentMinSize !== Infinity) setMinSize(Math.floor(currentMinSize));
+      if (currentMinSize !== Infinity) setMinSize(0);
       if (currentMaxSize !== -Infinity) setMaxSize(Math.ceil(currentMaxSize));
 
       setPriceRange(prev => [
-        Math.max(currentMinPrice !== Infinity ? currentMinPrice : prev[0], minPrice),
+        Math.max(0, prev[0]),
         Math.min(currentMaxPrice !== -Infinity ? currentMaxPrice : prev[1], maxPrice)
       ]);
       setSizeRange(prev => [
-        Math.max(currentMinSize !== Infinity ? Math.floor(currentMinSize) : prev[0], minSize),
+        Math.max(0, prev[0]),
         Math.min(currentMaxSize !== -Infinity ? Math.ceil(currentMaxSize) : prev[1], maxSize)
       ]);
     } else {
-      setMinPrice(1000000);
+      setMinPrice(0);
       setMaxPrice(150000000);
-      setMinSize(1);
+      setMinSize(0);
       setMaxSize(100);
     }
   }, [farmlandRes]);
@@ -111,6 +114,7 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
   };
 
   const formatPrice = (val: number) => {
+    if (val === 0) return "₹0";
     if (val >= 10000000) return `₹${(val / 10000000).toFixed(1)}Cr`;
     return `₹${(val / 100000).toFixed(0)}L`;
   };
@@ -173,6 +177,13 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
     "Most Bookmarked"
   ];
 
+  const allAttributesList = [
+    { name: "Borewell", icon: "drop" },
+    { name: "Existing Trees", icon: "sprout" },
+    { name: "Electricity", icon: "zap" },
+    { name: "Soil", icon: "mountain" }
+  ];
+
   if (!isOpen) return null;
 
   const toggleLeft = (item: string) => {
@@ -205,7 +216,7 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
         return (
           <svg width="20" height="17" viewBox="0 0 20 17" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ opacity }}>
             <g opacity="0.7">
-              <path d="M0 16.7V14.75C0.483333 14.75 0.895833 14.675 1.2375 14.525C1.57917 14.375 1.925 14.2125 2.275 14.0375C2.625 13.8625 3.0125 13.7042 3.4375 13.5625C3.8625 13.4208 4.3875 13.35 5.0125 13.35C5.6375 13.35 6.15417 13.4208 6.5625 13.5625C6.97083 13.7042 7.35 13.8625 7.7 14.0375C8.05 14.2125 8.4 14.375 8.75 14.525C9.1 14.675 9.51667 14.75 10 14.75C10.4833 14.75 10.9 14.675 11.25 14.525C11.6 14.375 11.95 14.2125 12.3 14.0375C12.65 13.8625 13.0333 13.7042 13.45 13.5625C13.8667 13.4208 14.3875 13.35 15.0125 13.35C15.6375 13.35 16.1583 13.4208 16.575 13.5625C16.9917 13.7042 17.375 13.8625 17.725 14.0375C18.075 14.2125 18.425 14.375 18.775 14.525C19.125 14.675 19.5333 14.75 20 14.75V16.7C19.3667 16.7 18.8375 16.625 18.4125 16.475C17.9875 16.325 17.6 16.1625 17.25 15.9875C16.9 15.8125 16.5583 15.6542 16.225 15.5125C15.8917 15.3708 15.4833 15.3 15 15.3C14.5333 15.3 14.1292 15.3708 13.7875 15.5125C13.4458 15.6542 13.1042 15.8125 12.7625 15.9875C12.4208 16.1625 12.0375 16.325 11.6125 16.475C11.1875 16.625 10.65 16.7 10 16.7C9.35 16.7 8.8125 16.625 8.3875 16.475C7.9625 16.325 7.57917 16.1625 7.2375 15.9875C6.89583 15.8125 6.55833 15.6542 6.225 15.5125C5.89167 15.3708 5.4875 15.3 5.0125 15.3C4.5375 15.3 4.12917 15.3708 3.7875 15.5125C3.44583 15.6542 3.1 15.8125 2.75 15.9875C2.4 16.1625 2.0125 16.325 1.5875 16.475C1.1625 16.625 0.633333 16.7 0 16.7ZM0 12.25V10.3C0.483333 10.3 0.895833 10.225 1.2375 10.075C1.57917 9.925 1.925 9.7625 2.275 9.5875C2.625 9.4125 3.0125 9.25417 3.4375 9.1125C3.8625 8.97083 4.3875 8.9 5.0125 8.9C5.6375 8.9 6.15417 8.97083 6.5625 9.1125C6.97083 9.25417 7.35 9.4125 7.7 9.5875C8.05 9.7625 8.4 9.925 8.75 10.075C9.1 10.225 9.51667 10.3 10 10.3C10.4833 10.3 10.9 10.225 11.25 10.075C11.6 9.925 11.95 9.7625 12.3 9.5875C12.65 9.4125 13.0333 9.25417 13.45 9.1125C13.8667 8.97083 14.3833 8.9 15 8.9C15.6333 8.9 16.1583 8.97083 16.575 9.1125C16.9917 9.25417 17.375 9.4125 17.725 9.5875C18.075 9.7625 18.425 9.925 18.775 10.075C19.125 10.225 19.5333 10.3 20 10.3V12.25C19.3667 12.25 18.8375 12.175 18.4125 12.025C17.9875 11.875 17.6 11.7125 17.25 11.5375C16.9 11.3625 16.5583 11.2042 16.225 11.0625C15.8917 10.9208 15.4833 10.85 15 10.85C14.5167 10.85 14.1042 10.9208 13.7625 11.0625C13.4208 11.2042 13.0792 11.3625 12.7375 11.5375C12.3958 11.7125 12.0167 11.875 11.6 12.025C11.1833 12.175 10.65 12.25 10 12.25C9.35 12.25 8.8125 12.175 8.3875 12.025C7.9625 11.875 7.57917 11.7125 7.2375 11.5375C6.89583 11.3625 6.55833 11.2042 6.225 11.0625C5.89167 10.9208 5.4875 10.85 5.0125 10.85C4.5375 10.85 4.12917 10.9208 3.7875 11.0625C3.44583 11.2042 3.1 11.3625 2.75 11.5375C2.4 11.7125 2.0125 11.875 1.5875 12.025C1.1625 12.175 0.633333 12.25 0 12.25ZM0 7.8V5.85C0.483333 5.85 0.895833 5.775 1.2375 5.625C1.57917 5.475 1.925 5.3125 2.275 5.1375C2.625 4.9625 3.0125 4.80417 3.4375 4.6625C3.8625 4.52083 4.3875 4.45 5.0125 4.45C5.6375 4.45 6.15417 4.52083 6.5625 4.6625C6.97083 4.80417 7.35 4.9625 7.7 5.1375C8.05 5.3125 8.4 5.475 8.75 5.625C9.1 5.775 9.51667 5.85 10 5.85C10.4833 5.85 10.9 5.775 11.25 5.625C11.6 5.475 11.95 5.3125 12.3 5.1375C12.65 4.9625 13.0333 4.80417 13.45 4.6625C13.8667 4.52083 14.3833 4.45 15 4.45C15.6333 4.45 16.1583 4.52083 16.575 4.6625C16.9917 4.80417 17.375 4.9625 17.725 5.1375C18.075 5.3125 18.425 5.475 18.775 5.625C19.125 5.775 19.5333 5.85 20 5.85V7.8C19.3667 7.8 18.8375 7.725 18.4125 7.575C17.9875 7.425 17.6 7.2625 17.25 7.0875C16.9 6.9125 16.5583 6.75417 16.225 6.6125C15.8917 6.47083 15.4833 6.4 15 6.4C14.5333 6.4 14.1292 6.47083 13.7875 6.6125C13.4458 6.75417 13.1042 6.9125 12.7625 7.0875C12.4208 7.2625 12.0375 7.425 11.6125 7.575C11.1875 7.725 10.65 7.8 10 7.8C9.35 7.8 8.8125 7.725 8.3875 7.575C7.9625 7.425 7.57917 7.2625 7.2375 7.0875C6.89583 6.9125 6.55833 6.75417 6.225 6.6125C5.89167 6.47083 5.4875 6.4 5.0125 6.4C4.5375 6.4 4.12917 6.47083 3.7875 6.6125C3.44583 6.75417 3.1 6.9125 2.75 7.0875C2.4 7.2625 2.0125 7.425 1.5875 7.575C1.1625 7.725 0.633333 7.8 0 7.8ZM0 3.35V1.4C0.483333 1.4 0.895833 1.325 1.2375 1.175C1.57917 1.025 1.925 0.8625 2.275 0.6875C2.625 0.5125 3.0125 0.354167 3.4375 0.2125C3.8625 0.0708333 4.3875 0 5.0125 0C5.6375 0 6.15417 0.0708333 6.5625 0.2125C6.97083 0.354167 7.35 0.5125 7.7 0.6875C8.05 0.8625 8.4 1.025 8.75 1.175C9.1 1.325 9.51667 1.4 10 1.4C10.4833 1.4 10.9 1.325 11.25 1.175C11.6 1.025 11.95 0.8625 12.3 0.6875C12.65 0.5125 13.0333 0.354167 13.45 0.2125C13.8667 0.0708333 14.3833 0 15 0C15.6333 0 16.1583 0.0708333 16.575 0.2125C16.9917 0.354167 17.375 0.5125 17.725 0.6875C18.075 0.8625 18.425 1.025 18.775 1.175C19.125 1.325 19.5333 1.4 20 1.4V3.35C19.3667 3.35 18.8375 3.275 18.4125 3.125C17.9875 2.975 17.6 2.8125 17.25 2.6375C16.9 2.4625 16.5583 2.30417 16.225 2.1625C15.8917 2.02083 15.4833 1.95 15 1.95C14.5333 1.95 14.1292 2.02083 13.7875 2.1625C13.4458 2.30417 13.1042 2.4625 12.7625 2.6375C12.4208 2.8125 12.0375 2.975 11.6125 3.125C11.1875 3.275 10.65 3.35 10 3.35C9.35 3.35 8.8125 3.275 8.3875 3.125C7.9625 2.975 7.57917 2.8125 7.2375 2.6375C6.89583 2.4625 6.55833 2.30417 6.225 2.1625C5.89167 2.02083 5.4875 1.95 5.0125 1.95C4.5375 1.95 4.12917 2.02083 3.7875 2.1625C3.44583 2.30417 3.1 2.4625 2.75 2.6375C2.4 2.8125 2.0125 2.975 1.5875 3.125C1.1625 3.275 0.633333 3.35 0 3.35Z" fill={color} />
+              <path d="M0 16.7V14.75C0.483333 14.75 0.895833 14.675 1.2375 14.525C1.57917 14.375 1.925 14.2125 2.275 14.0375C2.625 13.8625 3.0125 13.7042 3.4375 13.5625C3.8625 13.4208 4.3875 13.35 5.0125 13.35C5.6375 13.35 6.15417 13.4208 6.5625 13.5625C6.97083 13.7042 7.35 13.8625 7.7 14.0375C8.05 14.2125 8.4 14.375 8.75 14.525C9.1 14.675 9.51667 14.75 10 14.75C10.4833 14.75 10.9 14.675 11.25 14.525C11.6 14.375 11.95 14.2125 12.3 14.0375C12.65 13.8625 13.0333 13.7042 13.45 13.5625C13.8667 13.4208 14.3875 13.35 15.0125 13.35C15.6375 13.35 16.1583 13.4208 16.575 13.5625C16.9917 13.7042 17.375 13.8625 17.725 14.0375C18.075 14.2125 18.425 14.375 18.775 14.525C19.125 14.675 19.5333 14.75 20 14.75V16.7C19.3667 16.7 18.8375 16.625 18.4125 16.475C17.9875 16.325 17.6 16.1625 17.25 15.9875C16.9 15.8125 16.5583 15.6542 16.225 15.5125C15.8917 15.3708 15.4833 15.3 15 15.3C14.5333 15.3 14.1292 15.3708 13.7875 15.5125C13.4458 15.6542 13.1042 15.8125 12.7625 15.9875C12.4208 16.1625 12.0375 16.325 11.6125 16.475C11.1875 16.625 10.65 16.7 10 16.7C9.35 16.7 8.8125 16.625 8.3875 16.475C7.9625 16.325 7.57917 16.1625 7.2375 15.9875C6.89583 15.8125 6.55833 15.6542 6.225 15.5125C5.89167 15.3708 5.4875 15.3 5.0125 15.3C4.5375 15.3 4.12917 15.3708 3.7875 15.5125C3.44583 15.6542 3.1 15.8125 2.75 15.9875C2.4 16.1625 2.0125 16.325 1.5875 16.475C1.1625 16.625 0.633333 16.7 0 16.7ZM0 12.25V10.3C0.483333 10.3 0.895833 10.225 1.2375 10.075C1.57917 9.925 1.925 9.7625 2.275 9.5875C2.625 9.4125 3.0125 9.25417 3.4375 9.1125C3.8625 8.97083 4.3875 8.9 5.0125 8.9C5.6375 8.9 6.15417 8.97083 6.5625 9.1125C6.97083 9.25417 7.35 9.4125 7.7 9.5875C8.05 9.7625 8.4 9.925 8.75 10.075C9.1 10.225 9.51667 10.3 10 10.3C10.4833 10.3 10.9 10.225 11.25 10.075C11.6 9.925 11.95 9.7625 12.3 9.5875C12.65 9.4125 13.0333 9.25417 13.45 9.1125C13.8667 8.97083 14.3833 8.9 15 8.9C15.6333 8.9 16.1583 8.97083 16.575 9.1125C16.9917 9.25417 17.375 9.4125 17.725 9.5875C18.075 9.7625 18.425 9.925 18.775 10.075C19.125 10.225 19.5333 10.3 20 10.3V12.25C19.3667 12.25 18.8375 12.175 18.4125 12.025C17.9875 11.875 17.6 11.7125 17.25 11.5375C16.9 11.3625 16.5583 11.2042 16.225 11.0625C15.8917 10.9208 15.4833 10.85 15 10.85C14.5167 10.85 14.1042 10.9208 13.7625 11.0625C13.4458 11.2042 13.0792 11.3625 12.7375 11.5375C12.3958 11.7125 12.0167 11.875 11.6 12.025C11.1833 12.175 10.65 12.25 10 12.25C9.35 12.25 8.8125 12.175 8.3875 12.025C7.9625 11.875 7.57917 11.7125 7.2375 11.5375C6.89583 11.3625 6.55833 11.2042 6.225 11.0625C5.89167 10.9208 5.4875 10.85 5.0125 10.85C4.5375 10.85 4.12917 10.9208 3.7875 11.0625C3.44583 11.2042 3.1 11.3625 2.75 11.5375C2.4 11.7125 2.0125 11.875 1.5875 12.025C1.1625 12.175 0.633333 12.25 0 12.25ZM0 7.8V5.85C0.483333 5.85 0.895833 5.775 1.2375 5.625C1.57917 5.475 1.925 5.3125 2.275 5.1375C2.625 4.9625 3.0125 4.80417 3.4375 4.6625C3.8625 4.52083 4.3875 4.45 5.0125 4.45C5.6375 4.45 6.15417 4.52083 6.5625 4.6625C6.97083 4.80417 7.35 4.9625 7.7 5.1375C8.05 5.3125 8.4 5.475 8.75 5.625C9.1 5.775 9.51667 5.85 10 5.85C10.4833 5.85 10.9 5.775 11.25 5.625C11.6 5.475 11.95 5.3125 12.3 5.1375C12.65 4.9625 13.0333 4.80417 13.45 4.6625C13.8667 4.52083 14.3833 4.45 15 4.45C15.6333 4.45 16.1583 4.52083 16.575 4.6625C16.9917 4.80417 17.375 4.9625 17.725 5.1375C18.075 5.3125 18.425 5.475 18.775 5.625C19.125 5.775 19.5333 5.85 20 5.85V7.8C19.3667 7.8 18.8375 7.725 18.4125 7.575C17.9875 7.425 17.6 7.2625 17.25 7.0875C16.9 6.9125 16.5583 6.75417 16.225 6.6125C15.8917 6.47083 15.4833 6.4 15 6.4C14.5333 6.4 14.1292 6.47083 13.7875 6.6125C13.4458 6.75417 13.1042 6.9125 12.7625 7.0875C12.4208 7.2625 12.0375 7.425 11.6125 7.575C11.1875 7.725 10.65 7.8 10 7.8C9.35 7.8 8.8125 7.725 8.3875 7.575C7.9625 7.425 7.57917 7.2625 7.2375 7.0875C6.89583 6.9125 6.55833 6.75417 6.225 6.6125C5.89167 6.47083 5.4875 6.4 5.0125 6.4C4.5375 6.4 4.12917 6.47083 3.7875 6.6125C3.44583 6.75417 3.1 6.9125 2.75 7.0875C2.4 7.2625 2.0125 7.425 1.5875 7.575C1.1625 7.725 0.633333 7.8 0 7.8ZM0 3.35V1.4C0.483333 1.4 0.895833 1.325 1.2375 1.175C1.57917 1.025 1.925 0.8625 2.275 0.6875C2.625 0.5125 3.0125 0.354167 3.4375 0.2125C3.8625 0.0708333 4.3875 0 5.0125 0C5.6375 0 6.15417 0.0708333 6.5625 0.2125C6.97083 0.354167 7.35 0.5125 7.7 0.6875C8.05 0.8625 8.4 1.025 8.75 1.175C9.1 1.325 9.51667 1.4 10 1.4C10.4833 1.4 10.9 1.325 11.25 1.175C11.6 1.025 11.95 0.8625 12.3 0.6875C12.65 0.5125 13.0333 0.354167 13.45 0.2125C13.8667 0.0708333 14.3833 0 15 0C15.6333 0 16.1583 0.0708333 16.575 0.2125C16.9917 0.354167 17.375 0.5125 17.725 0.6875C18.075 0.8625 18.425 1.025 18.775 1.175C19.125 1.325 19.5333 1.4 20 1.4V3.35C19.3667 3.35 18.8375 3.275 18.4125 3.125C17.9875 2.975 17.6 2.8125 17.25 2.6375C16.9 2.4625 16.5583 2.30417 16.225 2.1625C15.8917 2.02083 15.4833 1.95 15 1.95C14.5333 1.95 14.1292 2.02083 13.7875 2.1625C13.4458 2.30417 13.1042 2.4625 12.7625 2.6375C12.4208 2.8125 12.0375 2.975 11.6125 3.125C11.1875 3.275 10.65 3.35 10 3.35C9.35 3.35 8.8125 3.275 8.3875 3.125C7.9625 2.975 7.57917 2.8125 7.2375 2.6375C6.89583 2.4625 6.55833 2.30417 6.225 2.1625C5.89167 2.02083 5.4875 1.95 5.0125 1.95C4.5375 1.95 4.12917 2.02083 3.7875 2.1625C3.44583 2.30417 3.1 2.4625 2.75 2.6375C2.4 2.8125 2.0125 2.975 1.5875 3.125C1.1625 3.275 0.633333 3.35 0 3.35Z" fill={color} />
             </g>
           </svg>
         );
@@ -215,10 +226,16 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
             <path d="M0 12L6 4L10.5 10H18L13 3.35L10.5 6.65L9.25 5L13 0L22 12H0ZM4 10H8L6 7.325L4 10ZM4 10H6H8H4Z" fill={color} />
           </svg>
         );
+      case "zap":
+        return (
+          <svg width="12" height="15" viewBox="0 0 12 15" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ opacity }}>
+            <path d="M12 5.625H7.5L8.25 0L0 9.375H4.5L3.75 15L12 5.625Z" fill={color}/>
+          </svg>
+        );
       default:
         return null;
     }
-  };  const CustomDropdown = ({
+  }; const CustomDropdown = ({
     value, onChange, options, placeholder, disabled, icon, isOpen, onToggle
   }: {
     value: any, onChange: (v: any) => void, options: { value: any, label: string }[], placeholder: string, disabled?: boolean, icon?: React.ReactNode, isOpen: boolean, onToggle: () => void
@@ -230,13 +247,13 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
       <div className={`relative w-full ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}>
         <div
           style={{
-            height: "66px",
+            height: "50px",
             background: "#FFFFFF",
             border: "1.16px solid rgba(197, 198, 205, 0.3)",
             borderRadius: isOpen ? "18.57px 18.57px 0px 0px" : "18.57px",
             boxSizing: "border-box",
           }}
-          className="flex items-center px-[29px]"
+          className="flex items-center px-4"
           onClick={(e) => {
             e.stopPropagation();
             if (!disabled) onToggle();
@@ -278,7 +295,7 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
           <div
             className="absolute left-0 right-0 bg-white z-50 overflow-y-auto"
             style={{
-              top: "65px",
+              top: "49px",
               borderRadius: "0px 0px 18.57px 18.57px",
               maxHeight: "263px",
               border: "1.16px solid rgba(197, 198, 205, 0.3)",
@@ -297,13 +314,13 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
                     onToggle();
                   }}
                   style={{
-                    height: "52.24px",
+                    height: "44px",
                     background: isSelected ? "rgba(42, 48, 8, 0.05)" : "#FFFFFF",
                     borderBottom: i === options.length - 1 ? "none" : "1.16px solid rgba(197, 198, 205, 0.3)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "space-between",
-                    padding: "0 18.57px",
+                    padding: "0 16px",
                   }}
                   className="cursor-pointer hover:bg-gray-50 transition-colors"
                 >
@@ -319,8 +336,8 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
                   </span>
                   {isSelected && (
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <circle cx="12" cy="12" r="11.61" fill="#2780C4"/>
-                      <path d="M7 12L10.5 15.5L17 9" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <circle cx="12" cy="12" r="11.61" fill="#2780C4" />
+                      <path d="M7 12L10.5 15.5L17 9" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   )}
                 </div>
@@ -422,8 +439,8 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
               setStateSearch("");
               setCitySearch("");
               setMandalSearch("");
-              setPriceRange([10000000, 150000000]);
-              setSizeRange([10, 45]);
+              setPriceRange([0, 0]);
+              setSizeRange([0, 0]);
               setFilters({
                 state_id: [],
                 district_id: [],
@@ -746,31 +763,59 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
               </div>
             </div>
 
-            {/* View All & Horizontal Divider */}
-            <div className="w-full flex flex-row items-center gap-[12px]">
-              <button
-                onClick={() => setIsViewAllOpen(true)}
-                style={{
-                  background: "none",
-                  border: "none",
-                  padding: 0,
-                  color: "#2880C4",
-                  fontFamily: "'Plus Jakarta Sans', sans-serif",
-                  fontWeight: 500,
-                  fontSize: "14px",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "6px",
-                  cursor: "pointer",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                View All
-                <svg width="6" height="10" viewBox="0 0 6 10" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M1 9L5 5L1 1" />
-                </svg>
-              </button>
-              <div className="flex-1 h-[1px]" style={{ background: "rgba(194, 199, 209, 0.4)" }}></div>
+            {/* View All Row */}
+            <div className="w-full flex flex-col md:flex-row gap-8 justify-between mt-2">
+              {/* Action Oriented View All & Divider */}
+              <div className="w-full md:w-[384px] flex flex-row items-center gap-[12px]">
+                <button
+                  onClick={() => setViewAllType("actions")}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    padding: 0,
+                    color: "#2880C4",
+                    fontFamily: "'Plus Jakarta Sans', sans-serif",
+                    fontWeight: 500,
+                    fontSize: "14px",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    cursor: "pointer",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  View All
+                  <svg width="6" height="10" viewBox="0 0 6 10" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M1 9L5 5L1 1" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Land Attributes View All & Divider */}
+              <div className="w-full md:w-[384px] flex flex-row items-center gap-[12px]">
+                <button
+                  onClick={() => setViewAllType("attributes")}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    padding: 0,
+                    color: "#2880C4",
+                    fontFamily: "'Plus Jakarta Sans', sans-serif",
+                    fontWeight: 500,
+                    fontSize: "14px",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    cursor: "pointer",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  View All
+                  <svg width="6" height="10" viewBox="0 0 6 10" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M1 9L5 5L1 1" />
+                  </svg>
+                </button>
+              </div>
             </div>
 
           </div>
@@ -905,7 +950,7 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
 
       </div>
 
-      {/* --- Action of Interest Nested Modal --- */}
+      {/* --- Action/Attributes of Interest Nested Modal --- */}
       {isViewAllOpen && (
         <div
           style={{
@@ -918,17 +963,16 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
             boxSizing: "border-box",
           }}
           className="select-none flex items-center justify-center p-4 md:p-6"
-          onClick={() => setIsViewAllOpen(false)}
+          onClick={() => setViewAllType(null)}
           data-lenis-prevent
         >
           <div
             style={{
-              width: "522px",
-              maxWidth: "650px",
-              height: "528px",
+              width: "552px",
+              height: showElectricityCondition ? "552.92px" : "492px",
               background: "#FFFFFF",
-              boxShadow: "0px 20px 60px rgba(0, 0, 0, 0.12)",
-              borderRadius: "24px",
+              boxShadow: "0px 30.8036px 61.6071px -14.7857px rgba(0, 0, 0, 0.25)",
+              borderRadius: "29.5714px",
               position: "relative" as const,
               boxSizing: "border-box",
               overflow: "hidden",
@@ -937,159 +981,441 @@ export default function FilterOverlay({ isOpen, onClose }: FilterOverlayProps) {
             onClick={(e) => e.stopPropagation()}
             data-lenis-prevent
           >
-            {/* Header */}
+            {viewAllType === "attributes" ? (
+              <>
+            {/* Drag Handle Indicator */}
             <div
               style={{
-                height: "80px",
-                borderBottom: "1px solid rgba(194, 199, 209, 0.2)",
-                boxSizing: "border-box",
-              }}
-              className="flex justify-between items-center px-[24px] w-full shrink-0"
-            >
-              <span
-                style={{
-                  fontFamily: "'Plus Jakarta Sans', sans-serif",
-                  fontWeight: 600,
-                  fontSize: "24px",
-                  color: "#0B1C30",
-                }}
-              >
-                Action of Interest
-              </span>
-              <button
-                onClick={() => setIsViewAllOpen(false)}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "40px",
-                  height: "40px",
-                  background: "transparent",
-                  border: "none",
-                  cursor: "pointer",
-                  padding: 0,
-                }}
-              >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#42474F" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M18 6L6 18M6 6l12 12"></path>
-                </svg>
-              </button>
-            </div>
-
-            {/* Search Area */}
-            <div className="flex flex-col px-[24px] pt-[24px] pb-[8px] w-full shrink-0">
-              <div
-                style={{
-                  background: "rgba(245, 245, 245, 0.67)",
-                  borderRadius: "46px",
-                  height: "48px",
-                }}
-                className="flex items-center px-[20px] w-full relative"
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#727780" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute left-[20px]">
-                  <circle cx="11" cy="11" r="8"></circle>
-                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
-                <input
-                  type="text"
-                  placeholder="Search actions..."
-                  value={viewAllSearch}
-                  onChange={(e) => setViewAllSearch(e.target.value)}
-                  style={{
-                    background: "transparent",
-                    border: "none",
-                    outline: "none",
-                    fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    fontSize: "15px",
-                    color: "#0B1C30",
-                  }}
-                  className="w-full h-full pl-[36px] placeholder:text-[#727780]"
-                />
-              </div>
-            </div>
-
-            {/* Scrollable Content */}
-            <div
-              style={{
-                overflowY: "scroll",
-              }}
-              className="flex flex-col px-[24px] py-[16px] gap-[16px] w-full flex-grow mb-[85px]"
-            >
-              <span
-                style={{
-                  fontFamily: "'Plus Jakarta Sans', sans-serif",
-                  fontWeight: 600,
-                  fontSize: "14px",
-                  letterSpacing: "0.7px",
-                  textTransform: "uppercase",
-                  color: "#42474F",
-                }}
-              >
-                SELECT ACTIONS
-              </span>
-              <div className="flex flex-wrap gap-x-[15px] gap-y-[16px] w-full">
-                {allActionsList.filter(a => a.toLowerCase().includes(viewAllSearch.toLowerCase())).map((item, i) => {
-                  const isSelected = selectedLeft.includes(item as any);
-                  return (
-                    <motion.button
-                      key={item}
-                      initial={{ opacity: 0, filter: "blur(8px)" }}
-                      animate={{ opacity: 1, filter: "blur(0px)" }}
-                      transition={{ duration: 0.3, delay: i * 0.05 }}
-                      onClick={() => toggleLeft(item)}
-                      style={{
-                        height: "40px",
-                        padding: "0 20px",
-                        background: isSelected ? "#0F2F4C" : "#E7E8E9",
-                        color: isSelected ? "#FFFFFF" : "#45474C",
-                        borderRadius: "9999px",
-                        border: "none",
-                        fontFamily: "'Plus Jakarta Sans', sans-serif",
-                        fontWeight: 600,
-                        fontSize: "14px",
-                        cursor: "pointer",
-                        boxShadow: isSelected ? "0px 4px 6px -1px rgba(0, 0, 0, 0.1)" : "none",
-                      }}
-                      className="flex items-center text-center shrink-0"
-                    >
-                      {item}
-                    </motion.button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Footer */}
-            <div
-              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "flex-start",
+                padding: "14.7857px 0px 4.92857px",
                 position: "absolute",
-                bottom: "0px",
+                height: "24.64px",
                 left: "0px",
                 right: "0px",
-                height: "85px",
-                background: "#FFFFFF",
+                top: "0px",
+                zIndex: 10,
               }}
-              className="flex justify-center items-center w-full"
             >
-              <button
-                onClick={() => setIsViewAllOpen(false)}
+              <div
                 style={{
-                  width: "265px",
-                  height: "49px",
-                  background: "#2880C4",
-                  borderRadius: "69px",
-                  border: "none",
-                  fontFamily: "'Plus Jakarta Sans', sans-serif",
-                  fontWeight: 600,
-                  fontSize: "14px",
-                  letterSpacing: "0.14px",
-                  color: "#FFFFFF",
-                  cursor: "pointer",
+                  width: "49.29px",
+                  height: "4.93px",
+                  background: "#E5E7EB",
+                  borderRadius: "12320.2px",
+                }}
+              />
+            </div>
+
+            {/* ModalHeader */}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                padding: "39.4286px 29.5714px 19.7143px",
+                gap: "8.62px",
+                position: "absolute",
+                height: "138.35px",
+                left: "0px",
+                right: "0px",
+                top: "0px",
+                borderBottom: "1.23214px dashed #F3F4F6",
+                boxSizing: "border-box",
+                zIndex: 5,
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  width: "100%",
                 }}
               >
-                APPLY
-              </button>
+                <span
+                  style={{
+                    fontFamily: "'Plus Jakarta Sans', sans-serif",
+                    fontWeight: 700,
+                    fontSize: "28px",
+                    lineHeight: "34px",
+                    color: "#0B2A4A",
+                  }}
+                >
+                  {"Land Attributes"}
+                </span>
+                <button
+                  onClick={() => setViewAllType(null)}
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: "39.43px",
+                    height: "39.43px",
+                    background: "#F3F4F6",
+                    borderRadius: "12320.2px",
+                    border: "none",
+                    cursor: "pointer",
+                    padding: 0,
+                  }}
+                >
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M18 6L6 18M6 6l12 12"></path>
+                  </svg>
+                </button>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  width: "100%",
+                  height: "29.92px",
+                }}
+              >
+                <span
+                  style={{
+                    fontFamily: "'Plus Jakarta Sans', sans-serif",
+                    fontWeight: 400,
+                    fontSize: "17.25px",
+                    lineHeight: "28px",
+                    color: "#6B7280",
+                  }}
+                >
+                  Select one or more filters to refine your land search.
+                </span>
+              </div>
             </div>
+
+            {/* ModalContent */}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "max-content max-content",
+                alignItems: "start",
+                alignContent: "start",
+                padding: "24.6429px 29.5714px 44.3571px",
+                gap: "12px 16px",
+                position: "absolute",
+                left: "0px",
+                right: "0px",
+                top: "138.35px",
+                bottom: "117.41px",
+                overflowY: "auto",
+                boxSizing: "border-box",
+              }}
+            >
+              {allAttributesList.map((item: any, i: number) => {
+                const itemName = item.name;
+                const itemIcon = item.icon;
+                const isSelected = selectedRight.includes(itemName);
+
+                const handleClick = () => {
+                  if (itemName === "Electricity" && isSelected) {
+                    setElectricityPhase(null);
+                  }
+                  toggleRight(itemName);
+                };
+
+                return (
+                  <motion.button
+                    key={itemName}
+                    initial={{ opacity: 0, filter: "blur(8px)" }}
+                    animate={{ opacity: 1, filter: "blur(0px)" }}
+                    transition={{ duration: 0.3, delay: i * 0.05 }}
+                    onClick={handleClick}
+                    style={{
+                      height: "42px",
+                      padding: "0 20px",
+                      background: isSelected ? "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%)" : "#FFFFFF",
+                      border: isSelected ? "1px solid #2780C4" : "1px solid rgba(199, 200, 175, 0.3)",
+                      boxShadow: isSelected ? "0px 1px 2px rgba(0, 0, 0, 0.05)" : "none",
+                      borderRadius: "9999px",
+                      fontFamily: "'Plus Jakarta Sans', sans-serif",
+                      fontWeight: 600,
+                      fontSize: "16px",
+                      color: isSelected ? "#FFFFFF" : "#0F2F4C",
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                      flexShrink: 0,
+                      position: "relative",
+                    }}
+                  >
+                    {itemIcon && renderAttributeIcon(itemIcon, isSelected)}
+                    <span>{itemName}</span>
+                    {itemName === "Electricity" && isSelected && electricityPhase && (
+                      <span style={{ position: "absolute", top: "46px", left: "12px", fontFamily: "'Plus Jakarta Sans'", fontWeight: 500, fontSize: "10px", lineHeight: "13px", color: "#0F2F4C", whiteSpace: "nowrap" }}>
+                        Selected : {electricityPhase}
+                      </span>
+                    )}
+                  </motion.button>
+                );
+              })}
+
+              {/* Conditional Section: Electricity Connection Type */}
+              {showElectricityCondition && (
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                    padding: "0px",
+                    gap: "14.79px",
+                    width: "100%",
+                    marginTop: "20px",
+                    gridColumn: "1 / -1",
+                  }}
+                >
+                  <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "9.86px", width: "100%" }}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M11 7H13V9H11V7ZM11 11H13V17H11V11ZM12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20Z" fill="#0F2F4C"/>
+                    </svg>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans'", fontWeight: 600, fontSize: "18px", color: "#0F2F4C" }}>
+                      Electricity Connection Type Is Required
+                    </span>
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "row", alignItems: "flex-start", gap: "14.79px", width: "100%" }}>
+                    <button
+                      onClick={() => setElectricityPhase("2 Phase")}
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        padding: "9.85714px 29.5714px",
+                        width: "122.61px",
+                        height: "47.18px",
+                        background: electricityPhase === "2 Phase" ? "#F3F4F6" : "#FFFFFF",
+                        border: electricityPhase === "2 Phase" ? "1.23214px solid #0F2F4C" : "1.23214px solid #E2E8F0",
+                        borderRadius: "12320.2px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <span style={{ fontFamily: "'Inter'", fontWeight: 500, fontSize: "16px", color: "#1A202C" }}>
+                        2 Phase
+                      </span>
+                    </button>
+                    <button
+                      onClick={() => setElectricityPhase("3 Phase")}
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        padding: "9.85714px 29.5714px",
+                        width: "123.61px",
+                        height: "47.18px",
+                        background: electricityPhase === "3 Phase" ? "#F3F4F6" : "#FFFFFF",
+                        border: electricityPhase === "3 Phase" ? "1.23214px solid #0F2F4C" : "1.23214px solid #E2E8F0",
+                        borderRadius: "12320.2px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <span style={{ fontFamily: "'Inter'", fontWeight: 500, fontSize: "16px", color: "#1A202C" }}>
+                        3 Phase
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* ModalFooter */}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "29.5714px",
+                position: "absolute",
+                height: "117.41px",
+                left: "0px",
+                right: "0px",
+                bottom: "0px",
+                background: "#FFFFFF",
+                borderTop: "1.23214px dashed #F3F4F6",
+                boxSizing: "border-box",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: "19.71px",
+                  width: "100%",
+                }}
+              >
+                {/* Clear All */}
+                <button
+                  onClick={() => {
+                    setSelectedRight([]);
+                    setElectricityPhase(null);
+                  }}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    padding: "14.7857px 19.7143px",
+                    width: "237.8px",
+                    height: "57.04px",
+                    border: "1.23214px solid #D1D5DB",
+                    borderRadius: "12320.2px",
+                    background: "transparent",
+                    cursor: "pointer",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontWeight: 600,
+                      fontSize: "17.25px",
+                      lineHeight: "25px",
+                      textAlign: "center",
+                      color: "#0B2A4A",
+                    }}
+                  >
+                    Clear All
+                  </span>
+                </button>
+
+                {/* APPLY */}
+                <button
+                  onClick={() => setViewAllType(null)}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    padding: "15.4018px 19.7143px 16.6339px",
+                    width: "235.34px",
+                    height: "57.04px",
+                    background: "radial-gradient(50% 50% at 50% 50%, #2780C4 0%, #164573 100%), linear-gradient(180deg, #1A5C9B 0%, #103A62 100%)",
+                    boxShadow: "0px 12.3214px 18.4821px -3.69643px rgba(0, 0, 0, 0.1), 0px 4.92857px 7.39286px -4.92857px rgba(0, 0, 0, 0.1)",
+                    borderRadius: "12320.2px",
+                    border: "none",
+                    cursor: "pointer",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontWeight: 600,
+                      fontSize: "17.25px",
+                      lineHeight: "25px",
+                      textAlign: "center",
+                      letterSpacing: "0.43125px",
+                      color: "#FFFFFF",
+                    }}
+                  >
+                    APPLY
+                  </span>
+                </button>
+              </div>
+            </div>
+              </>
+            ) : (
+              <>
+                {/* Header */}
+                <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: "0 24px", position: "absolute", height: "80px", left: 0, right: 0, top: 0, borderBottom: "1px solid rgba(194, 199, 209, 0.2)", boxSizing: "border-box" }}>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans'", fontWeight: 600, fontSize: "24px", color: "#0B1C30" }}>Action of Interest</span>
+                  <button onClick={() => setViewAllType(null)} style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "40px", height: "40px", borderRadius: "9999px", background: "transparent", border: "none", cursor: "pointer" }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#42474F" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M18 6L6 18M6 6l12 12"></path>
+                    </svg>
+                  </button>
+                </div>
+                
+                {/* Search Area */}
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", padding: "24px 24px 8px", position: "absolute", height: "80px", left: 0, right: 0, top: "80px", boxSizing: "border-box" }}>
+                  <div style={{ display: "flex", flexDirection: "row", alignItems: "center", padding: "14.5px 16px 14.5px 48px", width: "100%", height: "48px", background: "rgba(245, 245, 245, 0.67)", borderRadius: "46px", position: "relative", boxSizing: "border-box" }}>
+                    <div style={{ position: "absolute", left: "20px", top: "15px" }}>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#727780" strokeWidth="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                      </svg>
+                    </div>
+                    <input
+                      type="text"
+                      placeholder="Search actions..."
+                      value={viewAllSearch}
+                      onChange={(e) => setViewAllSearch(e.target.value)}
+                      style={{ width: "100%", background: "transparent", border: "none", outline: "none", fontFamily: "'Plus Jakarta Sans'", fontSize: "15px", color: "#0B1C30" }}
+                    />
+                  </div>
+                </div>
+                
+                {/* Scrollable Content */}
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", padding: "16px 24px", gap: "16px", position: "absolute", left: 0, right: 0, top: "173px", bottom: "42.2px", overflowY: "auto", boxSizing: "border-box" }}>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans'", fontWeight: 600, fontSize: "14px", letterSpacing: "0.7px", textTransform: "uppercase", color: "#42474F" }}>SELECT ACTIONS</span>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: "12px", width: "100%" }}>
+                    {allActionsList.filter(a => {
+                      return a.toLowerCase().includes(viewAllSearch.toLowerCase());
+                    }).map((action, i) => {
+                      const isSelected = selectedLeft.includes(action);
+                      return (
+                        <motion.button
+                          key={action}
+                          initial={{ opacity: 0, filter: "blur(8px)" }}
+                          animate={{ opacity: 1, filter: "blur(0px)" }}
+                          transition={{ duration: 0.3, delay: i * 0.05 }}
+                          onClick={() => toggleLeft(action)}
+                          style={{
+                            height: "40px",
+                            padding: "0 20px",
+                            background: isSelected ? "#0F2F4C" : "#E7E8E9",
+                            boxShadow: isSelected ? "0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -2px rgba(0, 0, 0, 0.1)" : "none",
+                            borderRadius: "9999px",
+                            fontFamily: "'Plus Jakarta Sans', sans-serif",
+                            fontWeight: 600,
+                            fontSize: "14px",
+                            color: isSelected ? "#FFFFFF" : "#45474C",
+                            cursor: "pointer",
+                            border: "none",
+                          }}
+                        >
+                          {action}
+                        </motion.button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Footer APPLY button */}
+                <button
+                  onClick={() => setViewAllType(null)}
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    position: "absolute",
+                    width: "265px",
+                    height: "49px",
+                    left: "calc(50% - 265px/2)",
+                    bottom: "24px",
+                    background: "#2880C4",
+                    borderRadius: "69px",
+                    border: "none",
+                    color: "#FFFFFF",
+                    fontFamily: "'Plus Jakarta Sans'",
+                    fontWeight: 600,
+                    fontSize: "14px",
+                    letterSpacing: "0.14px",
+                    cursor: "pointer",
+                    zIndex: 10,
+                  }}
+                >
+                  APPLY
+                </button>
+              </>
+            )}
           </div>
         </div>
       )}

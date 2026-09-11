@@ -109,7 +109,7 @@ export default function YourListings() {
     <section id="your-listings" className="w-full bg-transparent py-12 lg:py-[70px] overflow-hidden">
 
       {/* Section Header Wrapper (Constrained to Page Margin) */}
-      <div className="w-full max-w-[1440px] mx-auto px-4 md:px-[60px] mb-6 lg:mb-8">
+      <div className="w-full max-w-[1440px] mx-auto px-4 md:px-[24px] mb-6 lg:mb-8">
         <div className="flex justify-between items-center w-full">
           <h2 className="font-jakarta font-extrabold text-[20px] md:text-[24px] leading-[1.2] text-[#0F2F4C] m-0 flex gap-x-[6px]">
             {`Your Listings (${listings.length})`.split(" ").map((word, i) => (
@@ -131,7 +131,7 @@ export default function YourListings() {
       </div>
 
       {/* Cards Scrollable Container (Free Drag-to-Scroll + Asymmetric Offset Layout) */}
-      <div className="w-full max-w-[1440px] mx-auto px-4 md:px-[60px]">
+      <div className="w-full max-w-[1440px] mx-auto px-4 md:px-[24px]">
         <div
           ref={containerRef}
           onMouseDown={handleMouseDown}

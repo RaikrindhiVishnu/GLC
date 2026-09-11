@@ -7,6 +7,49 @@ import { motion } from "framer-motion";
 import { useEffect } from "react";
 import { useGetFarmlandsForComparisonQuery } from "../../services/farmland";
 import { useGetUserDetailsByIdQuery } from "../../services/user";
+import { s3Service } from "../../services/s3";
+
+const ResolvedImage = ({ imageUrl, alt, className }: { imageUrl: string; alt: string; className?: string }) => {
+  const [resolved, setResolved] = useState<string | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchImg = async () => {
+      if (!imageUrl || imageUrl === "null" || imageUrl === "") {
+        if (isMounted) setResolved(null);
+        return;
+      }
+      if (imageUrl.startsWith("http") || imageUrl.startsWith("data:") || imageUrl.startsWith("/")) {
+        if (isMounted) setResolved(imageUrl);
+        return;
+      }
+      try {
+        const res = await s3Service.generateUrl({ key: imageUrl, filename: imageUrl, folderPath: '' });
+        if (isMounted && res.url) {
+          setResolved(res.url);
+        }
+      } catch (e) {
+        if (isMounted) setResolved(null);
+      }
+    };
+    fetchImg();
+    return () => { isMounted = false; };
+  }, [imageUrl]);
+
+  if (!resolved) {
+    return (
+      <div className={`w-full h-full bg-[#F4F4F5] flex flex-col items-center justify-center ${className || ""}`}>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#A1A1AA" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: "8px" }}>
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+          <circle cx="8.5" cy="8.5" r="1.5" />
+          <polyline points="21 15 16 10 5 21" />
+        </svg>
+      </div>
+    );
+  }
+
+  return <Image src={resolved} alt={alt} fill className={className} onError={() => setResolved(null)} />;
+};
 
 const defaultComparisonData = [
   {
@@ -92,9 +135,6 @@ export default function CompareAssets() {
         const p1 = res.data[i];
         const p2 = res.data[i + 1];
 
-        const hasValidImg1 = p1.farmland_img && (p1.farmland_img.startsWith('/') || p1.farmland_img.startsWith('http') || p1.farmland_img.startsWith('data:')) && !p1.farmland_img.toLowerCase().endsWith('.pdf');
-        const hasValidImg2 = p2.farmland_img && (p2.farmland_img.startsWith('/') || p2.farmland_img.startsWith('http') || p2.farmland_img.startsWith('data:')) && !p2.farmland_img.toLowerCase().endsWith('.pdf');
-
         pairs.push({
           id: `comp-${i}`,
           plots: [
@@ -102,7 +142,7 @@ export default function CompareAssets() {
               id: p1.farmland_id,
               title: p1.farmland_code || `Plot ${p1.farmland_id}`,
               location: "Andhra Pradesh",
-              img: hasValidImg1 ? p1.farmland_img : "/assets/home/CompareAssets/compare1.svg",
+              img: p1.farmland_img,
               soil: p1.soil_type_id ? `Soil Type ${p1.soil_type_id}` : "Red Sandy Loam",
               ph: "pH Level: 6.8 (Optimal)",
               yield: p1.price ? (p1.price / 10000000).toFixed(2) : "5.2",
@@ -111,7 +151,7 @@ export default function CompareAssets() {
               id: p2.farmland_id,
               title: p2.farmland_code || `Plot ${p2.farmland_id}`,
               location: "Andhra Pradesh",
-              img: hasValidImg2 ? p2.farmland_img : "/assets/home/CompareAssets/compare2.svg",
+              img: p2.farmland_img,
               soil: p2.soil_type_id ? `Soil Type ${p2.soil_type_id}` : "Black Cotton Soil",
               ph: "pH Level: 7.4 (Alkaline)",
               yield: p2.price ? (p2.price / 10000000).toFixed(2) : "7.8",
@@ -160,7 +200,7 @@ export default function CompareAssets() {
     <section id="compare-assets" className="w-full bg-transparent py-12 lg:py-[70px] overflow-hidden">
 
       {/* Header — constrained to page margin */}
-      <div className="w-full max-w-[1440px] mx-auto px-4 md:px-[60px] mb-6 lg:mb-8">
+      <div className="w-full max-w-[1440px] mx-auto px-4 md:px-[24px] mb-6 lg:mb-8">
         <div className="flex flex-col gap-2">
           <span className="font-jakarta font-bold text-[10px] md:text-[12px] leading-[16px] tracking-[2.4px] uppercase text-[#0F2F4C]">
             Portfolio Intelligence
@@ -188,7 +228,7 @@ export default function CompareAssets() {
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUpOrLeave}
         onMouseLeave={handleMouseUpOrLeave}
-        className={`flex gap-6 lg:gap-12 w-full overflow-x-auto pb-4 hide-scrollbar max-w-[1440px] mx-auto px-4 md:px-[60px] select-none ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
+        className={`flex gap-6 lg:gap-12 w-full overflow-x-auto pb-4 hide-scrollbar max-w-[1440px] mx-auto px-4 md:px-[24px] select-none ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
       >
         <style dangerouslySetInnerHTML={{
           __html: `
@@ -222,7 +262,7 @@ export default function CompareAssets() {
                   className="flex-1 bg-white border border-[#EDEEEF] rounded-[24px] lg:rounded-[32px] p-4 lg:p-[20px] flex flex-col gap-3 lg:gap-[12px] box-border"
                 >
                   <div className="relative w-full h-[120px] lg:h-[176px] rounded-[16px] overflow-hidden shrink-0">
-                    <Image src={plot.img} alt={plot.title} fill className="object-cover" />
+                    <ResolvedImage imageUrl={plot.img} alt={plot.title} className="object-cover" />
                     <div className="absolute top-3 left-3 px-3 py-1 bg-white/85 backdrop-blur-md rounded-full flex items-center gap-1">
                       <div className="w-2 h-2 bg-[#006D37] rounded-full shrink-0" />
                       <span className="font-jakarta font-bold text-[8px] lg:text-[10px] text-[#006D37] uppercase">Verified</span>

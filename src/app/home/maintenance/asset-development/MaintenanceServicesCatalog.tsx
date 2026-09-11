@@ -100,7 +100,7 @@ function MaintenanceServicesCatalogInner() {
 
   return (
     <>
-      <section className="w-full max-w-7xl mx-auto px-4 lg:px-8 py-16 lg:py-24 box-border flex flex-col gap-12">
+      <section className="w-full max-w-[1440px] mx-auto px-4 lg:px-[24px] py-16 lg:py-24 box-border flex flex-col gap-12">
         {/* ─── SECTION HEADER ─── */}
         <motion.div
           initial={{ opacity: 0, filter: "blur(8px)" }}
